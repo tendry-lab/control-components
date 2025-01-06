@@ -55,7 +55,6 @@ ApNetwork::ApNetwork(INetworkHandler& handler, const Params& params)
     wifi_config.ap.channel = params_.channel;
     wifi_config.ap.max_connection = params_.max_connection;
     wifi_config.ap.authmode = WIFI_AUTH_WPA2_PSK;
-    wifi_config.ap.pmf_cfg.required = true;
 
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));
 }
