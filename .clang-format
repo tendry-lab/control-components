@@ -12,7 +12,6 @@ MaxEmptyLinesToKeep: 1
 PenaltyBreakComment: 0
 
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
-AllowShortFunctionsOnASingleLine: false
 
 KeepEmptyLinesAtTheStartOfBlocks: false
 NamespaceIndentation: None
