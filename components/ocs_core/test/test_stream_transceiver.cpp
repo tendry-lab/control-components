@@ -25,7 +25,7 @@ struct TestStreamReader : public IStreamReader {
 
     TestStreamReader() = default;
 
-    TestStreamReader(Data data)
+    explicit TestStreamReader(Data data)
         : data_(data) {
     }
 
