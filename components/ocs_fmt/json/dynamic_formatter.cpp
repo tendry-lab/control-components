@@ -20,7 +20,7 @@ DynamicFormatter::DynamicFormatter(unsigned size)
     : size_(size) {
     configASSERT(size_);
 
-    buf_.reset(new (std::nothrow) char[size]);
+    buf_.reset(new (std::nothrow) char[size_]);
     configASSERT(buf_);
 }
 
