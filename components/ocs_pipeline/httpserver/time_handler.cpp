@@ -20,14 +20,18 @@ TimeHandler::TimeHandler(http::Server& server, time_t start_point) {
         const auto it = values.find("value");
 
         if (it == values.end()) {
-            const auto timestamp = algo::TimeOps::get_time();
+            auto err = httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
+            if (err != ESP_OK) {
+                return status::StatusCode::Error;
+            }
+
+            auto timestamp = algo::TimeOps::get_time();
             if (!timestamp) {
                 return status::StatusCode::Error;
             }
 
-            auto err = httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
-            if (err != ESP_OK) {
-                return status::StatusCode::Error;
+            if (*timestamp < start_point) {
+                *timestamp = -1;
             }
 
             err = httpd_resp_send(req, std::to_string(*timestamp).c_str(),
