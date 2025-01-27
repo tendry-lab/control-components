@@ -39,6 +39,9 @@ public:
     //! Destroy.
     virtual ~IMdnsDriver() = default;
 
+    //! Return the configured hostname.
+    virtual const char* get_hostname() const = 0;
+
     //! Start mDNS driver.
     virtual status::StatusCode start() = 0;
 
