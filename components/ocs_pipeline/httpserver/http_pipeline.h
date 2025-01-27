@@ -16,6 +16,7 @@
 #include "ocs_pipeline/httpserver/data_handler.h"
 #include "ocs_pipeline/httpserver/system_handler.h"
 #include "ocs_scheduler/itask.h"
+#include "ocs_system/device_info.h"
 #include "ocs_system/fanout_suspender.h"
 #include "ocs_system/isuspend_handler.h"
 
@@ -48,6 +49,7 @@ public:
                  net::IMdnsDriver& mdns_driver,
                  fmt::json::IFormatter& telemetry_formatter,
                  fmt::json::FanoutFormatter& registration_formatter,
+                 const system::DeviceInfo& device_info,
                  Params params);
 
     //! Start HTTP server.

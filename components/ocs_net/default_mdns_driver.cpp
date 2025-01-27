@@ -26,6 +26,10 @@ DefaultMdnsDriver::DefaultMdnsDriver(const char* hostname, const char* instance_
     , instance_name_(instance_name) {
 }
 
+const char* DefaultMdnsDriver::get_hostname() const {
+    return hostname_.c_str();
+}
+
 status::StatusCode DefaultMdnsDriver::start() {
     auto err = mdns_init();
     if (err != ESP_OK) {

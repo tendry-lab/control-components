@@ -26,6 +26,7 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
                            net::IMdnsDriver& mdns_driver,
                            fmt::json::IFormatter& telemetry_formatter,
                            fmt::json::FanoutFormatter& registration_formatter,
+                           const system::DeviceInfo& device_info,
                            Params params)
     : mdns_driver_(mdns_driver) {
     mdns_driver.add_service(net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
@@ -38,6 +39,24 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
     configASSERT(mdns_driver.add_txt_record(net::IMdnsDriver::Service::Http,
                                             net::IMdnsDriver::Proto::Tcp, "api_versions",
                                             "v1")
+                 == status::StatusCode::OK);
+
+    const auto autodiscovery_uri =
+        std::string("http://") + mdns_driver.get_hostname() + ".local/api/v1";
+
+    configASSERT(mdns_driver.add_txt_record(
+                     net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
+                     "autodiscovery_uri", autodiscovery_uri.c_str())
+                 == status::StatusCode::OK);
+
+    configASSERT(mdns_driver.add_txt_record(
+                     net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
+                     "autodiscovery_desc", device_info.get_fw_description())
+                 == status::StatusCode::OK);
+
+    configASSERT(mdns_driver.add_txt_record(net::IMdnsDriver::Service::Http,
+                                            net::IMdnsDriver::Proto::Tcp,
+                                            "autodiscovery_mode", "1")
                  == status::StatusCode::OK);
 
     network_handler.add(*this);
