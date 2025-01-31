@@ -23,11 +23,12 @@ const char* log_tag = "default_mdns_driver";
 
 DefaultMdnsDriver::DefaultMdnsDriver(const char* hostname, const char* instance_name)
     : hostname_(hostname)
+    , dns_name_(std::string(hostname) + ".local")
     , instance_name_(instance_name) {
 }
 
-const char* DefaultMdnsDriver::get_hostname() const {
-    return hostname_.c_str();
+const char* DefaultMdnsDriver::get_dns_name() const {
+    return dns_name_.c_str();
 }
 
 status::StatusCode DefaultMdnsDriver::start() {
