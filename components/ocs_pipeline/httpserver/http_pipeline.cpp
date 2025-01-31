@@ -39,8 +39,8 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
                                             api_base_path)
                  == status::StatusCode::OK);
 
-    const auto autodiscovery_uri =
-        std::string("http://") + mdns_driver.get_hostname() + ".local" + api_base_path;
+    const auto autodiscovery_uri = std::string("http://") + mdns_driver.get_hostname()
+        + ".local:" + std::to_string(CONFIG_OCS_HTTP_SERVER_PORT) + api_base_path;
 
     configASSERT(mdns_driver.add_txt_record(
                      net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
