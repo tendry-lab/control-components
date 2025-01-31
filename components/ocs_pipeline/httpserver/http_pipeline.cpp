@@ -32,17 +32,15 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
     mdns_driver.add_service(net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
                             CONFIG_OCS_HTTP_SERVER_PORT);
 
+    const char* api_base_path = "/api/v1";
+
     configASSERT(mdns_driver.add_txt_record(net::IMdnsDriver::Service::Http,
-                                            net::IMdnsDriver::Proto::Tcp, "api_base_path",
-                                            "/api/")
-                 == status::StatusCode::OK);
-    configASSERT(mdns_driver.add_txt_record(net::IMdnsDriver::Service::Http,
-                                            net::IMdnsDriver::Proto::Tcp, "api_versions",
-                                            "v1")
+                                            net::IMdnsDriver::Proto::Tcp, "api",
+                                            api_base_path)
                  == status::StatusCode::OK);
 
     const auto autodiscovery_uri =
-        std::string("http://") + mdns_driver.get_hostname() + ".local/api/v1";
+        std::string("http://") + mdns_driver.get_hostname() + ".local" + api_base_path;
 
     configASSERT(mdns_driver.add_txt_record(
                      net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
