@@ -24,8 +24,8 @@ MdnsStore::MdnsStore(IMdnsDriver& driver)
     : driver_(driver) {
 }
 
-const char* MdnsStore::get_hostname() const {
-    return driver_.get_hostname();
+const char* MdnsStore::get_dns_name() const {
+    return driver_.get_dns_name();
 }
 
 status::StatusCode MdnsStore::start() {

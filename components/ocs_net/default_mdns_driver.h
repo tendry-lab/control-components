@@ -21,8 +21,8 @@ public:
     //! Initialize.
     DefaultMdnsDriver(const char* hostname, const char* instance_name);
 
-    //! Return the configured hostname.
-    const char* get_hostname() const override;
+    //! Return the configured device DNS name.
+    const char* get_dns_name() const override;
 
     //! Start mDNS driver.
     status::StatusCode start() override;
@@ -41,6 +41,7 @@ public:
 
 private:
     std::string hostname_;
+    std::string dns_name_;
     std::string instance_name_;
 };
 

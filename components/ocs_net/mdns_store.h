@@ -29,7 +29,7 @@ public:
     explicit MdnsStore(IMdnsDriver& driver);
 
     //! Return the configured hostname.
-    const char* get_hostname() const override;
+    const char* get_dns_name() const override;
 
     //! Start mDNS driver.
     //!
