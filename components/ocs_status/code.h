@@ -37,6 +37,9 @@ enum class StatusCode {
     //! An operation was not performed within the timeout.
     Timeout,
 
+    //! An operation hasn't changed the resource.
+    NotModified,
+
     //! Invalid status code.
     Last,
 };

@@ -26,7 +26,7 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
                            net::IMdnsDriver& mdns_driver,
                            fmt::json::IFormatter& telemetry_formatter,
                            fmt::json::FanoutFormatter& registration_formatter,
-                           const system::DeviceInfo& device_info,
+                           config::MdnsConfig& mdns_config,
                            Params params)
     : mdns_driver_(mdns_driver) {
     mdns_driver.add_service(net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
@@ -49,7 +49,7 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
 
     configASSERT(mdns_driver.add_txt_record(
                      net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
-                     "autodiscovery_desc", device_info.get_fw_description())
+                     "autodiscovery_desc", mdns_config.get_instance_name())
                  == status::StatusCode::OK);
 
     configASSERT(mdns_driver.add_txt_record(net::IMdnsDriver::Service::Http,
@@ -79,6 +79,10 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
 
     system_handler_.reset(new (std::nothrow) SystemHandler(*http_server_, reboot_task));
     configASSERT(system_handler_);
+
+    mdns_handler_.reset(new (std::nothrow)
+                            MdnsHandler(*http_server_, mdns_config, reboot_task));
+    configASSERT(mdns_handler_);
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
     system_state_handler_.reset(new (std::nothrow)

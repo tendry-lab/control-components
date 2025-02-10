@@ -6,6 +6,7 @@ idf_component_register(
     "httpserver/data_handler.cpp"
     "httpserver/system_handler.cpp"
     "httpserver/system_state_handler.cpp"
+    "httpserver/mdns_handler.cpp"
     "httpserver/web_gui_pipeline.cpp"
     "httpserver/time_handler.cpp"
     "httpserver/time_pipeline.cpp"
@@ -32,6 +33,8 @@ idf_component_register(
 
     "network/local_network_pipeline.cpp"
     "network/local_network_json_pipeline.cpp"
+
+    "config/mdns_config.cpp"
 
     REQUIRES
     "spiffs"

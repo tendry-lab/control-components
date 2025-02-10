@@ -14,9 +14,9 @@
 #include "ocs_net/fanout_network_handler.h"
 #include "ocs_net/imdns_driver.h"
 #include "ocs_pipeline/httpserver/data_handler.h"
+#include "ocs_pipeline/httpserver/mdns_handler.h"
 #include "ocs_pipeline/httpserver/system_handler.h"
 #include "ocs_scheduler/itask.h"
-#include "ocs_system/device_info.h"
 #include "ocs_system/fanout_suspender.h"
 #include "ocs_system/isuspend_handler.h"
 
@@ -49,7 +49,7 @@ public:
                  net::IMdnsDriver& mdns_driver,
                  fmt::json::IFormatter& telemetry_formatter,
                  fmt::json::FanoutFormatter& registration_formatter,
-                 const system::DeviceInfo& device_info,
+                 config::MdnsConfig& mdns_config,
                  Params params);
 
     //! Start HTTP server.
@@ -74,6 +74,7 @@ private:
     std::unique_ptr<DataHandler> telemetry_handler_;
     std::unique_ptr<DataHandler> registration_handler_;
     std::unique_ptr<SystemHandler> system_handler_;
+    std::unique_ptr<MdnsHandler> mdns_handler_;
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
     std::unique_ptr<SystemStateHandler> system_state_handler_;
