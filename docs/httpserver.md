@@ -169,6 +169,25 @@ http "bonsai-firmware.local/api/v1/system/time?value=1733233869"
 OK
 ```
 
+**Get mDNS configuration**
+
+http "bonsai-firmware.local/api/v1/system/mdns"
+
+```json
+{
+    "hostname": "bonsai-firmware",
+    "instance_name": "Hello-World"
+}
+```
+
+**Set mDNS configuration**
+
+http "bonsai-firmware.local/api/v1/system/mdns?hostname=test-lab&instance_name=Hello-World"
+
+```txt
+OK
+```
+
 **Sensors APIs**
 
 - [DS18B20](sensors/ds18b20.md#HTTP-API)
