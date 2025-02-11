@@ -12,6 +12,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_net/imdns_driver.h"
+#include "ocs_pipeline/config/mdns_config.h"
 #include "ocs_system/fanout_suspender.h"
 #include "ocs_system/isuspend_handler.h"
 
@@ -22,9 +23,7 @@ namespace network {
 class MdnsPipeline : private system::ISuspendHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
-    MdnsPipeline(system::FanoutSuspender& suspender,
-                 const char* hostname,
-                 const char* instance_name);
+    MdnsPipeline(system::FanoutSuspender& suspender, config::MdnsConfig& config);
 
     //! Start the pipeline.
     status::StatusCode start();

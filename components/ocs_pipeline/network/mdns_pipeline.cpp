@@ -17,11 +17,11 @@ namespace pipeline {
 namespace network {
 
 MdnsPipeline::MdnsPipeline(system::FanoutSuspender& suspender,
-                           const char* hostname,
-                           const char* instance_name) {
+                           config::MdnsConfig& config) {
     configASSERT(suspender.add(*this, "mdns_pipeline") == status::StatusCode::OK);
 
-    driver_.reset(new (std::nothrow) net::DefaultMdnsDriver(hostname, instance_name));
+    driver_.reset(new (std::nothrow) net::DefaultMdnsDriver(config.get_hostname(),
+                                                            config.get_instance_name()));
     configASSERT(driver_);
 
     store_.reset(new (std::nothrow) net::MdnsStore(*driver_));
