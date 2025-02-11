@@ -57,7 +57,7 @@ status::StatusCode LocalNetworkPipeline::start() {
 }
 
 void LocalNetworkPipeline::initialize_network_(const system::DeviceInfo& device_info) {
-    char ssid[max_ssid_size_];
+    char ssid[max_ssid_size_ + 1];
     memset(ssid, 0, sizeof(ssid));
 
     std::string builtin_ssid = device_info.get_fw_name();
@@ -66,7 +66,7 @@ void LocalNetworkPipeline::initialize_network_(const system::DeviceInfo& device_
 
     strncpy(ssid, builtin_ssid.c_str(), sizeof(ssid));
 
-    char password[max_password_size_];
+    char password[max_password_size_ + 1];
     memset(password, 0, sizeof(password));
 
     const auto code = algo::StorageOps::prob_read(*storage_, "net_ap_pswd", password,

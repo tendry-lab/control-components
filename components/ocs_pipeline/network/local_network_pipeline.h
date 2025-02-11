@@ -43,8 +43,8 @@ private:
     status::StatusCode start_();
     void stop_();
 
-    static const unsigned max_ssid_size_ = 32;
-    static const unsigned max_password_size_ = 64;
+    static const unsigned max_ssid_size_ = 31;
+    static const unsigned max_password_size_ = 63;
 
     static const TickType_t wait_start_interval_ = pdMS_TO_TICKS(1000 * 60 * 10);
 
