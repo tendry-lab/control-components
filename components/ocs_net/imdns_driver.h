@@ -39,9 +39,6 @@ public:
     //! Destroy.
     virtual ~IMdnsDriver() = default;
 
-    //! Return the configured device DNS name, e.g. bonsai-growlab.local
-    virtual const char* get_dns_name() const = 0;
-
     //! Start mDNS driver.
     virtual status::StatusCode start() = 0;
 

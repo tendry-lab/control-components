@@ -28,8 +28,8 @@ status::StatusCode MdnsAutodiscoveryPipeline::add(net::IMdnsDriver::Service serv
         scheme = "http";
     }
 
-    auto uri =
-        std::string(scheme) + "://" + driver_.get_dns_name() + ":" + std::to_string(port);
+    auto uri = std::string(scheme) + "://" + config_.get_hostname() + "." + domain_ + ":"
+        + std::to_string(port);
     if (path) {
         uri += path;
     }
