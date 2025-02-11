@@ -34,6 +34,7 @@ idf_component_register(
     "network/local_network_pipeline.cpp"
     "network/local_network_json_pipeline.cpp"
     "network/mdns_autodiscovery_pipeline.cpp"
+    "network/mdns_pipeline.cpp"
 
     "config/mdns_config.cpp"
 

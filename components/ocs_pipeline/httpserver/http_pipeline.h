@@ -17,8 +17,6 @@
 #include "ocs_pipeline/httpserver/mdns_handler.h"
 #include "ocs_pipeline/httpserver/system_handler.h"
 #include "ocs_scheduler/itask.h"
-#include "ocs_system/fanout_suspender.h"
-#include "ocs_system/isuspend_handler.h"
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
 #include "ocs_pipeline/httpserver/system_state_handler.h"
@@ -28,9 +26,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class HttpPipeline : public net::INetworkHandler,
-                     public system::ISuspendHandler,
-                     public core::NonCopyable<> {
+class HttpPipeline : public net::INetworkHandler, public core::NonCopyable<> {
 public:
     struct DataParams {
         //! Buffer size to hold the formatted JSON data, in bytes.
@@ -45,7 +41,6 @@ public:
 
     //! Initialize.
     HttpPipeline(scheduler::ITask& reboot_task,
-                 system::FanoutSuspender& suspender,
                  net::FanoutNetworkHandler& network_handler,
                  net::IMdnsDriver& mdns_driver,
                  fmt::json::IFormatter& telemetry_formatter,
@@ -59,18 +54,10 @@ public:
     //! Stop HTTP server.
     void handle_disconnect() override;
 
-    //! Disable mDNS.
-    status::StatusCode handle_suspend() override;
-
-    //! Enable mDNS.
-    status::StatusCode handle_resume() override;
-
     //! Return HTTP server.
     http::Server& get_server();
 
 private:
-    net::IMdnsDriver& mdns_driver_;
-
     std::unique_ptr<http::Server> http_server_;
     std::unique_ptr<DataHandler> telemetry_handler_;
     std::unique_ptr<DataHandler> registration_handler_;
