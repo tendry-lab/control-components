@@ -22,10 +22,6 @@ inputs:
     description: "path for various caches"
     required: true
     default: ".cache"
-  GITHUB_TOKEN:
-    description: "GitHub token for authentication"
-    required: true
-    default: "${{ github.token }}"
   CCACHE_HASH_FILE_KEY:
     description: "Unique cache key for ccache hash file"
     required: true
@@ -53,12 +49,13 @@ runs:
 
         echo "export CCACHE_LOGFILE=$GITHUB_WORKSPACE/$ccache_log_file" >> "${{ inputs.CONFIGURATION_PATH_CCACHE }}"
 
-    - name: Restore ccache Hash File
+    - name: ccache restore hash file
       uses: actions/cache/restore@v4
       with:
         path: ${{ inputs.CACHE_PATH }}/ccache_last_hash
         key: ${{ inputs.CCACHE_HASH_FILE_KEY }}
-
+        restore-keys: |
+          ${{ inputs.CCACHE_HASH_FILE_KEY }}-
 
     - name: ccache update hash file
       env:
@@ -97,20 +94,12 @@ runs:
         echo "ccache_cache_key=ccache-${{ runner.os }}-$new_hash" >> $GITHUB_ENV
         echo "ccache_cache_restore_key=ccache-${{ runner.os }}-$prev_hash" >> $GITHUB_ENV
 
-    - name: ccache remove hash file
-      if: env.ccache_hash_file_changed == 'true'
-      uses: open-control-systems/gh-action-cache-clear@v0.0.2
-      with:
-        PATTERN: "^${{ inputs.CCACHE_HASH_FILE_KEY }}"
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-
-
     - name: ccache save hash file
       if: env.ccache_hash_file_changed == 'true'
       uses: actions/cache/save@v4
       with:
         path: ${{ inputs.CACHE_PATH }}/ccache_last_hash
-        key: ${{ inputs.CCACHE_HASH_FILE_KEY }}
+        key: ${{ inputs.CCACHE_HASH_FILE_KEY }}-${{ github.run_id }}
 
     - name: ccache setup cache
       uses: actions/cache@v4
