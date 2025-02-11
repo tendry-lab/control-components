@@ -59,10 +59,7 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
 
     network_handler.add(*this);
 
-    http_server_.reset(new (std::nothrow) http::Server(http::Server::Params {
-        .server_port = CONFIG_OCS_HTTP_SERVER_PORT,
-        .max_uri_handlers = CONFIG_OCS_HTTP_SERVER_MAX_URI_HANDLERS,
-    }));
+    http_server_.reset(new (std::nothrow) http::Server(params.server));
     configASSERT(http_server_);
 
     configASSERT(suspender.add(*this, "http_pipeline") == status::StatusCode::OK);
