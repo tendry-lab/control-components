@@ -38,6 +38,8 @@ public:
     add(net::IMdnsDriver::Service service, unsigned port, const char* path);
 
 private:
+    static constexpr const char* domain_ = "local";
+
     net::IMdnsDriver& driver_;
     config::MdnsConfig& config_;
 };

@@ -28,9 +28,6 @@ public:
     //!  - @p driver to perform actual mDNS operations.
     explicit MdnsStore(IMdnsDriver& driver);
 
-    //! Return the configured hostname.
-    const char* get_dns_name() const override;
-
     //! Start mDNS driver.
     //!
     //! @notes
