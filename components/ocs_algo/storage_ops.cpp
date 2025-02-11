@@ -26,8 +26,10 @@ status::StatusCode StorageOps::prob_read(storage::IStorage& storage,
     unsigned recv_size = 0;
     auto code = storage.probe(key, recv_size);
     if (code != status::StatusCode::OK) {
-        ocs_loge(log_tag, "failed to prob object size from storage: key=%s code=%s", key,
-                 status::code_to_str(code));
+        if (code != status::StatusCode::NoData) {
+            ocs_loge(log_tag, "failed to prob object size from storage: key=%s code=%s",
+                     key, status::code_to_str(code));
+        }
 
         return code;
     }
