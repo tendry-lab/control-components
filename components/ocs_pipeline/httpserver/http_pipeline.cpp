@@ -21,14 +21,12 @@ const char* log_tag = "http_pipeline";
 } // namespace
 
 HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
-                           system::FanoutSuspender& suspender,
                            net::FanoutNetworkHandler& network_handler,
                            net::IMdnsDriver& mdns_driver,
                            fmt::json::IFormatter& telemetry_formatter,
                            fmt::json::FanoutFormatter& registration_formatter,
                            config::MdnsConfig& mdns_config,
-                           Params params)
-    : mdns_driver_(mdns_driver) {
+                           Params params) {
     mdns_driver.add_service(net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
                             CONFIG_OCS_HTTP_SERVER_PORT);
 
@@ -43,8 +41,6 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
 
     http_server_.reset(new (std::nothrow) http::Server(params.server));
     configASSERT(http_server_);
-
-    configASSERT(suspender.add(*this, "http_pipeline") == status::StatusCode::OK);
 
     telemetry_handler_.reset(new (std::nothrow) DataHandler(
         *http_server_, telemetry_formatter, "/api/v1/telemetry", "http_telemetry_handler",
@@ -85,14 +81,6 @@ void HttpPipeline::handle_disconnect() {
                  "failed to stop HTTP server when on network disconnect: code=%s",
                  status::code_to_str(code));
     }
-}
-
-status::StatusCode HttpPipeline::handle_suspend() {
-    return mdns_driver_.stop();
-}
-
-status::StatusCode HttpPipeline::handle_resume() {
-    return mdns_driver_.start();
 }
 
 http::Server& HttpPipeline::get_server() {
