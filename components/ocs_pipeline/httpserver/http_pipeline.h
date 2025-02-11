@@ -40,6 +40,7 @@ public:
     struct Params {
         DataParams telemetry;
         DataParams registration;
+        http::Server::Params server;
     };
 
     //! Initialize.
