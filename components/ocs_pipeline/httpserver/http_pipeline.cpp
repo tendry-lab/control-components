@@ -39,24 +39,6 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
                                             api_base_path)
                  == status::StatusCode::OK);
 
-    const auto autodiscovery_uri = std::string("http://") + mdns_driver.get_dns_name()
-        + ":" + std::to_string(CONFIG_OCS_HTTP_SERVER_PORT) + api_base_path;
-
-    configASSERT(mdns_driver.add_txt_record(
-                     net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
-                     "autodiscovery_uri", autodiscovery_uri.c_str())
-                 == status::StatusCode::OK);
-
-    configASSERT(mdns_driver.add_txt_record(
-                     net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
-                     "autodiscovery_desc", mdns_config.get_instance_name())
-                 == status::StatusCode::OK);
-
-    configASSERT(mdns_driver.add_txt_record(net::IMdnsDriver::Service::Http,
-                                            net::IMdnsDriver::Proto::Tcp,
-                                            "autodiscovery_mode", "1")
-                 == status::StatusCode::OK);
-
     network_handler.add(*this);
 
     http_server_.reset(new (std::nothrow) http::Server(params.server));
