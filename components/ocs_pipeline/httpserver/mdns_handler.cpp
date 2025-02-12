@@ -44,11 +44,8 @@ status::StatusCode MdnsHandler::handle_mdns_get_(httpd_req_t* req) {
     if (!formatter.add_string_ref_cs("hostname", config_.get_hostname())) {
         return status::StatusCode::NoMem;
     }
-    if (!formatter.add_string_ref_cs("instance_name", config_.get_instance_name())) {
-        return status::StatusCode::NoMem;
-    }
 
-    fmt::json::DynamicFormatter json_formatter(128);
+    fmt::json::DynamicFormatter json_formatter(64);
     const auto code = json_formatter.format(json.get());
     if (code != status::StatusCode::OK) {
         return code;
@@ -74,20 +71,11 @@ status::StatusCode MdnsHandler::handle_mdns_set_(httpd_req_t* req,
         return status::StatusCode::InvalidArg;
     }
 
-    const auto instance_name = values.find("instance_name");
-    if (instance_name == values.end()) {
-        return status::StatusCode::InvalidArg;
-    }
-
     char hostname_buf[hostname->second.size() + 1];
     memset(hostname_buf, 0, sizeof(hostname_buf));
     memcpy(hostname_buf, hostname->second.data(), hostname->second.size());
 
-    char instance_name_buf[instance_name->second.size() + 1];
-    memset(instance_name_buf, 0, sizeof(instance_name_buf));
-    memcpy(instance_name_buf, instance_name->second.data(), instance_name->second.size());
-
-    const auto code = config_.configure(hostname_buf, instance_name_buf);
+    const auto code = config_.configure(hostname_buf);
     if (code != status::StatusCode::OK && code != status::StatusCode::NotModified) {
         return code;
     }

@@ -29,23 +29,17 @@ public:
     //! Return the configured mDNS hostname.
     const char* get_hostname() const;
 
-    //! Return the configured mDNS instance name.
-    const char* get_instance_name() const;
-
     //! Update mDNS configuration.
-    status::StatusCode configure(const char* hostname, const char* instance_name);
+    status::StatusCode configure(const char* hostname);
 
 private:
     static constexpr const char* hostname_key_ = "host";
-    static constexpr const char* instance_name_key_ = "instance";
 
     static constexpr unsigned max_hostname_size_ = 31;
-    static constexpr unsigned max_instance_name_size_ = 31;
 
     storage::StorageBuilder::IStoragePtr storage_;
 
     char hostname_[max_hostname_size_ + 1];
-    char instance_name_[max_instance_name_size_ + 1];
 };
 
 } // namespace config

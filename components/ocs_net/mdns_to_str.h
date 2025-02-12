@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include "ocs_net/imdns_driver.h"
+#include "ocs_net/mdns_service.h"
 
 namespace ocs {
 namespace net {
 
-//! Return string representation of the mDNS service.
-const char* mdns_service_to_str(IMdnsDriver::Service service);
+//! Return string representation of the mDNS service type.
+const char* mdns_service_type_to_str(MdnsService::ServiceType service_type);
 
 //! Return string representation of the mDNS transport protocol.
-const char* mdns_proto_to_str(IMdnsDriver::Proto proto);
+const char* mdns_proto_to_str(MdnsService::Proto proto);
 
 } // namespace net
 } // namespace ocs

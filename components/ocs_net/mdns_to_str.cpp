@@ -11,9 +11,9 @@
 namespace ocs {
 namespace net {
 
-const char* mdns_service_to_str(IMdnsDriver::Service service) {
-    switch (service) {
-    case IMdnsDriver::Service::Http:
+const char* mdns_service_type_to_str(MdnsService::ServiceType service_type) {
+    switch (service_type) {
+    case MdnsService::ServiceType::Http:
         return "_http";
 
     default:
@@ -23,9 +23,9 @@ const char* mdns_service_to_str(IMdnsDriver::Service service) {
     return "<none>";
 }
 
-const char* mdns_proto_to_str(IMdnsDriver::Proto proto) {
+const char* mdns_proto_to_str(MdnsService::Proto proto) {
     switch (proto) {
-    case IMdnsDriver::Proto::Tcp:
+    case MdnsService::Proto::Tcp:
         return "_tcp";
 
     default:

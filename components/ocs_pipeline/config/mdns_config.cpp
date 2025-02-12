@@ -36,32 +36,14 @@ MdnsConfig::MdnsConfig(const system::DeviceInfo& device_info,
         memcpy(hostname_, device_info.get_fw_name(),
                std::min(max_hostname_size_, strlen(device_info.get_fw_name())));
     }
-
-    memset(instance_name_, 0, sizeof(instance_name_));
-    code = algo::StorageOps::prob_read(*storage_, instance_name_key_, instance_name_,
-                                       max_instance_name_size_);
-    if (code != status::StatusCode::OK) {
-        memcpy(
-            instance_name_, device_info.get_fw_description(),
-            std::min(max_instance_name_size_, strlen(device_info.get_fw_description())));
-    }
 }
 
 const char* MdnsConfig::get_hostname() const {
     return hostname_;
 }
 
-const char* MdnsConfig::get_instance_name() const {
-    return instance_name_;
-}
-
-status::StatusCode MdnsConfig::configure(const char* hostname,
-                                         const char* instance_name) {
+status::StatusCode MdnsConfig::configure(const char* hostname) {
     if (strlen(hostname) > max_hostname_size_) {
-        return status::StatusCode::InvalidArg;
-    }
-
-    if (strlen(instance_name) > max_instance_name_size_) {
         return status::StatusCode::InvalidArg;
     }
 
@@ -76,20 +58,8 @@ status::StatusCode MdnsConfig::configure(const char* hostname,
         modified = true;
     }
 
-    if (strncmp(instance_name_, instance_name,
-                std::min(strlen(instance_name_), strlen(instance_name)))) {
-        const auto code =
-            storage_->write(instance_name_key_, instance_name, strlen(instance_name));
-        if (code != status::StatusCode::OK) {
-            return code;
-        }
-
-        modified = true;
-    }
-
     if (modified) {
-        ocs_logi(log_tag, "configuration modified: old=(%s:%s) new=(%s:%s)", hostname_,
-                 instance_name_, hostname, instance_name);
+        ocs_logi(log_tag, "configuration modified: old=%s new=%s", hostname_, hostname);
 
         return status::StatusCode::OK;
     }
