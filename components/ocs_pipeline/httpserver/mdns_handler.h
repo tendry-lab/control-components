@@ -31,8 +31,7 @@ public:
                 scheduler::ITask& reboot_task);
 
 private:
-    status::StatusCode handle_mdns_get_(httpd_req_t*);
-    status::StatusCode handle_mdns_set_(httpd_req_t*, const algo::UriOps::Values&);
+    status::StatusCode handle_update_(httpd_req_t*, const algo::UriOps::Values&);
 
     config::MdnsConfig& config_;
     scheduler::ITask& reboot_task_;

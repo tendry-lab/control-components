@@ -169,19 +169,17 @@ http "bonsai-firmware.local/api/v1/system/time?value=1733233869"
 OK
 ```
 
-**Get mDNS configuration**
-
-http "bonsai-firmware.local/api/v1/system/mdns"
-
-```json
-{
-    "hostname": "bonsai-firmware"
-}
-```
-
 **Set mDNS configuration**
 
-http "bonsai-firmware.local/api/v1/system/mdns?hostname=test-lab"
+http "bonsai-firmware.local/api/v1/config/mdns?hostname=test-lab"
+
+```txt
+OK
+```
+
+**Reset mDNS configuration**
+
+http "bonsai-firmware.local/api/v1/config/mdns?reset=1
 
 ```txt
 OK

@@ -8,9 +8,6 @@
 
 #include <cstring>
 
-#include "ocs_fmt/json/cjson_builder.h"
-#include "ocs_fmt/json/cjson_object_formatter.h"
-#include "ocs_fmt/json/dynamic_formatter.h"
 #include "ocs_pipeline/httpserver/mdns_handler.h"
 
 namespace ocs {
@@ -22,62 +19,44 @@ MdnsHandler::MdnsHandler(http::Server& server,
                          scheduler::ITask& reboot_task)
     : config_(config)
     , reboot_task_(reboot_task) {
-    server.add_GET("/api/v1/system/mdns", [this](httpd_req_t* req) {
+    server.add_GET("/api/v1/config/mdns", [this](httpd_req_t* req) {
         const auto values = algo::UriOps::parse_query(req->uri);
         if (!values.size()) {
-            return handle_mdns_get_(req);
+            return status::StatusCode::InvalidArg;
         }
 
-        return handle_mdns_set_(req, values);
+        return handle_update_(req, values);
     });
 }
 
-status::StatusCode MdnsHandler::handle_mdns_get_(httpd_req_t* req) {
-    fmt::json::CjsonUniqueBuilder builder;
+status::StatusCode MdnsHandler::handle_update_(httpd_req_t* req,
+                                               const algo::UriOps::Values& values) {
+    status::StatusCode code = status::StatusCode::OK;
 
-    auto json = builder.make_object();
-    if (!json) {
-        return status::StatusCode::NoMem;
-    }
+    const auto reset = values.find("reset");
+    if (reset != values.end()) {
+        if (reset->second != "1") {
+            return status::StatusCode::InvalidArg;
+        }
 
-    fmt::json::CjsonObjectFormatter formatter(json.get());
-    if (!formatter.add_string_ref_cs("hostname", config_.get_hostname())) {
-        return status::StatusCode::NoMem;
-    }
+        code = config_.reset();
+        if (code != status::StatusCode::OK && code != status::StatusCode::NotModified) {
+            return code;
+        }
+    } else {
+        const auto hostname = values.find("hostname");
+        if (hostname == values.end()) {
+            return status::StatusCode::InvalidArg;
+        }
 
-    fmt::json::DynamicFormatter json_formatter(64);
-    const auto code = json_formatter.format(json.get());
-    if (code != status::StatusCode::OK) {
-        return code;
-    }
+        char hostname_buf[hostname->second.size() + 1];
+        memset(hostname_buf, 0, sizeof(hostname_buf));
+        memcpy(hostname_buf, hostname->second.data(), hostname->second.size());
 
-    auto err = httpd_resp_set_type(req, HTTPD_TYPE_JSON);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    err = httpd_resp_send(req, json_formatter.c_str(), HTTPD_RESP_USE_STRLEN);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    return status::StatusCode::OK;
-}
-
-status::StatusCode MdnsHandler::handle_mdns_set_(httpd_req_t* req,
-                                                 const algo::UriOps::Values& values) {
-    const auto hostname = values.find("hostname");
-    if (hostname == values.end()) {
-        return status::StatusCode::InvalidArg;
-    }
-
-    char hostname_buf[hostname->second.size() + 1];
-    memset(hostname_buf, 0, sizeof(hostname_buf));
-    memcpy(hostname_buf, hostname->second.data(), hostname->second.size());
-
-    const auto code = config_.configure(hostname_buf);
-    if (code != status::StatusCode::OK && code != status::StatusCode::NotModified) {
-        return code;
+        code = config_.configure(hostname_buf);
+        if (code != status::StatusCode::OK && code != status::StatusCode::NotModified) {
+            return code;
+        }
     }
 
     auto err = httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
