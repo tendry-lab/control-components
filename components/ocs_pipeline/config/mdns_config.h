@@ -32,6 +32,9 @@ public:
     //! Update mDNS configuration.
     status::StatusCode configure(const char* hostname);
 
+    //! Reset mDNS configuration.
+    status::StatusCode reset();
+
 private:
     static constexpr const char* hostname_key_ = "host";
 
