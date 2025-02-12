@@ -175,14 +175,13 @@ http "bonsai-firmware.local/api/v1/system/mdns"
 
 ```json
 {
-    "hostname": "bonsai-firmware",
-    "instance_name": "Hello-World"
+    "hostname": "bonsai-firmware"
 }
 ```
 
 **Set mDNS configuration**
 
-http "bonsai-firmware.local/api/v1/system/mdns?hostname=test-lab&instance_name=Hello-World"
+http "bonsai-firmware.local/api/v1/system/mdns?hostname=test-lab"
 
 ```txt
 OK

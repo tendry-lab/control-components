@@ -10,4 +10,10 @@ menu "OCS HTTP Server Configuration"
         default 64
         help
             Maximum number of URI handlers that can be registered for an HTTP server.
+
+    config OCS_HTTP_SERVER_API_BASE_PATH
+        string "HTTP API base path"
+        default "/api/v1"
+        help
+            HTTP API base path.
 endmenu

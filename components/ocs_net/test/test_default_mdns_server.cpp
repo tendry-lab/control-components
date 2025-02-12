@@ -9,14 +9,14 @@
 #include "unity.h"
 
 #include "ocs_net/ap_network.h"
-#include "ocs_net/default_mdns_driver.h"
+#include "ocs_net/default_mdns_server.h"
 #include "ocs_net/fanout_network_handler.h"
 #include "ocs_storage/flash_initializer.h"
 
 namespace ocs {
 namespace net {
 
-TEST_CASE("Default mDNS driver: start/stop", "[ocs_net], [default_mdns_driver]") {
+TEST_CASE("Default mDNS server: start/stop", "[ocs_net], [default_mdns_server]") {
     storage::FlashInitializer flash_initializer;
     FanoutNetworkHandler handler;
 
@@ -26,13 +26,13 @@ TEST_CASE("Default mDNS driver: start/stop", "[ocs_net], [default_mdns_driver]")
                           .password = "test-password",
                       });
 
-    DefaultMdnsDriver mdns_driver("host", "instance");
+    DefaultMdnsServer mdns_server("host");
 
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, mdns_driver.start());
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, mdns_driver.stop());
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, mdns_server.start());
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, mdns_server.stop());
 
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, mdns_driver.start());
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, mdns_driver.stop());
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, mdns_server.start());
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, mdns_server.stop());
 }
 
 } // namespace net

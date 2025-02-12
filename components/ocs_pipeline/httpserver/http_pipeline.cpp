@@ -22,21 +22,10 @@ const char* log_tag = "http_pipeline";
 
 HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
                            net::FanoutNetworkHandler& network_handler,
-                           net::IMdnsDriver& mdns_driver,
                            fmt::json::IFormatter& telemetry_formatter,
                            fmt::json::FanoutFormatter& registration_formatter,
                            config::MdnsConfig& mdns_config,
                            Params params) {
-    mdns_driver.add_service(net::IMdnsDriver::Service::Http, net::IMdnsDriver::Proto::Tcp,
-                            CONFIG_OCS_HTTP_SERVER_PORT);
-
-    const char* api_base_path = "/api/v1";
-
-    configASSERT(mdns_driver.add_txt_record(net::IMdnsDriver::Service::Http,
-                                            net::IMdnsDriver::Proto::Tcp, "api",
-                                            api_base_path)
-                 == status::StatusCode::OK);
-
     network_handler.add(*this);
 
     http_server_.reset(new (std::nothrow) http::Server(params.server));
