@@ -24,13 +24,10 @@ const char* log_tag = "mdns_config";
 
 } // namespace
 
-MdnsConfig::MdnsConfig(const system::DeviceInfo& device_info,
-                       storage::StorageBuilder& storage_builder) {
-    storage_ = storage_builder.make("mdns_config");
-    configASSERT(storage_);
-
+MdnsConfig::MdnsConfig(storage::IStorage& storage, const system::DeviceInfo& device_info)
+    : storage_(storage) {
     memset(hostname_, 0, sizeof(hostname_));
-    auto code = algo::StorageOps::prob_read(*storage_, hostname_key_, hostname_,
+    auto code = algo::StorageOps::prob_read(storage_, hostname_key_, hostname_,
                                             max_hostname_size_);
     if (code != status::StatusCode::OK) {
         memcpy(hostname_, device_info.get_fw_name(),
@@ -50,7 +47,7 @@ status::StatusCode MdnsConfig::configure(const char* hostname) {
     bool modified = false;
 
     if (strncmp(hostname_, hostname, std::min(strlen(hostname_), strlen(hostname)))) {
-        const auto code = storage_->write(hostname_key_, hostname, strlen(hostname));
+        const auto code = storage_.write(hostname_key_, hostname, strlen(hostname));
         if (code != status::StatusCode::OK) {
             return code;
         }
@@ -68,7 +65,7 @@ status::StatusCode MdnsConfig::configure(const char* hostname) {
 }
 
 status::StatusCode MdnsConfig::reset() {
-    auto code = storage_->erase(hostname_key_);
+    auto code = storage_.erase(hostname_key_);
     if (code == status::StatusCode::NoData) {
         code = status::StatusCode::NotModified;
     }
