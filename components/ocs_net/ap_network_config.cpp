@@ -34,8 +34,8 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
 
     strncpy(ssid_, builtin_ssid.c_str(), sizeof(ssid_));
 
-    const auto code = algo::StorageOps::prob_read(storage_, password_key_, password_,
-                                                  max_password_size_);
+    const auto code =
+        algo::StorageOps::prob_read(storage_, password_key_, password_, max_password_len);
     if (code != status::StatusCode::OK) {
         if (code != status::StatusCode::NoData) {
             ocs_loge(log_tag, "failed to read WiFi AP password from storage: %s",
@@ -67,7 +67,7 @@ uint8_t ApNetworkConfig::get_max_conn() const {
 }
 
 status::StatusCode ApNetworkConfig::configure(const char* password) {
-    if (strlen(password) > max_password_size_) {
+    if (strlen(password) < min_password_len || strlen(password) > max_password_len) {
         return status::StatusCode::InvalidArg;
     }
 

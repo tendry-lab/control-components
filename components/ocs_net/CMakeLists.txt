@@ -11,6 +11,7 @@ idf_component_register(
     "rssi_to_signal_strength.cpp"
     "fanout_network_handler.cpp"
     "wait_network_runner.cpp"
+    "reset_network_runner.cpp"
     "ap_network_config.cpp"
 
     REQUIRES

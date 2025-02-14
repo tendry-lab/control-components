@@ -52,6 +52,7 @@ public:
     scheduler::AsyncFuncScheduler& get_func_scheduler();
     scheduler::ITaskScheduler& get_task_scheduler();
     scheduler::ITask& get_reboot_task();
+    system::IRebooter& get_rebooter();
     system::FanoutRebootHandler& get_reboot_handler();
     system::FanoutSuspender& get_suspender();
 
@@ -68,6 +69,7 @@ private:
     std::unique_ptr<system::FanoutRebootHandler> fanout_reboot_handler_;
     std::unique_ptr<system::IRebooter> default_rebooter_;
     std::unique_ptr<system::IRebooter> delay_rebooter_;
+    system::IRebooter* rebooter_ { nullptr };
 
     std::unique_ptr<scheduler::ITask> reboot_task_;
     std::unique_ptr<scheduler::ITask> reboot_task_async_;
