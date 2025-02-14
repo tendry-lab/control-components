@@ -13,8 +13,7 @@
 #include "ocs_system/device_info.h"
 
 namespace ocs {
-namespace pipeline {
-namespace config {
+namespace net {
 
 class ApNetworkConfig : public core::NonCopyable<> {
 public:
@@ -37,16 +36,23 @@ public:
     //! Return the maximum number of simultaneous WiFi STA connections to WiFi AP.
     uint8_t get_max_conn() const;
 
+    //! Configure WiFi AP settings.
+    status::StatusCode configure(const char* password);
+
+    //! Reset WiFi AP configuration.
+    status::StatusCode reset();
+
 private:
     static constexpr const char* password_key_ = "net_ap_pswd";
 
-    static const unsigned max_ssid_size_ = 31;
-    static const unsigned max_password_size_ = 63;
+    static constexpr unsigned max_ssid_size_ = 31;
+    static constexpr unsigned max_password_size_ = 63;
+
+    storage::IStorage& storage_;
 
     char ssid_[max_ssid_size_ + 1];
     char password_[max_password_size_ + 1];
 };
 
-} // namespace config
-} // namespace pipeline
+} // namespace net
 } // namespace ocs
