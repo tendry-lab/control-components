@@ -15,14 +15,6 @@ BasicMdnsServer::BasicMdnsServer(const char* hostname)
     : hostname_(hostname) {
 }
 
-status::StatusCode BasicMdnsServer::handle_suspend() {
-    return stop();
-}
-
-status::StatusCode BasicMdnsServer::handle_resume() {
-    return start();
-}
-
 void BasicMdnsServer::add(MdnsService& service) {
     services_.push_back(&service);
 }
