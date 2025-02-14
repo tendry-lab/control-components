@@ -17,6 +17,7 @@
 #include "ocs_core/static_event_group.h"
 #include "ocs_core/static_mutex.h"
 #include "ocs_net/iap_network.h"
+#include "ocs_net/inetwork.h"
 #include "ocs_net/inetwork_handler.h"
 #include "ocs_net/netif_builder.h"
 #include "ocs_status/code.h"
@@ -25,7 +26,7 @@ namespace ocs {
 namespace net {
 
 //! Handle WiFi AP (access-point) mode network operations.
-class ApNetwork : public IApNetwork, public core::NonCopyable<> {
+class ApNetwork : public INetwork, public IApNetwork, public core::NonCopyable<> {
 public:
     struct Params {
         //! WiFi SSID.
@@ -54,13 +55,13 @@ public:
     IApNetwork::Info get_info() override;
 
     //! Start the WiFi connection process.
-    status::StatusCode start();
+    status::StatusCode start() override;
 
     //! Stop the WiFi connection process.
-    status::StatusCode stop();
+    status::StatusCode stop() override;
 
     //! Wait for the WiFi connection to be established.
-    status::StatusCode wait(TickType_t wait = portMAX_DELAY);
+    status::StatusCode wait(TickType_t wait = portMAX_DELAY) override;
 
 private:
     static void handle_event_(void* event_arg,

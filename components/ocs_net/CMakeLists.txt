@@ -10,6 +10,7 @@ idf_component_register(
     "ip_addr_to_str.cpp"
     "rssi_to_signal_strength.cpp"
     "fanout_network_handler.cpp"
+    "wait_network_runner.cpp"
 
     REQUIRES
     "esp_netif"
