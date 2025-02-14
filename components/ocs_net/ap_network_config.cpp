@@ -10,12 +10,11 @@
 
 #include "ocs_algo/storage_ops.h"
 #include "ocs_core/log.h"
-#include "ocs_pipeline/config/ap_network_config.h"
+#include "ocs_net/ap_network_config.h"
 #include "ocs_status/code_to_str.h"
 
 namespace ocs {
-namespace pipeline {
-namespace config {
+namespace net {
 
 namespace {
 
@@ -24,7 +23,8 @@ const char* log_tag = "ap_network_config";
 } // namespace
 
 ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
-                                 const system::DeviceInfo& device_info) {
+                                 const system::DeviceInfo& device_info)
+    : storage_(storage) {
     memset(ssid_, 0, sizeof(ssid_));
     memset(password_, 0, sizeof(password_));
 
@@ -34,7 +34,7 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
 
     strncpy(ssid_, builtin_ssid.c_str(), sizeof(ssid_));
 
-    const auto code = algo::StorageOps::prob_read(storage, password_key_, password_,
+    const auto code = algo::StorageOps::prob_read(storage_, password_key_, password_,
                                                   max_password_size_);
     if (code != status::StatusCode::OK) {
         if (code != status::StatusCode::NoData) {
@@ -66,6 +66,37 @@ uint8_t ApNetworkConfig::get_max_conn() const {
     return CONFIG_OCS_NETWORK_WIFI_AP_MAX_CONN;
 }
 
-} // namespace config
-} // namespace pipeline
+status::StatusCode ApNetworkConfig::configure(const char* password) {
+    if (strlen(password) > max_password_size_) {
+        return status::StatusCode::InvalidArg;
+    }
+
+    bool modified = false;
+
+    if (strncmp(password_, password, std::min(strlen(password_), strlen(password)))) {
+        const auto code = storage_.write(password_key_, password, strlen(password));
+        if (code != status::StatusCode::OK) {
+            return code;
+        }
+
+        modified = true;
+    }
+
+    if (!modified) {
+        return status::StatusCode::NotModified;
+    }
+
+    return status::StatusCode::OK;
+}
+
+status::StatusCode ApNetworkConfig::reset() {
+    auto code = storage_.erase(password_key_);
+    if (code == status::StatusCode::NoData) {
+        code = status::StatusCode::NotModified;
+    }
+
+    return code;
+}
+
+} // namespace net
 } // namespace ocs
