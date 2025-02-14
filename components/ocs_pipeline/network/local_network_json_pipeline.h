@@ -27,9 +27,11 @@ public:
     //!
     //! @params
     //!  - @p storage_builder to register storages for WiFi AP.
+    //!  - @p handler to notify about network connection status.
     //!  - @p registraton_formatter to format network characteristics.
     //!  - @p device_info to create a unique SSID for WiFi AP.
     LocalNetworkJsonPipeline(storage::StorageBuilder& storage_builder,
+                             net::INetworkHandler& handler,
                              fmt::json::FanoutFormatter& registraton_formatter,
                              const system::DeviceInfo& device_info);
 

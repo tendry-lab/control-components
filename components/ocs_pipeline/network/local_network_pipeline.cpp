@@ -29,34 +29,32 @@ const char* log_tag = "local_network_pipeline";
 } // namespace
 
 LocalNetworkPipeline::LocalNetworkPipeline(storage::StorageBuilder& storage_builder,
+                                           net::INetworkHandler& handler,
                                            const system::DeviceInfo& device_info) {
     storage_ = storage_builder.make("net_local_wifi");
     configASSERT(storage_);
 
-    handler_.reset(new (std::nothrow) net::FanoutNetworkHandler());
-    configASSERT(handler_);
-
-    initialize_network_(device_info);
+    initialize_network_(handler, device_info);
 }
 
 net::IApNetwork& LocalNetworkPipeline::get_network() {
     return *network_;
 }
 
-net::FanoutNetworkHandler& LocalNetworkPipeline::get_fanout_handler() {
-    return *handler_;
-}
-
 status::StatusCode LocalNetworkPipeline::start() {
-    const auto code = start_();
+    auto code = start_();
     if (code != status::StatusCode::OK) {
-        stop_();
+        code = network_->stop();
+        if (code != status::StatusCode::OK) {
+            ocs_loge(log_tag, "failed to stop network: %s", status::code_to_str(code));
+        }
     }
 
     return code;
 }
 
-void LocalNetworkPipeline::initialize_network_(const system::DeviceInfo& device_info) {
+void LocalNetworkPipeline::initialize_network_(net::INetworkHandler& handler,
+                                               const system::DeviceInfo& device_info) {
     char ssid[max_ssid_size_ + 1];
     memset(ssid, 0, sizeof(ssid));
 
@@ -85,7 +83,7 @@ void LocalNetworkPipeline::initialize_network_(const system::DeviceInfo& device_
     }
 
     network_.reset(new (std::nothrow) net::ApNetwork(
-        *handler_,
+        handler,
         net::ApNetwork::Params {
             .ssid = ssid,
             .password = password,
@@ -110,13 +108,6 @@ status::StatusCode LocalNetworkPipeline::start_() {
     }
 
     return status::StatusCode::OK;
-}
-
-void LocalNetworkPipeline::stop_() {
-    const auto code = network_->stop();
-    if (code != status::StatusCode::OK) {
-        ocs_loge(log_tag, "failed to stop network: %s", status::code_to_str(code));
-    }
 }
 
 } // namespace network

@@ -17,10 +17,11 @@ namespace network {
 
 LocalNetworkJsonPipeline::LocalNetworkJsonPipeline(
     storage::StorageBuilder& storage_builder,
+    net::INetworkHandler& handler,
     fmt::json::FanoutFormatter& registraton_formatter,
     const system::DeviceInfo& device_info) {
-    network_pipeline_.reset(new (std::nothrow)
-                                LocalNetworkPipeline(storage_builder, device_info));
+    network_pipeline_.reset(
+        new (std::nothrow) LocalNetworkPipeline(storage_builder, handler, device_info));
     configASSERT(network_pipeline_);
 
     network_formatter_.reset(
