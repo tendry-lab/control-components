@@ -185,6 +185,22 @@ http "bonsai-firmware.local/api/v1/config/mdns?reset=1
 OK
 ```
 
+**Set WiFi AP configuration**
+
+http "bonsai-firmware.local/api/v1/config/wifi/ap?password=hQ2BvY2a"
+
+```txt
+OK
+```
+
+**Reset WiFi AP configuration**
+
+http "bonsai-firmware.local/api/v1/config/wifi/ap?reset=1"
+
+```txt
+OK
+```
+
 **Sensors APIs**
 
 - [DS18B20](sensors/ds18b20.md#HTTP-API)

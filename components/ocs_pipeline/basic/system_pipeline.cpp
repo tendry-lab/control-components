@@ -56,11 +56,15 @@ SystemPipeline::SystemPipeline(SystemPipeline::Params params) {
                                 system::DefaultRebooter(*fanout_reboot_handler_));
     configASSERT(default_rebooter_);
 
-    delay_rebooter_.reset(
-        new (std::nothrow) system::DelayRebooter(pdMS_TO_TICKS(500), *default_rebooter_));
+    rebooter_ = default_rebooter_.get();
+
+    delay_rebooter_.reset(new (std::nothrow)
+                              system::DelayRebooter(pdMS_TO_TICKS(500), *rebooter_));
     configASSERT(delay_rebooter_);
 
-    reboot_task_.reset(new (std::nothrow) system::RebootTask(*delay_rebooter_));
+    rebooter_ = delay_rebooter_.get();
+
+    reboot_task_.reset(new (std::nothrow) system::RebootTask(*rebooter_));
     configASSERT(reboot_task_);
 
     reboot_task_async_.reset(new (std::nothrow)
@@ -104,6 +108,10 @@ scheduler::ITaskScheduler& SystemPipeline::get_task_scheduler() {
 
 scheduler::ITask& SystemPipeline::get_reboot_task() {
     return *reboot_task_async_;
+}
+
+system::IRebooter& SystemPipeline::get_rebooter() {
+    return *rebooter_;
 }
 
 system::FanoutRebootHandler& SystemPipeline::get_reboot_handler() {

@@ -10,6 +10,7 @@ idf_component_register(
     "httpserver/web_gui_pipeline.cpp"
     "httpserver/time_handler.cpp"
     "httpserver/time_pipeline.cpp"
+    "httpserver/ap_network_handler.cpp"
 
     "jsonfmt/data_pipeline.cpp"
     "jsonfmt/ap_network_formatter.cpp"

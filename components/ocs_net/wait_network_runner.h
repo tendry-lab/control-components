@@ -12,11 +12,12 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_net/inetwork.h"
+#include "ocs_net/inetwork_runner.h"
 
 namespace ocs {
 namespace net {
 
-class WaitNetworkRunner : public core::NonCopyable<> {
+class WaitNetworkRunner : public INetworkRunner, public core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -29,10 +30,10 @@ public:
     //!
     //! @remarks
     //!  If the network fails to start, it will be automatically stopped.
-    status::StatusCode start();
+    status::StatusCode start() override;
 
     //! Stop the network.
-    status::StatusCode stop();
+    status::StatusCode stop() override;
 
 private:
     status::StatusCode start_();

@@ -9,14 +9,21 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
+#include "ocs_net/inetwork_config.h"
 #include "ocs_storage/istorage.h"
 #include "ocs_system/device_info.h"
 
 namespace ocs {
 namespace net {
 
-class ApNetworkConfig : public core::NonCopyable<> {
+//! WiFi AP configuration.
+class ApNetworkConfig : public INetworkConfig, public core::NonCopyable<> {
 public:
+    //! Minimum password length.
+    static constexpr unsigned min_password_len = 8;
+    //! Maximum password length.
+    static constexpr unsigned max_password_len = 63;
+
     //! Initialize.
     //!
     //! @params
@@ -37,21 +44,26 @@ public:
     uint8_t get_max_conn() const;
 
     //! Configure WiFi AP settings.
+    //!
+    //! @remarks
+    //!  - Changes are applied on the component initialization.
     status::StatusCode configure(const char* password);
 
     //! Reset WiFi AP configuration.
-    status::StatusCode reset();
+    //!
+    //! @remarks
+    //!  - Changes are applied on the component initialization.
+    status::StatusCode reset() override;
 
 private:
     static constexpr const char* password_key_ = "net_ap_pswd";
 
-    static constexpr unsigned max_ssid_size_ = 31;
-    static constexpr unsigned max_password_size_ = 63;
+    static constexpr unsigned max_ssid_len_ = 31;
 
     storage::IStorage& storage_;
 
-    char ssid_[max_ssid_size_ + 1];
-    char password_[max_password_size_ + 1];
+    char ssid_[max_ssid_len_ + 1];
+    char password_[max_password_len + 1];
 };
 
 } // namespace net
