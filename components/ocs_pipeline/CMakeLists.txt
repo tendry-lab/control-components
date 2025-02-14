@@ -35,6 +35,7 @@ idf_component_register(
     "network/local_network_json_pipeline.cpp"
 
     "config/mdns_config.cpp"
+    "config/ap_network_config.cpp"
 
     REQUIRES
     "spiffs"

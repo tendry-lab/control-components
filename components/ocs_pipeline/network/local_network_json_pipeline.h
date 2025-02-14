@@ -12,9 +12,9 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/fanout_formatter.h"
+#include "ocs_pipeline/config/ap_network_config.h"
 #include "ocs_pipeline/network/local_network_pipeline.h"
 #include "ocs_status/code.h"
-#include "ocs_storage/storage_builder.h"
 #include "ocs_system/device_info.h"
 
 namespace ocs {
@@ -26,14 +26,12 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p storage_builder to register storages for WiFi AP.
     //!  - @p handler to notify about network connection status.
     //!  - @p registraton_formatter to format network characteristics.
-    //!  - @p device_info to create a unique SSID for WiFi AP.
-    LocalNetworkJsonPipeline(storage::StorageBuilder& storage_builder,
-                             net::INetworkHandler& handler,
+    //!  - @p config to read network settings.
+    LocalNetworkJsonPipeline(net::INetworkHandler& handler,
                              fmt::json::FanoutFormatter& registraton_formatter,
-                             const system::DeviceInfo& device_info);
+                             const config::ApNetworkConfig& config);
 
     LocalNetworkPipeline& get_network_pipeline();
 
