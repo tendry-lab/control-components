@@ -21,13 +21,17 @@ namespace storage {
 
 class NvsStorage : public IStorage, public core::NonCopyable<> {
 public:
+    //! Maximum number of symbols for the storage namespace, without NULL character.
+    static constexpr unsigned max_namespace_len = NVS_KEY_NAME_MAX_SIZE - 1;
+
     //! Initialize.
     //!
     //! @params
     //!  - @p ns - NVS namespace.
     //!
     //! @remarks
-    //!  NVS should be initialized.
+    //!  - NVS should be initialized.
+    //!  - namespace length should not exceed @p max_namespace_len.
     explicit NvsStorage(const char* ns);
 
     //! Read data size from the configured namespace.
@@ -53,9 +57,7 @@ private:
 
     status::StatusCode erase_(nvs_handle_t handle, const char* key);
 
-    static const constexpr unsigned bufsize_ = NVS_KEY_NAME_MAX_SIZE - 1;
-
-    char ns_[bufsize_ + 1];
+    char ns_[max_namespace_len + 1];
 };
 
 } // namespace storage
