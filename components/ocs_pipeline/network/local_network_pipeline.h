@@ -13,8 +13,7 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_net/ap_network.h"
 #include "ocs_net/inetwork_handler.h"
-#include "ocs_storage/storage_builder.h"
-#include "ocs_system/device_info.h"
+#include "ocs_pipeline/config/ap_network_config.h"
 
 namespace ocs {
 namespace pipeline {
@@ -26,12 +25,10 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p storage_builder to create storages for network configuration.
     //!  - @p handler to notify about network connection status.
-    //!  - @p device_info to create a unique access point SSID.
-    LocalNetworkPipeline(storage::StorageBuilder& storage_builder,
-                         net::INetworkHandler& handler,
-                         const system::DeviceInfo& device_info);
+    //!  - @p config to read network settings.
+    LocalNetworkPipeline(net::INetworkHandler& handler,
+                         const config::ApNetworkConfig& config);
 
     net::IApNetwork& get_network();
 
@@ -39,17 +36,9 @@ public:
     status::StatusCode start();
 
 private:
-    void initialize_network_(net::INetworkHandler& handler,
-                             const system::DeviceInfo& device_info);
-
     status::StatusCode start_();
 
-    static const unsigned max_ssid_size_ = 31;
-    static const unsigned max_password_size_ = 63;
-
     static const TickType_t wait_start_interval_ = pdMS_TO_TICKS(1000 * 60 * 10);
-
-    storage::StorageBuilder::IStoragePtr storage_;
 
     std::unique_ptr<net::ApNetwork> network_;
 };
