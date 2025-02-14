@@ -41,8 +41,6 @@ jobs:
       - name: system setup ccache
         uses: ./project/.github/actions/system/ccache
         with:
-          PROJECT_PATH: ${{ env.PROJECT_PATH }}
-          CONTROL_COMPONENTS_PATH: ${{ env.PROJECT_PATH }}
           CONFIGURATION_PATH_CCACHE: ${{ env.CONFIGURATION_PATH_CCACHE }}
 
       - name: core format firmware build version
