@@ -2,14 +2,6 @@ name: "Ccache Setup"
 description: "Setup ccache"
 
 inputs:
-  PROJECT_PATH:
-    description: "Path where the project is checked out"
-    required: true
-    default: "project"
-  CONTROL_COMPONENTS_PATH:
-    description: "Path to the control components library"
-    required: true
-    default: "project"
   CONFIGURATION_PATH_CCACHE:
     description: "ccache configuration path"
     required: true
@@ -22,10 +14,10 @@ inputs:
     description: "path for various caches"
     required: true
     default: ".cache"
-  CCACHE_HASH_FILE_KEY:
-    description: "Unique cache key for ccache hash file"
+  CCACHE_KEY:
+    description: "Unique cache key for ccache"
     required: true
-    default: "ccache-last-hash-${{ runner.os }}-${{ github.repository_owner }}-${{ github.event.repository.name }}"
+    default: "ccache-${{ runner.os }}-${{ github.repository_owner }}-${{ github.event.repository.name }}"
 
 runs:
   using: "composite"
@@ -49,62 +41,17 @@ runs:
 
         echo "export CCACHE_LOGFILE=$GITHUB_WORKSPACE/$ccache_log_file" >> "${{ inputs.CONFIGURATION_PATH_CCACHE }}"
 
-    - name: ccache restore hash file
+    - name: ccache restore
       uses: actions/cache/restore@v4
       with:
-        path: ${{ inputs.CACHE_PATH }}/ccache_last_hash
-        key: ${{ inputs.CCACHE_HASH_FILE_KEY }}
+        path: ${{ inputs.CACHE_PATH }}/ccache
+        key: ${{ inputs.CCACHE_KEY }}
         restore-keys: |
-          ${{ inputs.CCACHE_HASH_FILE_KEY }}-
+          ${{ inputs.CCACHE_KEY }}-
 
-    - name: ccache update hash file
-      env:
-          PROJECT_PATH: "${{ inputs.PROJECT_PATH }}"
-      shell: bash
-      run: |
-        # Compute new hash
-        new_hash=$("${{ inputs.CONTROL_COMPONENTS_PATH }}/tools/scripts/gen_source_hash.sh")
-
-        # Load previous hash if exists
-        hash_file="${{ inputs.CACHE_PATH }}/ccache_last_hash"
-        if [[ -f "$hash_file" ]]; then
-          prev_hash=$(cat "$hash_file")
-        else
-          prev_hash=""
-        fi
-
-        # If no previous hash or hashes differ, use new hash and update file
-        if [[ "$prev_hash" != "$new_hash" ]]; then
-          if [[ "${GITHUB_REF}" == "refs/heads/main" || "${GITHUB_REF}" == "refs/heads/master" ]]; then
-            echo "Updating cache key: prev_hash=$prev_hash new_hash=$new_hash"
-            echo "$new_hash" > "$hash_file"
-
-            echo "ccache_hash_file_changed=true" >> $GITHUB_ENV
-          else
-            echo "ccache_hash_file_changed=false" >> $GITHUB_ENV
-          fi
-
-          if [[ -z "$prev_hash" ]]; then
-            prev_hash=$new_hash
-          fi
-        else
-          echo "ccache_hash_file_changed=false" >> $GITHUB_ENV
-        fi
-
-        echo "ccache_cache_key=ccache-${{ runner.os }}-$new_hash" >> $GITHUB_ENV
-        echo "ccache_cache_restore_key=ccache-${{ runner.os }}-$prev_hash" >> $GITHUB_ENV
-
-    - name: ccache save hash file
-      if: env.ccache_hash_file_changed == 'true'
+    - name: ccache save
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
       uses: actions/cache/save@v4
       with:
-        path: ${{ inputs.CACHE_PATH }}/ccache_last_hash
-        key: ${{ inputs.CCACHE_HASH_FILE_KEY }}-${{ github.run_id }}
-
-    - name: ccache setup cache
-      uses: actions/cache@v4
-      with:
         path: ${{ inputs.CACHE_PATH }}/ccache
-        key: ${{ env.ccache_cache_key }}
-        restore-keys: |
-          ${{ env.ccache_cache_restore_key }}
+        key: ${{ inputs.CCACHE_KEY }}-${{ github.run_id }}
