@@ -25,9 +25,9 @@ WaitNetworkRunner::WaitNetworkRunner(INetwork& network, TickType_t wait)
 }
 
 status::StatusCode WaitNetworkRunner::start() {
-    auto code = start_();
+    const auto code = start_();
     if (code != status::StatusCode::OK) {
-        code = stop();
+        stop();
     }
 
     return code;
