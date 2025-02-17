@@ -32,8 +32,6 @@ idf_component_register(
     "basic/system_pipeline.cpp"
     "basic/system_counter_pipeline.cpp"
 
-    "config/mdns_config.cpp"
-
     REQUIRES
     "spiffs"
 

@@ -12,11 +12,10 @@
 
 #include "ocs_algo/storage_ops.h"
 #include "ocs_core/log.h"
-#include "ocs_pipeline/config/mdns_config.h"
+#include "ocs_net/mdns_config.h"
 
 namespace ocs {
-namespace pipeline {
-namespace config {
+namespace net {
 
 namespace {
 
@@ -73,6 +72,5 @@ status::StatusCode MdnsConfig::reset() {
     return code;
 }
 
-} // namespace config
-} // namespace pipeline
+} // namespace net
 } // namespace ocs

@@ -43,9 +43,9 @@ public:
     HttpPipeline(scheduler::ITask& reboot_task,
                  net::FanoutNetworkHandler& network_handler,
                  net::ApNetworkConfig& ap_network_config,
+                 net::MdnsConfig& mdns_config,
                  fmt::json::IFormatter& telemetry_formatter,
                  fmt::json::FanoutFormatter& registration_formatter,
-                 config::MdnsConfig& mdns_config,
                  Params params);
 
     //! Start HTTP server.
