@@ -37,6 +37,10 @@ ApNetwork::ApNetwork(INetworkHandler& handler, const ApNetworkConfig& config)
 
     ESP_ERROR_CHECK(esp_event_handler_instance_register(
         WIFI_EVENT, ESP_EVENT_ANY_ID, &handle_event_, this, &instance_any_id_));
+
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
 }
 
 ApNetwork::~ApNetwork() {
@@ -62,21 +66,6 @@ IApNetwork::Info ApNetwork::get_info() {
 }
 
 status::StatusCode ApNetwork::start() {
-    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-    auto err = esp_wifi_init(&cfg);
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "esp_wifi_init(): %s", esp_err_to_name(err));
-
-        return status::StatusCode::Error;
-    }
-
-    err = esp_wifi_set_mode(WIFI_MODE_AP);
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "esp_wifi_set_mode(): %s", esp_err_to_name(err));
-
-        return status::StatusCode::Error;
-    }
-
     wifi_config_t wifi_config;
     memset(&wifi_config, 0, sizeof(wifi_config));
 
@@ -90,7 +79,7 @@ status::StatusCode ApNetwork::start() {
     wifi_config.ap.max_connection = config_.get_max_conn();
     wifi_config.ap.authmode = WIFI_AUTH_WPA2_PSK;
 
-    err = esp_wifi_set_config(WIFI_IF_AP, &wifi_config);
+    auto err = esp_wifi_set_config(WIFI_IF_AP, &wifi_config);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "esp_wifi_set_config(): %s", esp_err_to_name(err));
 
