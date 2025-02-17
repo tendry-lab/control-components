@@ -56,3 +56,5 @@ runs:
       with:
         path: ${{ inputs.CACHE_PATH }}/ccache
         key: ${{ inputs.CCACHE_KEY }}-${{ github.run_id }}
+        restore-keys: |
+          ${{ inputs.CCACHE_KEY }}-
