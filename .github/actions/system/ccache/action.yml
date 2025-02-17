@@ -49,6 +49,7 @@ runs:
         restore-keys: |
           ${{ inputs.CCACHE_KEY }}-
 
+  post:
     - name: ccache save
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
       uses: actions/cache/save@v4
