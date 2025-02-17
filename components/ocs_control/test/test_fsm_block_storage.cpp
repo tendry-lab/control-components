@@ -11,6 +11,7 @@
 #include "unity.h"
 
 #include "ocs_control/test/test_fsm_block_storage.h"
+#include "ocs_status/macros.h"
 
 namespace ocs {
 namespace control {
@@ -100,6 +101,19 @@ status::StatusCode TestFsmBlockStorage::erase(const char* key) {
     } else {
         return status::StatusCode::Error;
     }
+
+    return status::StatusCode::OK;
+}
+
+status::StatusCode TestFsmBlockStorage::erase_all() {
+    if (erase_status != status::StatusCode::OK) {
+        return erase_status;
+    }
+    OCS_STATUS_RETURN_ON_ERROR(erase("prev_state"));
+    OCS_STATUS_RETURN_ON_ERROR(erase("curr_state"));
+    OCS_STATUS_RETURN_ON_ERROR(erase("prev_state_dur"));
+    OCS_STATUS_RETURN_ON_ERROR(erase("curr_state_dur"));
+    OCS_STATUS_RETURN_ON_ERROR(erase("write_count"));
 
     return status::StatusCode::OK;
 }

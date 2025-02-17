@@ -77,6 +77,16 @@ struct TestStorage : public storage::IStorage, public core::NonCopyable<> {
         return num == 1 ? status::StatusCode::OK : status::StatusCode::NoData;
     }
 
+    status::StatusCode erase_all() override {
+        if (erase_status != status::StatusCode::OK) {
+            return erase_status;
+        }
+
+        values_.clear();
+
+        return status::StatusCode::OK;
+    }
+
     void set(const char* key, T value) {
         values_[key] = value;
     }

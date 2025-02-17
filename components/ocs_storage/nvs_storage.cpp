@@ -82,6 +82,16 @@ status::StatusCode NvsStorage::erase(const char* key) {
     return code;
 }
 
+status::StatusCode NvsStorage::erase_all() {
+    auto [handle, code] = open_(NVS_READWRITE);
+    if (code == status::StatusCode::OK) {
+        code = erase_all_(handle);
+        nvs_close(handle);
+    }
+
+    return code;
+}
+
 std::pair<nvs_handle_t, status::StatusCode> NvsStorage::open_(nvs_open_mode_t mode) {
     nvs_handle_t handle = 0;
 
@@ -152,6 +162,30 @@ status::StatusCode NvsStorage::erase_(nvs_handle_t handle, const char* key) {
     err = nvs_commit(handle);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "failed to erase: nvs_commit(): key=%s err=%s", key,
+                 esp_err_to_name(err));
+
+        return status::StatusCode::Error;
+    }
+
+    return status::StatusCode::OK;
+}
+
+status::StatusCode NvsStorage::erase_all_(nvs_handle_t handle) {
+    auto err = nvs_erase_all(handle);
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        return status::StatusCode::NoData;
+    }
+
+    if (err != ESP_OK) {
+        ocs_loge(log_tag, "failed to erase: nvs_erase_all(): err=%s",
+                 esp_err_to_name(err));
+
+        return status::StatusCode::Error;
+    }
+
+    err = nvs_commit(handle);
+    if (err != ESP_OK) {
+        ocs_loge(log_tag, "failed to erase all: nvs_commit(): err=%s",
                  esp_err_to_name(err));
 
         return status::StatusCode::Error;

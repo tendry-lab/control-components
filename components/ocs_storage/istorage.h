@@ -44,6 +44,9 @@ public:
     //! @params
     //!  - @p key - name of value to erase, 15 characters is a maximum length.
     virtual status::StatusCode erase(const char* key) = 0;
+
+    //! Erase all key-value pairs.
+    virtual status::StatusCode erase_all() = 0;
 };
 
 } // namespace storage
