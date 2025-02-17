@@ -60,10 +60,18 @@ TEST_CASE("Time ops: after: check back in time", "[ocs_algo], [time_ops]") {
 }
 
 TEST_CASE("Time ops: parse time: valid input", "[ocs_algo], [time_ops]") {
-    const char* str = "1640295065";
-    const auto timestamp = TimeOps::parse_time(str);
-    TEST_ASSERT_TRUE(timestamp.has_value());
-    TEST_ASSERT_EQUAL(timestamp.value(), 1640295065);
+    { // random number
+        const char* str = "1640295065";
+        const auto timestamp = TimeOps::parse_time(str);
+        TEST_ASSERT_TRUE(timestamp.has_value());
+        TEST_ASSERT_EQUAL(timestamp.value(), 1640295065);
+    }
+    { // zero number
+        const char* str = "0";
+        const auto timestamp = TimeOps::parse_time(str);
+        TEST_ASSERT_TRUE(timestamp.has_value());
+        TEST_ASSERT_EQUAL(timestamp.value(), 0);
+    }
 }
 
 TEST_CASE("Time ops: parse time: invalid input", "[ocs_algo], [time_ops]") {

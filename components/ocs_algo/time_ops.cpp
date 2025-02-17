@@ -7,9 +7,9 @@
  */
 
 #include <cerrno>
-#include <climits>
 #include <cstdlib>
 #include <cstring>
+#include <limits>
 #include <sys/time.h>
 
 #include "ocs_algo/time_ops.h"
@@ -36,13 +36,19 @@ std::optional<time_t> TimeOps::get_time() {
 }
 
 std::optional<time_t> TimeOps::parse_time(const char* str) {
-    const auto value = strtol(str, nullptr, 10);
-
-    if (value == 0) {
+    if (!str || *str == '\0') {
         return std::nullopt;
     }
 
-    if (value == LONG_MIN || value == LONG_MAX) {
+    char* end = nullptr;
+    errno = 0;
+    const auto value = strtol(str, &end, 10);
+
+    if (end == str || *end != '\0') {
+        return std::nullopt;
+    }
+
+    if (errno == ERANGE || value < 0 || value > std::numeric_limits<time_t>::max()) {
         return std::nullopt;
     }
 
