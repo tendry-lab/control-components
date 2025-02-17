@@ -23,6 +23,7 @@ public:
     status::StatusCode read(const char* key, void* data, size_t size) override;
     status::StatusCode write(const char* key, const void* data, size_t size) override;
     status::StatusCode erase(const char* key) override;
+    status::StatusCode erase_all() override;
 
     FsmBlock::State prev_state { 0 };
     FsmBlock::State curr_state { 0 };

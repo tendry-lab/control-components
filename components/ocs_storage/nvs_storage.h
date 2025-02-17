@@ -46,6 +46,9 @@ public:
     //! Erase data from the configured namespace.
     status::StatusCode erase(const char* key) override;
 
+    //! Erase all data from the configured namespace.
+    status::StatusCode erase_all() override;
+
 private:
     std::pair<nvs_handle_t, status::StatusCode> open_(nvs_open_mode_t mode);
 
@@ -56,6 +59,7 @@ private:
     write_(nvs_handle_t handle, const char* key, const void* value, size_t size);
 
     status::StatusCode erase_(nvs_handle_t handle, const char* key);
+    status::StatusCode erase_all_(nvs_handle_t handle);
 
     char ns_[max_namespace_len + 1];
 };

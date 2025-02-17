@@ -19,19 +19,23 @@ namespace net {
 namespace {
 
 struct TestStorage : public storage::IStorage {
-    status::StatusCode probe(const char* key, size_t& size) {
+    status::StatusCode probe(const char* key, size_t& size) override {
         return status::StatusCode::Error;
     }
 
-    status::StatusCode read(const char* key, void* value, size_t size) {
+    status::StatusCode read(const char* key, void* value, size_t size) override {
         return status::StatusCode::Error;
     }
 
-    status::StatusCode write(const char* key, const void* value, size_t size) {
+    status::StatusCode write(const char* key, const void* value, size_t size) override {
         return status::StatusCode::Error;
     }
 
-    status::StatusCode erase(const char* key) {
+    status::StatusCode erase(const char* key) override {
+        return status::StatusCode::Error;
+    }
+
+    status::StatusCode erase_all() override {
         return status::StatusCode::Error;
     }
 };
