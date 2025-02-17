@@ -13,6 +13,7 @@ idf_component_register(
     "wait_network_runner.cpp"
     "reset_network_runner.cpp"
     "ap_network_config.cpp"
+    "mdns_config.cpp"
 
     REQUIRES
     "esp_netif"

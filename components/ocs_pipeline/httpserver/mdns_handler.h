@@ -11,7 +11,7 @@
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_http/server.h"
-#include "ocs_pipeline/config/mdns_config.h"
+#include "ocs_net/mdns_config.h"
 #include "ocs_scheduler/itask.h"
 
 namespace ocs {
@@ -27,13 +27,13 @@ public:
     //!  - @p config to perform the mDNS configuration.
     //!  - @p reboot_task to schedule a reboot when the mDNS configuration is changed.
     MdnsHandler(http::Server& server,
-                config::MdnsConfig& config,
+                net::MdnsConfig& config,
                 scheduler::ITask& reboot_task);
 
 private:
     status::StatusCode handle_update_(httpd_req_t*, const algo::UriOps::Values&);
 
-    config::MdnsConfig& config_;
+    net::MdnsConfig& config_;
     scheduler::ITask& reboot_task_;
 };
 

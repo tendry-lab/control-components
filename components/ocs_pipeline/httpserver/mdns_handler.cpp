@@ -15,7 +15,7 @@ namespace pipeline {
 namespace httpserver {
 
 MdnsHandler::MdnsHandler(http::Server& server,
-                         config::MdnsConfig& config,
+                         net::MdnsConfig& config,
                          scheduler::ITask& reboot_task)
     : config_(config)
     , reboot_task_(reboot_task) {

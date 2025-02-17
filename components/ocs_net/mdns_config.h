@@ -13,8 +13,7 @@
 #include "ocs_system/device_info.h"
 
 namespace ocs {
-namespace pipeline {
-namespace config {
+namespace net {
 
 class MdnsConfig : public core::NonCopyable<> {
 public:
@@ -29,9 +28,15 @@ public:
     const char* get_hostname() const;
 
     //! Update mDNS configuration.
+    //!
+    //! @remarks
+    //!  - Changes are applied on the component initialization.
     status::StatusCode configure(const char* hostname);
 
     //! Reset mDNS configuration.
+    //!
+    //! @remarks
+    //!  - Changes are applied on the component initialization.
     status::StatusCode reset();
 
 private:
@@ -43,6 +48,5 @@ private:
     char hostname_[max_hostname_size_ + 1];
 };
 
-} // namespace config
-} // namespace pipeline
+} // namespace net
 } // namespace ocs
