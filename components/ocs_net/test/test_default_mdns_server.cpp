@@ -16,15 +16,37 @@
 namespace ocs {
 namespace net {
 
+namespace {
+
+struct TestStorage : public storage::IStorage {
+    status::StatusCode probe(const char* key, size_t& size) {
+        return status::StatusCode::Error;
+    }
+
+    status::StatusCode read(const char* key, void* value, size_t size) {
+        return status::StatusCode::Error;
+    }
+
+    status::StatusCode write(const char* key, const void* value, size_t size) {
+        return status::StatusCode::Error;
+    }
+
+    status::StatusCode erase(const char* key) {
+        return status::StatusCode::Error;
+    }
+};
+
+} // namespace
+
 TEST_CASE("Default mDNS server: start/stop", "[ocs_net], [default_mdns_server]") {
     storage::FlashInitializer flash_initializer;
     FanoutNetworkHandler handler;
 
-    ApNetwork network(handler,
-                      ApNetwork::Params {
-                          .ssid = "test-ssid",
-                          .password = "test-password",
-                      });
+    TestStorage storage;
+    system::DeviceInfo device_info("test-firmware", "0.0.0", "Test Firmware");
+    ApNetworkConfig config(storage, device_info);
+
+    ApNetwork network(handler, config);
 
     DefaultMdnsServer mdns_server("host");
 

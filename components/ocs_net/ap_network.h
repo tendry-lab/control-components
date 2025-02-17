@@ -8,14 +8,13 @@
 
 #pragma once
 
-#include <string>
-
 #include "esp_wifi.h"
 
 #include "ocs_core/cond.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_event_group.h"
 #include "ocs_core/static_mutex.h"
+#include "ocs_net/ap_network_config.h"
 #include "ocs_net/iap_network.h"
 #include "ocs_net/inetwork.h"
 #include "ocs_net/inetwork_handler.h"
@@ -28,25 +27,11 @@ namespace net {
 //! Handle WiFi AP (access-point) mode network operations.
 class ApNetwork : public INetwork, public IApNetwork, public core::NonCopyable<> {
 public:
-    struct Params {
-        //! WiFi SSID.
-        std::string ssid;
-
-        //! WiFi password.
-        std::string password;
-
-        //! WiFi channel.
-        uint8_t channel { 0 };
-
-        //! Maximum number of simultaneous STA connections to the AP.
-        uint8_t max_connection { 0 };
-    };
-
     //! Initialize.
     //!
     //! @params
     //!  - @p handler to notify about network status changes.
-    ApNetwork(INetworkHandler& handler, const Params& params);
+    ApNetwork(INetworkHandler& handler, const ApNetworkConfig& config);
 
     //! Destroy.
     ~ApNetwork();
@@ -75,7 +60,7 @@ private:
     void handle_wifi_event_ap_sta_connected_(void* event_data);
     void handle_wifi_event_ap_sta_disconnected_(void* event_data);
 
-    const Params params_;
+    const ApNetworkConfig& config_;
 
     INetworkHandler& handler_;
 

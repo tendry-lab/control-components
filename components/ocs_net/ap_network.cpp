@@ -25,8 +25,8 @@ const char* log_tag = "ap_network";
 
 } // namespace
 
-ApNetwork::ApNetwork(INetworkHandler& handler, const Params& params)
-    : params_(params)
+ApNetwork::ApNetwork(INetworkHandler& handler, const ApNetworkConfig& config)
+    : config_(config)
     , handler_(handler)
     , cond_(mu_) {
     ESP_ERROR_CHECK(esp_netif_init());
@@ -55,9 +55,9 @@ IApNetwork::Info ApNetwork::get_info() {
     core::LockGuard lock(mu_);
 
     return IApNetwork::Info {
-        .channel = params_.channel,
+        .channel = config_.get_channel(),
         .cur_connection = connection_count_,
-        .max_connection = params_.max_connection,
+        .max_connection = config_.get_max_conn(),
     };
 }
 
@@ -80,14 +80,14 @@ status::StatusCode ApNetwork::start() {
     wifi_config_t wifi_config;
     memset(&wifi_config, 0, sizeof(wifi_config));
 
-    strncpy(reinterpret_cast<char*>(wifi_config.ap.ssid), params_.ssid.c_str(),
+    strncpy(reinterpret_cast<char*>(wifi_config.ap.ssid), config_.get_ssid(),
             sizeof(wifi_config.ap.ssid));
 
-    strncpy(reinterpret_cast<char*>(wifi_config.ap.password), params_.password.c_str(),
+    strncpy(reinterpret_cast<char*>(wifi_config.ap.password), config_.get_password(),
             sizeof(wifi_config.ap.password));
 
-    wifi_config.ap.channel = params_.channel;
-    wifi_config.ap.max_connection = params_.max_connection;
+    wifi_config.ap.channel = config_.get_channel();
+    wifi_config.ap.max_connection = config_.get_max_conn();
     wifi_config.ap.authmode = WIFI_AUTH_WPA2_PSK;
 
     err = esp_wifi_set_config(WIFI_IF_AP, &wifi_config);
