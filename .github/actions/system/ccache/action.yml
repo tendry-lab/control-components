@@ -42,6 +42,7 @@ runs:
         echo "export CCACHE_LOGFILE=$GITHUB_WORKSPACE/$ccache_log_file" >> "${{ inputs.CONFIGURATION_PATH_CCACHE }}"
 
     - name: ccache restore
+      if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master'
       uses: actions/cache/restore@v4
       with:
         path: ${{ inputs.CACHE_PATH }}/ccache
@@ -49,10 +50,9 @@ runs:
         restore-keys: |
           ${{ inputs.CCACHE_KEY }}-
 
-  post:
-    - name: ccache save
+    - name: ccache update
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      uses: actions/cache/save@v4
+      uses: actions/cache@v4
       with:
         path: ${{ inputs.CACHE_PATH }}/ccache
         key: ${{ inputs.CCACHE_KEY }}-${{ github.run_id }}
