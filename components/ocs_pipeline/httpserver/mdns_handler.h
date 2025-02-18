@@ -10,6 +10,7 @@
 
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/noncopyable.h"
+#include "ocs_core/static_mutex.h"
 #include "ocs_http/server.h"
 #include "ocs_net/mdns_config.h"
 #include "ocs_scheduler/itask.h"
@@ -33,6 +34,7 @@ public:
 private:
     status::StatusCode handle_update_(httpd_req_t*, const algo::UriOps::Values&);
 
+    core::StaticMutex mu_;
     net::MdnsConfig& config_;
     scheduler::ITask& reboot_task_;
 };

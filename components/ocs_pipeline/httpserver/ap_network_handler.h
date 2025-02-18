@@ -10,6 +10,7 @@
 
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/noncopyable.h"
+#include "ocs_core/static_mutex.h"
 #include "ocs_http/server.h"
 #include "ocs_net/ap_network_config.h"
 #include "ocs_scheduler/itask.h"
@@ -34,6 +35,7 @@ private:
     status::StatusCode handle_update_(httpd_req_t*, const algo::UriOps::Values&);
     status::StatusCode handle_get_(httpd_req_t*);
 
+    core::StaticMutex mu_;
     net::ApNetworkConfig& config_;
     scheduler::ITask& reboot_task_;
 };
