@@ -34,7 +34,7 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
 
     strncpy(ssid_, builtin_ssid.c_str(), sizeof(ssid_));
 
-    const auto code =
+    auto code =
         algo::StorageOps::prob_read(storage_, password_key_, password_, max_password_len);
     if (code != status::StatusCode::OK) {
         if (code != status::StatusCode::NoData) {
@@ -48,6 +48,28 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
 
         strncpy(password_, builtin_password.c_str(), sizeof(password_));
     }
+
+    code =
+        algo::StorageOps::prob_read(storage_, channel_key_, &channel_, sizeof(channel_));
+    if (code != status::StatusCode::OK) {
+        if (code != status::StatusCode::NoData) {
+            ocs_loge(log_tag, "failed to read WiFi AP channel from storage: %s",
+                     status::code_to_str(code));
+        }
+
+        channel_ = CONFIG_OCS_NETWORK_WIFI_AP_CHANNEL;
+    }
+
+    code = algo::StorageOps::prob_read(storage_, max_conn_key_, &max_conn_,
+                                       sizeof(max_conn_));
+    if (code != status::StatusCode::OK) {
+        if (code != status::StatusCode::NoData) {
+            ocs_loge(log_tag, "failed to read WiFi AP max connection from storage: %s",
+                     status::code_to_str(code));
+        }
+
+        max_conn_ = CONFIG_OCS_NETWORK_WIFI_AP_MAX_CONN;
+    }
 }
 
 const char* ApNetworkConfig::get_ssid() const {
@@ -59,14 +81,23 @@ const char* ApNetworkConfig::get_password() const {
 }
 
 uint8_t ApNetworkConfig::get_channel() const {
-    return CONFIG_OCS_NETWORK_WIFI_AP_CHANNEL;
+    return channel_;
 }
 
 uint8_t ApNetworkConfig::get_max_conn() const {
-    return CONFIG_OCS_NETWORK_WIFI_AP_MAX_CONN;
+    return max_conn_;
 }
 
-status::StatusCode ApNetworkConfig::configure(const char* password) {
+status::StatusCode
+ApNetworkConfig::configure(uint8_t channel, uint8_t max_conn, const char* password) {
+    if (channel < min_channel || channel > max_channel) {
+        return status::StatusCode::InvalidArg;
+    }
+
+    if (max_conn < min_max_conn || max_conn > max_max_conn) {
+        return status::StatusCode::InvalidArg;
+    }
+
     if (strlen(password) < min_password_len || strlen(password) > max_password_len) {
         return status::StatusCode::InvalidArg;
     }
@@ -82,15 +113,29 @@ status::StatusCode ApNetworkConfig::configure(const char* password) {
         modified = true;
     }
 
-    if (!modified) {
-        return status::StatusCode::NotModified;
+    if (channel_ != channel) {
+        const auto code = storage_.write(channel_key_, &channel, sizeof(channel));
+        if (code != status::StatusCode::OK) {
+            return code;
+        }
+
+        modified = true;
     }
 
-    return status::StatusCode::OK;
+    if (max_conn_ != max_conn) {
+        const auto code = storage_.write(max_conn_key_, &max_conn, sizeof(max_conn));
+        if (code != status::StatusCode::OK) {
+            return code;
+        }
+
+        modified = true;
+    }
+
+    return modified ? status::StatusCode::OK : status::StatusCode::NotModified;
 }
 
 status::StatusCode ApNetworkConfig::reset() {
-    auto code = storage_.erase(password_key_);
+    auto code = storage_.erase_all();
     if (code == status::StatusCode::NoData) {
         code = status::StatusCode::NotModified;
     }

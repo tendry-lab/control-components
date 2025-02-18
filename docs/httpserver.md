@@ -185,13 +185,30 @@ http "bonsai-firmware.local/api/v1/config/mdns?reset=1
 OK
 ```
 
+**Get WiFi AP configuration**
+
+http "bonsai-firmware.local/api/v1/config/wifi/ap"
+
+```json
+{
+    "channel": 6,
+    "max_conn": 7
+}
+```
+
 **Set WiFi AP configuration**
 
-http "bonsai-firmware.local/api/v1/config/wifi/ap?password=hQ2BvY2a"
+http "bonsai-firmware.local/api/v1/config/wifi/ap?password=hQ2BvY2a&channel=1&max_conn=3"
 
 ```txt
 OK
 ```
+
+- password - WiFi AP password. min length is 8 symbols, max length is 63 symbols.
+- channel - WiFi AP channel. min is 1, max is 13.
+- max_conn - maximum number of simultaneous STA connections. min is 1, max is 7. More connections - less performance.
+
+Each parameter can be configured separately.
 
 **Reset WiFi AP configuration**
 
