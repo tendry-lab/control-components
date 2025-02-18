@@ -18,9 +18,9 @@ menu "OCS Network Configuration"
 
             config OCS_NETWORK_WIFI_AP_MAX_CONN
                 int "Maximum number of STA connections"
-                default 7
+                default 5
                 help
-                    Maximum number of the STA connects to AP.
+                    Maximum number of the simultaneous STA connections.
         endmenu
     endmenu
 endmenu
