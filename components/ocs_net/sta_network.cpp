@@ -38,9 +38,11 @@ int8_t get_rssi() {
 
 } // namespace
 
-StaNetwork::StaNetwork(INetworkHandler& handler, const Params& params)
-    : params_(params)
+StaNetwork::StaNetwork(INetworkHandler& handler, const StaNetworkConfig& config)
+    : config_(config)
     , handler_(handler) {
+    configASSERT(config_.valid());
+
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
@@ -56,17 +58,7 @@ StaNetwork::StaNetwork(INetworkHandler& handler, const Params& params)
     ESP_ERROR_CHECK(esp_event_handler_instance_register(
         IP_EVENT, IP_EVENT_STA_GOT_IP, &handle_event_, this, &instance_got_ip_));
 
-    wifi_config_t wifi_config;
-    memset(&wifi_config, 0, sizeof(wifi_config));
-
-    strncpy(reinterpret_cast<char*>(wifi_config.sta.ssid), params_.ssid.c_str(),
-            sizeof(wifi_config.sta.ssid));
-
-    strncpy(reinterpret_cast<char*>(wifi_config.sta.password), params_.password.c_str(),
-            sizeof(wifi_config.sta.password));
-
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
 }
 
 StaNetwork::~StaNetwork() {
@@ -86,16 +78,33 @@ StaNetwork::~StaNetwork() {
 
 IStaNetwork::Info StaNetwork::get_info() {
     return IStaNetwork::Info {
-        .ssid = params_.ssid,
+        .ssid = config_.get_ssid(),
         .rssi = get_rssi(),
         .ip_addr = get_ip_addr_(),
     };
 }
 
 status::StatusCode StaNetwork::start() {
-    const auto err = esp_wifi_start();
+    wifi_config_t wifi_config;
+    memset(&wifi_config, 0, sizeof(wifi_config));
+
+    strncpy(reinterpret_cast<char*>(wifi_config.sta.ssid), config_.get_ssid(),
+            sizeof(wifi_config.sta.ssid));
+
+    strncpy(reinterpret_cast<char*>(wifi_config.sta.password), config_.get_password(),
+            sizeof(wifi_config.sta.password));
+
+    auto err = esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
+    if (err != ESP_OK) {
+        ocs_loge(log_tag, "esp_wifi_set_config(): %s", esp_err_to_name(err));
+
+        return status::StatusCode::Error;
+    }
+
+    err = esp_wifi_start();
     if (err != ESP_OK) {
         ocs_loge(log_tag, "esp_wifi_start(): %s", esp_err_to_name(err));
+
         return status::StatusCode::Error;
     }
 
@@ -118,14 +127,14 @@ status::StatusCode StaNetwork::wait(TickType_t wait) {
                             pdFALSE, pdFALSE, wait);
 
     if (bits & EVENT_BIT_CONNECTED) {
-        ocs_logi(log_tag, "connected to AP: SSID=%s RSSI=%d", params_.ssid.c_str(),
+        ocs_logi(log_tag, "connected to AP: SSID=%s RSSI=%d", config_.get_ssid(),
                  get_rssi());
 
         return status::StatusCode::OK;
     }
 
     if (bits & EVENT_BIT_FAILED) {
-        ocs_logi(log_tag, "failed to connect to AP: SSID=%s", params_.ssid.c_str());
+        ocs_logi(log_tag, "failed to connect to AP: SSID=%s", config_.get_ssid());
 
         return status::StatusCode::Error;
     }
@@ -204,7 +213,7 @@ void StaNetwork::handle_wifi_event_sta_disconnected_(void* event_data) {
 
     xEventGroupClearBits(event_group_.get(), EVENT_BIT_CONNECTED);
 
-    if (retry_count_ < params_.max_retry_count) {
+    if (retry_count_ < config_.get_max_retry_count()) {
         ++retry_count_;
 
         const esp_err_t err = esp_wifi_connect();
@@ -212,7 +221,7 @@ void StaNetwork::handle_wifi_event_sta_disconnected_(void* event_data) {
             ocs_loge(log_tag, "esp_wifi_connect(): %s", esp_err_to_name(err));
         } else {
             ocs_logi(log_tag, "reconnecting: retry_count=%u max_retry_count=%u",
-                     retry_count_, params_.max_retry_count);
+                     retry_count_, config_.get_max_retry_count());
         }
     } else {
         xEventGroupSetBits(event_group_.get(), EVENT_BIT_FAILED);

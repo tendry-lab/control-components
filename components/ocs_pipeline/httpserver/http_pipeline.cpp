@@ -22,7 +22,6 @@ const char* log_tag = "http_pipeline";
 
 HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
                            net::FanoutNetworkHandler& network_handler,
-                           net::ApNetworkConfig& ap_network_config,
                            net::MdnsConfig& mdns_config,
                            fmt::json::IFormatter& telemetry_formatter,
                            fmt::json::FanoutFormatter& registration_formatter,
@@ -48,10 +47,6 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
     mdns_handler_.reset(new (std::nothrow)
                             MdnsHandler(*http_server_, mdns_config, reboot_task));
     configASSERT(mdns_handler_);
-
-    ap_network_handler_.reset(new (std::nothrow) ApNetworkHandler(
-        *http_server_, ap_network_config, reboot_task));
-    configASSERT(ap_network_handler_);
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
     system_state_handler_.reset(new (std::nothrow)

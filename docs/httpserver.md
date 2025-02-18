@@ -218,6 +218,39 @@ http "bonsai-firmware.local/api/v1/config/wifi/ap?reset=1"
 OK
 ```
 
+**Get WiFi STA configuration**
+
+http "bonsai-firmware.local/api/v1/config/wifi/sta"
+
+```json
+{
+    "retry": 4,
+    "ssid": "router-ssid"
+}
+```
+
+**Set WiFi STA configuration**
+
+http "bonsai-firmware.local/api/v1/config/wifi/sta?ssid=router-ssid&password=hQ2BvY2a&retry=3"
+
+```txt
+OK
+```
+
+- ssid - WiFi AP SSID. min length is 1 symbols, max length is 31 symbols.
+- password - WiFi STA password. min length is 8 symbols, max length is 63 symbols.
+- retry - maximum number of attempts to connect to a WiFi AP. min is 1, max is 5.
+
+Each parameter can be configured separately.
+
+**Reset WiFi STA configuration**
+
+http "bonsai-firmware.local/api/v1/config/wifi/sta?reset=1"
+
+```txt
+OK
+```
+
 **Sensors APIs**
 
 - [DS18B20](sensors/ds18b20.md#HTTP-API)

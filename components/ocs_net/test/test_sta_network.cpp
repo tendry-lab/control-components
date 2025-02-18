@@ -6,13 +6,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <cstring>
-
 #include "unity.h"
 
 #include "ocs_net/fanout_network_handler.h"
 #include "ocs_net/sta_network.h"
 #include "ocs_storage/flash_initializer.h"
+#include "ocs_test/memory_storage.h"
 
 namespace ocs {
 namespace net {
@@ -23,13 +22,17 @@ TEST_CASE("WiFi STA: connect to AP: invalid credentials",
     { // Invalid SSID
         storage::FlashInitializer flash_initializer;
         FanoutNetworkHandler handler;
+        test::MemoryStorage storage;
 
-        StaNetwork network(handler,
-                           StaNetwork::Params {
-                               .max_retry_count = 1,
-                               .ssid = "foo",
-                               .password = CONFIG_OCS_TEST_UNIT_WIFI_STA_PASSWORD,
-                           });
+        { // Configure the network first.
+            StaNetworkConfig config(storage);
+            TEST_ASSERT_EQUAL(
+                status::StatusCode::OK,
+                config.configure(1, "foo", CONFIG_OCS_TEST_UNIT_WIFI_STA_PASSWORD));
+        }
+
+        StaNetworkConfig config(storage);
+        StaNetwork network(handler, config);
 
         TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
         TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
@@ -38,13 +41,17 @@ TEST_CASE("WiFi STA: connect to AP: invalid credentials",
     { // Invalid password
         storage::FlashInitializer flash_initializer;
         FanoutNetworkHandler handler;
+        test::MemoryStorage storage;
 
-        StaNetwork network(handler,
-                           StaNetwork::Params {
-                               .max_retry_count = 1,
-                               .ssid = CONFIG_OCS_TEST_UNIT_WIFI_STA_SSID,
-                               .password = "bar",
-                           });
+        { // Configure the network first.
+            StaNetworkConfig config(storage);
+            TEST_ASSERT_EQUAL(
+                status::StatusCode::OK,
+                config.configure(1, CONFIG_OCS_TEST_UNIT_WIFI_STA_SSID, "12345678"));
+        }
+
+        StaNetworkConfig config(storage);
+        StaNetwork network(handler, config);
 
         TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
         TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
@@ -53,13 +60,16 @@ TEST_CASE("WiFi STA: connect to AP: invalid credentials",
     { // Invalid SSID and password
         storage::FlashInitializer flash_initializer;
         FanoutNetworkHandler handler;
+        test::MemoryStorage storage;
 
-        StaNetwork network(handler,
-                           StaNetwork::Params {
-                               .max_retry_count = 1,
-                               .ssid = "foo",
-                               .password = "bar",
-                           });
+        { // Configure the network first.
+            StaNetworkConfig config(storage);
+            TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                              config.configure(1, "foo", "12345678"));
+        }
+
+        StaNetworkConfig config(storage);
+        StaNetwork network(handler, config);
 
         TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
         TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
@@ -71,13 +81,17 @@ TEST_CASE("WiFi STA: connect to AP: valid credentials",
           "[ocs_net], [sta_network| update]") {
     storage::FlashInitializer flash_initializer;
     FanoutNetworkHandler handler;
+    test::MemoryStorage storage;
 
-    StaNetwork network(handler,
-                       StaNetwork::Params {
-                           .max_retry_count = 3,
-                           .ssid = CONFIG_OCS_TEST_UNIT_WIFI_STA_SSID,
-                           .password = CONFIG_OCS_TEST_UNIT_WIFI_STA_PASSWORD,
-                       });
+    { // Configure the network first.
+        StaNetworkConfig config(storage);
+        TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                          config.configure(3, CONFIG_OCS_TEST_UNIT_WIFI_STA_SSID,
+                                           CONFIG_OCS_TEST_UNIT_WIFI_STA_PASSWORD));
+    }
+
+    StaNetworkConfig config(storage);
+    StaNetwork network(handler, config);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
     TEST_ASSERT_EQUAL(status::StatusCode::OK, network.wait());

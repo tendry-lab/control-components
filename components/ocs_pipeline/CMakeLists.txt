@@ -11,6 +11,7 @@ idf_component_register(
     "httpserver/time_handler.cpp"
     "httpserver/time_pipeline.cpp"
     "httpserver/ap_network_handler.cpp"
+    "httpserver/sta_network_handler.cpp"
 
     "jsonfmt/data_pipeline.cpp"
     "jsonfmt/ap_network_formatter.cpp"
@@ -31,6 +32,7 @@ idf_component_register(
 
     "basic/system_pipeline.cpp"
     "basic/system_counter_pipeline.cpp"
+    "basic/select_network_pipeline.cpp"
 
     REQUIRES
     "spiffs"

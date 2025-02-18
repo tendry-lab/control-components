@@ -18,6 +18,7 @@
 #include "ocs_net/ip_addr_to_str.h"
 #include "ocs_net/sta_network.h"
 #include "ocs_storage/flash_initializer.h"
+#include "ocs_test/memory_storage.h"
 
 #ifdef CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED
 #include "ocs_core/istream_reader.h"
@@ -37,12 +38,15 @@ TEST_CASE("Start HTTP server: WiFi not started", "[ocs_http], [server]") {
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;
 
-    net::StaNetwork network(handler,
-                            net::StaNetwork::Params {
-                                .max_retry_count = 1,
-                                .ssid = "foo",
-                                .password = "bar",
-                            });
+    test::MemoryStorage storage;
+
+    { // Configure the network first.
+        net::StaNetworkConfig config(storage);
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, config.configure(1, "foo", "12345678"));
+    }
+
+    net::StaNetworkConfig config(storage);
+    net::StaNetwork network(handler, config);
 
     Server server(Server::Params {});
     TEST_ASSERT_EQUAL(status::StatusCode::OK, server.start());
@@ -53,12 +57,16 @@ TEST_CASE("Start HTTP server: WiFi invalid credentials", "[ocs_http], [server]")
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;
 
-    net::StaNetwork network(handler,
-                            net::StaNetwork::Params {
-                                .max_retry_count = 1,
-                                .ssid = "foo",
-                                .password = "bar",
-                            });
+    test::MemoryStorage storage;
+
+    { // Configure the network first.
+        net::StaNetworkConfig config(storage);
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, config.configure(1, "foo", "12345678"));
+    }
+
+    net::StaNetworkConfig config(storage);
+    net::StaNetwork network(handler, config);
+
     TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
     TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
 
@@ -91,13 +99,18 @@ TEST_CASE("Start HTTP server: WiFi valid credentials", "[ocs_http], [server]") {
 
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;
+    test::MemoryStorage storage;
 
-    net::StaNetwork network(handler,
-                            net::StaNetwork::Params {
-                                .max_retry_count = 1,
-                                .ssid = CONFIG_OCS_TEST_UNIT_WIFI_STA_SSID,
-                                .password = CONFIG_OCS_TEST_UNIT_WIFI_STA_PASSWORD,
-                            });
+    { // Configure the network first.
+        net::StaNetworkConfig config(storage);
+        TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                          config.configure(1, CONFIG_OCS_TEST_UNIT_WIFI_STA_SSID,
+                                           CONFIG_OCS_TEST_UNIT_WIFI_STA_PASSWORD));
+    }
+
+    net::StaNetworkConfig config(storage);
+    net::StaNetwork network(handler, config);
+
     TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
     TEST_ASSERT_EQUAL(status::StatusCode::OK, network.wait());
     TEST_ASSERT_EQUAL(status::StatusCode::OK, server.start());
@@ -189,12 +202,18 @@ TEST_CASE("Start HTTP server: chunked response", "[ocs_http], [server]") {
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;
 
-    net::StaNetwork network(handler,
-                            net::StaNetwork::Params {
-                                .max_retry_count = 1,
-                                .ssid = CONFIG_OCS_TEST_UNIT_WIFI_STA_SSID,
-                                .password = CONFIG_OCS_TEST_UNIT_WIFI_STA_PASSWORD,
-                            });
+    test::MemoryStorage storage;
+
+    { // Configure the network first.
+        net::StaNetworkConfig config(storage);
+        TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                          config.configure(1, CONFIG_OCS_TEST_UNIT_WIFI_STA_SSID,
+                                           CONFIG_OCS_TEST_UNIT_WIFI_STA_PASSWORD));
+    }
+
+    net::StaNetworkConfig config(storage);
+    net::StaNetwork network(handler, config);
+
     TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
     TEST_ASSERT_EQUAL(status::StatusCode::OK, network.wait());
     TEST_ASSERT_EQUAL(status::StatusCode::OK, server.start());
