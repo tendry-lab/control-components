@@ -32,6 +32,7 @@ public:
 
 private:
     status::StatusCode handle_update_(httpd_req_t*, const algo::UriOps::Values&);
+    status::StatusCode handle_get_(httpd_req_t*);
 
     net::ApNetworkConfig& config_;
     scheduler::ITask& reboot_task_;
