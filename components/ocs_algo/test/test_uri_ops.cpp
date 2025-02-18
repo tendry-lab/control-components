@@ -67,6 +67,16 @@ TEST_CASE("URI ops: parse query: single pair", "[ocs_algo], [uri_ops]") {
     TEST_ASSERT_TRUE(it->second == "value");
 }
 
+TEST_CASE("URI ops: parse query: numeric argument", "[ocs_algo], [uri_ops]") {
+    const auto values = UriOps::parse_query("/foo/bar?key=2");
+    TEST_ASSERT_EQUAL(1, values.size());
+
+    const auto it = values.find("key");
+    TEST_ASSERT_TRUE(it != values.end());
+    TEST_ASSERT_TRUE(it->first == "key");
+    TEST_ASSERT_TRUE(it->second == "2");
+}
+
 TEST_CASE("URI ops: parse query: multile pairs", "[ocs_algo], [uri_ops]") {
     const auto values = UriOps::parse_query("/foo/bar?key1=value1&key2=value2");
     TEST_ASSERT_EQUAL(2, values.size());
