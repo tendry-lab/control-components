@@ -8,6 +8,7 @@
 
 #include <cstring>
 
+#include "ocs_core/lock_guard.h"
 #include "ocs_pipeline/httpserver/mdns_handler.h"
 
 namespace ocs {
@@ -20,6 +21,8 @@ MdnsHandler::MdnsHandler(http::Server& server,
     : config_(config)
     , reboot_task_(reboot_task) {
     server.add_GET("/api/v1/config/mdns", [this](httpd_req_t* req) {
+        core::LockGuard lock(mu_);
+
         const auto values = algo::UriOps::parse_query(req->uri);
         if (!values.size()) {
             return status::StatusCode::InvalidArg;

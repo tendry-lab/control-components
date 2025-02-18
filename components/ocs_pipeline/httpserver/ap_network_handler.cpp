@@ -10,6 +10,7 @@
 #include <cstring>
 #include <string>
 
+#include "ocs_core/lock_guard.h"
 #include "ocs_core/log.h"
 #include "ocs_fmt/json/cjson_builder.h"
 #include "ocs_fmt/json/cjson_object_formatter.h"
@@ -32,6 +33,8 @@ ApNetworkHandler::ApNetworkHandler(http::Server& server,
     : config_(config)
     , reboot_task_(reboot_task) {
     server.add_GET("/api/v1/config/wifi/ap", [this](httpd_req_t* req) {
+        core::LockGuard lock(mu_);
+
         const auto values = algo::UriOps::parse_query(req->uri);
         if (!values.size()) {
             return handle_get_(req);
