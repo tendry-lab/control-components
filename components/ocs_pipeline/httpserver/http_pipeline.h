@@ -12,7 +12,6 @@
 #include "ocs_fmt/json/fanout_formatter.h"
 #include "ocs_http/server.h"
 #include "ocs_net/fanout_network_handler.h"
-#include "ocs_pipeline/httpserver/ap_network_handler.h"
 #include "ocs_pipeline/httpserver/data_handler.h"
 #include "ocs_pipeline/httpserver/mdns_handler.h"
 #include "ocs_pipeline/httpserver/system_handler.h"
@@ -42,7 +41,6 @@ public:
     //! Initialize.
     HttpPipeline(scheduler::ITask& reboot_task,
                  net::FanoutNetworkHandler& network_handler,
-                 net::ApNetworkConfig& ap_network_config,
                  net::MdnsConfig& mdns_config,
                  fmt::json::IFormatter& telemetry_formatter,
                  fmt::json::FanoutFormatter& registration_formatter,
@@ -63,7 +61,6 @@ private:
     std::unique_ptr<DataHandler> registration_handler_;
     std::unique_ptr<SystemHandler> system_handler_;
     std::unique_ptr<MdnsHandler> mdns_handler_;
-    std::unique_ptr<ApNetworkHandler> ap_network_handler_;
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
     std::unique_ptr<SystemStateHandler> system_state_handler_;
