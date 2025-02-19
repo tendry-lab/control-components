@@ -4,13 +4,7 @@ All examples below are run from the terminal and use the [httpie](https://httpie
 
 **Receive telemetry data**
 
-```bash
 http "bonsai-firmware.local/api/v1/telemetry"
-```
-
-The response may be formatted differently depending on how the firmware has been configured:
-
-- Flat formatting
 
 ```json
 {
@@ -42,46 +36,6 @@ The response may be formatted differently depending on how the firmware has been
 }
 ```
 
-- Nested formatting:
-
-```json
-{
-    "BME280": {
-        "humidity": 50.48,
-        "pressure": 1017.42,
-        "temperature": 20.15
-    },
-    "SHT41": {
-        "humidity": 58.66,
-        "temperature": 20.71
-    },
-    "c_sys_lifetime": 3584745,
-    "c_sys_uptime": 671404,
-    "outside_temp": 21,
-    "soil_capacitive": {
-        "curr_status": "Wet",
-        "curr_status_dur": 300,
-        "moisture": 64,
-        "prev_status": "Saturated",
-        "prev_status_dur": 300,
-        "raw": 347,
-        "status_progress": 75,
-        "voltage": 1267,
-        "write_count": 1146
-    },
-    "soil_ldr": {
-        "lightness": 53,
-        "raw": 528,
-        "voltage": 1854
-    },
-    "soil_temp": 21.25,
-    "system_memory_heap": 185776,
-    "system_memory_heap_internal": 185688,
-    "system_memory_heap_min": 171840,
-    "system_reset_reason": "RST_POWERON"
-}
-```
-
 **Receive registration data**
 
 ```bash
@@ -102,9 +56,7 @@ http "bonsai-firmware.local/api/v1/registration"
 
 **Receive system report**
 
-```bash
 http "bonsai-firmware.local/api/v1/system/report"
-```
 
 ```json
 {

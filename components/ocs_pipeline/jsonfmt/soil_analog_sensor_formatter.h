@@ -9,19 +9,18 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_fmt/json/basic_formatter.h"
+#include "ocs_fmt/json/iformatter.h"
 #include "ocs_sensor/soil/analog_sensor.h"
 
 namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class SoilAnalogSensorFormatter : public fmt::json::BasicFormatter,
+class SoilAnalogSensorFormatter : public fmt::json::IFormatter,
                                   public core::NonCopyable<> {
 public:
     //! Initialize.
-    SoilAnalogSensorFormatter(sensor::soil::AnalogSensor& sensor,
-                              bool flat_formatting = true);
+    explicit SoilAnalogSensorFormatter(sensor::soil::AnalogSensor& sensor);
 
     //! Format soil sensor data into @p json.
     status::StatusCode format(cJSON* json) override;

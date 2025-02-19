@@ -1,6 +1,5 @@
 idf_component_register(
     SRCS
-    "json/basic_formatter.cpp"
     "json/cjson_array_formatter.cpp"
     "json/cjson_object_formatter.cpp"
     "json/dynamic_formatter.cpp"

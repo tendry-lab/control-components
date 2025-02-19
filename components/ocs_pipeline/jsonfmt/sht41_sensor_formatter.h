@@ -9,18 +9,17 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_fmt/json/basic_formatter.h"
+#include "ocs_fmt/json/iformatter.h"
 #include "ocs_sensor/sht41/sensor.h"
 
 namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class SHT41SensorFormatter : public fmt::json::BasicFormatter,
-                             public core::NonCopyable<> {
+class SHT41SensorFormatter : public fmt::json::IFormatter, public core::NonCopyable<> {
 public:
     //! Initialize.
-    SHT41SensorFormatter(sensor::sht41::Sensor& sensor, bool flat_formatting = true);
+    explicit SHT41SensorFormatter(sensor::sht41::Sensor& sensor);
 
     //! Format SHT41 sensor data into @p json.
     status::StatusCode format(cJSON* json) override;
