@@ -13,9 +13,8 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-LdrSensorFormatter::LdrSensorFormatter(sensor::ldr::Sensor& sensor, bool flat_formatting)
-    : BasicFormatter(flat_formatting)
-    , sensor_(sensor) {
+LdrSensorFormatter::LdrSensorFormatter(sensor::ldr::Sensor& sensor)
+    : sensor_(sensor) {
 }
 
 status::StatusCode LdrSensorFormatter::format(cJSON* json) {
@@ -23,30 +22,16 @@ status::StatusCode LdrSensorFormatter::format(cJSON* json) {
 
     const auto data = sensor_.get_data();
 
-    if (flat_formatting_) {
-        if (!formatter.add_number_cs("sensor_ldr_raw", data.raw)) {
-            return status::StatusCode::NoMem;
-        }
+    if (!formatter.add_number_cs("sensor_ldr_raw", data.raw)) {
+        return status::StatusCode::NoMem;
+    }
 
-        if (!formatter.add_number_cs("sensor_ldr_voltage", data.voltage)) {
-            return status::StatusCode::NoMem;
-        }
+    if (!formatter.add_number_cs("sensor_ldr_voltage", data.voltage)) {
+        return status::StatusCode::NoMem;
+    }
 
-        if (!formatter.add_number_cs("sensor_ldr_lightness", data.lightness)) {
-            return status::StatusCode::NoMem;
-        }
-    } else {
-        if (!formatter.add_number_cs("raw", data.raw)) {
-            return status::StatusCode::NoMem;
-        }
-
-        if (!formatter.add_number_cs("voltage", data.voltage)) {
-            return status::StatusCode::NoMem;
-        }
-
-        if (!formatter.add_number_cs("lightness", data.lightness)) {
-            return status::StatusCode::NoMem;
-        }
+    if (!formatter.add_number_cs("sensor_ldr_lightness", data.lightness)) {
+        return status::StatusCode::NoMem;
     }
 
     return status::StatusCode::OK;

@@ -4,8 +4,6 @@
 
 ## Telemetry Fields
 
-- Flat formatting:
-
 ```json
 {
     "sensor_sht41_heating_count": 7,
@@ -14,17 +12,6 @@
 }
 ```
 
-- Nested formatting:
-
-```json
-{
-    "SHT41": {
-        "heating_count": 7,
-        "humidity": 54.87,
-        "temperature": 21.92
-    }
-}
-```
 ## HTTP API
 
 - `bonsai-firmware.local/api/v1/sensor/sht41/reset` - reset the sensor.

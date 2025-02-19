@@ -13,10 +13,8 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-BME280SensorFormatter::BME280SensorFormatter(sensor::bme280::Sensor& sensor,
-                                             bool flat_formatting)
-    : BasicFormatter(flat_formatting)
-    , sensor_(sensor) {
+BME280SensorFormatter::BME280SensorFormatter(sensor::bme280::Sensor& sensor)
+    : sensor_(sensor) {
 }
 
 status::StatusCode BME280SensorFormatter::format(cJSON* json) {
@@ -24,26 +22,14 @@ status::StatusCode BME280SensorFormatter::format(cJSON* json) {
 
     const auto data = sensor_.get_data();
 
-    if (flat_formatting_) {
-        if (!formatter.add_number_cs("sensor_bme280_pressure", data.pressure)) {
-            return status::StatusCode::NoMem;
-        }
-        if (!formatter.add_number_cs("sensor_bme280_temperature", data.temperature)) {
-            return status::StatusCode::NoMem;
-        }
-        if (!formatter.add_number_cs("sensor_bme280_humidity", data.humidity)) {
-            return status::StatusCode::NoMem;
-        }
-    } else {
-        if (!formatter.add_number_cs("pressure", data.pressure)) {
-            return status::StatusCode::NoMem;
-        }
-        if (!formatter.add_number_cs("temperature", data.temperature)) {
-            return status::StatusCode::NoMem;
-        }
-        if (!formatter.add_number_cs("humidity", data.humidity)) {
-            return status::StatusCode::NoMem;
-        }
+    if (!formatter.add_number_cs("sensor_bme280_pressure", data.pressure)) {
+        return status::StatusCode::NoMem;
+    }
+    if (!formatter.add_number_cs("sensor_bme280_temperature", data.temperature)) {
+        return status::StatusCode::NoMem;
+    }
+    if (!formatter.add_number_cs("sensor_bme280_humidity", data.humidity)) {
+        return status::StatusCode::NoMem;
     }
 
     return status::StatusCode::OK;
