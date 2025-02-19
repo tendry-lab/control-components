@@ -8,28 +8,30 @@
 
 #pragma once
 
-#include <string>
-#include <unordered_map>
-#include <vector>
-
 #include "ocs_core/noncopyable.h"
 #include "ocs_storage/istorage.h"
 
 namespace ocs {
 namespace test {
 
-class MemoryStorage : public storage::IStorage, public core::NonCopyable<> {
+class StatusStorage : public storage::IStorage, public core::NonCopyable<> {
 public:
+    explicit StatusStorage(storage::IStorage& storage);
+
     status::StatusCode probe(const char* key, size_t& size) override;
     status::StatusCode read(const char* key, void* value, size_t size) override;
     status::StatusCode write(const char* key, const void* value, size_t size) override;
     status::StatusCode erase(const char* key) override;
     status::StatusCode erase_all() override;
 
-    bool contains(const char* key) const;
+    status::StatusCode probe_status { status::StatusCode::OK };
+    status::StatusCode read_status { status::StatusCode::OK };
+    status::StatusCode write_status { status::StatusCode::OK };
+    status::StatusCode erase_status { status::StatusCode::OK };
+    status::StatusCode erase_all_status { status::StatusCode::OK };
 
 private:
-    std::unordered_map<std::string, std::vector<uint8_t>> values_;
+    storage::IStorage& storage_;
 };
 
 } // namespace test
