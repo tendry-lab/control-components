@@ -32,7 +32,7 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
     builtin_ssid += "-";
     builtin_ssid += device_info.get_device_id();
 
-    strncpy(ssid_, builtin_ssid.c_str(), sizeof(ssid_));
+    strncpy(ssid_, builtin_ssid.c_str(), std::min(max_ssid_len_, builtin_ssid.size()));
 
     auto code =
         algo::StorageOps::prob_read(storage_, password_key_, password_, max_password_len);
@@ -46,7 +46,8 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
         builtin_password += "-";
         builtin_password += std::string(device_info.get_device_id(), 7);
 
-        strncpy(password_, builtin_password.c_str(), sizeof(password_));
+        strncpy(password_, builtin_password.c_str(),
+                std::min(max_password_len, builtin_password.size()));
     }
 
     code =
