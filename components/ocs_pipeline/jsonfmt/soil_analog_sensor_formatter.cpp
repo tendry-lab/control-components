@@ -64,11 +64,8 @@ status::StatusCode SoilAnalogSensorFormatter::format(cJSON* json) {
             return status::StatusCode::NoMem;
         }
 
-        if (!formatter.add_number_cs("sensor_soil_status_len", data.status_len)) {
-            return status::StatusCode::NoMem;
-        }
-
-        if (!formatter.add_number_cs("sensor_soil_status_pos", data.status_pos)) {
+        if (!formatter.add_number_cs("sensor_soil_status_progress",
+                                     data.status_progress)) {
             return status::StatusCode::NoMem;
         }
     } else {
@@ -106,11 +103,7 @@ status::StatusCode SoilAnalogSensorFormatter::format(cJSON* json) {
             return status::StatusCode::NoMem;
         }
 
-        if (!formatter.add_number_cs("status_len", data.status_len)) {
-            return status::StatusCode::NoMem;
-        }
-
-        if (!formatter.add_number_cs("status_pos", data.status_pos)) {
+        if (!formatter.add_number_cs("status_progress", data.status_progress)) {
             return status::StatusCode::NoMem;
         }
     }

@@ -34,8 +34,7 @@ public:
         core::Time prev_status_duration { 0 };
         core::Time curr_status_duration { 0 };
         uint64_t write_count { 0 };
-        uint16_t status_len { 0 };
-        int16_t status_pos { 0 };
+        uint8_t status_progress { 0 };
     };
 
     struct Params {
@@ -55,7 +54,7 @@ public:
 private:
     int calculate_moisture_(int raw) const;
     SoilStatus calculate_status_(int raw) const;
-    int16_t calculate_status_position_(int raw) const;
+    uint8_t calculate_status_progress_(int raw) const;
 
     void update_data_(int raw, int voltage);
 

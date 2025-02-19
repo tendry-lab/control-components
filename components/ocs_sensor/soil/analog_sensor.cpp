@@ -114,16 +114,17 @@ SoilStatus AnalogSensor::calculate_status_(int raw) const {
     return SoilStatus::Dry;
 }
 
-int16_t AnalogSensor::calculate_status_position_(int raw) const {
-    if (raw < params_.value_min) {
-        return -1;
+uint8_t AnalogSensor::calculate_status_progress_(int raw) const {
+    if (raw < params_.value_min || raw > params_.value_max) {
+        return 0;
     }
 
     const auto offset = raw - params_.value_min;
-    const auto count = offset / status_len_;
-    const auto pos = offset - (status_len_ * count);
+    const auto status_index = offset / status_len_;
+    const auto status_pos = offset - (status_len_ * status_index);
+    const float loss = static_cast<float>(status_pos) / status_len_;
 
-    return pos;
+    return loss * 100;
 }
 
 void AnalogSensor::update_data_(int raw, int voltage) {
@@ -137,8 +138,7 @@ void AnalogSensor::update_data_(int raw, int voltage) {
     data.prev_status_duration = fsm_block_.previous_state_duration();
     data.curr_status_duration = fsm_block_.current_state_duration();
     data.write_count = fsm_block_.write_count();
-    data.status_len = status_len_;
-    data.status_pos = calculate_status_position_(raw);
+    data.status_progress = calculate_status_progress_(raw);
 
     data_.set(data);
 }
