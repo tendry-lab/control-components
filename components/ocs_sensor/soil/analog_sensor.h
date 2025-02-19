@@ -52,6 +52,7 @@ public:
     Data get_data() const;
 
 private:
+    bool is_invalid_input_(int raw) const;
     int calculate_moisture_(int raw) const;
     SoilStatus calculate_status_(int raw) const;
     uint8_t calculate_status_progress_(int raw) const;

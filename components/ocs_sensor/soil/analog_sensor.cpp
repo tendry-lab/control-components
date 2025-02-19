@@ -79,13 +79,13 @@ AnalogSensor::Data AnalogSensor::get_data() const {
     return data_.get();
 }
 
-int AnalogSensor::calculate_moisture_(int raw) const {
-    if (raw > params_.value_max) {
-        return 0;
-    }
+bool AnalogSensor::is_invalid_input_(int raw) const {
+    return raw < params_.value_min || raw > params_.value_max;
+}
 
-    if (raw < params_.value_min) {
-        return 100;
+int AnalogSensor::calculate_moisture_(int raw) const {
+    if (is_invalid_input_(raw)) {
+        return 0;
     }
 
     const int range = params_.value_max - params_.value_min;
@@ -97,7 +97,7 @@ int AnalogSensor::calculate_moisture_(int raw) const {
 }
 
 SoilStatus AnalogSensor::calculate_status_(int raw) const {
-    if (raw < params_.value_min || raw > params_.value_max) {
+    if (is_invalid_input_(raw)) {
         return SoilStatus::Error;
     }
 
@@ -115,7 +115,7 @@ SoilStatus AnalogSensor::calculate_status_(int raw) const {
 }
 
 uint8_t AnalogSensor::calculate_status_progress_(int raw) const {
-    if (raw < params_.value_min || raw > params_.value_max) {
+    if (is_invalid_input_(raw)) {
         return 0;
     }
 
