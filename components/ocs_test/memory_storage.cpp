@@ -63,5 +63,9 @@ status::StatusCode MemoryStorage::erase_all() {
     return status::StatusCode::OK;
 }
 
+bool MemoryStorage::contains(const char* key) const {
+    return values_.find(key) != values_.end();
+}
+
 } // namespace test
 } // namespace ocs
