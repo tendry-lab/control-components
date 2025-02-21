@@ -28,8 +28,7 @@ AnalogRelaySensorPipeline::AnalogRelaySensorPipeline(
     configASSERT(adc_);
 
     fsm_block_pipeline_.reset(new (std::nothrow) control::FsmBlockPipeline(
-        clock, reboot_handler, task_scheduler, storage_builder, "soil_fsm",
-        params.fsm_block));
+        clock, reboot_handler, task_scheduler, storage_builder, id, params.fsm_block));
     configASSERT(fsm_block_pipeline_);
 
     sensor_.reset(new (std::nothrow)
