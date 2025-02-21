@@ -58,7 +58,7 @@ uint16_t AnalogConfig::get_max() const {
 }
 
 status::StatusCode AnalogConfig::configure(uint16_t min, uint16_t max) {
-    if (min < max) {
+    if (min >= max) {
         return status::StatusCode::InvalidArg;
     }
 
