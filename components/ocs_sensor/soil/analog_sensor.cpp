@@ -6,11 +6,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_sensor/soil/analog_sensor.h"
 #include "ocs_core/log.h"
 #include "ocs_core/time.h"
-#include "ocs_sensor/soil/analog_sensor.h"
 #include "ocs_status/code_to_str.h"
 
 namespace ocs {
@@ -38,10 +36,13 @@ AnalogSensor::AnalogSensor(io::adc::IAdc& adc,
     : config_(config)
     , adc_(adc)
     , fsm_block_(fsm_block) {
-    configASSERT(config_.valid());
 }
 
 status::StatusCode AnalogSensor::run() {
+    if (!config_.valid()) {
+        return status::StatusCode::InvalidState;
+    }
+
     const auto read_result = adc_.read();
     if (read_result.code != status::StatusCode::OK) {
         return read_result.code;

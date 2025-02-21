@@ -6,10 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
-#include "ocs_sensor/analog_config.h"
 #include "ocs_sensor/ldr/analog_sensor.h"
+#include "ocs_sensor/analog_config.h"
 
 namespace ocs {
 namespace sensor {
@@ -18,10 +16,13 @@ namespace ldr {
 AnalogSensor::AnalogSensor(io::adc::IAdc& adc, const AnalogConfig& config)
     : config_(config)
     , adc_(adc) {
-    configASSERT(config_.valid());
 }
 
 status::StatusCode AnalogSensor::run() {
+    if (!config_.valid()) {
+        return status::StatusCode::InvalidState;
+    }
+
     const auto read_result = adc_.read();
     if (read_result.code != status::StatusCode::OK) {
         return read_result.code;
