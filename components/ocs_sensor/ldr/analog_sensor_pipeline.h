@@ -15,6 +15,7 @@
 #include "ocs_core/time.h"
 #include "ocs_io/adc/istore.h"
 #include "ocs_scheduler/itask_scheduler.h"
+#include "ocs_sensor/analog_config.h"
 #include "ocs_sensor/ldr/analog_sensor.h"
 
 namespace ocs {
@@ -24,7 +25,6 @@ namespace ldr {
 class AnalogSensorPipeline : public core::NonCopyable<> {
 public:
     struct Params {
-        AnalogSensor::Params sensor;
         io::adc::Channel adc_channel { static_cast<io::adc::Channel>(0) };
         core::Time read_interval { 0 };
     };
@@ -34,9 +34,11 @@ public:
     //! @params
     //!  - @p adc_store to configure ADC channels.
     //!  - @p task_scheduler to schedule periodic ADC readings.
+    //!  - @p config to read sensor configuration.
     //!  - @p id to distringuish one sensor from another.
     AnalogSensorPipeline(io::adc::IStore& adc_store,
                          scheduler::ITaskScheduler& task_scheduler,
+                         const AnalogConfig& config,
                          const char* id,
                          Params params);
 

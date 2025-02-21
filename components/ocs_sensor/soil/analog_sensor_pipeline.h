@@ -28,7 +28,6 @@ namespace soil {
 class AnalogSensorPipeline : public core::NonCopyable<> {
 public:
     struct Params {
-        AnalogSensor::Params sensor;
         io::adc::Channel adc_channel { static_cast<io::adc::Channel>(0) };
         control::FsmBlockPipeline::Params fsm_block;
         core::Time read_interval { 0 };
@@ -40,6 +39,7 @@ public:
                          storage::StorageBuilder& storage_builder,
                          system::FanoutRebootHandler& reboot_handler,
                          scheduler::ITaskScheduler& task_scheduler,
+                         const AnalogConfig& config,
                          const char* id,
                          Params params);
 

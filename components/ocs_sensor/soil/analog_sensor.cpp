@@ -34,12 +34,11 @@ const char* log_tag = "soil_analog_sensor";
 
 AnalogSensor::AnalogSensor(io::adc::IAdc& adc,
                            control::FsmBlock& fsm_block,
-                           Params params)
-    : params_(params)
+                           const AnalogConfig& config)
+    : config_(config)
     , adc_(adc)
     , fsm_block_(fsm_block) {
-    configASSERT(params_.value_min < params_.value_max);
-    status_len_ = (params_.value_max - params_.value_min) / status_count_;
+    configASSERT(config_.valid());
 }
 
 status::StatusCode AnalogSensor::run() {
@@ -80,7 +79,7 @@ AnalogSensor::Data AnalogSensor::get_data() const {
 }
 
 bool AnalogSensor::is_invalid_input_(int raw) const {
-    return raw < params_.value_min || raw > params_.value_max;
+    return raw < config_.get_min() || raw > config_.get_max();
 }
 
 int AnalogSensor::calculate_moisture_(int raw) const {
@@ -88,8 +87,8 @@ int AnalogSensor::calculate_moisture_(int raw) const {
         return 0;
     }
 
-    const int range = params_.value_max - params_.value_min;
-    const int offset = raw - params_.value_min;
+    const int range = config_.get_max() - config_.get_min();
+    const int offset = raw - config_.get_min();
     const float loss = static_cast<float>(offset) / range;
     const float remain = 1 - loss;
 
@@ -101,13 +100,14 @@ SoilStatus AnalogSensor::calculate_status_(int raw) const {
         return SoilStatus::Error;
     }
 
-    if (raw < params_.value_min + status_len_) {
+    if (raw < config_.get_min() + get_status_len_()) {
         return SoilStatus::Saturated;
     }
-    if (raw < params_.value_min + status_len_ + status_len_) {
+    if (raw < config_.get_min() + get_status_len_() + get_status_len_()) {
         return SoilStatus::Wet;
     }
-    if (raw < params_.value_min + status_len_ + status_len_ + status_len_) {
+    if (raw
+        < config_.get_min() + get_status_len_() + get_status_len_() + get_status_len_()) {
         return SoilStatus::Depletion;
     }
 
@@ -119,12 +119,16 @@ uint8_t AnalogSensor::calculate_status_progress_(int raw) const {
         return 0;
     }
 
-    const auto offset = raw - params_.value_min;
-    const auto status_index = offset / status_len_;
-    const auto status_pos = offset - (status_len_ * status_index);
-    const float loss = static_cast<float>(status_pos) / status_len_;
+    const auto offset = raw - config_.get_min();
+    const auto status_index = offset / get_status_len_();
+    const auto status_pos = offset - (get_status_len_() * status_index);
+    const float loss = static_cast<float>(status_pos) / get_status_len_();
 
     return loss * 100;
+}
+
+uint16_t AnalogSensor::get_status_len_() const {
+    return (config_.get_max() - config_.get_min()) / status_count_;
 }
 
 void AnalogSensor::update_data_(int raw, int voltage) {
