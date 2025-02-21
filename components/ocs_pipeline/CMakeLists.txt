@@ -26,8 +26,8 @@ idf_component_register(
     "jsonfmt/console_pipeline.cpp"
     "jsonfmt/sht41_sensor_formatter.cpp"
     "jsonfmt/bme280_sensor_formatter.cpp"
-    "jsonfmt/ldr_sensor_formatter.cpp"
     "jsonfmt/ds18b20_sensor_formatter.cpp"
+    "jsonfmt/ldr_analog_sensor_formatter.cpp"
     "jsonfmt/soil_analog_sensor_formatter.cpp"
 
     "basic/system_pipeline.cpp"
