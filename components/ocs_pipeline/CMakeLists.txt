@@ -12,6 +12,7 @@ idf_component_register(
     "httpserver/time_pipeline.cpp"
     "httpserver/ap_network_handler.cpp"
     "httpserver/sta_network_handler.cpp"
+    "httpserver/analog_config_store_handler.cpp"
 
     "jsonfmt/data_pipeline.cpp"
     "jsonfmt/ap_network_formatter.cpp"
