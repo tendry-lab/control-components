@@ -8,19 +8,19 @@
 
 #include "freertos/FreeRTOSConfig.h"
 
-#include "ocs_sensor/ldr/sensor.h"
+#include "ocs_sensor/ldr/analog_sensor.h"
 
 namespace ocs {
 namespace sensor {
 namespace ldr {
 
-Sensor::Sensor(io::adc::IAdc& adc, Sensor::Params params)
+AnalogSensor::AnalogSensor(io::adc::IAdc& adc, AnalogSensor::Params params)
     : params_(params)
     , adc_(adc) {
     configASSERT(params_.value_min < params_.value_max);
 }
 
-status::StatusCode Sensor::run() {
+status::StatusCode AnalogSensor::run() {
     const auto read_result = adc_.read();
     if (read_result.code != status::StatusCode::OK) {
         return read_result.code;
@@ -36,11 +36,11 @@ status::StatusCode Sensor::run() {
     return status::StatusCode::OK;
 }
 
-Sensor::Data Sensor::get_data() const {
+AnalogSensor::Data AnalogSensor::get_data() const {
     return data_.get();
 }
 
-int Sensor::calculate_lightness_(int raw) const {
+int AnalogSensor::calculate_lightness_(int raw) const {
     if (raw >= params_.value_max) {
         return 100;
     }
@@ -56,7 +56,7 @@ int Sensor::calculate_lightness_(int raw) const {
     return 100 * lightness;
 }
 
-void Sensor::update_data_(int raw, int voltage) {
+void AnalogSensor::update_data_(int raw, int voltage) {
     Data data;
 
     data.raw = raw;

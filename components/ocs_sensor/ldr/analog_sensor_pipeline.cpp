@@ -8,28 +8,28 @@
 
 #include "freertos/FreeRTOSConfig.h"
 
-#include "ocs_sensor/ldr/sensor_pipeline.h"
+#include "ocs_sensor/ldr/analog_sensor_pipeline.h"
 
 namespace ocs {
 namespace sensor {
 namespace ldr {
 
-SensorPipeline::SensorPipeline(io::adc::IStore& adc_store,
-                               scheduler::ITaskScheduler& task_scheduler,
-                               const char* id,
-                               SensorPipeline::Params params)
+AnalogSensorPipeline::AnalogSensorPipeline(io::adc::IStore& adc_store,
+                                           scheduler::ITaskScheduler& task_scheduler,
+                                           const char* id,
+                                           AnalogSensorPipeline::Params params)
     : task_id_(std::string(id) + "_task") {
     adc_ = adc_store.add(params.adc_channel);
     configASSERT(adc_);
 
-    sensor_.reset(new (std::nothrow) Sensor(*adc_, params.sensor));
+    sensor_.reset(new (std::nothrow) AnalogSensor(*adc_, params.sensor));
     configASSERT(sensor_);
 
     configASSERT(task_scheduler.add(*sensor_, task_id_.c_str(), params.read_interval)
                  == status::StatusCode::OK);
 }
 
-Sensor& SensorPipeline::get_sensor() {
+AnalogSensor& AnalogSensorPipeline::get_sensor() {
     return *sensor_;
 }
 

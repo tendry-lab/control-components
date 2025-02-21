@@ -1,13 +1,14 @@
 idf_component_register(
     SRCS
+
     "soil/analog_sensor.cpp"
     "soil/analog_relay_sensor.cpp"
     "soil/analog_sensor_pipeline.cpp"
     "soil/analog_relay_sensor_pipeline.cpp"
     "soil/soil_status_to_str.cpp"
 
-    "ldr/sensor.cpp"
-    "ldr/sensor_pipeline.cpp"
+    "ldr/analog_sensor.cpp"
+    "ldr/analog_sensor_pipeline.cpp"
 
     "ds18b20/store.cpp"
     "ds18b20/sensor.cpp"

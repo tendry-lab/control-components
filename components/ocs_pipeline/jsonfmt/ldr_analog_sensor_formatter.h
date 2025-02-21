@@ -10,22 +10,23 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/iformatter.h"
-#include "ocs_sensor/ldr/sensor.h"
+#include "ocs_sensor/ldr/analog_sensor.h"
 
 namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class LdrSensorFormatter : public fmt::json::IFormatter, public core::NonCopyable<> {
+class LdrAnalogSensorFormatter : public fmt::json::IFormatter,
+                                 public core::NonCopyable<> {
 public:
     //! Initialize.
-    explicit LdrSensorFormatter(sensor::ldr::Sensor& sensor);
+    explicit LdrAnalogSensorFormatter(sensor::ldr::AnalogSensor& sensor);
 
     //! Format LDR sensor data into @p json.
     status::StatusCode format(cJSON* json) override;
 
 private:
-    sensor::ldr::Sensor& sensor_;
+    sensor::ldr::AnalogSensor& sensor_;
 };
 
 } // namespace jsonfmt

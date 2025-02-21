@@ -17,7 +17,7 @@ namespace ocs {
 namespace sensor {
 namespace ldr {
 
-class Sensor : public scheduler::ITask, public core::NonCopyable<> {
+class AnalogSensor : public scheduler::ITask, public core::NonCopyable<> {
 public:
     //! Various sensor characteristics.
     struct Data {
@@ -32,7 +32,7 @@ public:
     };
 
     //! Initialize.
-    Sensor(io::adc::IAdc& adc, Params params);
+    AnalogSensor(io::adc::IAdc& adc, Params params);
 
     //! Read sensor data.
     status::StatusCode run() override;

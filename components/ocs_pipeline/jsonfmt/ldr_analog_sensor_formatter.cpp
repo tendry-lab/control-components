@@ -6,18 +6,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ocs_pipeline/jsonfmt/ldr_sensor_formatter.h"
+#include "ocs_pipeline/jsonfmt/ldr_analog_sensor_formatter.h"
 #include "ocs_fmt/json/cjson_object_formatter.h"
 
 namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-LdrSensorFormatter::LdrSensorFormatter(sensor::ldr::Sensor& sensor)
+LdrAnalogSensorFormatter::LdrAnalogSensorFormatter(sensor::ldr::AnalogSensor& sensor)
     : sensor_(sensor) {
 }
 
-status::StatusCode LdrSensorFormatter::format(cJSON* json) {
+status::StatusCode LdrAnalogSensorFormatter::format(cJSON* json) {
     fmt::json::CjsonObjectFormatter formatter(json);
 
     const auto data = sensor_.get_data();
