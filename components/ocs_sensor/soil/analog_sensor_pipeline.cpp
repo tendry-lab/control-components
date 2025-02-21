@@ -19,6 +19,7 @@ AnalogSensorPipeline::AnalogSensorPipeline(core::IClock& clock,
                                            storage::StorageBuilder& storage_builder,
                                            system::FanoutRebootHandler& reboot_handler,
                                            scheduler::ITaskScheduler& task_scheduler,
+                                           const AnalogConfig& config,
                                            const char* id,
                                            AnalogSensorPipeline::Params params)
     : task_id_(std::string(id) + "_task") {
@@ -30,8 +31,8 @@ AnalogSensorPipeline::AnalogSensorPipeline(core::IClock& clock,
         params.fsm_block));
     configASSERT(fsm_block_pipeline_);
 
-    sensor_.reset(new (std::nothrow) AnalogSensor(*adc_, fsm_block_pipeline_->get_block(),
-                                                  params.sensor));
+    sensor_.reset(new (std::nothrow)
+                      AnalogSensor(*adc_, fsm_block_pipeline_->get_block(), config));
     configASSERT(sensor_);
 
     configASSERT(task_scheduler.add(*sensor_, task_id_.c_str(), params.read_interval)

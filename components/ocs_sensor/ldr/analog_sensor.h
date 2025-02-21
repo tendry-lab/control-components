@@ -12,6 +12,7 @@
 #include "ocs_core/spmc_node.h"
 #include "ocs_io/adc/iadc.h"
 #include "ocs_scheduler/itask.h"
+#include "ocs_sensor/analog_config.h"
 
 namespace ocs {
 namespace sensor {
@@ -26,13 +27,12 @@ public:
         int lightness { 0 };
     };
 
-    struct Params {
-        unsigned value_min { 0 };
-        unsigned value_max { 0 };
-    };
-
     //! Initialize.
-    AnalogSensor(io::adc::IAdc& adc, Params params);
+    //!
+    //! @params
+    //!  - @p adc to read ADC value from the sensor.
+    //!  - @p config to read sensor configuration.
+    AnalogSensor(io::adc::IAdc& adc, const AnalogConfig& config);
 
     //! Read sensor data.
     status::StatusCode run() override;
@@ -45,7 +45,7 @@ private:
 
     void update_data_(int raw, int voltage);
 
-    const Params params_;
+    const AnalogConfig& config_;
 
     io::adc::IAdc& adc_;
     core::SpmcNode<Data> data_;

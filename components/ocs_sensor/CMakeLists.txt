@@ -1,6 +1,8 @@
 idf_component_register(
     SRCS
 
+    "analog_config"
+
     "soil/analog_sensor.cpp"
     "soil/analog_relay_sensor.cpp"
     "soil/analog_sensor_pipeline.cpp"

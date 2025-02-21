@@ -16,6 +16,7 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/spmc_node.h"
 #include "ocs_io/adc/iadc.h"
+#include "ocs_sensor/analog_config.h"
 #include "ocs_sensor/soil/soil_status.h"
 
 namespace ocs {
@@ -37,13 +38,15 @@ public:
         uint8_t status_progress { 0 };
     };
 
-    struct Params {
-        unsigned value_min { 0 };
-        unsigned value_max { 0 };
-    };
-
     //! Initialize.
-    AnalogSensor(io::adc::IAdc& adc, control::FsmBlock& fsm_block, Params params);
+    //!
+    //! @params
+    //!  - @p adc to read the ADC value from the sensor.
+    //!  - @p fsm_block to measure the soil status duration.
+    //!  - @p config to read the sensor configuration.
+    AnalogSensor(io::adc::IAdc& adc,
+                 control::FsmBlock& fsm_block,
+                 const AnalogConfig& config);
 
     //! Read sensor data.
     status::StatusCode run() override;
@@ -56,18 +59,17 @@ private:
     int calculate_moisture_(int raw) const;
     SoilStatus calculate_status_(int raw) const;
     uint8_t calculate_status_progress_(int raw) const;
+    uint16_t get_status_len_() const;
 
     void update_data_(int raw, int voltage);
 
     // Saturated, Wet, Depletion, Dry.
     static const uint8_t status_count_ { 4 };
 
-    const Params params_;
+    const AnalogConfig& config_;
 
     io::adc::IAdc& adc_;
     control::FsmBlock& fsm_block_;
-
-    uint16_t status_len_ { 0 };
 
     core::SpmcNode<Data> data_;
 };

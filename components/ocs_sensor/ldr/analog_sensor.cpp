@@ -8,16 +8,17 @@
 
 #include "freertos/FreeRTOSConfig.h"
 
+#include "ocs_sensor/analog_config.h"
 #include "ocs_sensor/ldr/analog_sensor.h"
 
 namespace ocs {
 namespace sensor {
 namespace ldr {
 
-AnalogSensor::AnalogSensor(io::adc::IAdc& adc, AnalogSensor::Params params)
-    : params_(params)
+AnalogSensor::AnalogSensor(io::adc::IAdc& adc, const AnalogConfig& config)
+    : config_(config)
     , adc_(adc) {
-    configASSERT(params_.value_min < params_.value_max);
+    configASSERT(config_.valid());
 }
 
 status::StatusCode AnalogSensor::run() {
@@ -41,16 +42,16 @@ AnalogSensor::Data AnalogSensor::get_data() const {
 }
 
 int AnalogSensor::calculate_lightness_(int raw) const {
-    if (raw >= params_.value_max) {
+    if (raw >= config_.get_max()) {
         return 100;
     }
 
-    if (raw <= params_.value_min) {
+    if (raw <= config_.get_min()) {
         return 0;
     }
 
-    const int range = params_.value_max - params_.value_min;
-    const int offset = raw - params_.value_min;
+    const int range = config_.get_max() - config_.get_min();
+    const int offset = raw - config_.get_min();
     const float lightness = static_cast<float>(offset) / range;
 
     return 100 * lightness;
