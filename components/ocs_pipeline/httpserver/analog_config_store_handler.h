@@ -23,18 +23,22 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p func_scheduler to schedule asynchronous configuration updates.
+    //!  - @p func_scheduler to schedule asynchronous configuration updates. config should
+    //!    be modified in the same context as a sensor that uses that config.
     //!  - @p server to register HTTP endpoints.
     //!  - @p store to access sensor configurations.
-    //!  - @p path - URI path for HTTP endpoint.
     AnalogConfigStoreHandler(scheduler::AsyncFuncScheduler& func_scheduler,
                              http::Server& server,
-                             sensor::AnalogConfigStore& store,
-                             const char* path);
+                             sensor::AnalogConfigStore& store);
 
 private:
-    status::StatusCode handle_(httpd_req_t* req, const algo::UriOps::Values& values);
-    status::StatusCode handle_get_(httpd_req_t* req, const sensor::AnalogConfig& config);
+    status::StatusCode handle_all_(httpd_req_t* req);
+
+    status::StatusCode handle_single_(httpd_req_t* req,
+                                      const algo::UriOps::Values& values);
+
+    status::StatusCode handle_single_get_(httpd_req_t* req,
+                                          const sensor::AnalogConfig& config);
 
     static constexpr TickType_t wait_timeout_ = pdMS_TO_TICKS(1000 * 6);
 

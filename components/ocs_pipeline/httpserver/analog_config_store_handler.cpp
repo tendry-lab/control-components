@@ -37,6 +37,27 @@ status::StatusCode send_ok(httpd_req_t* req) {
     return status::StatusCode::OK;
 }
 
+status::StatusCode send_json(httpd_req_t* req, cJSON* json, unsigned size) {
+    fmt::json::DynamicFormatter json_formatter(size);
+
+    const auto code = json_formatter.format(json);
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
+
+    auto err = httpd_resp_set_type(req, HTTPD_TYPE_JSON);
+    if (err != ESP_OK) {
+        return status::StatusCode::Error;
+    }
+
+    err = httpd_resp_send(req, json_formatter.c_str(), HTTPD_RESP_USE_STRLEN);
+    if (err != ESP_OK) {
+        return status::StatusCode::Error;
+    }
+
+    return status::StatusCode::OK;
+}
+
 const char* log_tag = "analog_config_store_handler";
 
 } // namespace
@@ -44,34 +65,70 @@ const char* log_tag = "analog_config_store_handler";
 AnalogConfigStoreHandler::AnalogConfigStoreHandler(
     scheduler::AsyncFuncScheduler& func_scheduler,
     http::Server& server,
-    sensor::AnalogConfigStore& store,
-    const char* path)
+    sensor::AnalogConfigStore& store)
     : store_(store) {
-    server.add_GET(path, [this, &func_scheduler](httpd_req_t* req) {
-        const auto values = algo::UriOps::parse_query(req->uri);
-        if (!values.size()) {
-            return status::StatusCode::InvalidArg;
-        }
+    server.add_GET("/api/v1/config/sensor/analog",
+                   [this, &func_scheduler](httpd_req_t* req) {
+                       auto future = func_scheduler.add([this, req]() {
+                           const auto values = algo::UriOps::parse_query(req->uri);
+                           if (!values.size()) {
+                               return handle_all_(req);
+                           }
 
-        auto future = func_scheduler.add([req, &values, this]() {
-            return handle_(req, values);
-        });
-        if (!future) {
-            return status::StatusCode::InvalidState;
-        }
-        if (future->wait(wait_timeout_) != status::StatusCode::OK) {
-            return status::StatusCode::Timeout;
-        }
-        if (future->code() != status::StatusCode::OK) {
-            return future->code();
-        }
+                           return handle_single_(req, values);
+                       });
+                       if (!future) {
+                           return status::StatusCode::InvalidState;
+                       }
+                       if (future->wait(wait_timeout_) != status::StatusCode::OK) {
+                           return status::StatusCode::Timeout;
+                       }
+                       if (future->code() != status::StatusCode::OK) {
+                           return future->code();
+                       }
 
-        return status::StatusCode::OK;
-    });
+                       return status::StatusCode::OK;
+                   });
 }
 
-status::StatusCode AnalogConfigStoreHandler::handle_(httpd_req_t* req,
-                                                     const algo::UriOps::Values& values) {
+status::StatusCode AnalogConfigStoreHandler::handle_all_(httpd_req_t* req) {
+    fmt::json::CjsonUniqueBuilder builder;
+
+    auto array = builder.make_array();
+    if (!array) {
+        return status::StatusCode::NoMem;
+    }
+
+    for (auto& config : store_.get_all()) {
+        auto json = builder.make_object();
+        if (!json) {
+            return status::StatusCode::NoMem;
+        }
+
+        fmt::json::CjsonObjectFormatter object_formatter(json.get());
+
+        if (!object_formatter.add_string_ref_cs("id", config->get_id())) {
+            return status::StatusCode::NoMem;
+        }
+        if (!object_formatter.add_number_cs("min", config->get_min())) {
+            return status::StatusCode::NoMem;
+        }
+        if (!object_formatter.add_number_cs("max", config->get_max())) {
+            return status::StatusCode::NoMem;
+        }
+
+        if (!cJSON_AddItemToArray(array.get(), json.get())) {
+            return status::StatusCode::NoMem;
+        }
+        json.release();
+    }
+
+    return send_json(req, array.get(), 256);
+}
+
+status::StatusCode
+AnalogConfigStoreHandler::handle_single_(httpd_req_t* req,
+                                         const algo::UriOps::Values& values) {
     const auto id = values.find("id");
     if (id == values.end()) {
         ocs_logw(log_tag, "id field is required");
@@ -109,7 +166,7 @@ status::StatusCode AnalogConfigStoreHandler::handle_(httpd_req_t* req,
     const auto max = values.find("max");
 
     if (min == values.end() && max == values.end()) {
-        return handle_get_(req, *config);
+        return handle_single_get_(req, *config);
     }
 
     if (min == values.end() || max == values.end()) {
@@ -147,8 +204,8 @@ status::StatusCode AnalogConfigStoreHandler::handle_(httpd_req_t* req,
 }
 
 status::StatusCode
-AnalogConfigStoreHandler::handle_get_(httpd_req_t* req,
-                                      const sensor::AnalogConfig& config) {
+AnalogConfigStoreHandler::handle_single_get_(httpd_req_t* req,
+                                             const sensor::AnalogConfig& config) {
     if (!config.valid()) {
         return status::StatusCode::InvalidState;
     }
@@ -169,25 +226,7 @@ AnalogConfigStoreHandler::handle_get_(httpd_req_t* req,
         return status::StatusCode::NoMem;
     }
 
-    fmt::json::DynamicFormatter json_formatter(64);
-
-    const auto code = json_formatter.format(json.get());
-    if (code != status::StatusCode::OK) {
-        return code;
-    }
-
-    auto err = httpd_resp_set_type(req, HTTPD_TYPE_JSON);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    err = httpd_resp_send(req, json_formatter.c_str(), HTTPD_RESP_USE_STRLEN);
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "httpd_resp_send(): %s", esp_err_to_name(err));
-        return status::StatusCode::Error;
-    }
-
-    return status::StatusCode::OK;
+    return send_json(req, json.get(), 64);
 }
 
 } // namespace httpserver

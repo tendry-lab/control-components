@@ -20,11 +20,18 @@ const char* log_tag = "analog_config";
 
 } // namespace
 
-AnalogConfig::AnalogConfig(storage::IStorage& storage, uint16_t min, uint16_t max)
-    : def_min_(min)
+AnalogConfig::AnalogConfig(storage::IStorage& storage,
+                           uint16_t min,
+                           uint16_t max,
+                           const char* id)
+    : id_(id)
+    , min_key_(std::string(id) + "_min")
+    , max_key_(std::string(id) + "_max")
+    , def_min_(min)
     , def_max_(max)
     , storage_(storage) {
-    auto code = algo::StorageOps::prob_read(storage_, min_key_, &min_, sizeof(min_));
+    auto code =
+        algo::StorageOps::prob_read(storage_, min_key_.c_str(), &min_, sizeof(min_));
     if (code != status::StatusCode::OK) {
         if (code != status::StatusCode::NoData) {
             ocs_loge(log_tag, "failed to read min from storage: %s",
@@ -34,7 +41,7 @@ AnalogConfig::AnalogConfig(storage::IStorage& storage, uint16_t min, uint16_t ma
         min_ = def_min_;
     }
 
-    code = algo::StorageOps::prob_read(storage_, max_key_, &max_, sizeof(max_));
+    code = algo::StorageOps::prob_read(storage_, max_key_.c_str(), &max_, sizeof(max_));
     if (code != status::StatusCode::OK) {
         if (code != status::StatusCode::NoData) {
             ocs_loge(log_tag, "failed to read max from storage: %s",
@@ -47,6 +54,10 @@ AnalogConfig::AnalogConfig(storage::IStorage& storage, uint16_t min, uint16_t ma
 
 bool AnalogConfig::valid() const {
     return min_ < max_;
+}
+
+const char* AnalogConfig::get_id() const {
+    return id_.c_str();
 }
 
 uint16_t AnalogConfig::get_min() const {
@@ -65,7 +76,7 @@ status::StatusCode AnalogConfig::configure(uint16_t min, uint16_t max) {
     bool modified = false;
 
     if (min_ != min) {
-        const auto code = storage_.write(min_key_, &min, sizeof(min));
+        const auto code = storage_.write(min_key_.c_str(), &min, sizeof(min));
         if (code != status::StatusCode::OK) {
             return code;
         }
@@ -75,7 +86,7 @@ status::StatusCode AnalogConfig::configure(uint16_t min, uint16_t max) {
     }
 
     if (max_ != max) {
-        const auto code = storage_.write(max_key_, &max, sizeof(max));
+        const auto code = storage_.write(max_key_.c_str(), &max, sizeof(max));
         if (code != status::StatusCode::OK) {
             return code;
         }

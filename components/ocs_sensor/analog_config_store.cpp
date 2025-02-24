@@ -6,6 +6,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <algorithm>
+#include <cstring>
+
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_sensor/analog_config_store.h"
@@ -13,19 +16,28 @@
 namespace ocs {
 namespace sensor {
 
-void AnalogConfigStore::add(AnalogConfig& config, const char* id) {
-    configASSERT(configs_.find(id) == configs_.end());
+void AnalogConfigStore::add(AnalogConfig& config) {
+    configASSERT(std::find_if(configs_.begin(), configs_.end(),
+                              [&config](const auto& c) {
+                                  return !strcmp(c->get_id(), config.get_id());
+                              })
+                 == configs_.end());
 
-    configs_[id] = &config;
+    configs_.push_back(&config);
 }
 
 AnalogConfig* AnalogConfigStore::get(const char* id) const {
-    auto it = configs_.find(id);
-    if (it == configs_.end()) {
-        return nullptr;
+    for (auto& config : configs_) {
+        if (!strcmp(id, config->get_id())) {
+            return config;
+        }
     }
 
-    return it->second;
+    return nullptr;
+}
+
+const AnalogConfigStore::ConfigList& AnalogConfigStore::get_all() const {
+    return configs_;
 }
 
 } // namespace sensor
