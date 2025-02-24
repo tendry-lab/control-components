@@ -1,6 +1,7 @@
 idf_component_register(
     SRCS
     "test_analog_config.cpp"
+    "test_analog_config_store.cpp"
 
     "ds18b20/test_store.cpp"
     "ds18b20/test_parse_configuration.cpp"
