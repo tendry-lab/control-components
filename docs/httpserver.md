@@ -205,6 +205,8 @@ OK
 
 - [DS18B20](sensors/ds18b20.md#HTTP-API)
 - [SHT41](sensors/sht41.md#HTTP-API)
+- [Soil Analog](sensors/soil_analog.md#HTTP-API)
+- [LDR Analog](sensors/ldr_analog.md#HTTP-API)
 
 ## Firmware Configuration Options
 

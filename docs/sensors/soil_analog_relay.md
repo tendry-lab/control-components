@@ -1,3 +1,7 @@
+## Introduction
+
+For more details see the following [documentation](soil_analog.md).
+
 ## Firmware Configuration Options
 
 - CONFIG_BONSAI_FIRMWARE_SENSOR_SOIL_ANALOG_RELAY_ADC_CHANNEL
