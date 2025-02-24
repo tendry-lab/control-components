@@ -21,14 +21,14 @@ const char* log_tag = "analog_config";
 } // namespace
 
 AnalogConfig::AnalogConfig(storage::IStorage& storage,
-                           uint16_t min,
-                           uint16_t max,
+                           uint16_t def_min,
+                           uint16_t def_max,
                            const char* id)
     : id_(id)
     , min_key_(std::string(id) + "_min")
     , max_key_(std::string(id) + "_max")
-    , def_min_(min)
-    , def_max_(max)
+    , def_min_(def_min)
+    , def_max_(def_max)
     , storage_(storage) {
     auto code =
         algo::StorageOps::prob_read(storage_, min_key_.c_str(), &min_, sizeof(min_));

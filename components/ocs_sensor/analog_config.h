@@ -23,10 +23,13 @@ public:
     //!
     //! @params
     //!  - @p storage to read analog sensor configuration.
-    //!  - @p min - default minimum value for the sensor.
-    //!  - @p max - default maximum value for the sensor.
+    //!  - @p def_min - default minimum value for the sensor.
+    //!  - @p def_max - default maximum value for the sensor.
     //!  - @p id - unique config identifier.
-    AnalogConfig(storage::IStorage& storage, uint16_t min, uint16_t max, const char* id);
+    AnalogConfig(storage::IStorage& storage,
+                 uint16_t def_min,
+                 uint16_t def_max,
+                 const char* id);
 
     //! Return true if the config is valid.
     //!
