@@ -75,7 +75,7 @@ OK
 ## Tested Sensors
 
 - YL-69 Soil Moisture Sensor
-- Capacitive Soil Moisture Sensor V1.2
+- Capacitive Soil Moisture Sensor V1.2. [Datasheet](https://www.datocms-assets.com/28969/1662716326-hw-101-hw-moisture-sensor-v1-0.pdf)
 
 ## Firmware Configuration Options
 
