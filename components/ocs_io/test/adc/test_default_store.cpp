@@ -104,11 +104,11 @@ TEST_CASE("Default ADC store: read/convert operations",
         auto adc = store.add(channel);
         TEST_ASSERT_NOT_NULL(adc);
 
-        const auto read_result = adc->read();
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, read_result.code);
+        int raw = 0;
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, adc->read(raw));
 
-        const auto conv_result = adc->convert(read_result.value);
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, conv_result.code);
+        int voltage = 0;
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, adc->convert(voltage, raw));
     }
 }
 

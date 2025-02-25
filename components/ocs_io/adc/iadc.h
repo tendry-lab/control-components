@@ -16,20 +16,14 @@ namespace adc {
 
 class IAdc {
 public:
-    //! ADC operation result.
-    struct Result {
-        status::StatusCode code { status::StatusCode::OK };
-        int value { 0 };
-    };
-
     //! Destroy.
     virtual ~IAdc() = default;
 
     //! Read raw ADC value.
-    virtual Result read() = 0;
+    virtual status::StatusCode read(int& raw) = 0;
 
     //! Convert raw ADC value into voltage, in mV.
-    virtual Result convert(int raw) = 0;
+    virtual status::StatusCode convert(int& voltage, int raw) = 0;
 };
 
 } // namespace adc

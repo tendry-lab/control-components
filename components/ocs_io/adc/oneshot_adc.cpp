@@ -27,32 +27,28 @@ OneshotAdc::OneshotAdc(Channel channel,
     , calibration_handle_(calibration_handle) {
 }
 
-IAdc::Result OneshotAdc::read() {
-    int raw = 0;
-
+status::StatusCode OneshotAdc::read(int& raw) {
     const auto err = adc_oneshot_read(unit_handle_, channel_, &raw);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "adc_oneshot_read(): channel=%u err=%s", channel_,
                  esp_err_to_name(err));
 
-        return { status::StatusCode::Error, -1 };
+        return status::StatusCode::Error;
     }
 
-    return { status::StatusCode::OK, raw };
+    return status::StatusCode::OK;
 }
 
-IAdc::Result OneshotAdc::convert(int raw) {
-    int voltage = 0;
-
+status::StatusCode OneshotAdc::convert(int& voltage, int raw) {
     const auto err = adc_cali_raw_to_voltage(calibration_handle_, raw, &voltage);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "adc_cali_raw_to_voltage(): channel=%u err=%s", channel_,
                  esp_err_to_name(err));
 
-        return { status::StatusCode::Error, -1 };
+        return status::StatusCode::Error;
     }
 
-    return { status::StatusCode::OK, voltage };
+    return status::StatusCode::OK;
 }
 
 } // namespace adc
