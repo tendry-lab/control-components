@@ -23,17 +23,19 @@ status::StatusCode AnalogSensor::run() {
         return status::StatusCode::InvalidState;
     }
 
-    const auto read_result = adc_.read();
-    if (read_result.code != status::StatusCode::OK) {
-        return read_result.code;
+    int raw = 0;
+    auto code = adc_.read(raw);
+    if (code != status::StatusCode::OK) {
+        return code;
     }
 
-    const auto conv_result = adc_.convert(read_result.value);
-    if (conv_result.code != status::StatusCode::OK) {
-        return conv_result.code;
+    int voltage = 0;
+    code = adc_.convert(voltage, raw);
+    if (code != status::StatusCode::OK) {
+        return code;
     }
 
-    update_data_(read_result.value, conv_result.value);
+    update_data_(raw, voltage);
 
     return status::StatusCode::OK;
 }

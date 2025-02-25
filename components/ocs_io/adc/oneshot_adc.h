@@ -31,10 +31,10 @@ public:
                adc_cali_handle_t calibration_handle);
 
     //! Read raw ADC value from the configured channel.
-    IAdc::Result read() override;
+    status::StatusCode read(int& raw) override;
 
     //! Convert raw ADC value into voltage, in mV.
-    IAdc::Result convert(int raw) override;
+    status::StatusCode convert(int& voltage, int raw) override;
 
 private:
     Channel channel_ { ADC_CHANNEL_0 };
