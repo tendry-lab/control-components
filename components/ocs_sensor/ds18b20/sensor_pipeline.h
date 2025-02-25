@@ -22,8 +22,22 @@ namespace ds18b20 {
 class SensorPipeline : public core::NonCopyable<> {
 public:
     struct Params {
-        core::Time read_interval { 0 };
+        //! 1-Wire Data pin.
         io::gpio::Gpio data_pin { static_cast<io::gpio::Gpio>(-1) };
+
+        //! How often to read data from the sensor.
+        //!
+        //! @remarks
+        //! 1-Wire communication relies on the strict timings. It's not stable in an
+        //! environment with many tasks and interruptions. Each sensor reading is
+        //! protected by an operation guard, which automatically suspends/resumes the
+        //! FreeRTOS scheduler. Very frequent sensor readings can lead to the overall
+        //! performance degradation. If the frequent sensor readings are needed it's
+        //! better to disable the sensor reading protection.
+        core::Time read_interval { 0 };
+
+        //! Disable sensor reading protection.
+        bool disable_operation_guard { false };
     };
 
     //! Initialize.
@@ -46,7 +60,8 @@ private:
     const std::string task_id_;
 
     std::unique_ptr<Sensor> sensor_;
-    std::unique_ptr<scheduler::ITask> sensor_task_;
+    std::unique_ptr<scheduler::ITask> guard_task_;
+    scheduler::ITask* sensor_task_ { nullptr };
 };
 
 } // namespace ds18b20
