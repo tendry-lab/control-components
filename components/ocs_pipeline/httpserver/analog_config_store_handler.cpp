@@ -58,6 +58,24 @@ status::StatusCode send_json(httpd_req_t* req, cJSON* json, unsigned size) {
     return status::StatusCode::OK;
 }
 
+bool format_config(fmt::json::CjsonObjectFormatter& formatter,
+                   const sensor::AnalogConfig& config) {
+    if (!formatter.add_number_cs("min", config.get_min())) {
+        return false;
+    }
+    if (!formatter.add_number_cs("max", config.get_max())) {
+        return false;
+    }
+    if (!formatter.add_number_cs("oversampling", config.get_sample_count())) {
+        return false;
+    }
+    if (!formatter.add_number_cs("bitwidth", config.get_bitwidth())) {
+        return false;
+    }
+
+    return true;
+}
+
 const char* log_tag = "analog_config_store_handler";
 
 } // namespace
@@ -110,10 +128,7 @@ status::StatusCode AnalogConfigStoreHandler::handle_all_(httpd_req_t* req) {
         if (!object_formatter.add_string_ref_cs("id", config->get_id())) {
             return status::StatusCode::NoMem;
         }
-        if (!object_formatter.add_number_cs("min", config->get_min())) {
-            return status::StatusCode::NoMem;
-        }
-        if (!object_formatter.add_number_cs("max", config->get_max())) {
+        if (!format_config(object_formatter, *config)) {
             return status::StatusCode::NoMem;
         }
 
@@ -164,36 +179,48 @@ AnalogConfigStoreHandler::handle_single_(httpd_req_t* req,
 
     const auto min = values.find("min");
     const auto max = values.find("max");
+    const auto oversampling = values.find("oversampling");
 
-    if (min == values.end() && max == values.end()) {
+    if (min == values.end() && max == values.end() && oversampling == values.end()) {
         return handle_single_get_(req, *config);
     }
 
-    if (min == values.end() || max == values.end()) {
-        ocs_logw(log_tag, "both min and max are required");
+    uint16_t parsed_min = config->get_min();
+    if (min != values.end()) {
+        const auto result = std::from_chars(
+            min->second.data(), min->second.data() + min->second.size(), parsed_min);
+        if (result.ec != std::errc()) {
+            ocs_loge(log_tag, "failed to parse min parameter");
 
-        return status::StatusCode::InvalidArg;
+            return status::StatusCode::InvalidArg;
+        }
     }
 
-    uint16_t parsed_min = 0;
-    auto result = std::from_chars(min->second.data(),
-                                  min->second.data() + min->second.size(), parsed_min);
-    if (result.ec != std::errc()) {
-        ocs_loge(log_tag, "failed to parse min parameter");
+    uint16_t parsed_max = config->get_max();
+    if (max != values.end()) {
+        const auto result = std::from_chars(
+            max->second.data(), max->second.data() + max->second.size(), parsed_max);
+        if (result.ec != std::errc()) {
+            ocs_loge(log_tag, "failed to parse max parameter");
 
-        return status::StatusCode::InvalidArg;
+            return status::StatusCode::InvalidArg;
+        }
     }
 
-    uint16_t parsed_max = 0;
-    result = std::from_chars(max->second.data(), max->second.data() + max->second.size(),
-                             parsed_max);
-    if (result.ec != std::errc()) {
-        ocs_loge(log_tag, "failed to parse max parameter");
+    uint8_t parsed_sample_count = config->get_sample_count();
+    if (oversampling != values.end()) {
+        const auto result =
+            std::from_chars(oversampling->second.data(),
+                            oversampling->second.data() + oversampling->second.size(),
+                            parsed_sample_count);
+        if (result.ec != std::errc()) {
+            ocs_loge(log_tag, "failed to parse oversampling parameter");
 
-        return status::StatusCode::InvalidArg;
+            return status::StatusCode::InvalidArg;
+        }
     }
 
-    const auto code = config->configure(parsed_min, parsed_max);
+    const auto code = config->configure(parsed_min, parsed_max, parsed_sample_count);
     if (code != status::StatusCode::OK && code != status::StatusCode::NotModified) {
         ocs_loge(log_tag, "failed to update config: %s", status::code_to_str(code));
 
@@ -218,11 +245,7 @@ AnalogConfigStoreHandler::handle_single_get_(httpd_req_t* req,
     }
 
     fmt::json::CjsonObjectFormatter object_formatter(json.get());
-
-    if (!object_formatter.add_number_cs("min", config.get_min())) {
-        return status::StatusCode::NoMem;
-    }
-    if (!object_formatter.add_number_cs("max", config.get_max())) {
+    if (!format_config(object_formatter, config)) {
         return status::StatusCode::NoMem;
     }
 

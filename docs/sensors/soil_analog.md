@@ -22,37 +22,43 @@ The calibration procedure includes the following steps:
 
 **Get configuration for all analog sensors**
 
-http "bonsai-firmware.local/api/v1/config/sensor/analog"
+http "bonsai-growlab.local/api/v1/config/sensor/analog"
 
 ```json
 [
     {
+        "bitwidth": 10,
         "id": "ldr_a0",
         "max": 950,
-        "min": 50
+        "min": 50,
+        "oversampling": 32
     },
     {
+        "bitwidth": 10,
         "id": "soil_a0",
-        "max": 900,
-        "min": 100
+        "max": 540,
+        "min": 240,
+        "oversampling": 32
     }
 ]
 ```
 
 **Get soil sensor configuration**
 
-http "bonsai-firmware.local/api/v1/config/sensor/analog?id=soil_a0"
+http "bonsai-growlab.local/api/v1/config/sensor/analog?id=soil_a0"
 
 ```json
 {
-    "min": 200,
-    "max": 800
+    "bitwidth": 10,
+    "max": 540,
+    "min": 240,
+    "oversampling": 32
 }
 ```
 
 **Set soil sensor configuration**
 
-http "bonsai-firmware.local/api/v1/config/sensor/analog?id=soil_a0&min=200&max=800"
+http "bonsai-growlab.local/api/v1/config/sensor/analog?id=soil_a0&min=200&max=800&oversampling=32"
 
 ```txt
 OK
@@ -61,10 +67,11 @@ OK
 - id - unique sensor identifier.
 - max - maximum possible sensor value.
 - min - minimum possible sensor value.
+- oversampling - number of times a sensor value should be measured.
 
 **Reset soil sensor configuration**
 
-http "bonsai-firmware.local/api/v1/config/sensor/analog/id=soil_a0&reset=1"
+http "bonsai-growlab.local/api/v1/config/sensor/analog/id=soil_a0&reset=1"
 
 ```txt
 OK
