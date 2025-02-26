@@ -11,25 +11,22 @@
 #include "soc/soc_caps.h"
 #include "unity.h"
 
-#include "ocs_io/adc/default_store.h"
+#include "ocs_io/adc/esp32/line_fitting_converter.h"
+#include "ocs_io/adc/esp32/oneshot_store.h"
 
 namespace ocs {
 namespace io {
 namespace adc {
 
-TEST_CASE("Default ADC store: register maximum number of ADC",
-          "[ocs_io], [adc], [default_store]") {
+TEST_CASE("Oneshot ADC store: register maximum number of ADC",
+          "[ocs_io], [adc_oneshot_store]") {
     const std::vector<adc_unit_t> units {
         ADC_UNIT_1,
         ADC_UNIT_2,
     };
 
     for (const auto& unit : units) {
-        DefaultStore store(DefaultStore::Params {
-            .unit = unit,
-            .atten = ADC_ATTEN_DB_12,
-            .bitwidth = ADC_BITWIDTH_10,
-        });
+        OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
         const unsigned count = SOC_ADC_CHANNEL_NUM(unit);
 
@@ -40,19 +37,15 @@ TEST_CASE("Default ADC store: register maximum number of ADC",
     }
 }
 
-TEST_CASE("Default ADC store: register the same ADC twice",
-          "[ocs_io], [adc], [default_store]") {
+TEST_CASE("Oneshot ADC store: register the same ADC twice",
+          "[ocs_io], [adc_oneshot_store]") {
     const std::vector<adc_unit_t> units {
         ADC_UNIT_1,
         ADC_UNIT_2,
     };
 
     for (const auto& unit : units) {
-        DefaultStore store(DefaultStore::Params {
-            .unit = unit,
-            .atten = ADC_ATTEN_DB_12,
-            .bitwidth = ADC_BITWIDTH_10,
-        });
+        OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
         const Channel channel = ADC_CHANNEL_5;
         TEST_ASSERT_NOT_NULL(store.add(channel));
@@ -60,18 +53,14 @@ TEST_CASE("Default ADC store: register the same ADC twice",
     }
 }
 
-TEST_CASE("Default ADC store: register overflow", "[ocs_io], [adc], [default_store]") {
+TEST_CASE("Oneshot ADC store: register overflow", "[ocs_io], [adc_oneshot_store]") {
     const std::vector<adc_unit_t> units {
         ADC_UNIT_1,
         ADC_UNIT_2,
     };
 
     for (const auto& unit : units) {
-        DefaultStore store(DefaultStore::Params {
-            .unit = unit,
-            .atten = ADC_ATTEN_DB_12,
-            .bitwidth = ADC_BITWIDTH_10,
-        });
+        OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
         const unsigned count = SOC_ADC_CHANNEL_NUM(unit);
 
@@ -85,30 +74,26 @@ TEST_CASE("Default ADC store: register overflow", "[ocs_io], [adc], [default_sto
     }
 }
 
-TEST_CASE("Default ADC store: read/convert operations",
-          "[ocs_io], [adc], [default_store]") {
+TEST_CASE("Oneshot ADC store: read/convert operations", "[ocs_io], [adc_oneshot_store]") {
     const std::vector<adc_unit_t> units {
         ADC_UNIT_1,
         ADC_UNIT_2,
     };
 
     for (const auto& unit : units) {
-        DefaultStore store(DefaultStore::Params {
-            .unit = unit,
-            .atten = ADC_ATTEN_DB_12,
-            .bitwidth = ADC_BITWIDTH_10,
-        });
+        OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
+        LineFittingConverter converter(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
         const Channel channel = ADC_CHANNEL_5;
 
-        auto adc = store.add(channel);
-        TEST_ASSERT_NOT_NULL(adc);
+        auto reader = store.add(channel);
+        TEST_ASSERT_NOT_NULL(reader);
 
         int raw = 0;
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, adc->read(raw));
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, reader->read(raw));
 
         int voltage = 0;
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, adc->convert(voltage, raw));
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, converter.convert(voltage, raw));
     }
 }
 

@@ -16,6 +16,7 @@ namespace soil {
 
 AnalogSensorPipeline::AnalogSensorPipeline(core::IClock& clock,
                                            io::adc::IStore& adc_store,
+                                           io::adc::IConverter& adc_converter,
                                            storage::StorageBuilder& storage_builder,
                                            system::FanoutRebootHandler& reboot_handler,
                                            scheduler::ITaskScheduler& task_scheduler,
@@ -23,15 +24,15 @@ AnalogSensorPipeline::AnalogSensorPipeline(core::IClock& clock,
                                            const char* id,
                                            AnalogSensorPipeline::Params params)
     : task_id_(std::string(id) + "_task") {
-    adc_ = adc_store.add(params.adc_channel);
-    configASSERT(adc_);
+    reader_ = adc_store.add(params.adc_channel);
+    configASSERT(reader_);
 
     fsm_block_pipeline_.reset(new (std::nothrow) control::FsmBlockPipeline(
         clock, reboot_handler, task_scheduler, storage_builder, id, params.fsm_block));
     configASSERT(fsm_block_pipeline_);
 
-    sensor_.reset(new (std::nothrow)
-                      AnalogSensor(*adc_, fsm_block_pipeline_->get_block(), config));
+    sensor_.reset(new (std::nothrow) AnalogSensor(
+        *reader_, adc_converter, fsm_block_pipeline_->get_block(), config));
     configASSERT(sensor_);
 
     configASSERT(task_scheduler.add(*sensor_, task_id_.c_str(), params.read_interval)

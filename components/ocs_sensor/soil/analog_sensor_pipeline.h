@@ -36,6 +36,7 @@ public:
     //! Initialize.
     AnalogSensorPipeline(core::IClock& clock,
                          io::adc::IStore& adc_store,
+                         io::adc::IConverter& adc_converter,
                          storage::StorageBuilder& storage_builder,
                          system::FanoutRebootHandler& reboot_handler,
                          scheduler::ITaskScheduler& task_scheduler,
@@ -49,7 +50,7 @@ public:
 private:
     const std::string task_id_;
 
-    io::adc::IStore::IAdcPtr adc_;
+    io::adc::IStore::IReaderPtr reader_;
     std::unique_ptr<control::FsmBlockPipeline> fsm_block_pipeline_;
     std::unique_ptr<AnalogSensor> sensor_;
 };

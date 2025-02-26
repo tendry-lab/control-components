@@ -11,7 +11,7 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_io/adc/default_store.h"
+#include "ocs_io/adc/esp32/oneshot_store.h"
 
 namespace ocs {
 namespace io {
@@ -19,37 +19,27 @@ namespace adc {
 
 namespace {
 
-const char* log_tag = "default_adc_store";
+const char* log_tag = "adc_oneshot_store";
 
 } // namespace
 
-DefaultStore::DefaultStore(DefaultStore::Params params)
-    : params_(params) {
+OneshotStore::OneshotStore(adc_unit_t unit, adc_atten_t atten, adc_bitwidth_t bitwidth) {
     // Unit configuration.
     memset(&unit_config_, 0, sizeof(unit_config_));
-    unit_config_.unit_id = params.unit;
+    unit_config_.unit_id = unit;
     ESP_ERROR_CHECK(adc_oneshot_new_unit(&unit_config_, &unit_handle_));
 
     // ADC configuration.
     memset(&config_, 0, sizeof(config_));
-    config_.bitwidth = params_.bitwidth;
-    config_.atten = params_.atten;
-
-    // ADC calibration configuration.
-    memset(&calibration_config_, 0, sizeof(calibration_config_));
-    calibration_config_.unit_id = params.unit;
-    calibration_config_.atten = params_.atten;
-    calibration_config_.bitwidth = params_.bitwidth;
-    ESP_ERROR_CHECK(
-        adc_cali_create_scheme_line_fitting(&calibration_config_, &calibration_handle_));
+    config_.bitwidth = bitwidth;
+    config_.atten = atten;
 }
 
-DefaultStore::~DefaultStore() {
+OneshotStore::~OneshotStore() {
     ESP_ERROR_CHECK(adc_oneshot_del_unit(unit_handle_));
-    ESP_ERROR_CHECK(adc_cali_delete_scheme_line_fitting(calibration_handle_));
 }
 
-IStore::IAdcPtr DefaultStore::add(Channel channel) {
+IStore::IReaderPtr OneshotStore::add(Channel channel) {
     for (const auto& adc : adcs_) {
         if (adc.first == channel) {
             ocs_loge(log_tag, "channel %u already configured", channel);
@@ -65,11 +55,10 @@ IStore::IAdcPtr DefaultStore::add(Channel channel) {
         return nullptr;
     }
 
-    IStore::IAdcPtr adc(new (std::nothrow)
-                            OneshotAdc(channel, unit_handle_, calibration_handle_));
+    IStore::IReaderPtr adc(new (std::nothrow) OneshotReader(channel, unit_handle_));
     configASSERT(adc);
 
-    adcs_.emplace_back(std::pair<Channel, IStore::IAdcPtr>(channel, adc));
+    adcs_.emplace_back(std::pair<Channel, IStore::IReaderPtr>(channel, adc));
 
     return adc;
 }

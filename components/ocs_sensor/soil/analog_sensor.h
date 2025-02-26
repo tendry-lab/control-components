@@ -15,7 +15,8 @@
 #include "ocs_control/ifsm_handler.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/spmc_node.h"
-#include "ocs_io/adc/iadc.h"
+#include "ocs_io/adc/iconverter.h"
+#include "ocs_io/adc/ireader.h"
 #include "ocs_sensor/analog_config.h"
 #include "ocs_sensor/soil/soil_status.h"
 
@@ -41,10 +42,12 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p adc to read the ADC value from the sensor.
+    //!  - @p reader to read the ADC value from the sensor.
+    //!  - @p converter to convert the ADC reading to voltage.
     //!  - @p fsm_block to measure the soil status duration.
     //!  - @p config to read the sensor configuration.
-    AnalogSensor(io::adc::IAdc& adc,
+    AnalogSensor(io::adc::IReader& reader,
+                 io::adc::IConverter& converter,
                  control::FsmBlock& fsm_block,
                  const AnalogConfig& config);
 
@@ -68,7 +71,8 @@ private:
 
     const AnalogConfig& config_;
 
-    io::adc::IAdc& adc_;
+    io::adc::IReader& reader_;
+    io::adc::IConverter& converter_;
     control::FsmBlock& fsm_block_;
 
     core::SpmcNode<Data> data_;

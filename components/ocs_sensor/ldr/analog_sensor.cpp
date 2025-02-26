@@ -13,9 +13,12 @@ namespace ocs {
 namespace sensor {
 namespace ldr {
 
-AnalogSensor::AnalogSensor(io::adc::IAdc& adc, const AnalogConfig& config)
+AnalogSensor::AnalogSensor(io::adc::IReader& reader,
+                           io::adc::IConverter& converter,
+                           const AnalogConfig& config)
     : config_(config)
-    , adc_(adc) {
+    , reader_(reader)
+    , converter_(converter) {
 }
 
 status::StatusCode AnalogSensor::run() {
@@ -24,13 +27,13 @@ status::StatusCode AnalogSensor::run() {
     }
 
     int raw = 0;
-    auto code = adc_.read(raw);
+    auto code = reader_.read(raw);
     if (code != status::StatusCode::OK) {
         return code;
     }
 
     int voltage = 0;
-    code = adc_.convert(voltage, raw);
+    code = converter_.convert(voltage, raw);
     if (code != status::StatusCode::OK) {
         return code;
     }

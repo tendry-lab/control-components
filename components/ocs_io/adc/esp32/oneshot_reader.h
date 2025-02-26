@@ -8,38 +8,30 @@
 
 #pragma once
 
-#include "esp_adc/adc_cali.h"
 #include "esp_adc/adc_oneshot.h"
 
-#include "ocs_io/adc/iadc.h"
+#include "ocs_io/adc/ireader.h"
 #include "ocs_io/adc/types.h"
 
 namespace ocs {
 namespace io {
 namespace adc {
 
-class OneshotAdc : public IAdc {
+class OneshotReader : public IReader {
 public:
     //! Initialize.
     //!
     //! @params
     //!  - @p channel - ADC channel to read value from.
     //!  - @p unit_handle - handle to operate with ADC unit.
-    //!  - @p calibration_handle - handle to convert raw ADC value into voltage.
-    OneshotAdc(Channel channel,
-               adc_oneshot_unit_handle_t unit_handle,
-               adc_cali_handle_t calibration_handle);
+    OneshotReader(Channel channel, adc_oneshot_unit_handle_t unit_handle);
 
     //! Read raw ADC value from the configured channel.
     status::StatusCode read(int& raw) override;
 
-    //! Convert raw ADC value into voltage, in mV.
-    status::StatusCode convert(int& voltage, int raw) override;
-
 private:
     Channel channel_ { ADC_CHANNEL_0 };
     adc_oneshot_unit_handle_t unit_handle_ { nullptr };
-    adc_cali_handle_t calibration_handle_ { nullptr };
 };
 
 } // namespace adc
