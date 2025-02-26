@@ -14,16 +14,13 @@ namespace ocs {
 namespace io {
 namespace adc {
 
-class IAdc {
+class IReader {
 public:
     //! Destroy.
-    virtual ~IAdc() = default;
+    virtual ~IReader() = default;
 
     //! Read raw ADC value.
     virtual status::StatusCode read(int& raw) = 0;
-
-    //! Convert raw ADC value into voltage, in mV.
-    virtual status::StatusCode convert(int& voltage, int raw) = 0;
 };
 
 } // namespace adc

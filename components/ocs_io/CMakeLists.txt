@@ -5,8 +5,10 @@ idf_component_register(
     "gpio/delay_gpio.cpp"
     "gpio/gpio_guard.cpp"
 
-    "adc/oneshot_adc.cpp"
-    "adc/default_store.cpp"
+    "adc/esp32/oneshot_reader.cpp"
+    "adc/esp32/oneshot_store.cpp"
+    "adc/esp32/basic_converter.cpp"
+    "adc/esp32/line_fitting_converter.cpp"
 
     "spi/master_store.cpp"
     "spi/master_transceiver.cpp"

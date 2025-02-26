@@ -18,20 +18,22 @@ namespace ldr {
 
 namespace {
 
-struct TestAdc : public io::adc::IAdc, public core::NonCopyable<> {
+struct TestAdcReader : public io::adc::IReader, public core::NonCopyable<> {
     status::StatusCode read(int& raw) override {
         raw = value;
 
         return status::StatusCode::OK;
     }
 
+    int value { 0 };
+};
+
+struct TestAdcConverter : public io::adc::IConverter, public core::NonCopyable<> {
     status::StatusCode convert(int& voltage, int raw) override {
         voltage = raw;
 
         return status::StatusCode::OK;
     }
-
-    int value { 0 };
 };
 
 } // namespace
@@ -46,13 +48,14 @@ TEST_CASE("LDR analog sensor: receive in range", "[ocs_sensor], [ldr_analog_sens
     AnalogConfig config(storage, def_min, def_max, id);
     TEST_ASSERT_TRUE(config.valid());
 
-    TestAdc adc;
-    AnalogSensor sensor(adc, config);
+    TestAdcReader reader;
+    TestAdcConverter converter;
+    AnalogSensor sensor(reader, converter, config);
 
     const int raw = def_min + 1;
     TEST_ASSERT_TRUE(raw < def_max);
 
-    adc.value = raw;
+    reader.value = raw;
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, sensor.run());
 
@@ -73,16 +76,17 @@ TEST_CASE("LDR analog sensor: receive out of range",
     AnalogConfig config(storage, def_min, def_max, id);
     TEST_ASSERT_TRUE(config.valid());
 
-    TestAdc adc;
-    AnalogSensor sensor(adc, config);
+    TestAdcReader reader;
+    TestAdcConverter converter;
+    AnalogSensor sensor(reader, converter, config);
 
     int raw = def_min - 1;
-    adc.value = raw;
+    reader.value = raw;
     TEST_ASSERT_EQUAL(status::StatusCode::OK, sensor.run());
     TEST_ASSERT_EQUAL(0, sensor.get_data().lightness);
 
     raw = def_max + 1;
-    adc.value = raw;
+    reader.value = raw;
     TEST_ASSERT_EQUAL(status::StatusCode::OK, sensor.run());
     TEST_ASSERT_EQUAL(100, sensor.get_data().lightness);
 }
@@ -99,11 +103,12 @@ TEST_CASE("LDR analog sensor: read config invalid", "[ocs_sensor], [ldr_analog_s
     AnalogConfig config(storage, def_min, def_max, id);
     TEST_ASSERT_FALSE(config.valid());
 
-    TestAdc adc;
-    AnalogSensor sensor(adc, config);
+    TestAdcReader reader;
+    TestAdcConverter converter;
+    AnalogSensor sensor(reader, converter, config);
 
     const int raw = (def_min + def_max) / 2;
-    adc.value = raw;
+    reader.value = raw;
 
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidState, sensor.run());
 

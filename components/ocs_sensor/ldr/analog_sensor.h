@@ -10,7 +10,8 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/spmc_node.h"
-#include "ocs_io/adc/iadc.h"
+#include "ocs_io/adc/iconverter.h"
+#include "ocs_io/adc/ireader.h"
 #include "ocs_scheduler/itask.h"
 #include "ocs_sensor/analog_config.h"
 
@@ -30,9 +31,12 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p adc to read ADC value from the sensor.
+    //!  - @p reader to read ADC value from the sensor.
+    //!  - @p converter to convert the ADC reading to voltage.
     //!  - @p config to read sensor configuration.
-    AnalogSensor(io::adc::IAdc& adc, const AnalogConfig& config);
+    AnalogSensor(io::adc::IReader& reader,
+                 io::adc::IConverter& converter,
+                 const AnalogConfig& config);
 
     //! Read sensor data.
     status::StatusCode run() override;
@@ -47,7 +51,8 @@ private:
 
     const AnalogConfig& config_;
 
-    io::adc::IAdc& adc_;
+    io::adc::IReader& reader_;
+    io::adc::IConverter& converter_;
     core::SpmcNode<Data> data_;
 };
 

@@ -33,10 +33,12 @@ public:
     //!
     //! @params
     //!  - @p adc_store to configure ADC channels.
+    //!  - @p adc_converter to convert the ADC reading to voltage.
     //!  - @p task_scheduler to schedule periodic ADC readings.
     //!  - @p config to read sensor configuration.
     //!  - @p id to distringuish one sensor from another.
     AnalogSensorPipeline(io::adc::IStore& adc_store,
+                         io::adc::IConverter& adc_converter,
                          scheduler::ITaskScheduler& task_scheduler,
                          const AnalogConfig& config,
                          const char* id,
@@ -48,7 +50,7 @@ public:
 private:
     const std::string task_id_;
 
-    io::adc::IStore::IAdcPtr adc_;
+    io::adc::IStore::IReaderPtr reader_;
     std::unique_ptr<AnalogSensor> sensor_;
 };
 

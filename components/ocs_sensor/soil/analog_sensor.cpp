@@ -30,11 +30,13 @@ const char* log_tag = "soil_analog_sensor";
 
 } // namespace
 
-AnalogSensor::AnalogSensor(io::adc::IAdc& adc,
+AnalogSensor::AnalogSensor(io::adc::IReader& reader,
+                           io::adc::IConverter& converter,
                            control::FsmBlock& fsm_block,
                            const AnalogConfig& config)
     : config_(config)
-    , adc_(adc)
+    , reader_(reader)
+    , converter_(converter)
     , fsm_block_(fsm_block) {
 }
 
@@ -44,13 +46,13 @@ status::StatusCode AnalogSensor::run() {
     }
 
     int raw = 0;
-    auto code = adc_.read(raw);
+    auto code = reader_.read(raw);
     if (code != status::StatusCode::OK) {
         return code;
     }
 
     int voltage = 0;
-    code = adc_.convert(voltage, raw);
+    code = converter_.convert(voltage, raw);
     if (code != status::StatusCode::OK) {
         return code;
     }
