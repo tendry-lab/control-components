@@ -19,6 +19,7 @@
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_sensor/soil/analog_sensor.h"
 #include "ocs_system/fanout_reboot_handler.h"
+#include "ocs_system/idelayer.h"
 
 namespace ocs {
 namespace sensor {
@@ -38,6 +39,7 @@ public:
                          io::adc::IStore& adc_store,
                          io::adc::IConverter& adc_converter,
                          storage::StorageBuilder& storage_builder,
+                         system::IDelayer& delayer,
                          system::FanoutRebootHandler& reboot_handler,
                          scheduler::ITaskScheduler& task_scheduler,
                          const AnalogConfig& config,
@@ -50,7 +52,9 @@ public:
 private:
     const std::string task_id_;
 
-    io::adc::IStore::IReaderPtr reader_;
+    io::adc::IStore::IReaderPtr adc_reader_;
+    std::unique_ptr<io::adc::IReader> sample_reader_;
+    io::adc::IReader* reader_ { nullptr };
     std::unique_ptr<control::FsmBlockPipeline> fsm_block_pipeline_;
     std::unique_ptr<AnalogSensor> sensor_;
 };

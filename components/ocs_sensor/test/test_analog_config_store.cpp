@@ -21,7 +21,8 @@ TEST_CASE("Analog config store: get", "[ocs_sensor], [analog_config]") {
 
     test::MemoryStorage storage;
 
-    AnalogConfig config(storage, def_min, def_max, id);
+    AnalogConfig config(storage, def_min, def_max, static_cast<io::adc::Bitwidth>(10),
+                        AnalogConfig::OversamplingMode::Mode_1, id);
     TEST_ASSERT_TRUE(config.valid());
 
     AnalogConfigStore store;
@@ -42,8 +43,10 @@ TEST_CASE("Analog config store: get all", "[ocs_sensor], [analog_config]") {
 
     test::MemoryStorage storage;
 
-    AnalogConfig config1(storage, def_min, def_max, id1);
-    AnalogConfig config2(storage, def_min, def_max, id2);
+    AnalogConfig config1(storage, def_min, def_max, static_cast<io::adc::Bitwidth>(10),
+                         AnalogConfig::OversamplingMode::Mode_1, id1);
+    AnalogConfig config2(storage, def_min, def_max, static_cast<io::adc::Bitwidth>(10),
+                         AnalogConfig::OversamplingMode::Mode_1, id2);
 
     AnalogConfigStore store;
 

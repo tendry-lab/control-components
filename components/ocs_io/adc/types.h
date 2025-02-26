@@ -17,6 +17,9 @@ namespace adc {
 //! ADC channel.
 using Channel = adc_channel_t;
 
+//! ADC reading bit width.
+using Bitwidth = adc_bitwidth_t;
+
 } // namespace adc
 } // namespace io
 } // namespace ocs

@@ -45,7 +45,8 @@ TEST_CASE("LDR analog sensor: receive in range", "[ocs_sensor], [ldr_analog_sens
 
     test::MemoryStorage storage;
 
-    AnalogConfig config(storage, def_min, def_max, id);
+    AnalogConfig config(storage, def_min, def_max, static_cast<io::adc::Bitwidth>(10),
+                        AnalogConfig::OversamplingMode::Mode_1, id);
     TEST_ASSERT_TRUE(config.valid());
 
     TestAdcReader reader;
@@ -73,7 +74,8 @@ TEST_CASE("LDR analog sensor: receive out of range",
 
     test::MemoryStorage storage;
 
-    AnalogConfig config(storage, def_min, def_max, id);
+    AnalogConfig config(storage, def_min, def_max, static_cast<io::adc::Bitwidth>(10),
+                        AnalogConfig::OversamplingMode::Mode_1, id);
     TEST_ASSERT_TRUE(config.valid());
 
     TestAdcReader reader;
@@ -100,7 +102,8 @@ TEST_CASE("LDR analog sensor: read config invalid", "[ocs_sensor], [ldr_analog_s
 
     test::MemoryStorage storage;
 
-    AnalogConfig config(storage, def_min, def_max, id);
+    AnalogConfig config(storage, def_min, def_max, static_cast<io::adc::Bitwidth>(10),
+                        AnalogConfig::OversamplingMode::Mode_1, id);
     TEST_ASSERT_FALSE(config.valid());
 
     TestAdcReader reader;

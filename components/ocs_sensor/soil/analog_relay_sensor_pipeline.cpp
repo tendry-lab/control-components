@@ -7,6 +7,7 @@
  */
 
 #include "ocs_sensor/soil/analog_relay_sensor_pipeline.h"
+#include "ocs_sensor/analog_sample_reader.h"
 #include "ocs_sensor/soil/analog_relay_sensor.h"
 #include "ocs_sensor/soil/analog_sensor_pipeline.h"
 
@@ -19,14 +20,23 @@ AnalogRelaySensorPipeline::AnalogRelaySensorPipeline(
     io::adc::IStore& adc_store,
     io::adc::IConverter& adc_converter,
     storage::StorageBuilder& storage_builder,
+    system::IDelayer& delayer,
     system::FanoutRebootHandler& reboot_handler,
     scheduler::ITaskScheduler& task_scheduler,
     const AnalogConfig& config,
     const char* id,
     AnalogRelaySensorPipeline::Params params)
     : task_id_(std::string(id) + "_task") {
-    reader_ = adc_store.add(params.adc_channel);
-    configASSERT(reader_);
+    adc_reader_ = adc_store.add(params.adc_channel);
+    configASSERT(adc_reader_);
+
+    reader_ = adc_reader_.get();
+
+    sample_reader_.reset(new (std::nothrow)
+                             AnalogSampleReader(delayer, *reader_, config));
+    configASSERT(sample_reader_);
+
+    reader_ = sample_reader_.get();
 
     fsm_block_pipeline_.reset(new (std::nothrow) control::FsmBlockPipeline(
         clock, reboot_handler, task_scheduler, storage_builder, id, params.fsm_block));
