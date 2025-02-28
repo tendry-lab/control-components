@@ -17,7 +17,7 @@
 #include "ocs_net/fanout_network_handler.h"
 #include "ocs_net/ip_addr_to_str.h"
 #include "ocs_net/sta_network.h"
-#include "ocs_storage/flash_initializer.h"
+#include "ocs_storage/target_esp32/flash_initializer.h"
 #include "ocs_test/memory_storage.h"
 
 #ifdef CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED

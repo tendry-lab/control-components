@@ -12,7 +12,6 @@
 #include "ocs_diagnostic/mem_persistent_counter.h"
 #include "ocs_diagnostic/time_counter.h"
 #include "ocs_pipeline/basic/system_counter_pipeline.h"
-#include "ocs_storage/nvs_storage.h"
 
 namespace ocs {
 namespace pipeline {

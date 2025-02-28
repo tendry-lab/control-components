@@ -12,7 +12,7 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_storage/nvs_storage.h"
+#include "ocs_storage/target_esp32/nvs_storage.h"
 
 namespace ocs {
 namespace storage {

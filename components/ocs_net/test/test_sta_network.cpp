@@ -10,7 +10,7 @@
 
 #include "ocs_net/fanout_network_handler.h"
 #include "ocs_net/sta_network.h"
-#include "ocs_storage/flash_initializer.h"
+#include "ocs_storage/target_esp32/flash_initializer.h"
 #include "ocs_test/memory_storage.h"
 
 namespace ocs {

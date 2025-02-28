@@ -8,7 +8,7 @@
 
 #include "unity.h"
 
-#include "ocs_storage/flash_initializer.h"
+#include "ocs_storage/target_esp32/flash_initializer.h"
 
 namespace ocs {
 namespace storage {
