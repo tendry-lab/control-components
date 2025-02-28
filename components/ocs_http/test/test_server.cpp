@@ -16,7 +16,7 @@
 #include "ocs_http/server.h"
 #include "ocs_net/fanout_network_handler.h"
 #include "ocs_net/ip_addr_to_str.h"
-#include "ocs_net/sta_network.h"
+#include "ocs_net/target_esp32/sta_network.h"
 #include "ocs_storage/target_esp32/flash_initializer.h"
 #include "ocs_test/memory_storage.h"
 
