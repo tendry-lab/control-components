@@ -17,10 +17,27 @@ namespace ocs {
 namespace sensor {
 namespace ds18b20 {
 
+namespace {
+
+struct TestDelayer : public system::IDelayer, public core::NonCopyable<> {
+    status::StatusCode delay(core::Time delay) {
+        if (delay < core::Duration::millisecond) {
+            return status::StatusCode::InvalidArg;
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(delay / core::Duration::millisecond));
+
+        return status::StatusCode::OK;
+    }
+};
+
+} // namespace
+
 TEST_CASE("DS18B20 store: schedule: empty store", "[ocs_sensor], [ds18b20_store]") {
     const io::gpio::Gpio gpio = GPIO_NUM_26;
 
-    Store store(16);
+    TestDelayer delayer;
+    Store store(delayer, 16);
 
     auto future = store.schedule(gpio, [](onewire::Bus& bus, Store::SensorList& sensors) {
         return status::StatusCode::OK;
@@ -36,7 +53,8 @@ TEST_CASE("DS18B20 store: schedule: invalid GPIO", "[ocs_sensor], [ds18b20_store
 
     TEST_ASSERT_NOT_EQUAL(gpio, invalid_gpio);
 
-    Store store(16);
+    TestDelayer delayer;
+    Store store(delayer, 16);
     test::MemoryStorage storage;
     Sensor sensor(storage, sensor_id);
 
@@ -54,7 +72,8 @@ TEST_CASE("DS18B20 store: add sensor", "[ocs_sensor], [ds18b20_store]") {
     const io::gpio::Gpio gpio = GPIO_NUM_26;
     const char* gpio_id = "test_gpio_id";
 
-    Store store(16);
+    TestDelayer delayer;
+    Store store(delayer, 16);
     test::MemoryStorage storage;
     Sensor sensor(storage, sensor_id);
 
@@ -78,7 +97,8 @@ TEST_CASE("DS18B20 store: read sensor configuration: non-configured",
     const io::gpio::Gpio gpio = GPIO_NUM_26;
     const char* gpio_id = "test_gpio_id";
 
-    Store store(16);
+    TestDelayer delayer;
+    Store store(delayer, 16);
     test::MemoryStorage storage;
     Sensor sensor(storage, sensor_id);
 

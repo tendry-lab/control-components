@@ -17,6 +17,7 @@
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_sensor/ds18b20/sensor.h"
 #include "ocs_status/code.h"
+#include "ocs_system/idelayer.h"
 
 namespace ocs {
 namespace sensor {
@@ -32,10 +33,11 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p delayer to add short delays between bus operations.
     //!  - @p max_event_count - maximum number of asynchronous events that can be
     //!    scheduled per 1-Wire bus. If the value is too small and the run() is called
     //!    rarely, it's possible to miss some events.
-    explicit Store(unsigned max_event_count);
+    Store(system::IDelayer& delayer, unsigned max_event_count);
 
     //! Handle asynchronous events on the 1-wire buses.
     status::StatusCode run() override;
@@ -58,7 +60,10 @@ private:
     class Node : public scheduler::ITask, public core::NonCopyable<> {
     public:
         //! Initialize.
-        Node(io::gpio::Gpio gpio, const char* gpio_id, unsigned max_event_count);
+        Node(system::IDelayer& delayer,
+             io::gpio::Gpio gpio,
+             const char* gpio_id,
+             unsigned max_event_count);
 
         //! Handle operations on the 1-Wire bus.
         status::StatusCode run() override;
@@ -73,7 +78,6 @@ private:
         scheduler::AsyncFuncScheduler func_scheduler_;
 
         std::unique_ptr<io::gpio::IGpio> gpio_;
-        std::unique_ptr<system::IDelayer> delayer_;
         std::unique_ptr<onewire::Bus> bus_;
         SensorList sensors_;
     };
@@ -82,10 +86,12 @@ private:
     using NodeListItem = std::pair<io::gpio::Gpio, NodePtr>;
     using NodeList = std::vector<NodeListItem>;
 
-    const unsigned max_event_count_ { 0 };
-
     NodePtr get_node_(io::gpio::Gpio gpio);
     NodePtr add_node_(io::gpio::Gpio gpio, const char* gpio_id);
+
+    const unsigned max_event_count_ { 0 };
+
+    system::IDelayer& delayer_;
 
     NodeList nodes_;
 };
