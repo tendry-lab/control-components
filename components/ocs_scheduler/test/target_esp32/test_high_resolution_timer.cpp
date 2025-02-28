@@ -8,7 +8,7 @@
 
 #include "unity.h"
 
-#include "ocs_scheduler/high_resolution_timer.h"
+#include "ocs_scheduler/target_esp32/high_resolution_timer.h"
 #include "ocs_test/test_task.h"
 
 namespace ocs {
