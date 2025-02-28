@@ -6,19 +6,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "unity.h"
+#include "esp_timer.h"
 
-#include "ocs_system/low_power_delayer.h"
+#include "ocs_system/target_esp32/default_clock.h"
 
 namespace ocs {
 namespace system {
 
-TEST_CASE("Low power delayer: delay", "[ocs_system], [low_power_delayer]") {
-    LowPowerDelayer delayer(core::Duration::second);
-
-    for (unsigned n = 0; n < 10; ++n) {
-        delayer.delay(core::Duration::microsecond * 100);
-    }
+core::Time DefaultClock::now() {
+    return esp_timer_get_time();
 }
 
 } // namespace system

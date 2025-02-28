@@ -24,7 +24,7 @@
 #include "ocs_onewire/serial_number_to_str.h"
 #include "ocs_sensor/ds18b20/scratchpad.h"
 #include "ocs_status/code_to_str.h"
-#include "ocs_system/default_delayer.h"
+#include "ocs_system/target_esp32/default_delayer.h"
 
 using namespace ocs;
 

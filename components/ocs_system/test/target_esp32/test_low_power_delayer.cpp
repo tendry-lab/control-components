@@ -8,13 +8,13 @@
 
 #include "unity.h"
 
-#include "ocs_system/default_delayer.h"
+#include "ocs_system/target_esp32/low_power_delayer.h"
 
 namespace ocs {
 namespace system {
 
-TEST_CASE("Default delayer: delay", "[ocs_system], [default_delayer]") {
-    DefaultDelayer delayer;
+TEST_CASE("Low power delayer: delay", "[ocs_system], [low_power_delayer]") {
+    LowPowerDelayer delayer(core::Duration::second);
 
     for (unsigned n = 0; n < 10; ++n) {
         delayer.delay(core::Duration::microsecond * 100);

@@ -13,10 +13,10 @@
 #include "ocs_scheduler/constant_delay_estimator.h"
 #include "ocs_scheduler/periodic_task_scheduler.h"
 #include "ocs_status/code_to_str.h"
-#include "ocs_system/default_clock.h"
-#include "ocs_system/default_rebooter.h"
 #include "ocs_system/delay_rebooter.h"
 #include "ocs_system/reboot_task.h"
+#include "ocs_system/target_esp32/default_clock.h"
+#include "ocs_system/target_esp32/default_rebooter.h"
 
 namespace ocs {
 namespace pipeline {

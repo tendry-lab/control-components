@@ -9,7 +9,7 @@
 #include "esp_system.h"
 
 #include "ocs_core/log.h"
-#include "ocs_system/default_rebooter.h"
+#include "ocs_system/target_esp32/default_rebooter.h"
 
 namespace ocs {
 namespace system {

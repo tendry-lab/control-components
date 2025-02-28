@@ -12,7 +12,7 @@
 
 #include "ocs_core/lock_guard.h"
 #include "ocs_status/macros.h"
-#include "ocs_system/low_power_delayer.h"
+#include "ocs_system/target_esp32/low_power_delayer.h"
 
 namespace ocs {
 namespace system {

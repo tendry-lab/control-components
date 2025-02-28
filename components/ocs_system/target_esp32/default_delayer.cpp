@@ -8,7 +8,7 @@
 
 #include "rom/ets_sys.h"
 
-#include "ocs_system/default_delayer.h"
+#include "ocs_system/target_esp32/default_delayer.h"
 
 namespace ocs {
 namespace system {
