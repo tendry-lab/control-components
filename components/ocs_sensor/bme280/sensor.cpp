@@ -36,15 +36,15 @@ uint8_t oversampling_to_coef(Sensor::OversamplingMode oversampling_mode) {
     switch (oversampling_mode) {
     case Sensor::OversamplingMode::None:
         break;
-    case Sensor::OversamplingMode::One:
+    case Sensor::OversamplingMode::Mode_1:
         return 1;
-    case Sensor::OversamplingMode::Two:
+    case Sensor::OversamplingMode::Mode_2:
         return 2;
-    case Sensor::OversamplingMode::Four:
+    case Sensor::OversamplingMode::Mode_4:
         return 4;
-    case Sensor::OversamplingMode::Eight:
+    case Sensor::OversamplingMode::Mode_8:
         return 8;
-    case Sensor::OversamplingMode::Sixteen:
+    case Sensor::OversamplingMode::Mode_16:
         return 16;
     }
 

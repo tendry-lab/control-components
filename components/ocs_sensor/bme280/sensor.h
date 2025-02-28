@@ -41,11 +41,11 @@ public:
     //!  More number of the measurements, more power is consumed.
     enum class OversamplingMode : uint8_t {
         None = 0b00000000,
-        One = 0b00000001,
-        Two = 0b00000010,
-        Four = 0b00000011,
-        Eight = 0b00000100,
-        Sixteen = 0b00000101,
+        Mode_1 = 0b00000001,
+        Mode_2 = 0b00000010,
+        Mode_4 = 0b00000011,
+        Mode_8 = 0b00000100,
+        Mode_16 = 0b00000101,
     };
 
     //! Various sensor operational modes. See section 3.3 page 14.
@@ -71,9 +71,9 @@ public:
 
     struct Params {
         OperationMode operation_mode { OperationMode::Sleep };
-        OversamplingMode pressure_oversampling { OversamplingMode::One };
-        OversamplingMode temperature_oversampling { OversamplingMode::One };
-        OversamplingMode humidity_oversampling { OversamplingMode::One };
+        OversamplingMode pressure_oversampling { OversamplingMode::Mode_1 };
+        OversamplingMode temperature_oversampling { OversamplingMode::Mode_1 };
+        OversamplingMode humidity_oversampling { OversamplingMode::Mode_1 };
         IirCoefficient iir_coefficient { IirCoefficient::None };
 
         //! Control inactive duration in normal mode.
