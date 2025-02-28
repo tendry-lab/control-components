@@ -48,6 +48,8 @@ status::StatusCode AnalogSampleReader::read(int& raw) {
         OCS_STATUS_RETURN_ON_ERROR(reader_.read(result));
 
         total += result;
+
+        // Add a short delay to allow the ADC unit to stabilize.
         OCS_STATUS_RETURN_ON_ERROR(delayer_.delay(delay_interval_));
     }
 
