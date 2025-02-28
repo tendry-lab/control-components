@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ocs_io/adc/esp32/oneshot_reader.h"
+#include "ocs_io/adc/target_esp32/oneshot_reader.h"
 #include "ocs_core/log.h"
 
 namespace ocs {

@@ -11,8 +11,8 @@
 #include "soc/soc_caps.h"
 #include "unity.h"
 
-#include "ocs_io/adc/esp32/line_fitting_converter.h"
-#include "ocs_io/adc/esp32/oneshot_store.h"
+#include "ocs_io/adc/target_esp32/line_fitting_converter.h"
+#include "ocs_io/adc/target_esp32/oneshot_store.h"
 
 namespace ocs {
 namespace io {
