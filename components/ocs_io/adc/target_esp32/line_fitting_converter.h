@@ -11,7 +11,7 @@
 #include "esp_adc/adc_cali_scheme.h"
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_io/adc/esp32/basic_converter.h"
+#include "ocs_io/adc/target_esp32/basic_converter.h"
 
 namespace ocs {
 namespace io {

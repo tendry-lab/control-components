@@ -11,7 +11,7 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_io/adc/esp32/oneshot_store.h"
+#include "ocs_io/adc/target_esp32/oneshot_store.h"
 
 namespace ocs {
 namespace io {

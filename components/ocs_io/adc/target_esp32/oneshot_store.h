@@ -17,8 +17,8 @@
 #include "esp_adc/adc_oneshot.h"
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_io/adc/esp32/oneshot_reader.h"
 #include "ocs_io/adc/istore.h"
+#include "ocs_io/adc/target_esp32/oneshot_reader.h"
 
 namespace ocs {
 namespace io {
