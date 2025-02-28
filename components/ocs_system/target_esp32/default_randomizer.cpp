@@ -10,7 +10,7 @@
 
 #include "esp_random.h"
 
-#include "ocs_system/default_randomizer.h"
+#include "ocs_system/target_esp32/default_randomizer.h"
 
 namespace ocs {
 namespace system {

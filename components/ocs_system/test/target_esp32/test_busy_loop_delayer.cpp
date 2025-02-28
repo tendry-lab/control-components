@@ -6,15 +6,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "esp_timer.h"
+#include "unity.h"
 
-#include "ocs_system/default_clock.h"
+#include "ocs_system/target_esp32/busy_loop_delayer.h"
 
 namespace ocs {
 namespace system {
 
-core::Time DefaultClock::now() {
-    return esp_timer_get_time();
+TEST_CASE("Busy loop delayer: delay", "[ocs_system], [busy_loop_delayer]") {
+    BusyLoopDelayer delayer(core::Duration::second);
+    for (unsigned n = 0; n < 10; ++n) {
+        delayer.delay(core::Duration::microsecond * 100);
+    }
 }
 
 } // namespace system

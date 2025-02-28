@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_system/basic_delayer.h"
+#include "ocs_system/target_esp32/basic_delayer.h"
 
 namespace ocs {
 namespace system {

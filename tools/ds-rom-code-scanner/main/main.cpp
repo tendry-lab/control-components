@@ -22,7 +22,7 @@
 #include "ocs_onewire/rom_code_scanner.h"
 #include "ocs_onewire/serial_number_to_str.h"
 #include "ocs_status/code_to_str.h"
-#include "ocs_system/default_delayer.h"
+#include "ocs_system/target_esp32/default_delayer.h"
 
 using namespace ocs;
 

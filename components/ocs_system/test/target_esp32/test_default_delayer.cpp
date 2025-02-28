@@ -8,13 +8,14 @@
 
 #include "unity.h"
 
-#include "ocs_system/busy_loop_delayer.h"
+#include "ocs_system/target_esp32/default_delayer.h"
 
 namespace ocs {
 namespace system {
 
-TEST_CASE("Busy loop delayer: delay", "[ocs_system], [busy_loop_delayer]") {
-    BusyLoopDelayer delayer(core::Duration::second);
+TEST_CASE("Default delayer: delay", "[ocs_system], [default_delayer]") {
+    DefaultDelayer delayer;
+
     for (unsigned n = 0; n < 10; ++n) {
         delayer.delay(core::Duration::microsecond * 100);
     }

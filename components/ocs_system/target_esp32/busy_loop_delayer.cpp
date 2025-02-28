@@ -11,7 +11,7 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_status/macros.h"
-#include "ocs_system/busy_loop_delayer.h"
+#include "ocs_system/target_esp32/busy_loop_delayer.h"
 
 namespace ocs {
 namespace system {

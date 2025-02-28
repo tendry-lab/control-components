@@ -8,6 +8,7 @@
 
 #include <atomic>
 #include <memory>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -20,12 +21,19 @@
 #include "ocs_core/lock_guard.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_mutex.h"
-#include "ocs_system/default_randomizer.h"
 
 namespace ocs {
 namespace core {
 
 namespace {
+
+// Ref: https://stackoverflow.com/a/20136256/3873244
+template <typename T> T random(T range_from, T range_to) {
+    std::random_device rand_dev;
+    std::mt19937 generator(rand_dev());
+    std::uniform_int_distribution<T> distr(range_from, range_to);
+    return distr(generator);
+}
 
 class TestTask : public NonCopyable<> {
 public:
@@ -115,8 +123,6 @@ TEST_CASE("Condition variable: wait multiple tasks", "[ocs_core], [cond]") {
         return status::StatusCode::OK;
     };
 
-    system::DefaultRandomizer randomizer;
-
     while (true) {
         TEST_ASSERT_EQUAL(status::StatusCode::OK, cond.broadcast());
 
@@ -126,7 +132,7 @@ TEST_CASE("Condition variable: wait multiple tasks", "[ocs_core], [cond]") {
         }
 
         // Wait for all tasks to start.
-        vTaskDelay(pdMS_TO_TICKS(randomizer.random(50, 100)));
+        vTaskDelay(pdMS_TO_TICKS(random(50, 100)));
     }
 }
 
