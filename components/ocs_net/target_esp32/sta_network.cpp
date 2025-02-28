@@ -11,7 +11,7 @@
 #include "esp_netif.h"
 
 #include "ocs_core/log.h"
-#include "ocs_net/sta_network.h"
+#include "ocs_net/target_esp32/sta_network.h"
 
 #define EVENT_BIT_CONNECTED BIT0
 #define EVENT_BIT_FAILED BIT1

@@ -11,12 +11,12 @@
 #include <memory>
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_net/ap_network.h"
 #include "ocs_net/ap_network_config.h"
 #include "ocs_net/inetwork_handler.h"
 #include "ocs_net/inetwork_runner.h"
-#include "ocs_net/sta_network.h"
 #include "ocs_net/sta_network_config.h"
+#include "ocs_net/target_esp32/ap_network.h"
+#include "ocs_net/target_esp32/sta_network.h"
 #include "ocs_storage/storage_builder.h"
 #include "ocs_system/device_info.h"
 #include "ocs_system/irebooter.h"

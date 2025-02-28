@@ -8,9 +8,9 @@
 
 #include "unity.h"
 
-#include "ocs_net/ap_network.h"
-#include "ocs_net/default_mdns_server.h"
 #include "ocs_net/fanout_network_handler.h"
+#include "ocs_net/target_esp32/ap_network.h"
+#include "ocs_net/target_esp32/default_mdns_server.h"
 #include "ocs_storage/target_esp32/flash_initializer.h"
 
 namespace ocs {

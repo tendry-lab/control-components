@@ -10,34 +10,32 @@
 
 #include "esp_wifi.h"
 
-#include "ocs_core/cond.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_event_group.h"
-#include "ocs_core/static_mutex.h"
-#include "ocs_net/ap_network_config.h"
-#include "ocs_net/iap_network.h"
 #include "ocs_net/inetwork.h"
 #include "ocs_net/inetwork_handler.h"
-#include "ocs_net/netif_builder.h"
+#include "ocs_net/ista_network.h"
+#include "ocs_net/sta_network_config.h"
+#include "ocs_net/target_esp32/netif_builder.h"
 #include "ocs_status/code.h"
 
 namespace ocs {
 namespace net {
 
-//! Handle WiFi AP (access-point) mode network operations.
-class ApNetwork : public INetwork, public IApNetwork, public core::NonCopyable<> {
+//! Handle WiFi STA (station) network operations.
+class StaNetwork : public INetwork, public IStaNetwork, public core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
     //!  - @p handler to notify about network status changes.
-    ApNetwork(INetworkHandler& handler, const ApNetworkConfig& config);
+    StaNetwork(INetworkHandler& handler, const StaNetworkConfig& config);
 
     //! Destroy.
-    ~ApNetwork();
+    ~StaNetwork();
 
     //! Return various network characteristics.
-    IApNetwork::Info get_info() override;
+    IStaNetwork::Info get_info() override;
 
     //! Start the WiFi connection process.
     status::StatusCode start() override;
@@ -54,24 +52,27 @@ private:
                               int32_t event_id,
                               void* event_data);
 
-    void handle_wifi_event_(int32_t event_id, void* event_data);
-    void handle_wifi_event_ap_sta_start_();
-    void handle_wifi_event_ap_sta_stop_();
-    void handle_wifi_event_ap_sta_connected_(void* event_data);
-    void handle_wifi_event_ap_sta_disconnected_(void* event_data);
+    ip_addr_t get_ip_addr_() const;
 
-    const ApNetworkConfig& config_;
+    void handle_wifi_event_(int32_t event_id, void* event_data);
+    void handle_wifi_event_sta_start_();
+    void handle_wifi_event_sta_disconnected_(void* event_data);
+
+    void handle_ip_event_(int32_t event_id, void* event_data);
+    void handle_ip_event_sta_got_ip_(void* event_data);
+
+    const StaNetworkConfig& config_;
 
     INetworkHandler& handler_;
 
     NetifSharedPtr netif_;
 
-    esp_event_handler_instance_t instance_any_id_ { nullptr };
+    core::StaticEventGroup event_group_;
 
-    core::StaticMutex mu_;
-    core::Cond cond_;
-    status::StatusCode code_ { status::StatusCode::Last };
-    uint8_t connection_count_ { 0 };
+    esp_event_handler_instance_t instance_any_id_ { nullptr };
+    esp_event_handler_instance_t instance_got_ip_ { nullptr };
+
+    unsigned retry_count_ { 0 };
 };
 
 } // namespace net

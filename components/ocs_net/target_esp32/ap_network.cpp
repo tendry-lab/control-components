@@ -12,8 +12,8 @@
 
 #include "ocs_core/lock_guard.h"
 #include "ocs_core/log.h"
-#include "ocs_net/ap_network.h"
 #include "ocs_net/macros.h"
+#include "ocs_net/target_esp32/ap_network.h"
 #include "ocs_status/code_to_str.h"
 
 namespace ocs {

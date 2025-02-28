@@ -11,8 +11,8 @@
 #include "mdns.h"
 
 #include "ocs_core/log.h"
-#include "ocs_net/default_mdns_server.h"
 #include "ocs_net/mdns_to_str.h"
+#include "ocs_net/target_esp32/default_mdns_server.h"
 
 namespace ocs {
 namespace net {

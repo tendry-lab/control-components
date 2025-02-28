@@ -10,7 +10,7 @@
 
 #include "esp_wifi.h"
 
-#include "ocs_net/netif_builder.h"
+#include "ocs_net/target_esp32/netif_builder.h"
 
 namespace ocs {
 namespace net {
