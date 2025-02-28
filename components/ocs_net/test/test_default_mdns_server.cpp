@@ -11,7 +11,7 @@
 #include "ocs_net/ap_network.h"
 #include "ocs_net/default_mdns_server.h"
 #include "ocs_net/fanout_network_handler.h"
-#include "ocs_storage/flash_initializer.h"
+#include "ocs_storage/target_esp32/flash_initializer.h"
 
 namespace ocs {
 namespace net {
