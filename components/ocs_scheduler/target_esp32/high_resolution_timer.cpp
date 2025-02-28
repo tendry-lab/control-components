@@ -11,7 +11,7 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_scheduler/high_resolution_timer.h"
+#include "ocs_scheduler/target_esp32/high_resolution_timer.h"
 #include "ocs_status/code_to_str.h"
 
 namespace ocs {

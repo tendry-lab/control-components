@@ -14,7 +14,7 @@
 #include "ocs_core/log.h"
 #include "ocs_scheduler/async_task.h"
 #include "ocs_scheduler/async_task_scheduler.h"
-#include "ocs_scheduler/high_resolution_timer.h"
+#include "ocs_scheduler/timer_builder.h"
 #include "ocs_status/code_to_str.h"
 
 namespace ocs {
@@ -137,7 +137,7 @@ AsyncTaskScheduler::Node::Node(ITask& task,
     async_task_.reset(new (std::nothrow) AsyncTask(even_group, event));
     configASSERT(async_task_);
 
-    timer_.reset(new (std::nothrow) HighResolutionTimer(*async_task_, id, interval));
+    timer_ = TimerBuilder::make_high_resolution_timer(*async_task_, id, interval);
     configASSERT(timer_);
 }
 
