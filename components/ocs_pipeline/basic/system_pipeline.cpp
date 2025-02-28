@@ -71,9 +71,6 @@ SystemPipeline::SystemPipeline(SystemPipeline::Params params) {
                                  scheduler::AsyncFunc(*func_scheduler_, *reboot_task_));
     configASSERT(reboot_task_async_);
 
-    fanout_suspender_.reset(new (std::nothrow) system::FanoutSuspender());
-    configASSERT(fanout_suspender_);
-
     device_info_.reset(new (std::nothrow) system::DeviceInfo(
         CONFIG_OCS_CORE_FW_NAME, CONFIG_OCS_CORE_FW_VERSION,
         CONFIG_OCS_CORE_FW_DESCRIPTION));
@@ -117,11 +114,6 @@ system::IRebooter& SystemPipeline::get_rebooter() {
 system::FanoutRebootHandler& SystemPipeline::get_reboot_handler() {
     return *fanout_reboot_handler_;
 }
-
-system::FanoutSuspender& SystemPipeline::get_suspender() {
-    return *fanout_suspender_;
-}
-
 const system::DeviceInfo& SystemPipeline::get_device_info() const {
     return *device_info_;
 }
