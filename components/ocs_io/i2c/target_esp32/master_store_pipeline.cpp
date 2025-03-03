@@ -9,8 +9,8 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_io/i2c/master_store.h"
-#include "ocs_io/i2c/master_store_pipeline.h"
+#include "ocs_io/i2c/target_esp32/master_store.h"
+#include "ocs_io/i2c/target_esp32/master_store_pipeline.h"
 #include "ocs_status/code_to_str.h"
 #include "ocs_status/macros.h"
 
