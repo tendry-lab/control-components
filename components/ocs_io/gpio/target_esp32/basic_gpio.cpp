@@ -17,7 +17,7 @@ namespace gpio {
 
 namespace {
 
-const char* log_tag = "basic-gpio";
+const char* log_tag = "basic_gpio";
 
 } // namespace
 
