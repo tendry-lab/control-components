@@ -10,7 +10,7 @@
 
 #include "ocs_fmt/json/cjson_object_formatter.h"
 #include "ocs_pipeline/jsonfmt/system_formatter.h"
-#include "ocs_system/target_esp32/reset_reason_to_str.h"
+#include "ocs_system/reset_reason_to_str.h"
 
 namespace ocs {
 namespace pipeline {

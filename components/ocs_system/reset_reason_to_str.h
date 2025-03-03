@@ -13,8 +13,10 @@
 namespace ocs {
 namespace system {
 
+using ResetReason = esp_reset_reason_t;
+
 //! Return human-readable reset reason description.
-const char* reset_reason_to_str(esp_reset_reason_t reason);
+const char* reset_reason_to_str(ResetReason reason);
 
 } // namespace system
 } // namespace ocs

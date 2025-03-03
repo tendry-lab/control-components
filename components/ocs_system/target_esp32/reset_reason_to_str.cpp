@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ocs_system/target_esp32/reset_reason_to_str.h"
+#include "ocs_system/reset_reason_to_str.h"
 
 namespace ocs {
 namespace system {
