@@ -15,7 +15,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-TimePipeline::TimePipeline(http::Server& server,
+TimePipeline::TimePipeline(http::IServer& server,
                            fmt::json::FanoutFormatter& telemetry_formatter,
                            fmt::json::FanoutFormatter& registration_formatter,
                            time_t start_point) {

@@ -72,7 +72,7 @@ void HttpPipeline::handle_disconnect() {
     }
 }
 
-http::Server& HttpPipeline::get_server() {
+http::IServer& HttpPipeline::get_server() {
     return *http_server_;
 }
 

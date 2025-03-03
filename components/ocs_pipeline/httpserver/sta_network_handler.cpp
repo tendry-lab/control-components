@@ -10,8 +10,8 @@
 #include <cstring>
 #include <string>
 
+#include "ocs_algo/response_ops.h"
 #include "ocs_core/lock_guard.h"
-#include "ocs_core/log.h"
 #include "ocs_fmt/json/cjson_builder.h"
 #include "ocs_fmt/json/cjson_object_formatter.h"
 #include "ocs_fmt/json/dynamic_formatter.h"
@@ -21,30 +21,25 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-namespace {
-
-const char* log_tag = "sta_network_handler";
-
-} // namespace
-
-StaNetworkHandler::StaNetworkHandler(http::Server& server,
+StaNetworkHandler::StaNetworkHandler(http::IServer& server,
                                      net::StaNetworkConfig& config,
                                      scheduler::ITask& reboot_task)
     : config_(config)
     , reboot_task_(reboot_task) {
-    server.add_GET("/api/v1/config/wifi/sta", [this](httpd_req_t* req) {
-        core::LockGuard lock(mu_);
+    server.add_GET("/api/v1/config/wifi/sta",
+                   [this](http::IResponseWriter& w, http::IRequest& r) {
+                       core::LockGuard lock(mu_);
 
-        const auto values = algo::UriOps::parse_query(req->uri);
-        if (!values.size()) {
-            return handle_get_(req);
-        }
+                       const auto values = algo::UriOps::parse_query(r.get_uri());
+                       if (!values.size()) {
+                           return handle_get_(w);
+                       }
 
-        return handle_update_(req, values);
-    });
+                       return handle_update_(w, values);
+                   });
 }
 
-status::StatusCode StaNetworkHandler::handle_update_(httpd_req_t* req,
+status::StatusCode StaNetworkHandler::handle_update_(http::IResponseWriter& w,
                                                      const algo::UriOps::Values& values) {
     status::StatusCode code = status::StatusCode::OK;
 
@@ -96,14 +91,9 @@ status::StatusCode StaNetworkHandler::handle_update_(httpd_req_t* req,
         }
     }
 
-    auto err = httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    err = httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
+    code = algo::ResponseOps::write_text(w, "OK");
+    if (code != status::StatusCode::OK) {
+        return code;
     }
 
     if (code == status::StatusCode::NotModified) {
@@ -113,7 +103,7 @@ status::StatusCode StaNetworkHandler::handle_update_(httpd_req_t* req,
     return reboot_task_.run();
 }
 
-status::StatusCode StaNetworkHandler::handle_get_(httpd_req_t* req) {
+status::StatusCode StaNetworkHandler::handle_get_(http::IResponseWriter& w) {
     if (!config_.valid()) {
         return status::StatusCode::InvalidState;
     }
@@ -141,18 +131,7 @@ status::StatusCode StaNetworkHandler::handle_get_(httpd_req_t* req) {
         return code;
     }
 
-    auto err = httpd_resp_set_type(req, HTTPD_TYPE_JSON);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    err = httpd_resp_send(req, json_formatter.c_str(), HTTPD_RESP_USE_STRLEN);
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "httpd_resp_send(): %s", esp_err_to_name(err));
-        return status::StatusCode::Error;
-    }
-
-    return status::StatusCode::OK;
+    return algo::ResponseOps::write_json(w, json_formatter.c_str());
 }
 
 } // namespace httpserver

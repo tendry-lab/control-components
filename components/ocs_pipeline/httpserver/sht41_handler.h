@@ -11,7 +11,7 @@
 #include <functional>
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_http/server.h"
+#include "ocs_http/iserver.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_sensor/sht41/sensor.h"
 
@@ -23,13 +23,14 @@ class SHT41Handler : public core::NonCopyable<> {
 public:
     //! Initialize.
     SHT41Handler(scheduler::AsyncFuncScheduler& func_scheduler,
-                 http::Server& http_server,
+                 http::IServer& http_server,
                  sensor::sht41::Sensor& sensor);
 
 private:
     using HandleOperationFunc = std::function<status::StatusCode(sensor::sht41::Sensor&)>;
 
-    status::StatusCode handle_operation_(httpd_req_t* req, HandleOperationFunc func);
+    status::StatusCode handle_operation_(http::IResponseWriter& w,
+                                         HandleOperationFunc func);
 
     static const TickType_t wait_op_interval_ { pdMS_TO_TICKS(5 * 1000) };
 

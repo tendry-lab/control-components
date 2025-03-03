@@ -8,10 +8,9 @@
 
 #pragma once
 
-#include "esp_http_server.h"
-
 #include "ocs_core/istream_writer.h"
 #include "ocs_core/noncopyable.h"
+#include "ocs_http/iresponse_writer.h"
 
 namespace ocs {
 namespace http {
@@ -20,7 +19,10 @@ namespace http {
 class ChunkStreamWriter : public core::IStreamWriter, public core::NonCopyable<> {
 public:
     //! Initialize.
-    explicit ChunkStreamWriter(httpd_req_t* req);
+    //!
+    //! @params
+    //!  - @p writer to write chunks of data.
+    explicit ChunkStreamWriter(IResponseWriter& writer);
 
     //! Begin stream writing.
     status::StatusCode begin() override;
@@ -35,9 +37,7 @@ public:
     status::StatusCode write(const void* data, unsigned size) override;
 
 private:
-    status::StatusCode send_(const void* data, unsigned size);
-
-    httpd_req_t* req_ { nullptr };
+    IResponseWriter& writer_;
 };
 
 } // namespace http

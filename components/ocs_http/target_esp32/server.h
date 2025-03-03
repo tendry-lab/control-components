@@ -8,23 +8,19 @@
 
 #pragma once
 
-#include <functional>
 #include <string>
 #include <vector>
 
 #include "esp_http_server.h"
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_status/code.h"
+#include "ocs_http/iserver.h"
 
 namespace ocs {
 namespace http {
 
-class Server : public core::NonCopyable<> {
+class Server : public IServer, public core::NonCopyable<> {
 public:
-    //! Handler to process an HTTP request.
-    using HandlerFunc = std::function<status::StatusCode(httpd_req_t* req)>;
-
     struct Params {
         //! TCP port to accept incoming connections.
         unsigned server_port { 80 };
@@ -40,16 +36,13 @@ public:
     ~Server();
 
     //! Start HTTP server.
-    status::StatusCode start();
+    status::StatusCode start() override;
 
     //! Stop HTTP server.
-    //!
-    //! @remarks
-    //!  Can be called multiple times.
-    status::StatusCode stop();
+    status::StatusCode stop() override;
 
     //! Register HTTP handler for a GET request.
-    void add_GET(const char* path, HandlerFunc func);
+    void add_GET(const char* path, HandlerFunc func) override;
 
 private:
     using Endpoint = std::pair<std::string, HandlerFunc>;

@@ -6,64 +6,49 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ocs_pipeline/httpserver/time_handler.h"
+#include <cstring>
+#include <string>
+
+#include "ocs_algo/response_ops.h"
 #include "ocs_algo/time_ops.h"
 #include "ocs_algo/uri_ops.h"
+#include "ocs_pipeline/httpserver/time_handler.h"
 
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-TimeHandler::TimeHandler(http::Server& server, time_t start_point) {
-    server.add_GET("/api/v1/system/time", [start_point](httpd_req_t* req) {
-        const auto values = algo::UriOps::parse_query(req->uri);
-        const auto it = values.find("value");
+TimeHandler::TimeHandler(http::IServer& server, time_t start_point) {
+    server.add_GET("/api/v1/system/time",
+                   [start_point](http::IResponseWriter& w, http::IRequest& r) {
+                       const auto values = algo::UriOps::parse_query(r.get_uri());
+                       const auto it = values.find("value");
 
-        if (it == values.end()) {
-            auto err = httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
-            if (err != ESP_OK) {
-                return status::StatusCode::Error;
-            }
+                       if (it == values.end()) {
+                           auto timestamp = algo::TimeOps::get_time();
+                           if (!timestamp) {
+                               return status::StatusCode::Error;
+                           }
 
-            auto timestamp = algo::TimeOps::get_time();
-            if (!timestamp) {
-                return status::StatusCode::Error;
-            }
+                           if (*timestamp < start_point) {
+                               *timestamp = -1;
+                           }
 
-            if (*timestamp < start_point) {
-                *timestamp = -1;
-            }
+                           return algo::ResponseOps::write_text(
+                               w, std::to_string(*timestamp).c_str());
+                       }
 
-            err = httpd_resp_send(req, std::to_string(*timestamp).c_str(),
-                                  HTTPD_RESP_USE_STRLEN);
-            if (err != ESP_OK) {
-                return status::StatusCode::Error;
-            }
+                       char buf[it->second.size() + 1];
+                       memset(buf, 0, sizeof(buf));
+                       memcpy(buf, it->second.data(), it->second.size());
 
-            return status::StatusCode::OK;
-        }
+                       const auto code = algo::TimeOps::set_time(buf, start_point);
+                       if (code != status::StatusCode::OK) {
+                           return code;
+                       }
 
-        char buf[it->second.size() + 1];
-        memset(buf, 0, sizeof(buf));
-        memcpy(buf, it->second.data(), it->second.size());
-
-        const auto code = algo::TimeOps::set_time(buf, start_point);
-        if (code != status::StatusCode::OK) {
-            return code;
-        }
-
-        auto err = httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
-        if (err != ESP_OK) {
-            return status::StatusCode::Error;
-        }
-
-        err = httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
-        if (err != ESP_OK) {
-            return status::StatusCode::Error;
-        }
-
-        return status::StatusCode::OK;
-    });
+                       return algo::ResponseOps::write_text(w, "OK");
+                   });
 }
 
 } // namespace httpserver

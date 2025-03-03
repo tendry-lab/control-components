@@ -10,7 +10,9 @@
 
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/log.h"
-#include "ocs_http/server.h"
+#include "ocs_http/target_esp32/request.h"
+#include "ocs_http/target_esp32/response_writer.h"
+#include "ocs_http/target_esp32/server.h"
 #include "ocs_status/code_to_str.h"
 
 namespace ocs {
@@ -120,7 +122,10 @@ void Server::handle_request_get_(httpd_req_t* req) {
         return;
     }
 
-    const auto code = endpoint->second(req);
+    Request r(*req);
+    ResponseWriter w(*req);
+
+    const auto code = endpoint->second(w, r);
     if (code != status::StatusCode::OK) {
         ocs_loge(log_tag, "failed to handle request: URI=%s code=%s", req->uri,
                  status::code_to_str(code));

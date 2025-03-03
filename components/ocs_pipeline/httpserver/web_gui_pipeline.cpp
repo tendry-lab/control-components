@@ -58,19 +58,19 @@ const char* log_tag = "web_gui_pipeline";
 
 } // namespace
 
-WebGuiPipeline::WebGuiPipeline(http::Server& server) {
+WebGuiPipeline::WebGuiPipeline(http::IServer& server) {
     buffer_.resize(buffer_size_);
 
     initialize_fs_();
 
-    server.add_GET("/", [this](httpd_req_t* req) {
-        return handle_root_(req);
+    server.add_GET("/", [this](http::IResponseWriter& w, http::IRequest& r) {
+        return handle_root_(w);
     });
-    server.add_GET("/dashboard", [this](httpd_req_t* req) {
-        return handle_file_(req, "/index.html");
+    server.add_GET("/dashboard", [this](http::IResponseWriter& w, http::IRequest& r) {
+        return handle_file_(w, "/index.html");
     });
-    server.add_GET("/assets/*", [this](httpd_req_t* req) {
-        return handle_file_(req, req->uri);
+    server.add_GET("/assets/*", [this](http::IResponseWriter& w, http::IRequest& r) {
+        return handle_file_(w, r.get_uri());
     });
 }
 
@@ -112,32 +112,23 @@ void WebGuiPipeline::initialize_fs_() {
     valid_ = true;
 }
 
-status::StatusCode WebGuiPipeline::handle_root_(httpd_req_t* req) {
-    auto err = httpd_resp_set_status(req, "301 Moved Permanently");
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "httpd_resp_set_status(): %s", esp_err_to_name(err));
-
-        return status::StatusCode::Error;
+status::StatusCode WebGuiPipeline::handle_root_(http::IResponseWriter& w) {
+    auto code = w.write_status(http::StatusCode::MovedPermanently);
+    if (code != status::StatusCode::OK) {
+        return code;
     }
 
-    err = httpd_resp_set_hdr(req, "Location", "/dashboard");
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "httpd_resp_set_hdr(): %s", esp_err_to_name(err));
-
-        return status::StatusCode::Error;
+    code = w.get_header().set("Location", "/dashboard");
+    if (code != status::StatusCode::OK) {
+        return code;
     }
 
-    err = httpd_resp_send(req, nullptr, 0);
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "httpd_resp_set_hdr(): %s", esp_err_to_name(err));
-
-        return status::StatusCode::Error;
-    }
-
-    return status::StatusCode::OK;
+    // Send headers only.
+    return w.write(nullptr, 0);
 }
 
-status::StatusCode WebGuiPipeline::handle_file_(httpd_req_t* req, const char* filename) {
+status::StatusCode WebGuiPipeline::handle_file_(http::IResponseWriter& w,
+                                                const char* filename) {
     if (!valid_) {
         return status::StatusCode::InvalidState;
     }
@@ -145,24 +136,25 @@ status::StatusCode WebGuiPipeline::handle_file_(httpd_req_t* req, const char* fi
     std::string file_path = mount_point_;
     file_path += filename;
 
-    auto err = httpd_resp_set_type(req, parse_content_type(file_path.c_str()));
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "httpd_resp_set_type(): %s", esp_err_to_name(err));
-
-        return status::StatusCode::Error;
+    auto code = w.get_header().set("Content-Type", parse_content_type(file_path.c_str()));
+    if (code != status::StatusCode::OK) {
+        return code;
     }
 
-    err = httpd_resp_set_hdr(req, "Content-Encoding", "gzip");
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "httpd_resp_set_hdr(): %s", esp_err_to_name(err));
+    code = w.get_header().set("Transfer-Encoding", "chunked");
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
 
-        return status::StatusCode::Error;
+    code = w.get_header().set("Content-Encoding", "gzip");
+    if (code != status::StatusCode::OK) {
+        return code;
     }
 
     file_path += ".gz";
 
     core::FileStreamReader reader(file_path.c_str());
-    http::ChunkStreamWriter writer(req);
+    http::ChunkStreamWriter writer(w);
     core::StreamTransceiver transceiver(reader, writer, buffer_);
 
     return transceiver.transceive();

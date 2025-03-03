@@ -10,7 +10,7 @@
 
 #include "ocs_core/lock_guard.h"
 #include "ocs_core/log.h"
-#include "ocs_http/client_reader.h"
+#include "ocs_http/target_esp32/client_reader.h"
 #include "ocs_status/macros.h"
 
 namespace ocs {

@@ -9,6 +9,7 @@
 #include <charconv>
 #include <cstring>
 
+#include "ocs_algo/response_ops.h"
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/operation_guard.h"
 #include "ocs_fmt/json/cjson_array_formatter.h"
@@ -109,37 +110,40 @@ status::StatusCode find_rom_code(onewire::Bus& bus,
 
 } // namespace
 
-DS18B20Handler::DS18B20Handler(http::Server& server,
+DS18B20Handler::DS18B20Handler(http::IServer& server,
                                system::ISuspender& suspender,
                                sensor::ds18b20::Store& store)
     : suspender_(suspender)
     , store_(store) {
-    server.add_GET("/api/v1/sensor/ds18b20/scan", [this](httpd_req_t* req) {
-        return handle_scan_(req);
-    });
-    server.add_GET("/api/v1/sensor/ds18b20/read_configuration", [this](httpd_req_t* req) {
-        return handle_configuration_(
-            req, read_wait_interval_, read_response_buffer_size_,
-            [this](cJSON* json, sensor::ds18b20::Sensor& sensor) {
-                return read_configuration_(json, sensor);
-            });
-    });
+    server.add_GET("/api/v1/sensor/ds18b20/scan",
+                   [this](http::IResponseWriter& w, http::IRequest& r) {
+                       return handle_scan_(w, r);
+                   });
+    server.add_GET("/api/v1/sensor/ds18b20/read_configuration",
+                   [this](http::IResponseWriter& w, http::IRequest& r) {
+                       return handle_configuration_(
+                           w, r, read_wait_interval_, read_response_buffer_size_,
+                           [this](cJSON* json, sensor::ds18b20::Sensor& sensor) {
+                               return read_configuration_(json, sensor);
+                           });
+                   });
     server.add_GET("/api/v1/sensor/ds18b20/write_configuration",
-                   [this](httpd_req_t* req) {
-                       return handle_write_configuration_(req);
+                   [this](http::IResponseWriter& w, http::IRequest& r) {
+                       return handle_write_configuration_(w, r);
                    });
     server.add_GET("/api/v1/sensor/ds18b20/erase_configuration",
-                   [this](httpd_req_t* req) {
+                   [this](http::IResponseWriter& w, http::IRequest& r) {
                        return handle_configuration_(
-                           req, erase_wait_interval_, erase_response_buffer_size_,
+                           w, r, erase_wait_interval_, erase_response_buffer_size_,
                            [this](cJSON* json, sensor::ds18b20::Sensor& sensor) {
                                return erase_configuration_(json, sensor);
                            });
                    });
 }
 
-status::StatusCode DS18B20Handler::handle_scan_(httpd_req_t* req) {
-    const auto values = algo::UriOps::parse_query(req->uri);
+status::StatusCode DS18B20Handler::handle_scan_(http::IResponseWriter& w,
+                                                http::IRequest& r) {
+    const auto values = algo::UriOps::parse_query(r.get_uri());
     const auto it = values.find("gpio");
     if (it == values.end()) {
         return status::StatusCode::InvalidArg;
@@ -176,7 +180,7 @@ status::StatusCode DS18B20Handler::handle_scan_(httpd_req_t* req) {
         return future->code();
     }
 
-    return send_response_(scan_response_buffer_size_, json.get(), req);
+    return send_response_(scan_response_buffer_size_, json.get(), w);
 }
 
 status::StatusCode
@@ -265,11 +269,12 @@ status::StatusCode DS18B20Handler::format_sensor_(cJSON* array,
 }
 
 status::StatusCode
-DS18B20Handler::handle_configuration_(httpd_req_t* req,
+DS18B20Handler::handle_configuration_(http::IResponseWriter& w,
+                                      http::IRequest& r,
                                       unsigned wait_interval,
                                       unsigned response_size,
                                       DS18B20Handler::HandleConfigurationFunc func) {
-    const auto values = algo::UriOps::parse_query(req->uri);
+    const auto values = algo::UriOps::parse_query(r.get_uri());
 
     const auto gpio_it = values.find("gpio");
     if (gpio_it == values.end()) {
@@ -317,7 +322,7 @@ DS18B20Handler::handle_configuration_(httpd_req_t* req,
         return future->code();
     }
 
-    return send_response_(response_size, json.get(), req);
+    return send_response_(response_size, json.get(), w);
 }
 
 status::StatusCode DS18B20Handler::read_configuration_(cJSON* json,
@@ -336,8 +341,9 @@ status::StatusCode DS18B20Handler::read_configuration_(cJSON* json,
     return status::StatusCode::OK;
 }
 
-status::StatusCode DS18B20Handler::handle_write_configuration_(httpd_req_t* req) {
-    const auto values = algo::UriOps::parse_query(req->uri);
+status::StatusCode DS18B20Handler::handle_write_configuration_(http::IResponseWriter& w,
+                                                               http::IRequest& r) {
+    const auto values = algo::UriOps::parse_query(r.get_uri());
 
     const auto gpio_it = values.find("gpio");
     if (gpio_it == values.end()) {
@@ -392,7 +398,7 @@ status::StatusCode DS18B20Handler::handle_write_configuration_(httpd_req_t* req)
         return future->code();
     }
 
-    return send_response_(write_response_buffer_size_, json.get(), req);
+    return send_response_(write_response_buffer_size_, json.get(), w);
 }
 
 status::StatusCode
@@ -460,8 +466,9 @@ status::StatusCode DS18B20Handler::erase_configuration_(cJSON* json,
     return status::StatusCode::OK;
 }
 
-status::StatusCode
-DS18B20Handler::send_response_(unsigned buffer_size, cJSON* json, httpd_req_t* req) {
+status::StatusCode DS18B20Handler::send_response_(unsigned buffer_size,
+                                                  cJSON* json,
+                                                  http::IResponseWriter& w) {
     fmt::json::DynamicFormatter json_formatter(buffer_size);
 
     const auto code = json_formatter.format(json);
@@ -469,17 +476,7 @@ DS18B20Handler::send_response_(unsigned buffer_size, cJSON* json, httpd_req_t* r
         return code;
     }
 
-    auto err = httpd_resp_set_type(req, HTTPD_TYPE_JSON);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    err = httpd_resp_send(req, json_formatter.c_str(), HTTPD_RESP_USE_STRLEN);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    return status::StatusCode::OK;
+    return algo::ResponseOps::write_json(w, json_formatter.c_str());
 }
 
 } // namespace httpserver

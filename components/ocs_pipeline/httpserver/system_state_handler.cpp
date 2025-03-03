@@ -6,49 +6,48 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ocs_pipeline/httpserver/system_state_handler.h"
+#include "freertos/FreeRTOSConfig.h"
+
+#include "ocs_algo/response_ops.h"
 #include "ocs_fmt/json/cjson_builder.h"
+#include "ocs_pipeline/httpserver/system_state_handler.h"
 #include "ocs_pipeline/jsonfmt/system_state_formatter.h"
 
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-SystemStateHandler::SystemStateHandler(http::Server& server, unsigned response_size) {
+SystemStateHandler::SystemStateHandler(http::IServer& server, unsigned response_size) {
     state_json_formatter_.reset(new (std::nothrow) jsonfmt::SystemStateFormatter());
     configASSERT(state_json_formatter_);
 
     json_formatter_.reset(new (std::nothrow) fmt::json::DynamicFormatter(response_size));
     configASSERT(json_formatter_);
 
-    server.add_GET("/api/v1/system/report", [this](httpd_req_t* req) {
-        auto json = fmt::json::CjsonUniqueBuilder::make_object();
-        if (!json) {
-            return status::StatusCode::NoMem;
-        }
+    server.add_GET("/api/v1/system/report",
+                   [this](http::IResponseWriter& w, http::IRequest&) {
+                       auto json = fmt::json::CjsonUniqueBuilder::make_object();
+                       if (!json) {
+                           return status::StatusCode::NoMem;
+                       }
 
-        auto code = state_json_formatter_->format(json.get());
-        if (code != status::StatusCode::OK) {
-            return code;
-        }
+                       auto code = state_json_formatter_->format(json.get());
+                       if (code != status::StatusCode::OK) {
+                           return code;
+                       }
 
-        code = json_formatter_->format(json.get());
-        if (code != status::StatusCode::OK) {
-            return code;
-        }
+                       code = json_formatter_->format(json.get());
+                       if (code != status::StatusCode::OK) {
+                           return code;
+                       }
 
-        auto err = httpd_resp_set_type(req, HTTPD_TYPE_JSON);
-        if (err != ESP_OK) {
-            return status::StatusCode::Error;
-        }
+                       code = algo::ResponseOps::write_json(w, json_formatter_->c_str());
+                       if (code != status::StatusCode::OK) {
+                           return code;
+                       }
 
-        err = httpd_resp_send(req, json_formatter_->c_str(), HTTPD_RESP_USE_STRLEN);
-        if (err != ESP_OK) {
-            return status::StatusCode::Error;
-        }
-
-        return status::StatusCode::OK;
-    });
+                       return status::StatusCode::OK;
+                   });
 }
 
 } // namespace httpserver

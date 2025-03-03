@@ -8,6 +8,7 @@
 
 #include <cstring>
 
+#include "ocs_algo/response_ops.h"
 #include "ocs_core/lock_guard.h"
 #include "ocs_pipeline/httpserver/mdns_handler.h"
 
@@ -15,24 +16,25 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-MdnsHandler::MdnsHandler(http::Server& server,
+MdnsHandler::MdnsHandler(http::IServer& server,
                          net::MdnsConfig& config,
                          scheduler::ITask& reboot_task)
     : config_(config)
     , reboot_task_(reboot_task) {
-    server.add_GET("/api/v1/config/mdns", [this](httpd_req_t* req) {
-        core::LockGuard lock(mu_);
+    server.add_GET("/api/v1/config/mdns",
+                   [this](http::IResponseWriter& w, http::IRequest& r) {
+                       core::LockGuard lock(mu_);
 
-        const auto values = algo::UriOps::parse_query(req->uri);
-        if (!values.size()) {
-            return status::StatusCode::InvalidArg;
-        }
+                       const auto values = algo::UriOps::parse_query(r.get_uri());
+                       if (!values.size()) {
+                           return status::StatusCode::InvalidArg;
+                       }
 
-        return handle_update_(req, values);
-    });
+                       return handle_update_(w, values);
+                   });
 }
 
-status::StatusCode MdnsHandler::handle_update_(httpd_req_t* req,
+status::StatusCode MdnsHandler::handle_update_(http::IResponseWriter& w,
                                                const algo::UriOps::Values& values) {
     status::StatusCode code = status::StatusCode::OK;
 
@@ -62,14 +64,9 @@ status::StatusCode MdnsHandler::handle_update_(httpd_req_t* req,
         }
     }
 
-    auto err = httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    err = httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
+    code = algo::ResponseOps::write_text(w, "OK");
+    if (code != status::StatusCode::OK) {
+        return code;
     }
 
     if (code == status::StatusCode::NotModified) {

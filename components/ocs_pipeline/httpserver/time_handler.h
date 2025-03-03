@@ -11,7 +11,7 @@
 #include <ctime>
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_http/server.h"
+#include "ocs_http/iserver.h"
 
 namespace ocs {
 namespace pipeline {
@@ -24,7 +24,7 @@ public:
     //! @params
     //!  - @p server to register HTTP endpoint.
     //!  - @p start_point - point in time begin with the system time is valid.
-    TimeHandler(http::Server& server, time_t start_point);
+    TimeHandler(http::IServer& server, time_t start_point);
 };
 
 } // namespace httpserver
