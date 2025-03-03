@@ -9,7 +9,7 @@
 #include <cstring>
 
 #include "ocs_core/log.h"
-#include "ocs_io/spi/master_transceiver.h"
+#include "ocs_io/spi/target_esp32/master_transceiver.h"
 
 namespace ocs {
 namespace io {
