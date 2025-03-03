@@ -11,7 +11,7 @@
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_mutex.h"
-#include "ocs_http/server.h"
+#include "ocs_http/iserver.h"
 #include "ocs_net/sta_network_config.h"
 #include "ocs_scheduler/itask.h"
 
@@ -27,13 +27,15 @@ public:
     //!  - @p server to register HTTP endpoints.
     //!  - @p config to perform the WiFi STA configuration.
     //!  - @p reboot_task to schedule a reboot when the configuration is changed.
-    StaNetworkHandler(http::Server& server,
+    StaNetworkHandler(http::IServer& server,
                       net::StaNetworkConfig& config,
                       scheduler::ITask& reboot_task);
 
 private:
-    status::StatusCode handle_update_(httpd_req_t*, const algo::UriOps::Values&);
-    status::StatusCode handle_get_(httpd_req_t*);
+    status::StatusCode handle_update_(http::IResponseWriter& w,
+                                      const algo::UriOps::Values&);
+
+    status::StatusCode handle_get_(http::IResponseWriter& w);
 
     core::StaticMutex mu_;
     net::StaNetworkConfig& config_;

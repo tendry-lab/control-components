@@ -8,6 +8,7 @@
 
 #include "freertos/FreeRTOSConfig.h"
 
+#include "ocs_algo/response_ops.h"
 #include "ocs_core/log.h"
 #include "ocs_pipeline/httpserver/system_handler.h"
 
@@ -21,22 +22,18 @@ const char* log_tag = "http_system_handler";
 
 } // namespace
 
-SystemHandler::SystemHandler(http::Server& server, scheduler::ITask& reboot_task) {
-    server.add_GET("/api/v1/system/reboot", [&reboot_task](httpd_req_t* req) {
-        auto err = httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
-        if (err != ESP_OK) {
-            return status::StatusCode::Error;
-        }
+SystemHandler::SystemHandler(http::IServer& server, scheduler::ITask& reboot_task) {
+    server.add_GET("/api/v1/system/reboot",
+                   [&reboot_task](http::IResponseWriter& w, http::IRequest&) {
+                       const auto code = algo::ResponseOps::write_text(w, "Rebooting...");
+                       if (code != status::StatusCode::OK) {
+                           return code;
+                       }
 
-        err = httpd_resp_send(req, "Rebooting...", HTTPD_RESP_USE_STRLEN);
-        if (err != ESP_OK) {
-            return status::StatusCode::Error;
-        }
+                       ocs_logi(log_tag, "Rebooting...");
 
-        ocs_logi(log_tag, "Rebooting...");
-
-        return reboot_task.run();
-    });
+                       return reboot_task.run();
+                   });
 }
 
 } // namespace httpserver

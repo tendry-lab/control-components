@@ -1,6 +1,6 @@
 idf_component_register(
     SRCS
-    "test_server.cpp"
+    "target_esp32/test_server.cpp"
 
     REQUIRES
     "unity"

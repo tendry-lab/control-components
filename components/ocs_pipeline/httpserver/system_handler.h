@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_http/server.h"
+#include "ocs_http/iserver.h"
 #include "ocs_scheduler/itask.h"
 
 namespace ocs {
@@ -23,7 +23,7 @@ public:
     //! @params
     //!  - @p server to register HTTP endpoints.
     //!  - @p reboot_task to initiate the reboot process.
-    SystemHandler(http::Server& server, scheduler::ITask& reboot_task);
+    SystemHandler(http::IServer& server, scheduler::ITask& reboot_task);
 };
 
 } // namespace httpserver

@@ -10,7 +10,7 @@
 
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/noncopyable.h"
-#include "ocs_http/server.h"
+#include "ocs_http/iserver.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_sensor/analog_config_store.h"
 
@@ -28,16 +28,16 @@ public:
     //!  - @p server to register HTTP endpoints.
     //!  - @p store to access sensor configurations.
     AnalogConfigStoreHandler(scheduler::AsyncFuncScheduler& func_scheduler,
-                             http::Server& server,
+                             http::IServer& server,
                              sensor::AnalogConfigStore& store);
 
 private:
-    status::StatusCode handle_all_(httpd_req_t* req);
+    status::StatusCode handle_all_(http::IResponseWriter& w);
 
-    status::StatusCode handle_single_(httpd_req_t* req,
+    status::StatusCode handle_single_(http::IResponseWriter& w,
                                       const algo::UriOps::Values& values);
 
-    status::StatusCode handle_single_get_(httpd_req_t* req,
+    status::StatusCode handle_single_get_(http::IResponseWriter& w,
                                           const sensor::AnalogConfig& config);
 
     static constexpr TickType_t wait_timeout_ = pdMS_TO_TICKS(1000 * 6);

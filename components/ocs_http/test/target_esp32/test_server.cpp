@@ -12,8 +12,9 @@
 
 #include "unity.h"
 
-#include "ocs_http/client_reader.h"
-#include "ocs_http/server.h"
+#include "ocs_algo/response_ops.h"
+#include "ocs_http/target_esp32/client_reader.h"
+#include "ocs_http/target_esp32/server.h"
 #include "ocs_net/fanout_network_handler.h"
 #include "ocs_net/ip_addr_to_str.h"
 #include "ocs_net/target_esp32/sta_network.h"
@@ -88,13 +89,8 @@ TEST_CASE("Start HTTP server: WiFi valid credentials", "[ocs_http], [server]") {
     const char* path = "/foo";
     const char* want_response = "hello world";
 
-    server.add_GET(path, [want_response](httpd_req_t* req) {
-        const auto err = httpd_resp_send(req, want_response, HTTPD_RESP_USE_STRLEN);
-        if (err != ESP_OK) {
-            return status::StatusCode::Error;
-        }
-
-        return status::StatusCode::OK;
+    server.add_GET(path, [want_response](http::IResponseWriter& w, http::IRequest& r) {
+        return algo::ResponseOps::write_text(w, want_response);
     });
 
     storage::FlashInitializer flash_initializer;
@@ -188,11 +184,16 @@ TEST_CASE("Start HTTP server: chunked response", "[ocs_http], [server]") {
     const char* path = "/foo";
     const char* want_response = "hello world";
 
-    server.add_GET(path, [want_response](httpd_req_t* req) {
+    server.add_GET(path, [want_response](http::IResponseWriter& w, http::IRequest&) {
+        const auto code = w.get_header().set("Transfer-Encoding", "chunked");
+        if (code != status::StatusCode::OK) {
+            return code;
+        }
+
         core::StreamTransceiver::Buffer buffer;
         buffer.resize(strlen(want_response));
 
-        ChunkStreamWriter writer(req);
+        ChunkStreamWriter writer(w);
         TestStreamReader reader(want_response, 1);
 
         core::StreamTransceiver transceiver(reader, writer, buffer);

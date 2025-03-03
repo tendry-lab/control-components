@@ -12,7 +12,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/cjson_builder.h"
-#include "ocs_http/server.h"
+#include "ocs_http/iserver.h"
 #include "ocs_sensor/ds18b20/store.h"
 #include "ocs_system/isuspender.h"
 
@@ -28,7 +28,7 @@ public:
     //!  - @p server to register endpoints.
     //!  - @p suspender to suspend the system during sensors operations.
     //!  - @p store to perform operations on sensors.
-    DS18B20Handler(http::Server& server,
+    DS18B20Handler(http::IServer& server,
                    system::ISuspender& suspender,
                    sensor::ds18b20::Store& store);
 
@@ -46,7 +46,7 @@ private:
     static const TickType_t write_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
     static const TickType_t erase_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
 
-    status::StatusCode handle_scan_(httpd_req_t* req);
+    status::StatusCode handle_scan_(http::IResponseWriter& w, http::IRequest& r);
 
     status::StatusCode scan_(cJSON* json,
                              fmt::json::CjsonUniqueBuilder& builder,
@@ -63,14 +63,16 @@ private:
                                       fmt::json::CjsonUniqueBuilder& builder,
                                       const sensor::ds18b20::Sensor& sensors);
 
-    status::StatusCode handle_configuration_(httpd_req_t* req,
+    status::StatusCode handle_configuration_(http::IResponseWriter& w,
+                                             http::IRequest& r,
                                              unsigned wait_interval,
                                              unsigned response_size,
                                              HandleConfigurationFunc func);
 
     status::StatusCode read_configuration_(cJSON* json, sensor::ds18b20::Sensor&);
 
-    status::StatusCode handle_write_configuration_(httpd_req_t* req);
+    status::StatusCode handle_write_configuration_(http::IResponseWriter& w,
+                                                   http::IRequest& r);
 
     status::StatusCode write_configuration_(cJSON* json,
                                             onewire::Bus& bus,
@@ -85,7 +87,7 @@ private:
     status::StatusCode erase_configuration_(cJSON* json, sensor::ds18b20::Sensor& sensor);
 
     status::StatusCode
-    send_response_(unsigned buffer_size, cJSON* json, httpd_req_t* req);
+    send_response_(unsigned buffer_size, cJSON* json, http::IResponseWriter& w);
 
     system::ISuspender& suspender_;
     sensor::ds18b20::Store& store_;

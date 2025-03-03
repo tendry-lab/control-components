@@ -13,7 +13,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/fanout_formatter.h"
-#include "ocs_http/server.h"
+#include "ocs_http/iserver.h"
 #include "ocs_pipeline/httpserver/time_handler.h"
 
 namespace ocs {
@@ -26,7 +26,7 @@ public:
     //!
     //! @params
     //!  - @p start_point - point in time begin with the system time is valid.
-    TimePipeline(http::Server& server,
+    TimePipeline(http::IServer& server,
                  fmt::json::FanoutFormatter& telemetry_formatter,
                  fmt::json::FanoutFormatter& registration_formatter,
                  time_t start_point);

@@ -7,30 +7,34 @@
  */
 
 #include "ocs_pipeline/httpserver/sht41_handler.h"
+#include "ocs_algo/response_ops.h"
 
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
 SHT41Handler::SHT41Handler(scheduler::AsyncFuncScheduler& func_scheduler,
-                           http::Server& http_server,
+                           http::IServer& http_server,
                            sensor::sht41::Sensor& sensor)
     : func_scheduler_(func_scheduler)
     , sensor_(sensor) {
-    http_server.add_GET("/api/v1/sensor/sht41/reset", [this](httpd_req_t* req) {
-        return handle_operation_(req, [](sensor::sht41::Sensor& sensor) {
-            return sensor.reset();
+    http_server.add_GET("/api/v1/sensor/sht41/reset",
+                        [this](http::IResponseWriter& w, http::IRequest& r) {
+                            return handle_operation_(w,
+                                                     [](sensor::sht41::Sensor& sensor) {
+                                                         return sensor.reset();
+                                                     });
+                        });
+    http_server.add_GET(
+        "/api/v1/sensor/sht41/heat", [this](http::IResponseWriter& w, http::IRequest& r) {
+            return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
+                return sensor.heat();
+            });
         });
-    });
-    http_server.add_GET("/api/v1/sensor/sht41/heat", [this](httpd_req_t* req) {
-        return handle_operation_(req, [](sensor::sht41::Sensor& sensor) {
-            return sensor.heat();
-        });
-    });
 }
 
 status::StatusCode
-SHT41Handler::handle_operation_(httpd_req_t* req,
+SHT41Handler::handle_operation_(http::IResponseWriter& w,
                                 SHT41Handler::HandleOperationFunc func) {
     auto future = func_scheduler_.add([this, func]() {
         return func(sensor_);
@@ -45,14 +49,9 @@ SHT41Handler::handle_operation_(httpd_req_t* req,
         return future->code();
     }
 
-    auto err = httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    err = httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
+    const auto code = algo::ResponseOps::write_text(w, "OK");
+    if (code != status::StatusCode::OK) {
+        return code;
     }
 
     return status::StatusCode::OK;

@@ -10,7 +10,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/fanout_formatter.h"
-#include "ocs_http/server.h"
+#include "ocs_http/target_esp32/server.h"
 #include "ocs_net/fanout_network_handler.h"
 #include "ocs_pipeline/httpserver/data_handler.h"
 #include "ocs_pipeline/httpserver/mdns_handler.h"
@@ -53,10 +53,10 @@ public:
     void handle_disconnect() override;
 
     //! Return HTTP server.
-    http::Server& get_server();
+    http::IServer& get_server();
 
 private:
-    std::unique_ptr<http::Server> http_server_;
+    std::unique_ptr<http::IServer> http_server_;
     std::unique_ptr<DataHandler> telemetry_handler_;
     std::unique_ptr<DataHandler> registration_handler_;
     std::unique_ptr<SystemHandler> system_handler_;

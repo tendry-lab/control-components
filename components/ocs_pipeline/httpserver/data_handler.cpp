@@ -6,15 +6,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ocs_pipeline/httpserver/data_handler.h"
+#include "freertos/FreeRTOSConfig.h"
+
+#include "ocs_algo/response_ops.h"
 #include "ocs_core/log.h"
 #include "ocs_fmt/json/cjson_builder.h"
+#include "ocs_pipeline/httpserver/data_handler.h"
 
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-DataHandler::DataHandler(http::Server& server,
+DataHandler::DataHandler(http::IServer& server,
                          fmt::json::IFormatter& formatter,
                          const char* path,
                          const char* id,
@@ -29,7 +32,7 @@ DataHandler::DataHandler(http::Server& server,
 
     fanout_formatter_->add(*json_formatter_);
 
-    server.add_GET(path, [this, path, id](httpd_req_t* req) {
+    server.add_GET(path, [this, path, id](http::IResponseWriter& w, http::IRequest&) {
         auto json = fmt::json::CjsonUniqueBuilder::make_object();
         if (!json) {
             return status::StatusCode::NoMem;
@@ -40,18 +43,7 @@ DataHandler::DataHandler(http::Server& server,
             return code;
         }
 
-        auto err = httpd_resp_set_type(req, HTTPD_TYPE_JSON);
-        if (err != ESP_OK) {
-            return status::StatusCode::Error;
-        }
-
-        err = httpd_resp_send(req, json_formatter_->c_str(), HTTPD_RESP_USE_STRLEN);
-        if (err != ESP_OK) {
-            ocs_loge(id, "httpd_resp_send(): %s", esp_err_to_name(err));
-            return status::StatusCode::Error;
-        }
-
-        return status::StatusCode::OK;
+        return algo::ResponseOps::write_json(w, json_formatter_->c_str());
     });
 }
 

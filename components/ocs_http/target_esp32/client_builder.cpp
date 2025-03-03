@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ocs_http/client_builder.h"
+#include "ocs_http/target_esp32/client_builder.h"
 
 namespace ocs {
 namespace http {

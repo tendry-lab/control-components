@@ -15,7 +15,7 @@
 #include "ocs_core/cond.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_mutex.h"
-#include "ocs_http/client_builder.h"
+#include "ocs_http/target_esp32/client_builder.h"
 
 namespace ocs {
 namespace http {

@@ -8,6 +8,7 @@ idf_component_register(
     "storage_ops.cpp"
     "time_ops.cpp"
     "mdns_ops.cpp"
+    "response_ops.cpp"
 
     REQUIRES
     "ocs_storage"

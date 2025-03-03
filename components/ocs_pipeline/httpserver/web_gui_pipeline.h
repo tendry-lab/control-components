@@ -12,7 +12,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/stream_transceiver.h"
-#include "ocs_http/server.h"
+#include "ocs_http/iserver.h"
 
 namespace ocs {
 namespace pipeline {
@@ -24,12 +24,12 @@ public:
     //!
     //! @params
     //!  - @p server to register endpoints to serve the Web GUI files.
-    explicit WebGuiPipeline(http::Server& server);
+    explicit WebGuiPipeline(http::IServer& server);
 
 private:
     void initialize_fs_();
-    status::StatusCode handle_root_(httpd_req_t* req);
-    status::StatusCode handle_file_(httpd_req_t* req, const char* filename);
+    status::StatusCode handle_root_(http::IResponseWriter& w);
+    status::StatusCode handle_file_(http::IResponseWriter& w, const char* filename);
 
     static const constexpr char* mount_point_ = "/web_gui";
     static const size_t buffer_size_ = 1024;

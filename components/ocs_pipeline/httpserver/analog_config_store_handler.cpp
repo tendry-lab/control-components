@@ -10,6 +10,7 @@
 #include <cstring>
 #include <string>
 
+#include "ocs_algo/response_ops.h"
 #include "ocs_core/log.h"
 #include "ocs_fmt/json/cjson_builder.h"
 #include "ocs_fmt/json/cjson_object_formatter.h"
@@ -23,21 +24,7 @@ namespace httpserver {
 
 namespace {
 
-status::StatusCode send_ok(httpd_req_t* req) {
-    auto err = httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    err = httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    return status::StatusCode::OK;
-}
-
-status::StatusCode send_json(httpd_req_t* req, cJSON* json, unsigned size) {
+status::StatusCode send_json(http::IResponseWriter& w, cJSON* json, unsigned size) {
     fmt::json::DynamicFormatter json_formatter(size);
 
     const auto code = json_formatter.format(json);
@@ -45,17 +32,7 @@ status::StatusCode send_json(httpd_req_t* req, cJSON* json, unsigned size) {
         return code;
     }
 
-    auto err = httpd_resp_set_type(req, HTTPD_TYPE_JSON);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    err = httpd_resp_send(req, json_formatter.c_str(), HTTPD_RESP_USE_STRLEN);
-    if (err != ESP_OK) {
-        return status::StatusCode::Error;
-    }
-
-    return status::StatusCode::OK;
+    return algo::ResponseOps::write_json(w, json_formatter.c_str());
 }
 
 bool format_config(fmt::json::CjsonObjectFormatter& formatter,
@@ -82,18 +59,18 @@ const char* log_tag = "analog_config_store_handler";
 
 AnalogConfigStoreHandler::AnalogConfigStoreHandler(
     scheduler::AsyncFuncScheduler& func_scheduler,
-    http::Server& server,
+    http::IServer& server,
     sensor::AnalogConfigStore& store)
     : store_(store) {
     server.add_GET("/api/v1/config/sensor/analog",
-                   [this, &func_scheduler](httpd_req_t* req) {
-                       auto future = func_scheduler.add([this, req]() {
-                           const auto values = algo::UriOps::parse_query(req->uri);
+                   [this, &func_scheduler](http::IResponseWriter& w, http::IRequest& r) {
+                       auto future = func_scheduler.add([this, &w, &r]() {
+                           const auto values = algo::UriOps::parse_query(r.get_uri());
                            if (!values.size()) {
-                               return handle_all_(req);
+                               return handle_all_(w);
                            }
 
-                           return handle_single_(req, values);
+                           return handle_single_(w, values);
                        });
                        if (!future) {
                            return status::StatusCode::InvalidState;
@@ -109,7 +86,7 @@ AnalogConfigStoreHandler::AnalogConfigStoreHandler(
                    });
 }
 
-status::StatusCode AnalogConfigStoreHandler::handle_all_(httpd_req_t* req) {
+status::StatusCode AnalogConfigStoreHandler::handle_all_(http::IResponseWriter& w) {
     fmt::json::CjsonUniqueBuilder builder;
 
     auto array = builder.make_array();
@@ -138,11 +115,11 @@ status::StatusCode AnalogConfigStoreHandler::handle_all_(httpd_req_t* req) {
         json.release();
     }
 
-    return send_json(req, array.get(), 256);
+    return send_json(w, array.get(), 256);
 }
 
 status::StatusCode
-AnalogConfigStoreHandler::handle_single_(httpd_req_t* req,
+AnalogConfigStoreHandler::handle_single_(http::IResponseWriter& w,
                                          const algo::UriOps::Values& values) {
     const auto id = values.find("id");
     if (id == values.end()) {
@@ -174,7 +151,7 @@ AnalogConfigStoreHandler::handle_single_(httpd_req_t* req,
             return code;
         }
 
-        return send_ok(req);
+        return algo::ResponseOps::write_text(w, "OK");
     }
 
     const auto min = values.find("min");
@@ -182,7 +159,7 @@ AnalogConfigStoreHandler::handle_single_(httpd_req_t* req,
     const auto oversampling = values.find("oversampling");
 
     if (min == values.end() && max == values.end() && oversampling == values.end()) {
-        return handle_single_get_(req, *config);
+        return handle_single_get_(w, *config);
     }
 
     uint16_t parsed_min = config->get_min();
@@ -227,11 +204,11 @@ AnalogConfigStoreHandler::handle_single_(httpd_req_t* req,
         return code;
     }
 
-    return send_ok(req);
+    return algo::ResponseOps::write_text(w, "OK");
 }
 
 status::StatusCode
-AnalogConfigStoreHandler::handle_single_get_(httpd_req_t* req,
+AnalogConfigStoreHandler::handle_single_get_(http::IResponseWriter& w,
                                              const sensor::AnalogConfig& config) {
     if (!config.valid()) {
         return status::StatusCode::InvalidState;
@@ -249,7 +226,7 @@ AnalogConfigStoreHandler::handle_single_get_(httpd_req_t* req,
         return status::StatusCode::NoMem;
     }
 
-    return send_json(req, json.get(), 64);
+    return send_json(w, json.get(), 64);
 }
 
 } // namespace httpserver
