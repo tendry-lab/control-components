@@ -9,7 +9,7 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_io/i2c/master_store_pipeline.h"
+#include "ocs_io/i2c/target_esp32/master_store_pipeline.h"
 #include "ocs_sensor/sht41/sensor.h"
 #include "ocs_storage/storage_builder.h"
 

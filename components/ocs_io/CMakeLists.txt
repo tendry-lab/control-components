@@ -13,9 +13,9 @@ idf_component_register(
     "spi/master_store.cpp"
     "spi/master_transceiver.cpp"
 
-    "i2c/master_store.cpp"
-    "i2c/master_transceiver.cpp"
-    "i2c/master_store_pipeline.cpp"
+    "i2c/target_esp32/master_store.cpp"
+    "i2c/target_esp32/master_transceiver.cpp"
+    "i2c/target_esp32/master_store_pipeline.cpp"
 
     REQUIRES
     "driver"

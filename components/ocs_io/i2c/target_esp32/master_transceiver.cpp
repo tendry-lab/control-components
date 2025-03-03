@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ocs_io/i2c/master_transceiver.h"
+#include "ocs_io/i2c/target_esp32/master_transceiver.h"
 #include "ocs_core/log.h"
 
 namespace ocs {
