@@ -24,7 +24,7 @@
 #include "ocs_sensor/soil/analog_sensor.h"
 #include "ocs_storage/storage_builder.h"
 #include "ocs_system/fanout_reboot_handler.h"
-#include "ocs_system/idelayer.h"
+#include "ocs_system/irt_delayer.h"
 
 namespace ocs {
 namespace sensor {
@@ -46,7 +46,7 @@ public:
                               io::adc::IStore& adc_store,
                               io::adc::IConverter& adc_converter,
                               storage::StorageBuilder& storage_builder,
-                              system::IDelayer& delayer,
+                              system::IRtDelayer& delayer,
                               system::FanoutRebootHandler& reboot_handler,
                               scheduler::ITaskScheduler& task_scheduler,
                               const AnalogConfig& config,

@@ -22,7 +22,7 @@
 #include "ocs_onewire/rom_code_scanner.h"
 #include "ocs_onewire/serial_number_to_str.h"
 #include "ocs_status/code_to_str.h"
-#include "ocs_system/target_esp32/default_delayer.h"
+#include "ocs_system/platform_builder.h"
 
 using namespace ocs;
 
@@ -93,9 +93,11 @@ void scan_rom_codes(ScanParams scan_params, onewire::Bus::Params bus_params) {
     format_bus_params(formatter, bus_params);
 
     io::gpio::DefaultGpio gpio("test_gpio_onewire_bus", scan_params.gpio);
-    system::DefaultDelayer delayer;
 
-    onewire::Bus bus(delayer, gpio, bus_params);
+    auto delayer = system::PlatformBuilder::make_rt_delayer();
+    configASSERT(delayer);
+
+    onewire::Bus bus(*delayer, gpio, bus_params);
 
     onewire::RomCodeScanner scanner(bus);
 

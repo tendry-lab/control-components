@@ -15,7 +15,7 @@
 namespace ocs {
 namespace sensor {
 
-AnalogSampleReader::AnalogSampleReader(system::IDelayer& delayer,
+AnalogSampleReader::AnalogSampleReader(system::IRtDelayer& delayer,
                                        io::adc::IReader& reader,
                                        const AnalogConfig& config)
     : config_(config)

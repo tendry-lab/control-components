@@ -6,19 +6,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "unity.h"
+#pragma once
 
-#include "ocs_system/target_esp32/busy_loop_delayer.h"
+#include <memory>
+
+#include "ocs_system/irt_delayer.h"
 
 namespace ocs {
 namespace system {
 
-TEST_CASE("Busy loop delayer: delay", "[ocs_system], [busy_loop_delayer]") {
-    BusyLoopDelayer delayer(core::Duration::second);
-    for (unsigned n = 0; n < 10; ++n) {
-        delayer.delay(core::Duration::microsecond * 100);
-    }
-}
+struct PlatformBuilder {
+    using IRtDelayerPtr = std::unique_ptr<IRtDelayer>;
+
+    //! Create real-time delayer for highly-accurate delays.
+    static IRtDelayerPtr make_rt_delayer();
+};
 
 } // namespace system
 } // namespace ocs

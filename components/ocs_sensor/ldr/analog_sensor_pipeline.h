@@ -17,7 +17,7 @@
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_sensor/analog_config.h"
 #include "ocs_sensor/ldr/analog_sensor.h"
-#include "ocs_system/idelayer.h"
+#include "ocs_system/irt_delayer.h"
 
 namespace ocs {
 namespace sensor {
@@ -38,7 +38,7 @@ public:
     //!  - @p task_scheduler to schedule periodic ADC readings.
     //!  - @p config to read sensor configuration.
     //!  - @p id to distringuish one sensor from another.
-    AnalogSensorPipeline(system::IDelayer& delayer,
+    AnalogSensorPipeline(system::IRtDelayer& delayer,
                          io::adc::IStore& adc_store,
                          io::adc::IConverter& adc_converter,
                          scheduler::ITaskScheduler& task_scheduler,

@@ -12,7 +12,7 @@
 #include "ocs_core/time.h"
 #include "ocs_io/adc/ireader.h"
 #include "ocs_sensor/analog_config.h"
-#include "ocs_system/idelayer.h"
+#include "ocs_system/irt_delayer.h"
 
 namespace ocs {
 namespace sensor {
@@ -25,7 +25,7 @@ public:
     //!  - @p delayer to add a delay between each ADC reading.
     //!  - @p reader to perform an actual ADC reading.
     //!  - @p config to get the number of times the ADC value should be read.
-    AnalogSampleReader(system::IDelayer& delayer,
+    AnalogSampleReader(system::IRtDelayer& delayer,
                        io::adc::IReader& reader,
                        const AnalogConfig& config);
 
@@ -38,7 +38,7 @@ private:
     const AnalogConfig& config_;
 
     io::adc::IReader& reader_;
-    system::IDelayer& delayer_;
+    system::IRtDelayer& delayer_;
 };
 
 } // namespace sensor

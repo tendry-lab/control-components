@@ -11,7 +11,7 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/igpio.h"
 #include "ocs_status/code.h"
-#include "ocs_system/idelayer.h"
+#include "ocs_system/irt_delayer.h"
 
 namespace ocs {
 namespace onewire {
@@ -54,7 +54,7 @@ public:
     //! @params
     //!  - @p delayer to perform required delays between bus operations.
     //!  - @p gpio to read/write data to the bus.
-    Bus(system::IDelayer& delayer, io::gpio::IGpio& gpio, Params params);
+    Bus(system::IRtDelayer& delayer, io::gpio::IGpio& gpio, Params params);
 
     //! Reset the bus.
     status::StatusCode reset();
@@ -95,7 +95,7 @@ private:
     core::Time write_remain_time_slot_ { 0 };
     core::Time read_remain_time_slot_ { 0 };
 
-    system::IDelayer& delayer_;
+    system::IRtDelayer& delayer_;
     io::gpio::IGpio& gpio_;
 };
 

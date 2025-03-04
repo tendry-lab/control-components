@@ -15,10 +15,10 @@ namespace ocs {
 namespace system {
 
 //! Provide delay with up to microsecond resolution.
-class IDelayer {
+class IRtDelayer {
 public:
     //! Destroy.
-    virtual ~IDelayer() = default;
+    virtual ~IRtDelayer() = default;
 
     //! Pause the execution for @p delay.
     //!

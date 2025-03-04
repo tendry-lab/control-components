@@ -6,19 +6,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#pragma once
+#include "unity.h"
 
-#include "ocs_core/noncopyable.h"
-#include "ocs_system/idelayer.h"
+#include "ocs_system/target_esp32/rt_delayer.h"
 
 namespace ocs {
 namespace system {
 
-class DefaultDelayer : public IDelayer, public core::NonCopyable<> {
-public:
-    //! Highly-accurate delay based on the builtin ets_delay_us().
-    status::StatusCode delay(core::Time delay) override;
-};
+TEST_CASE("Rt delayer: delay", "[ocs_system], [rt_delayer]") {
+    RtDelayer delayer;
+
+    for (unsigned n = 0; n < 10; ++n) {
+        delayer.delay(core::Duration::microsecond * 100);
+    }
+}
 
 } // namespace system
 } // namespace ocs

@@ -20,7 +20,7 @@ AnalogRelaySensorPipeline::AnalogRelaySensorPipeline(
     io::adc::IStore& adc_store,
     io::adc::IConverter& adc_converter,
     storage::StorageBuilder& storage_builder,
-    system::IDelayer& delayer,
+    system::IRtDelayer& delayer,
     system::FanoutRebootHandler& reboot_handler,
     scheduler::ITaskScheduler& task_scheduler,
     const AnalogConfig& config,

@@ -15,7 +15,7 @@ namespace ocs {
 namespace sensor {
 namespace ldr {
 
-AnalogSensorPipeline::AnalogSensorPipeline(system::IDelayer& delayer,
+AnalogSensorPipeline::AnalogSensorPipeline(system::IRtDelayer& delayer,
                                            io::adc::IStore& adc_store,
                                            io::adc::IConverter& adc_converter,
                                            scheduler::ITaskScheduler& task_scheduler,

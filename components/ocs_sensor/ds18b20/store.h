@@ -17,7 +17,7 @@
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_sensor/ds18b20/sensor.h"
 #include "ocs_status/code.h"
-#include "ocs_system/idelayer.h"
+#include "ocs_system/irt_delayer.h"
 
 namespace ocs {
 namespace sensor {
@@ -37,7 +37,7 @@ public:
     //!  - @p max_event_count - maximum number of asynchronous events that can be
     //!    scheduled per 1-Wire bus. If the value is too small and the run() is called
     //!    rarely, it's possible to miss some events.
-    Store(system::IDelayer& delayer, unsigned max_event_count);
+    Store(system::IRtDelayer& delayer, unsigned max_event_count);
 
     //! Handle asynchronous events on the 1-wire buses.
     status::StatusCode run() override;
@@ -60,7 +60,7 @@ private:
     class Node : public scheduler::ITask, public core::NonCopyable<> {
     public:
         //! Initialize.
-        Node(system::IDelayer& delayer,
+        Node(system::IRtDelayer& delayer,
              io::gpio::Gpio gpio,
              const char* gpio_id,
              unsigned max_event_count);
@@ -91,7 +91,7 @@ private:
 
     const unsigned max_event_count_ { 0 };
 
-    system::IDelayer& delayer_;
+    system::IRtDelayer& delayer_;
 
     NodeList nodes_;
 };
