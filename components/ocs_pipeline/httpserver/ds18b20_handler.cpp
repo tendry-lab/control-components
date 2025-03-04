@@ -110,35 +110,35 @@ status::StatusCode find_rom_code(onewire::Bus& bus,
 
 } // namespace
 
-DS18B20Handler::DS18B20Handler(http::IServer& server,
+DS18B20Handler::DS18B20Handler(http::IRouter& router,
                                system::ISuspender& suspender,
                                sensor::ds18b20::Store& store)
     : suspender_(suspender)
     , store_(store) {
-    server.add_GET("/api/v1/sensor/ds18b20/scan",
-                   [this](http::IResponseWriter& w, http::IRequest& r) {
-                       return handle_scan_(w, r);
-                   });
-    server.add_GET("/api/v1/sensor/ds18b20/read_configuration",
-                   [this](http::IResponseWriter& w, http::IRequest& r) {
-                       return handle_configuration_(
-                           w, r, read_wait_interval_, read_response_buffer_size_,
-                           [this](cJSON* json, sensor::ds18b20::Sensor& sensor) {
-                               return read_configuration_(json, sensor);
-                           });
-                   });
-    server.add_GET("/api/v1/sensor/ds18b20/write_configuration",
-                   [this](http::IResponseWriter& w, http::IRequest& r) {
-                       return handle_write_configuration_(w, r);
-                   });
-    server.add_GET("/api/v1/sensor/ds18b20/erase_configuration",
-                   [this](http::IResponseWriter& w, http::IRequest& r) {
-                       return handle_configuration_(
-                           w, r, erase_wait_interval_, erase_response_buffer_size_,
-                           [this](cJSON* json, sensor::ds18b20::Sensor& sensor) {
-                               return erase_configuration_(json, sensor);
-                           });
-                   });
+    router.add(http::IRouter::Method::Get, "/api/v1/sensor/ds18b20/scan",
+               [this](http::IResponseWriter& w, http::IRequest& r) {
+                   return handle_scan_(w, r);
+               });
+    router.add(http::IRouter::Method::Get, "/api/v1/sensor/ds18b20/read_configuration",
+               [this](http::IResponseWriter& w, http::IRequest& r) {
+                   return handle_configuration_(
+                       w, r, read_wait_interval_, read_response_buffer_size_,
+                       [this](cJSON* json, sensor::ds18b20::Sensor& sensor) {
+                           return read_configuration_(json, sensor);
+                       });
+               });
+    router.add(http::IRouter::Method::Get, "/api/v1/sensor/ds18b20/write_configuration",
+               [this](http::IResponseWriter& w, http::IRequest& r) {
+                   return handle_write_configuration_(w, r);
+               });
+    router.add(http::IRouter::Method::Get, "/api/v1/sensor/ds18b20/erase_configuration",
+               [this](http::IResponseWriter& w, http::IRequest& r) {
+                   return handle_configuration_(
+                       w, r, erase_wait_interval_, erase_response_buffer_size_,
+                       [this](cJSON* json, sensor::ds18b20::Sensor& sensor) {
+                           return erase_configuration_(json, sensor);
+                       });
+               });
 }
 
 status::StatusCode DS18B20Handler::handle_scan_(http::IResponseWriter& w,

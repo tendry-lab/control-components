@@ -36,7 +36,8 @@ httpd_err_code_t status_code_to_http_code(status::StatusCode code) {
 
 } // namespace
 
-Server::Server(const Params& params) {
+Server::Server(IRouter& router, Params params)
+    : router_(router) {
     config_ = HTTPD_DEFAULT_CONFIG();
     config_.server_port = params.server_port;
     config_.max_uri_handlers = params.max_uri_handlers;
@@ -47,10 +48,6 @@ Server::~Server() {
     if (handle_) {
         stop();
     }
-}
-
-void Server::add_GET(const char* path, Server::HandlerFunc func) {
-    endpoints_get_.push_back(std::make_pair(path, func));
 }
 
 status::StatusCode Server::start() {
@@ -64,17 +61,7 @@ status::StatusCode Server::start() {
 }
 
 status::StatusCode Server::register_uris_() {
-    for (const auto& [path, _] : endpoints_get_) {
-        httpd_uri_t uri;
-        memset(&uri, 0, sizeof(uri));
-
-        uri.method = HTTP_GET;
-        uri.handler = handle_request_;
-        uri.user_ctx = this;
-        uri.uri = path.c_str();
-
-        ESP_ERROR_CHECK(httpd_register_uri_handler(handle_, &uri));
-    }
+    router_.for_each(IRouter::Method::Get, *this);
 
     return status::StatusCode::OK;
 }
@@ -95,20 +82,33 @@ esp_err_t Server::handle_request_(httpd_req_t* req) {
     return ESP_OK;
 }
 
+bool Server::match_path(const char* reference_path,
+                        const char* path_to_match,
+                        size_t match_upto) {
+    if (config_.uri_match_fn) {
+        return config_.uri_match_fn(reference_path, path_to_match, match_upto);
+    }
+
+    return strcmp(reference_path, path_to_match) == 0;
+}
+
+void Server::iterate_path(const char* path, HandlerFunc&) {
+    httpd_uri_t uri;
+    memset(&uri, 0, sizeof(uri));
+
+    uri.method = HTTP_GET;
+    uri.handler = handle_request_;
+    uri.user_ctx = this;
+    uri.uri = path;
+
+    ESP_ERROR_CHECK(httpd_register_uri_handler(handle_, &uri));
+}
+
 void Server::handle_request_get_(httpd_req_t* req) {
     const auto path = algo::UriOps::parse_path(req->uri);
 
-    const auto endpoint =
-        std::find_if(endpoints_get_.begin(), endpoints_get_.end(),
-                     [&path, this](const auto& endpoint) {
-                         if (config_.uri_match_fn) {
-                             return config_.uri_match_fn(endpoint.first.c_str(),
-                                                         path.data(), path.size());
-                         }
-
-                         return endpoint.first == path;
-                     });
-    if (endpoint == endpoints_get_.end()) {
+    auto handler = router_.match(IRouter::Method::Get, path.data(), path.size(), *this);
+    if (!handler) {
         ocs_loge(log_tag, "unknown URI: %s", req->uri);
 
         const auto ret = httpd_resp_send_err(
@@ -125,7 +125,7 @@ void Server::handle_request_get_(httpd_req_t* req) {
     Request r(*req);
     ResponseWriter w(*req);
 
-    const auto code = endpoint->second(w, r);
+    const auto code = handler(w, r);
     if (code != status::StatusCode::OK) {
         ocs_loge(log_tag, "failed to handle request: URI=%s code=%s", req->uri,
                  status::code_to_str(code));

@@ -58,20 +58,23 @@ const char* log_tag = "web_gui_pipeline";
 
 } // namespace
 
-WebGuiPipeline::WebGuiPipeline(http::IServer& server) {
+WebGuiPipeline::WebGuiPipeline(http::IRouter& router) {
     buffer_.resize(buffer_size_);
 
     initialize_fs_();
 
-    server.add_GET("/", [this](http::IResponseWriter& w, http::IRequest& r) {
-        return handle_root_(w);
-    });
-    server.add_GET("/dashboard", [this](http::IResponseWriter& w, http::IRequest& r) {
-        return handle_file_(w, "/index.html");
-    });
-    server.add_GET("/assets/*", [this](http::IResponseWriter& w, http::IRequest& r) {
-        return handle_file_(w, r.get_uri());
-    });
+    router.add(http::IRouter::Method::Get, "/",
+               [this](http::IResponseWriter& w, http::IRequest& r) {
+                   return handle_root_(w);
+               });
+    router.add(http::IRouter::Method::Get, "/dashboard",
+               [this](http::IResponseWriter& w, http::IRequest& r) {
+                   return handle_file_(w, "/index.html");
+               });
+    router.add(http::IRouter::Method::Get, "/assets/*",
+               [this](http::IResponseWriter& w, http::IRequest& r) {
+                   return handle_file_(w, r.get_uri());
+               });
 }
 
 void WebGuiPipeline::initialize_fs_() {

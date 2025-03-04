@@ -8,18 +8,21 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include "esp_http_server.h"
 
 #include "ocs_core/noncopyable.h"
+#include "ocs_http/ipath_iterator.h"
+#include "ocs_http/ipath_matcher.h"
+#include "ocs_http/irouter.h"
 #include "ocs_http/iserver.h"
 
 namespace ocs {
 namespace http {
 
-class Server : public IServer, public core::NonCopyable<> {
+class Server : public IServer,
+               private IPathMatcher,
+               private IPathIterator,
+               private core::NonCopyable<> {
 public:
     struct Params {
         //! TCP port to accept incoming connections.
@@ -30,7 +33,7 @@ public:
     };
 
     //! Initialize.
-    explicit Server(const Params& params);
+    Server(IRouter& router, Params params);
 
     //! Destroy.
     ~Server();
@@ -41,23 +44,23 @@ public:
     //! Stop HTTP server.
     status::StatusCode stop() override;
 
-    //! Register HTTP handler for a GET request.
-    void add_GET(const char* path, HandlerFunc func) override;
-
 private:
-    using Endpoint = std::pair<std::string, HandlerFunc>;
-    using EndpointList = std::vector<Endpoint>;
-
     static esp_err_t handle_request_(httpd_req_t* req);
+
+    bool match_path(const char* reference_path,
+                    const char* path_to_match,
+                    size_t match_upto) override;
+
+    void iterate_path(const char* path, HandlerFunc& handler) override;
 
     status::StatusCode register_uris_();
 
     void handle_request_get_(httpd_req_t* req);
 
+    IRouter& router_;
+
     httpd_handle_t handle_ { nullptr };
     httpd_config_t config_;
-
-    EndpointList endpoints_get_;
 };
 
 } // namespace http

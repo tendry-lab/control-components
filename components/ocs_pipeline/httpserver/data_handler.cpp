@@ -17,7 +17,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-DataHandler::DataHandler(http::IServer& server,
+DataHandler::DataHandler(http::IRouter& router,
                          fmt::json::IFormatter& formatter,
                          const char* path,
                          const char* id,
@@ -32,19 +32,20 @@ DataHandler::DataHandler(http::IServer& server,
 
     fanout_formatter_->add(*json_formatter_);
 
-    server.add_GET(path, [this, path, id](http::IResponseWriter& w, http::IRequest&) {
-        auto json = fmt::json::CjsonUniqueBuilder::make_object();
-        if (!json) {
-            return status::StatusCode::NoMem;
-        }
+    router.add(http::IRouter::Method::Get, path,
+               [this, path, id](http::IResponseWriter& w, http::IRequest&) {
+                   auto json = fmt::json::CjsonUniqueBuilder::make_object();
+                   if (!json) {
+                       return status::StatusCode::NoMem;
+                   }
 
-        const auto code = fanout_formatter_->format(json.get());
-        if (code != status::StatusCode::OK) {
-            return code;
-        }
+                   const auto code = fanout_formatter_->format(json.get());
+                   if (code != status::StatusCode::OK) {
+                       return code;
+                   }
 
-        return algo::ResponseOps::write_json(w, json_formatter_->c_str());
-    });
+                   return algo::ResponseOps::write_json(w, json_formatter_->c_str());
+               });
 }
 
 } // namespace httpserver

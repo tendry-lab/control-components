@@ -12,7 +12,7 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_mutex.h"
 #include "ocs_http/iresponse_writer.h"
-#include "ocs_http/iserver.h"
+#include "ocs_http/irouter.h"
 #include "ocs_net/mdns_config.h"
 #include "ocs_scheduler/itask.h"
 
@@ -25,10 +25,10 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p server to register HTTP endpoints.
+    //!  - @p router to register HTTP endpoints.
     //!  - @p config to perform the mDNS configuration.
     //!  - @p reboot_task to schedule a reboot when the mDNS configuration is changed.
-    MdnsHandler(http::IServer& server,
+    MdnsHandler(http::IRouter& router,
                 net::MdnsConfig& config,
                 scheduler::ITask& reboot_task);
 

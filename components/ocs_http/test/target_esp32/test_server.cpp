@@ -13,6 +13,7 @@
 #include "unity.h"
 
 #include "ocs_algo/response_ops.h"
+#include "ocs_http/router.h"
 #include "ocs_http/target_esp32/client_reader.h"
 #include "ocs_http/target_esp32/server.h"
 #include "ocs_net/fanout_network_handler.h"
@@ -31,7 +32,8 @@ namespace ocs {
 namespace http {
 
 TEST_CASE("Stop HTTP server: no start", "[ocs_http], [server]") {
-    Server server(Server::Params {});
+    Router router;
+    Server server(router, Server::Params {});
     TEST_ASSERT_EQUAL(status::StatusCode::OK, server.stop());
 }
 
@@ -49,7 +51,8 @@ TEST_CASE("Start HTTP server: WiFi not started", "[ocs_http], [server]") {
     net::StaNetworkConfig config(storage);
     net::StaNetwork network(handler, config);
 
-    Server server(Server::Params {});
+    Router router;
+    Server server(router, Server::Params {});
     TEST_ASSERT_EQUAL(status::StatusCode::OK, server.start());
     TEST_ASSERT_EQUAL(status::StatusCode::OK, server.stop());
 }
@@ -71,7 +74,8 @@ TEST_CASE("Start HTTP server: WiFi invalid credentials", "[ocs_http], [server]")
     TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
     TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
 
-    Server server(Server::Params {});
+    Router router;
+    Server server(router, Server::Params {});
     TEST_ASSERT_EQUAL(status::StatusCode::OK, server.start());
     TEST_ASSERT_EQUAL(status::StatusCode::OK, server.stop());
 
@@ -82,16 +86,19 @@ TEST_CASE("Start HTTP server: WiFi invalid credentials", "[ocs_http], [server]")
 TEST_CASE("Start HTTP server: WiFi valid credentials", "[ocs_http], [server]") {
     const unsigned server_port = 80;
 
-    Server server(Server::Params {
-        .server_port = server_port,
-    });
+    Router router;
+    Server server(router,
+                  Server::Params {
+                      .server_port = server_port,
+                  });
 
     const char* path = "/foo";
     const char* want_response = "hello world";
 
-    server.add_GET(path, [want_response](http::IResponseWriter& w, http::IRequest& r) {
-        return algo::ResponseOps::write_text(w, want_response);
-    });
+    router.add(http::IRouter::Method::Get, path,
+               [want_response](http::IResponseWriter& w, http::IRequest& r) {
+                   return algo::ResponseOps::write_text(w, want_response);
+               });
 
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;
@@ -177,28 +184,31 @@ TEST_CASE("Start HTTP server: chunked response", "[ocs_http], [server]") {
 
     const unsigned server_port = 80;
 
-    Server server(Server::Params {
-        .server_port = server_port,
-    });
+    Router router;
+    Server server(router,
+                  Server::Params {
+                      .server_port = server_port,
+                  });
 
     const char* path = "/foo";
     const char* want_response = "hello world";
 
-    server.add_GET(path, [want_response](http::IResponseWriter& w, http::IRequest&) {
-        const auto code = w.get_header().set("Transfer-Encoding", "chunked");
-        if (code != status::StatusCode::OK) {
-            return code;
-        }
+    router.add(http::IRouter::Method::Get, path,
+               [want_response](http::IResponseWriter& w, http::IRequest&) {
+                   const auto code = w.get_header().set("Transfer-Encoding", "chunked");
+                   if (code != status::StatusCode::OK) {
+                       return code;
+                   }
 
-        core::StreamTransceiver::Buffer buffer;
-        buffer.resize(strlen(want_response));
+                   core::StreamTransceiver::Buffer buffer;
+                   buffer.resize(strlen(want_response));
 
-        ChunkStreamWriter writer(w);
-        TestStreamReader reader(want_response, 1);
+                   ChunkStreamWriter writer(w);
+                   TestStreamReader reader(want_response, 1);
 
-        core::StreamTransceiver transceiver(reader, writer, buffer);
-        return transceiver.transceive();
-    });
+                   core::StreamTransceiver transceiver(reader, writer, buffer);
+                   return transceiver.transceive();
+               });
 
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;

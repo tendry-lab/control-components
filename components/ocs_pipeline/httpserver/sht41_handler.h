@@ -11,7 +11,7 @@
 #include <functional>
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_http/iserver.h"
+#include "ocs_http/irouter.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_sensor/sht41/sensor.h"
 
@@ -23,7 +23,7 @@ class SHT41Handler : public core::NonCopyable<> {
 public:
     //! Initialize.
     SHT41Handler(scheduler::AsyncFuncScheduler& func_scheduler,
-                 http::IServer& http_server,
+                 http::IRouter& router,
                  sensor::sht41::Sensor& sensor);
 
 private:

@@ -12,7 +12,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/dynamic_formatter.h"
-#include "ocs_http/iserver.h"
+#include "ocs_http/irouter.h"
 
 namespace ocs {
 namespace pipeline {
@@ -23,9 +23,9 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p server to register endpoint to receive system statistics.
+    //!  - @p router to register endpoint to receive system statistics.
     //!  - @p response_size - system state response size, in bytes.
-    SystemStateHandler(http::IServer& server, unsigned response_size);
+    SystemStateHandler(http::IRouter& router, unsigned response_size);
 
 private:
     std::unique_ptr<fmt::json::IFormatter> state_json_formatter_;

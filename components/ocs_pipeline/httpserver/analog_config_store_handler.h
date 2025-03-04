@@ -10,7 +10,7 @@
 
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/noncopyable.h"
-#include "ocs_http/iserver.h"
+#include "ocs_http/irouter.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_sensor/analog_config_store.h"
 
@@ -25,10 +25,10 @@ public:
     //! @params
     //!  - @p func_scheduler to schedule asynchronous configuration updates. config should
     //!    be modified in the same context as a sensor that uses that config.
-    //!  - @p server to register HTTP endpoints.
+    //!  - @p router to register HTTP endpoints.
     //!  - @p store to access sensor configurations.
     AnalogConfigStoreHandler(scheduler::AsyncFuncScheduler& func_scheduler,
-                             http::IServer& server,
+                             http::IRouter& router,
                              sensor::AnalogConfigStore& store);
 
 private:
