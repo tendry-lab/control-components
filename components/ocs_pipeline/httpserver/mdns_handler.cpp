@@ -16,22 +16,22 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-MdnsHandler::MdnsHandler(http::IServer& server,
+MdnsHandler::MdnsHandler(http::IRouter& router,
                          net::MdnsConfig& config,
                          scheduler::ITask& reboot_task)
     : config_(config)
     , reboot_task_(reboot_task) {
-    server.add_GET("/api/v1/config/mdns",
-                   [this](http::IResponseWriter& w, http::IRequest& r) {
-                       core::LockGuard lock(mu_);
+    router.add(http::IRouter::Method::Get, "/api/v1/config/mdns",
+               [this](http::IResponseWriter& w, http::IRequest& r) {
+                   core::LockGuard lock(mu_);
 
-                       const auto values = algo::UriOps::parse_query(r.get_uri());
-                       if (!values.size()) {
-                           return status::StatusCode::InvalidArg;
-                       }
+                   const auto values = algo::UriOps::parse_query(r.get_uri());
+                   if (!values.size()) {
+                       return status::StatusCode::InvalidArg;
+                   }
 
-                       return handle_update_(w, values);
-                   });
+                   return handle_update_(w, values);
+               });
 }
 
 status::StatusCode MdnsHandler::handle_update_(http::IResponseWriter& w,

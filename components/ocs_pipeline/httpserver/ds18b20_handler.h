@@ -12,7 +12,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/cjson_builder.h"
-#include "ocs_http/iserver.h"
+#include "ocs_http/irouter.h"
 #include "ocs_sensor/ds18b20/store.h"
 #include "ocs_system/isuspender.h"
 
@@ -25,10 +25,10 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p server to register endpoints.
+    //!  - @p router to register endpoints.
     //!  - @p suspender to suspend the system during sensors operations.
     //!  - @p store to perform operations on sensors.
-    DS18B20Handler(http::IServer& server,
+    DS18B20Handler(http::IRouter& router,
                    system::ISuspender& suspender,
                    sensor::ds18b20::Store& store);
 

@@ -10,7 +10,8 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/fanout_formatter.h"
-#include "ocs_http/target_esp32/server.h"
+#include "ocs_http/irouter.h"
+#include "ocs_http/iserver.h"
 #include "ocs_net/fanout_network_handler.h"
 #include "ocs_pipeline/httpserver/data_handler.h"
 #include "ocs_pipeline/httpserver/mdns_handler.h"
@@ -35,13 +36,14 @@ public:
     struct Params {
         DataParams telemetry;
         DataParams registration;
-        http::Server::Params server;
     };
 
     //! Initialize.
     HttpPipeline(scheduler::ITask& reboot_task,
                  net::FanoutNetworkHandler& network_handler,
                  net::MdnsConfig& mdns_config,
+                 http::IServer& server,
+                 http::IRouter& router,
                  fmt::json::IFormatter& telemetry_formatter,
                  fmt::json::FanoutFormatter& registration_formatter,
                  Params params);
@@ -52,11 +54,9 @@ public:
     //! Stop HTTP server.
     void handle_disconnect() override;
 
-    //! Return HTTP server.
-    http::IServer& get_server();
-
 private:
-    std::unique_ptr<http::IServer> http_server_;
+    http::IServer& server_;
+
     std::unique_ptr<DataHandler> telemetry_handler_;
     std::unique_ptr<DataHandler> registration_handler_;
     std::unique_ptr<SystemHandler> system_handler_;

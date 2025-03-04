@@ -13,7 +13,7 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/dynamic_formatter.h"
 #include "ocs_fmt/json/fanout_formatter.h"
-#include "ocs_http/iserver.h"
+#include "ocs_http/irouter.h"
 
 namespace ocs {
 namespace pipeline {
@@ -24,12 +24,12 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p server to register the HTTP endpoint.
+    //!  - @p router to register the HTTP endpoint.
     //!  - @p formatter to format the data.
     //!  - @p path - URI path.
     //!  - @p id - unique data ID, to distinguish one data from another.
     //!  - @p buffer_size to hold the formatted JSON data, in bytes.
-    DataHandler(http::IServer& server,
+    DataHandler(http::IRouter& router,
                 fmt::json::IFormatter& formatter,
                 const char* path,
                 const char* id,

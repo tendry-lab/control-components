@@ -22,18 +22,18 @@ const char* log_tag = "http_system_handler";
 
 } // namespace
 
-SystemHandler::SystemHandler(http::IServer& server, scheduler::ITask& reboot_task) {
-    server.add_GET("/api/v1/system/reboot",
-                   [&reboot_task](http::IResponseWriter& w, http::IRequest&) {
-                       const auto code = algo::ResponseOps::write_text(w, "Rebooting...");
-                       if (code != status::StatusCode::OK) {
-                           return code;
-                       }
+SystemHandler::SystemHandler(http::IRouter& router, scheduler::ITask& reboot_task) {
+    router.add(http::IRouter::Method::Get, "/api/v1/system/reboot",
+               [&reboot_task](http::IResponseWriter& w, http::IRequest&) {
+                   const auto code = algo::ResponseOps::write_text(w, "Rebooting...");
+                   if (code != status::StatusCode::OK) {
+                       return code;
+                   }
 
-                       ocs_logi(log_tag, "Rebooting...");
+                   ocs_logi(log_tag, "Rebooting...");
 
-                       return reboot_task.run();
-                   });
+                   return reboot_task.run();
+               });
 }
 
 } // namespace httpserver

@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2025, Open Control Systems authors
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+#pragma once
+
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+
+#include "ocs_core/noncopyable.h"
+#include "ocs_http/irouter.h"
+
+namespace ocs {
+namespace http {
+
+class Router : public IRouter, public core::NonCopyable<> {
+public:
+    //! Register HTTP endpoint.
+    void add(Method method, const char* path, HandlerFunc func) override;
+
+    //! Receive a registered handler.
+    HandlerFunc match(Method method,
+                      const char* path,
+                      size_t match_upto,
+                      IPathMatcher& matcher) override;
+
+    //! Iterate over each registered handler.
+    void for_each(Method method, IPathIterator& iterator) override;
+
+private:
+    using Endpoint = std::pair<std::string, HandlerFunc>;
+    using EndpointList = std::vector<Endpoint>;
+
+    std::unordered_map<Method, EndpointList> method_to_endpoints_;
+};
+
+} // namespace http
+} // namespace ocs

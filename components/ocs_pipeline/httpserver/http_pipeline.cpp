@@ -23,40 +23,38 @@ const char* log_tag = "http_pipeline";
 HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
                            net::FanoutNetworkHandler& network_handler,
                            net::MdnsConfig& mdns_config,
+                           http::IServer& server,
+                           http::IRouter& router,
                            fmt::json::IFormatter& telemetry_formatter,
                            fmt::json::FanoutFormatter& registration_formatter,
-                           Params params) {
+                           Params params)
+    : server_(server) {
     network_handler.add(*this);
 
-    http_server_.reset(new (std::nothrow) http::Server(params.server));
-    configASSERT(http_server_);
-
     telemetry_handler_.reset(new (std::nothrow) DataHandler(
-        *http_server_, telemetry_formatter, "/api/v1/telemetry", "http_telemetry_handler",
+        router, telemetry_formatter, "/api/v1/telemetry", "http_telemetry_handler",
         params.telemetry.buffer_size));
     configASSERT(telemetry_handler_);
 
     registration_handler_.reset(new (std::nothrow) DataHandler(
-        *http_server_, registration_formatter, "/api/v1/registration",
+        router, registration_formatter, "/api/v1/registration",
         "http_registration_handler", params.registration.buffer_size));
     configASSERT(registration_handler_);
 
-    system_handler_.reset(new (std::nothrow) SystemHandler(*http_server_, reboot_task));
+    system_handler_.reset(new (std::nothrow) SystemHandler(router, reboot_task));
     configASSERT(system_handler_);
 
-    mdns_handler_.reset(new (std::nothrow)
-                            MdnsHandler(*http_server_, mdns_config, reboot_task));
+    mdns_handler_.reset(new (std::nothrow) MdnsHandler(router, mdns_config, reboot_task));
     configASSERT(mdns_handler_);
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
-    system_state_handler_.reset(new (std::nothrow)
-                                    SystemStateHandler(*http_server_, 1024 * 2));
+    system_state_handler_.reset(new (std::nothrow) SystemStateHandler(router, 1024 * 2));
     configASSERT(system_state_handler_);
 #endif // CONFIG_FREERTOS_USE_TRACE_FACILITY
 }
 
 void HttpPipeline::handle_connect() {
-    const auto code = http_server_->start();
+    const auto code = server_.start();
     if (code != status::StatusCode::OK) {
         ocs_loge(log_tag, "failed to start HTTP server on network connect: code=%s",
                  status::code_to_str(code));
@@ -64,16 +62,12 @@ void HttpPipeline::handle_connect() {
 }
 
 void HttpPipeline::handle_disconnect() {
-    const auto code = http_server_->stop();
+    const auto code = server_.stop();
     if (code != status::StatusCode::OK) {
         ocs_loge(log_tag,
                  "failed to stop HTTP server when on network disconnect: code=%s",
                  status::code_to_str(code));
     }
-}
-
-http::IServer& HttpPipeline::get_server() {
-    return *http_server_;
 }
 
 } // namespace httpserver

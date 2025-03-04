@@ -15,7 +15,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-TimePipeline::TimePipeline(http::IServer& server,
+TimePipeline::TimePipeline(http::IRouter& router,
                            fmt::json::FanoutFormatter& telemetry_formatter,
                            fmt::json::FanoutFormatter& registration_formatter,
                            time_t start_point) {
@@ -25,7 +25,7 @@ TimePipeline::TimePipeline(http::IServer& server,
     telemetry_formatter.add(*formatter_);
     registration_formatter.add(*formatter_);
 
-    handler_.reset(new (std::nothrow) TimeHandler(server, start_point));
+    handler_.reset(new (std::nothrow) TimeHandler(router, start_point));
     configASSERT(handler_);
 }
 

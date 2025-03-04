@@ -2,6 +2,7 @@ idf_component_register(
     SRCS
     "chunk_stream_writer.cpp"
     "status_code_to_str.cpp"
+    "router.cpp"
 
     "target_esp32/server.cpp"
     "target_esp32/client_builder.cpp"

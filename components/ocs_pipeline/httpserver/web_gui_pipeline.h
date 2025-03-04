@@ -12,7 +12,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/stream_transceiver.h"
-#include "ocs_http/iserver.h"
+#include "ocs_http/irouter.h"
 
 namespace ocs {
 namespace pipeline {
@@ -23,8 +23,8 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p server to register endpoints to serve the Web GUI files.
-    explicit WebGuiPipeline(http::IServer& server);
+    //!  - @p router to register endpoints to serve the Web GUI files.
+    explicit WebGuiPipeline(http::IRouter& router);
 
 private:
     void initialize_fs_();

@@ -8,25 +8,16 @@
 
 #pragma once
 
-#include "ocs_status/code.h"
+#include <functional>
+
+#include "ocs_http/irequest.h"
+#include "ocs_http/iresponse_writer.h"
 
 namespace ocs {
 namespace http {
 
-class IServer {
-public:
-    //! Destroy.
-    virtual ~IServer() = default;
-
-    //! Start HTTP server.
-    virtual status::StatusCode start() = 0;
-
-    //! Stop HTTP server.
-    //!
-    //! @remarks
-    //!  Can be called multiple times.
-    virtual status::StatusCode stop() = 0;
-};
+//! HTTP endpoint handler.
+using HandlerFunc = std::function<status::StatusCode(IResponseWriter& w, IRequest& r)>;
 
 } // namespace http
 } // namespace ocs

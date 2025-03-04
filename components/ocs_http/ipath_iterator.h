@@ -8,24 +8,19 @@
 
 #pragma once
 
-#include "ocs_status/code.h"
+#include "ocs_http/ipath_handler.h"
 
 namespace ocs {
 namespace http {
 
-class IServer {
+//! URI path iterator.
+class IPathIterator {
 public:
     //! Destroy.
-    virtual ~IServer() = default;
+    virtual ~IPathIterator() = default;
 
-    //! Start HTTP server.
-    virtual status::StatusCode start() = 0;
-
-    //! Stop HTTP server.
-    //!
-    //! @remarks
-    //!  Can be called multiple times.
-    virtual status::StatusCode stop() = 0;
+    //! Handle URI path.
+    virtual void iterate_path(const char* path, HandlerFunc& handler) = 0;
 };
 
 } // namespace http

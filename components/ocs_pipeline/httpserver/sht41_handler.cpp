@@ -14,23 +14,22 @@ namespace pipeline {
 namespace httpserver {
 
 SHT41Handler::SHT41Handler(scheduler::AsyncFuncScheduler& func_scheduler,
-                           http::IServer& http_server,
+                           http::IRouter& router,
                            sensor::sht41::Sensor& sensor)
     : func_scheduler_(func_scheduler)
     , sensor_(sensor) {
-    http_server.add_GET("/api/v1/sensor/sht41/reset",
-                        [this](http::IResponseWriter& w, http::IRequest& r) {
-                            return handle_operation_(w,
-                                                     [](sensor::sht41::Sensor& sensor) {
-                                                         return sensor.reset();
-                                                     });
-                        });
-    http_server.add_GET(
-        "/api/v1/sensor/sht41/heat", [this](http::IResponseWriter& w, http::IRequest& r) {
-            return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
-                return sensor.heat();
-            });
-        });
+    router.add(http::IRouter::Method::Get, "/api/v1/sensor/sht41/reset",
+               [this](http::IResponseWriter& w, http::IRequest& r) {
+                   return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
+                       return sensor.reset();
+                   });
+               });
+    router.add(http::IRouter::Method::Get, "/api/v1/sensor/sht41/heat",
+               [this](http::IResponseWriter& w, http::IRequest& r) {
+                   return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
+                       return sensor.heat();
+                   });
+               });
 }
 
 status::StatusCode
