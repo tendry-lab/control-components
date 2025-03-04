@@ -5,7 +5,6 @@ idf_component_register(
     "reboot_task.cpp"
     "task_state_to_str.cpp"
     "system_state_builder.cpp"
-    "delayer_configuration.cpp"
     "fanout_suspender.cpp"
     "suspender_guard.cpp"
     "device_id.cpp"
@@ -14,10 +13,8 @@ idf_component_register(
     "target_esp32/default_clock.cpp"
     "target_esp32/default_rebooter.cpp"
     "target_esp32/reset_reason_to_str.cpp"
-    "target_esp32/basic_delayer.cpp"
-    "target_esp32/default_delayer.cpp"
-    "target_esp32/busy_loop_delayer.cpp"
-    "target_esp32/low_power_delayer.cpp"
+    "target_esp32/rt_delayer.cpp"
+    "target_esp32/platform_builder.cpp"
     "target_esp32/default_randomizer.cpp"
 
     REQUIRES

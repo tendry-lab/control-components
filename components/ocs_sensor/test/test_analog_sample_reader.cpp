@@ -50,7 +50,7 @@ int compute_avg(const Samples& samples) {
 
 namespace {
 
-struct TestDelayer : public system::IDelayer, public core::NonCopyable<> {
+struct TestDelayer : public system::IRtDelayer, public core::NonCopyable<> {
     status::StatusCode delay(core::Time) {
         return status::StatusCode::OK;
     }

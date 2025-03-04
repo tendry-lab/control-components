@@ -15,7 +15,7 @@
 namespace ocs {
 namespace onewire {
 
-Bus::Bus(system::IDelayer& delayer, io::gpio::IGpio& gpio, Bus::Params params)
+Bus::Bus(system::IRtDelayer& delayer, io::gpio::IGpio& gpio, Bus::Params params)
     : params_(params)
     , delayer_(delayer)
     , gpio_(gpio) {

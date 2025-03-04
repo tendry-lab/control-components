@@ -27,7 +27,7 @@ const char* log_tag = "ds18b20_store";
 
 } // namespace
 
-Store::Store(system::IDelayer& delayer, unsigned max_event_count)
+Store::Store(system::IRtDelayer& delayer, unsigned max_event_count)
     : max_event_count_(max_event_count)
     , delayer_(delayer) {
     configASSERT(max_event_count_);
@@ -87,7 +87,7 @@ Store::NodePtr Store::add_node_(io::gpio::Gpio gpio, const char* gpio_id) {
     return node;
 }
 
-Store::Node::Node(system::IDelayer& delayer,
+Store::Node::Node(system::IRtDelayer& delayer,
                   io::gpio::Gpio gpio,
                   const char* gpio_id,
                   unsigned max_event_count)
