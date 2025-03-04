@@ -11,7 +11,7 @@
 namespace ocs {
 namespace system {
 
-const char* reset_reason_to_str(esp_reset_reason_t reason) {
+const char* reset_reason_to_str(ResetReason reason) {
     switch (reason) {
     case ESP_RST_UNKNOWN:
         // Reset reason can not be determined
