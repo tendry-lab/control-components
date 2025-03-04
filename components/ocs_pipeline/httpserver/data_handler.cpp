@@ -32,20 +32,21 @@ DataHandler::DataHandler(http::IRouter& router,
 
     fanout_formatter_->add(*json_formatter_);
 
-    router.add(http::IRouter::Method::Get, path,
-               [this, path, id](http::IResponseWriter& w, http::IRequest&) {
-                   auto json = fmt::json::CjsonUniqueBuilder::make_object();
-                   if (!json) {
-                       return status::StatusCode::NoMem;
-                   }
+    router.add(http::IRouter::Method::Get, path, *this);
+}
 
-                   const auto code = fanout_formatter_->format(json.get());
-                   if (code != status::StatusCode::OK) {
-                       return code;
-                   }
+status::StatusCode DataHandler::serve_http(http::IResponseWriter& w, http::IRequest&) {
+    auto json = fmt::json::CjsonUniqueBuilder::make_object();
+    if (!json) {
+        return status::StatusCode::NoMem;
+    }
 
-                   return algo::ResponseOps::write_json(w, json_formatter_->c_str());
-               });
+    const auto code = fanout_formatter_->format(json.get());
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
+
+    return algo::ResponseOps::write_json(w, json_formatter_->c_str());
 }
 
 } // namespace httpserver

@@ -24,30 +24,32 @@ SystemStateHandler::SystemStateHandler(http::IRouter& router, unsigned response_
     json_formatter_.reset(new (std::nothrow) fmt::json::DynamicFormatter(response_size));
     configASSERT(json_formatter_);
 
-    router.add(http::IRouter::Method::Get, "/api/v1/system/report",
-               [this](http::IResponseWriter& w, http::IRequest&) {
-                   auto json = fmt::json::CjsonUniqueBuilder::make_object();
-                   if (!json) {
-                       return status::StatusCode::NoMem;
-                   }
+    router.add(http::IRouter::Method::Get, "/api/v1/system/report", *this);
+}
 
-                   auto code = state_json_formatter_->format(json.get());
-                   if (code != status::StatusCode::OK) {
-                       return code;
-                   }
+status::StatusCode SystemStateHandler::serve_http(http::IResponseWriter& w,
+                                                  http::IRequest&) {
+    auto json = fmt::json::CjsonUniqueBuilder::make_object();
+    if (!json) {
+        return status::StatusCode::NoMem;
+    }
 
-                   code = json_formatter_->format(json.get());
-                   if (code != status::StatusCode::OK) {
-                       return code;
-                   }
+    auto code = state_json_formatter_->format(json.get());
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
 
-                   code = algo::ResponseOps::write_json(w, json_formatter_->c_str());
-                   if (code != status::StatusCode::OK) {
-                       return code;
-                   }
+    code = json_formatter_->format(json.get());
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
 
-                   return status::StatusCode::OK;
-               });
+    code = algo::ResponseOps::write_json(w, json_formatter_->c_str());
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
+
+    return status::StatusCode::OK;
 }
 
 } // namespace httpserver

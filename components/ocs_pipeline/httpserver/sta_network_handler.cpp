@@ -26,17 +26,19 @@ StaNetworkHandler::StaNetworkHandler(http::IRouter& router,
                                      scheduler::ITask& reboot_task)
     : config_(config)
     , reboot_task_(reboot_task) {
-    router.add(http::IRouter::Method::Get, "/api/v1/config/wifi/sta",
-               [this](http::IResponseWriter& w, http::IRequest& r) {
-                   core::LockGuard lock(mu_);
+    router.add(http::IRouter::Method::Get, "/api/v1/config/wifi/sta", *this);
+}
 
-                   const auto values = algo::UriOps::parse_query(r.get_uri());
-                   if (!values.size()) {
-                       return handle_get_(w);
-                   }
+status::StatusCode StaNetworkHandler::serve_http(http::IResponseWriter& w,
+                                                 http::IRequest& r) {
+    core::LockGuard lock(mu_);
 
-                   return handle_update_(w, values);
-               });
+    const auto values = algo::UriOps::parse_query(r.get_uri());
+    if (!values.size()) {
+        return handle_get_(w);
+    }
+
+    return handle_update_(w, values);
 }
 
 status::StatusCode StaNetworkHandler::handle_update_(http::IResponseWriter& w,

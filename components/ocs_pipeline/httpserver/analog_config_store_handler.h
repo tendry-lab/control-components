@@ -10,6 +10,7 @@
 
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/noncopyable.h"
+#include "ocs_http/ihandler.h"
 #include "ocs_http/irouter.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_sensor/analog_config_store.h"
@@ -18,7 +19,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class AnalogConfigStoreHandler : public core::NonCopyable<> {
+class AnalogConfigStoreHandler : private http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -32,6 +33,8 @@ public:
                              sensor::AnalogConfigStore& store);
 
 private:
+    status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
+
     status::StatusCode handle_all_(http::IResponseWriter& w);
 
     status::StatusCode handle_single_(http::IResponseWriter& w,
@@ -42,6 +45,7 @@ private:
 
     static constexpr TickType_t wait_timeout_ = pdMS_TO_TICKS(1000 * 6);
 
+    scheduler::AsyncFuncScheduler& func_scheduler_;
     sensor::AnalogConfigStore& store_;
 };
 

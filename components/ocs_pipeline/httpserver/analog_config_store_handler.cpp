@@ -61,29 +61,32 @@ AnalogConfigStoreHandler::AnalogConfigStoreHandler(
     scheduler::AsyncFuncScheduler& func_scheduler,
     http::IRouter& router,
     sensor::AnalogConfigStore& store)
-    : store_(store) {
-    router.add(http::IRouter::Method::Get, "/api/v1/config/sensor/analog",
-               [this, &func_scheduler](http::IResponseWriter& w, http::IRequest& r) {
-                   auto future = func_scheduler.add([this, &w, &r]() {
-                       const auto values = algo::UriOps::parse_query(r.get_uri());
-                       if (!values.size()) {
-                           return handle_all_(w);
-                       }
+    : func_scheduler_(func_scheduler)
+    , store_(store) {
+    router.add(http::IRouter::Method::Get, "/api/v1/config/sensor/analog", *this);
+}
 
-                       return handle_single_(w, values);
-                   });
-                   if (!future) {
-                       return status::StatusCode::InvalidState;
-                   }
-                   if (future->wait(wait_timeout_) != status::StatusCode::OK) {
-                       return status::StatusCode::Timeout;
-                   }
-                   if (future->code() != status::StatusCode::OK) {
-                       return future->code();
-                   }
+status::StatusCode AnalogConfigStoreHandler::serve_http(http::IResponseWriter& w,
+                                                        http::IRequest& r) {
+    auto future = func_scheduler_.add([this, &w, &r]() {
+        const auto values = algo::UriOps::parse_query(r.get_uri());
+        if (!values.size()) {
+            return handle_all_(w);
+        }
 
-                   return status::StatusCode::OK;
-               });
+        return handle_single_(w, values);
+    });
+    if (!future) {
+        return status::StatusCode::InvalidState;
+    }
+    if (future->wait(wait_timeout_) != status::StatusCode::OK) {
+        return status::StatusCode::Timeout;
+    }
+    if (future->code() != status::StatusCode::OK) {
+        return future->code();
+    }
+
+    return status::StatusCode::OK;
 }
 
 status::StatusCode AnalogConfigStoreHandler::handle_all_(http::IResponseWriter& w) {

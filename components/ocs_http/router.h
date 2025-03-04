@@ -22,19 +22,19 @@ namespace http {
 class Router : public IRouter, public core::NonCopyable<> {
 public:
     //! Register HTTP endpoint.
-    void add(Method method, const char* path, HandlerFunc func) override;
+    void add(Method method, const char* pattern, IHandler& handler) override;
 
     //! Receive a registered handler.
-    HandlerFunc match(Method method,
-                      const char* path,
-                      size_t match_upto,
-                      IPathMatcher& matcher) override;
+    IHandler* match(Method method,
+                    const char* pattern,
+                    size_t match_upto,
+                    IPatternMatcher& matcher) override;
 
     //! Iterate over each registered handler.
-    void for_each(Method method, IPathIterator& iterator) override;
+    void for_each(Method method, IPatternIterator& iterator) override;
 
 private:
-    using Endpoint = std::pair<std::string, HandlerFunc>;
+    using Endpoint = std::pair<std::string, IHandler*>;
     using EndpointList = std::vector<Endpoint>;
 
     std::unordered_map<Method, EndpointList> method_to_endpoints_;

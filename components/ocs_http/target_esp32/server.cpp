@@ -82,17 +82,17 @@ esp_err_t Server::handle_request_(httpd_req_t* req) {
     return ESP_OK;
 }
 
-bool Server::match_path(const char* reference_path,
-                        const char* path_to_match,
-                        size_t match_upto) {
+bool Server::match_pattern(const char* reference_pattern,
+                           const char* pattern_to_match,
+                           size_t match_upto) {
     if (config_.uri_match_fn) {
-        return config_.uri_match_fn(reference_path, path_to_match, match_upto);
+        return config_.uri_match_fn(reference_pattern, pattern_to_match, match_upto);
     }
 
-    return strcmp(reference_path, path_to_match) == 0;
+    return strcmp(reference_pattern, pattern_to_match) == 0;
 }
 
-void Server::iterate_path(const char* path, HandlerFunc&) {
+void Server::iterate_pattern(const char* path, IHandler&) {
     httpd_uri_t uri;
     memset(&uri, 0, sizeof(uri));
 
@@ -125,7 +125,7 @@ void Server::handle_request_get_(httpd_req_t* req) {
     Request r(*req);
     ResponseWriter w(*req);
 
-    const auto code = handler(w, r);
+    const auto code = handler->serve_http(w, r);
     if (code != status::StatusCode::OK) {
         ocs_loge(log_tag, "failed to handle request: URI=%s code=%s", req->uri,
                  status::code_to_str(code));

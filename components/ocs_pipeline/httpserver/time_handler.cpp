@@ -18,37 +18,38 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-TimeHandler::TimeHandler(http::IRouter& router, time_t start_point) {
-    router.add(http::IRouter::Method::Get, "/api/v1/system/time",
-               [start_point](http::IResponseWriter& w, http::IRequest& r) {
-                   const auto values = algo::UriOps::parse_query(r.get_uri());
-                   const auto it = values.find("value");
+TimeHandler::TimeHandler(http::IRouter& router, time_t start_point)
+    : start_point_(start_point) {
+    router.add(http::IRouter::Method::Get, "/api/v1/system/time", *this);
+}
 
-                   if (it == values.end()) {
-                       auto timestamp = algo::TimeOps::get_time();
-                       if (!timestamp) {
-                           return status::StatusCode::Error;
-                       }
+status::StatusCode TimeHandler::serve_http(http::IResponseWriter& w, http::IRequest& r) {
+    const auto values = algo::UriOps::parse_query(r.get_uri());
+    const auto it = values.find("value");
 
-                       if (*timestamp < start_point) {
-                           *timestamp = -1;
-                       }
+    if (it == values.end()) {
+        auto timestamp = algo::TimeOps::get_time();
+        if (!timestamp) {
+            return status::StatusCode::Error;
+        }
 
-                       return algo::ResponseOps::write_text(
-                           w, std::to_string(*timestamp).c_str());
-                   }
+        if (*timestamp < start_point_) {
+            *timestamp = -1;
+        }
 
-                   char buf[it->second.size() + 1];
-                   memset(buf, 0, sizeof(buf));
-                   memcpy(buf, it->second.data(), it->second.size());
+        return algo::ResponseOps::write_text(w, std::to_string(*timestamp).c_str());
+    }
 
-                   const auto code = algo::TimeOps::set_time(buf, start_point);
-                   if (code != status::StatusCode::OK) {
-                       return code;
-                   }
+    char buf[it->second.size() + 1];
+    memset(buf, 0, sizeof(buf));
+    memcpy(buf, it->second.data(), it->second.size());
 
-                   return algo::ResponseOps::write_text(w, "OK");
-               });
+    const auto code = algo::TimeOps::set_time(buf, start_point_);
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
+
+    return algo::ResponseOps::write_text(w, "OK");
 }
 
 } // namespace httpserver

@@ -95,10 +95,21 @@ TEST_CASE("Start HTTP server: WiFi valid credentials", "[ocs_http], [server]") {
     const char* path = "/foo";
     const char* want_response = "hello world";
 
-    router.add(http::IRouter::Method::Get, path,
-               [want_response](http::IResponseWriter& w, http::IRequest& r) {
-                   return algo::ResponseOps::write_text(w, want_response);
-               });
+    class TestHandler : public IHandler {
+    public:
+        explicit TestHandler(const char* response)
+            : response_(response) {
+        }
+
+        status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest& r) {
+            return algo::ResponseOps::write_text(w, response_.c_str());
+        }
+
+    private:
+        std::string response_;
+    } http_handler(want_response);
+
+    router.add(http::IRouter::Method::Get, path, http_handler);
 
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;
@@ -193,22 +204,33 @@ TEST_CASE("Start HTTP server: chunked response", "[ocs_http], [server]") {
     const char* path = "/foo";
     const char* want_response = "hello world";
 
-    router.add(http::IRouter::Method::Get, path,
-               [want_response](http::IResponseWriter& w, http::IRequest&) {
-                   const auto code = w.get_header().set("Transfer-Encoding", "chunked");
-                   if (code != status::StatusCode::OK) {
-                       return code;
-                   }
+    class TestHandler : public IHandler {
+    public:
+        explicit TestHandler(const char* response)
+            : response_(response) {
+        }
 
-                   core::StreamTransceiver::Buffer buffer;
-                   buffer.resize(strlen(want_response));
+        status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest& r) {
+            const auto code = w.get_header().set("Transfer-Encoding", "chunked");
+            if (code != status::StatusCode::OK) {
+                return code;
+            }
 
-                   ChunkStreamWriter writer(w);
-                   TestStreamReader reader(want_response, 1);
+            core::StreamTransceiver::Buffer buffer;
+            buffer.resize(response_.size());
 
-                   core::StreamTransceiver transceiver(reader, writer, buffer);
-                   return transceiver.transceive();
-               });
+            ChunkStreamWriter writer(w);
+            TestStreamReader reader(response_.c_str(), 1);
+
+            core::StreamTransceiver transceiver(reader, writer, buffer);
+            return transceiver.transceive();
+        }
+
+    private:
+        std::string response_;
+    } http_handler(want_response);
+
+    router.add(http::IRouter::Method::Get, path, http_handler);
 
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;

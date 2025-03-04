@@ -11,8 +11,8 @@
 #include "esp_http_server.h"
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_http/ipath_iterator.h"
-#include "ocs_http/ipath_matcher.h"
+#include "ocs_http/ipattern_iterator.h"
+#include "ocs_http/ipattern_matcher.h"
 #include "ocs_http/irouter.h"
 #include "ocs_http/iserver.h"
 
@@ -20,8 +20,8 @@ namespace ocs {
 namespace http {
 
 class Server : public IServer,
-               private IPathMatcher,
-               private IPathIterator,
+               private IPatternMatcher,
+               private IPatternIterator,
                private core::NonCopyable<> {
 public:
     struct Params {
@@ -47,11 +47,11 @@ public:
 private:
     static esp_err_t handle_request_(httpd_req_t* req);
 
-    bool match_path(const char* reference_path,
-                    const char* path_to_match,
-                    size_t match_upto) override;
+    bool match_pattern(const char* reference_pattern,
+                       const char* pattern_to_match,
+                       size_t match_upto) override;
 
-    void iterate_path(const char* path, HandlerFunc& handler) override;
+    void iterate_pattern(const char* path, IHandler& handler) override;
 
     status::StatusCode register_uris_();
 

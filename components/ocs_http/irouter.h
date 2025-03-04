@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "ocs_http/ipath_handler.h"
-#include "ocs_http/ipath_iterator.h"
-#include "ocs_http/ipath_matcher.h"
+#include "ocs_http/ihandler.h"
+#include "ocs_http/ipattern_iterator.h"
+#include "ocs_http/ipattern_matcher.h"
 #include "ocs_status/code.h"
 
 namespace ocs {
@@ -29,15 +29,17 @@ public:
     //! Register HTTP handler.
     //!
     //! @remarks
-    //!  It's forbidden to register multiple handlers for the same path and method.
-    virtual void add(Method method, const char* path, HandlerFunc handler) = 0;
+    //!  It's forbidden to register multiple handlers for the same pattern and method.
+    virtual void add(Method method, const char* pattern, IHandler& handler) = 0;
 
     //! Receive a registered handler.
-    virtual HandlerFunc
-    match(Method method, const char* path, size_t match_upto, IPathMatcher& matcher) = 0;
+    virtual IHandler* match(Method method,
+                            const char* pattern,
+                            size_t match_upto,
+                            IPatternMatcher& matcher) = 0;
 
     //! Iterate over each registered handler.
-    virtual void for_each(Method method, IPathIterator& iterator) = 0;
+    virtual void for_each(Method method, IPatternIterator& iterator) = 0;
 };
 
 } // namespace http

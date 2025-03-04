@@ -12,13 +12,14 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/dynamic_formatter.h"
+#include "ocs_http/ihandler.h"
 #include "ocs_http/irouter.h"
 
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class SystemStateHandler : public core::NonCopyable<> {
+class SystemStateHandler : private http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -28,6 +29,8 @@ public:
     SystemStateHandler(http::IRouter& router, unsigned response_size);
 
 private:
+    status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
+
     std::unique_ptr<fmt::json::IFormatter> state_json_formatter_;
     std::unique_ptr<fmt::json::DynamicFormatter> json_formatter_;
 };

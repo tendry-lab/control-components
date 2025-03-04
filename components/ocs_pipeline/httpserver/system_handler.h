@@ -16,7 +16,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class SystemHandler : public core::NonCopyable<> {
+class SystemHandler : private http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -24,6 +24,11 @@ public:
     //!  - @p router to register HTTP endpoints.
     //!  - @p reboot_task to initiate the reboot process.
     SystemHandler(http::IRouter& router, scheduler::ITask& reboot_task);
+
+private:
+    status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest& r) override;
+
+    scheduler::ITask& reboot_task_;
 };
 
 } // namespace httpserver
