@@ -15,13 +15,13 @@
 namespace ocs {
 namespace system {
 
-class DefaultRebooter : public IRebooter, public core::NonCopyable<> {
+class Rebooter : public IRebooter, public core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
     //!  - @p handler to be notified before the actual reboot is happened.
-    explicit DefaultRebooter(IRebootHandler& handler);
+    explicit Rebooter(IRebootHandler& handler);
 
     //! Restart the board.
     void reboot() override;

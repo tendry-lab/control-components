@@ -9,22 +9,22 @@
 #include "esp_system.h"
 
 #include "ocs_core/log.h"
-#include "ocs_system/target_esp32/default_rebooter.h"
+#include "ocs_system/target_esp32/rebooter.h"
 
 namespace ocs {
 namespace system {
 
 namespace {
 
-const char* log_tag = "default_rebooter";
+const char* log_tag = "rebooter";
 
 } // namespace
 
-DefaultRebooter::DefaultRebooter(IRebootHandler& handler)
+Rebooter::Rebooter(IRebootHandler& handler)
     : handler_(handler) {
 }
 
-void DefaultRebooter::reboot() {
+void Rebooter::reboot() {
     ocs_logi(log_tag, "Prepare for rebooting...");
     handler_.handle_reboot();
     ocs_logi(log_tag, "Ready for rebooting...");

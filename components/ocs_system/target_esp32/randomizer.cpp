@@ -10,12 +10,12 @@
 
 #include "esp_random.h"
 
-#include "ocs_system/target_esp32/default_randomizer.h"
+#include "ocs_system/target_esp32/randomizer.h"
 
 namespace ocs {
 namespace system {
 
-uint32_t DefaultRandomizer::random(uint32_t from, uint32_t to) {
+uint32_t Randomizer::random(uint32_t from, uint32_t to) {
     configASSERT(from <= to);
 
     const uint64_t range = static_cast<uint64_t>(to) - from + 1;
