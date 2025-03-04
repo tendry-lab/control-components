@@ -12,7 +12,7 @@
 #pragma once
 
 namespace ocs {
-namespace core {
+namespace system {
 
 class IRandomizer {
 public:
@@ -23,5 +23,5 @@ public:
     virtual uint32_t random(uint32_t from, uint32_t to) = 0;
 };
 
-} // namespace core
+} // namespace system
 } // namespace ocs

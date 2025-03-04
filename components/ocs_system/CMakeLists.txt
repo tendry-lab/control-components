@@ -11,11 +11,11 @@ idf_component_register(
     "device_info.cpp"
 
     "target_esp32/default_clock.cpp"
-    "target_esp32/default_rebooter.cpp"
+    "target_esp32/rebooter.cpp"
     "target_esp32/reset_reason_to_str.cpp"
     "target_esp32/rt_delayer.cpp"
     "target_esp32/platform_builder.cpp"
-    "target_esp32/default_randomizer.cpp"
+    "target_esp32/randomizer.cpp"
 
     REQUIRES
     "esp_timer"

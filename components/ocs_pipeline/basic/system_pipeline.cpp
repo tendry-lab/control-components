@@ -16,7 +16,6 @@
 #include "ocs_system/delay_rebooter.h"
 #include "ocs_system/reboot_task.h"
 #include "ocs_system/target_esp32/default_clock.h"
-#include "ocs_system/target_esp32/default_rebooter.h"
 
 namespace ocs {
 namespace pipeline {
@@ -52,8 +51,7 @@ SystemPipeline::SystemPipeline(SystemPipeline::Params params) {
     fanout_reboot_handler_.reset(new (std::nothrow) system::FanoutRebootHandler());
     configASSERT(fanout_reboot_handler_);
 
-    default_rebooter_.reset(new (std::nothrow)
-                                system::DefaultRebooter(*fanout_reboot_handler_));
+    default_rebooter_ = system::PlatformBuilder::make_rebooter(*fanout_reboot_handler_);
     configASSERT(default_rebooter_);
 
     rebooter_ = default_rebooter_.get();

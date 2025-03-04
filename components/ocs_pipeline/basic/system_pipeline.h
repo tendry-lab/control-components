@@ -21,6 +21,7 @@
 #include "ocs_system/device_info.h"
 #include "ocs_system/fanout_reboot_handler.h"
 #include "ocs_system/irebooter.h"
+#include "ocs_system/platform_builder.h"
 
 namespace ocs {
 namespace pipeline {
@@ -65,7 +66,7 @@ private:
     std::unique_ptr<scheduler::AsyncFuncScheduler> func_scheduler_;
 
     std::unique_ptr<system::FanoutRebootHandler> fanout_reboot_handler_;
-    std::unique_ptr<system::IRebooter> default_rebooter_;
+    system::PlatformBuilder::IRebooterPtr default_rebooter_;
     std::unique_ptr<system::IRebooter> delay_rebooter_;
     system::IRebooter* rebooter_ { nullptr };
 

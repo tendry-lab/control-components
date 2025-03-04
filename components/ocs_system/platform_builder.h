@@ -10,6 +10,9 @@
 
 #include <memory>
 
+#include "ocs_system/irandomizer.h"
+#include "ocs_system/ireboot_handler.h"
+#include "ocs_system/irebooter.h"
 #include "ocs_system/irt_delayer.h"
 
 namespace ocs {
@@ -17,9 +20,17 @@ namespace system {
 
 struct PlatformBuilder {
     using IRtDelayerPtr = std::unique_ptr<IRtDelayer>;
+    using IRebooterPtr = std::unique_ptr<IRebooter>;
+    using IRandomizerPtr = std::unique_ptr<IRandomizer>;
 
     //! Create real-time delayer for highly-accurate delays.
     static IRtDelayerPtr make_rt_delayer();
+
+    //! Create a basic system rebooter.
+    static IRebooterPtr make_rebooter(IRebootHandler& handler);
+
+    //! Create a basic system randomizer.
+    static IRandomizerPtr make_randomizer();
 };
 
 } // namespace system
