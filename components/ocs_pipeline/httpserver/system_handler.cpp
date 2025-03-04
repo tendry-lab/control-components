@@ -6,11 +6,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_pipeline/httpserver/system_handler.h"
 #include "ocs_algo/response_ops.h"
 #include "ocs_core/log.h"
-#include "ocs_pipeline/httpserver/system_handler.h"
 
 namespace ocs {
 namespace pipeline {
@@ -22,18 +20,20 @@ const char* log_tag = "http_system_handler";
 
 } // namespace
 
-SystemHandler::SystemHandler(http::IRouter& router, scheduler::ITask& reboot_task) {
-    router.add(http::IRouter::Method::Get, "/api/v1/system/reboot",
-               [&reboot_task](http::IResponseWriter& w, http::IRequest&) {
-                   const auto code = algo::ResponseOps::write_text(w, "Rebooting...");
-                   if (code != status::StatusCode::OK) {
-                       return code;
-                   }
+SystemHandler::SystemHandler(http::IRouter& router, scheduler::ITask& reboot_task)
+    : reboot_task_(reboot_task) {
+    router.add(http::IRouter::Method::Get, "/api/v1/system/reboot", *this);
+}
 
-                   ocs_logi(log_tag, "Rebooting...");
+status::StatusCode SystemHandler::serve_http(http::IResponseWriter& w, http::IRequest&) {
+    const auto code = algo::ResponseOps::write_text(w, "Rebooting...");
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
 
-                   return reboot_task.run();
-               });
+    ocs_logi(log_tag, "Rebooting...");
+
+    return reboot_task_.run();
 }
 
 } // namespace httpserver

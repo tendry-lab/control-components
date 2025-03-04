@@ -17,7 +17,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class TimeHandler : public core::NonCopyable<> {
+class TimeHandler : private http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -25,6 +25,11 @@ public:
     //!  - @p router to register HTTP endpoint.
     //!  - @p start_point - point in time begin with the system time is valid.
     TimeHandler(http::IRouter& router, time_t start_point);
+
+private:
+    status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest& r) override;
+
+    const time_t start_point_ { 0 };
 };
 
 } // namespace httpserver

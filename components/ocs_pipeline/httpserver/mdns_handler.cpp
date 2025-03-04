@@ -21,21 +21,17 @@ MdnsHandler::MdnsHandler(http::IRouter& router,
                          scheduler::ITask& reboot_task)
     : config_(config)
     , reboot_task_(reboot_task) {
-    router.add(http::IRouter::Method::Get, "/api/v1/config/mdns",
-               [this](http::IResponseWriter& w, http::IRequest& r) {
-                   core::LockGuard lock(mu_);
-
-                   const auto values = algo::UriOps::parse_query(r.get_uri());
-                   if (!values.size()) {
-                       return status::StatusCode::InvalidArg;
-                   }
-
-                   return handle_update_(w, values);
-               });
+    router.add(http::IRouter::Method::Get, "/api/v1/config/mdns", *this);
 }
 
-status::StatusCode MdnsHandler::handle_update_(http::IResponseWriter& w,
-                                               const algo::UriOps::Values& values) {
+status::StatusCode MdnsHandler::serve_http(http::IResponseWriter& w, http::IRequest& r) {
+    core::LockGuard lock(mu_);
+
+    const auto values = algo::UriOps::parse_query(r.get_uri());
+    if (!values.size()) {
+        return status::StatusCode::InvalidArg;
+    }
+
     status::StatusCode code = status::StatusCode::OK;
 
     const auto reset = values.find("reset");

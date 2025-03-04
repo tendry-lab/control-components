@@ -12,6 +12,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/cjson_builder.h"
+#include "ocs_http/ihandler.h"
 #include "ocs_http/irouter.h"
 #include "ocs_sensor/ds18b20/store.h"
 #include "ocs_system/isuspender.h"
@@ -20,7 +21,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class DS18B20Handler : public core::NonCopyable<> {
+class DS18B20Handler : private http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -45,6 +46,8 @@ private:
     static const TickType_t read_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
     static const TickType_t write_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
     static const TickType_t erase_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
+
+    status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
 
     status::StatusCode handle_scan_(http::IResponseWriter& w, http::IRequest& r);
 

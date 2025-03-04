@@ -11,6 +11,7 @@
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_mutex.h"
+#include "ocs_http/ihandler.h"
 #include "ocs_http/irouter.h"
 #include "ocs_net/sta_network_config.h"
 #include "ocs_scheduler/itask.h"
@@ -19,7 +20,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class StaNetworkHandler : public core::NonCopyable<> {
+class StaNetworkHandler : private http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -32,6 +33,8 @@ public:
                       scheduler::ITask& reboot_task);
 
 private:
+    status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
+
     status::StatusCode handle_update_(http::IResponseWriter& w,
                                       const algo::UriOps::Values&);
 

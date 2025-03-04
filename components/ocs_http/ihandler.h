@@ -8,19 +8,22 @@
 
 #pragma once
 
-#include "ocs_http/ipath_handler.h"
+#include <functional>
+
+#include "ocs_http/irequest.h"
+#include "ocs_http/iresponse_writer.h"
 
 namespace ocs {
 namespace http {
 
-//! URI path iterator.
-class IPathIterator {
+//! Handler for an HTTP request.
+class IHandler {
 public:
     //! Destroy.
-    virtual ~IPathIterator() = default;
+    virtual ~IHandler() = default;
 
-    //! Handle URI path.
-    virtual void iterate_path(const char* path, HandlerFunc& handler) = 0;
+    //! Handle HTTP request.
+    virtual status::StatusCode serve_http(IResponseWriter& w, IRequest& r) = 0;
 };
 
 } // namespace http

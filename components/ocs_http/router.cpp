@@ -16,29 +16,29 @@
 namespace ocs {
 namespace http {
 
-void Router::add(IRouter::Method method, const char* path, HandlerFunc func) {
+void Router::add(IRouter::Method method, const char* pattern, IHandler& handler) {
     auto& endpoints = method_to_endpoints_[method];
 
-    const auto it =
-        std::find_if(endpoints.begin(), endpoints.end(), [&path](const auto& endpoint) {
-            return endpoint.first == path;
-        });
+    const auto it = std::find_if(endpoints.begin(), endpoints.end(),
+                                 [&pattern](const auto& endpoint) {
+                                     return endpoint.first == pattern;
+                                 });
     configASSERT(it == endpoints.end());
 
-    endpoints.push_back(std::make_pair(path, func));
+    endpoints.push_back(std::make_pair(pattern, &handler));
 }
 
-HandlerFunc Router::match(IRouter::Method method,
-                          const char* path_to_match,
-                          size_t match_upto,
-                          IPathMatcher& matcher) {
+IHandler* Router::match(IRouter::Method method,
+                        const char* pattern_to_match,
+                        size_t match_upto,
+                        IPatternMatcher& matcher) {
     auto it = method_to_endpoints_.find(method);
     if (it == method_to_endpoints_.end()) {
         return nullptr;
     }
 
-    for (auto& [ref_path, handler] : it->second) {
-        if (matcher.match_path(ref_path.c_str(), path_to_match, match_upto)) {
+    for (auto& [pattern, handler] : it->second) {
+        if (matcher.match_pattern(pattern.c_str(), pattern_to_match, match_upto)) {
             return handler;
         }
     }
@@ -46,11 +46,11 @@ HandlerFunc Router::match(IRouter::Method method,
     return nullptr;
 }
 
-void Router::for_each(Method method, IPathIterator& iterator) {
+void Router::for_each(Method method, IPatternIterator& iterator) {
     auto it = method_to_endpoints_.find(method);
     if (it != method_to_endpoints_.end()) {
-        for (auto& [path, handler] : it->second) {
-            iterator.iterate_path(path.c_str(), handler);
+        for (auto& [pattern, handler] : it->second) {
+            iterator.iterate_pattern(pattern.c_str(), *handler);
         }
     }
 }

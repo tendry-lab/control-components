@@ -63,18 +63,21 @@ WebGuiPipeline::WebGuiPipeline(http::IRouter& router) {
 
     initialize_fs_();
 
-    router.add(http::IRouter::Method::Get, "/",
-               [this](http::IResponseWriter& w, http::IRequest& r) {
-                   return handle_root_(w);
-               });
-    router.add(http::IRouter::Method::Get, "/dashboard",
-               [this](http::IResponseWriter& w, http::IRequest& r) {
-                   return handle_file_(w, "/index.html");
-               });
-    router.add(http::IRouter::Method::Get, "/assets/*",
-               [this](http::IResponseWriter& w, http::IRequest& r) {
-                   return handle_file_(w, r.get_uri());
-               });
+    router.add(http::IRouter::Method::Get, "/", *this);
+    router.add(http::IRouter::Method::Get, "/dashboard", *this);
+    router.add(http::IRouter::Method::Get, "/assets/*", *this);
+}
+
+status::StatusCode WebGuiPipeline::serve_http(http::IResponseWriter& w,
+                                              http::IRequest& r) {
+    if (!strcmp(r.get_uri(), "/")) {
+        return handle_root_(w);
+    }
+    if (!strcmp(r.get_uri(), "/dashboard")) {
+        return handle_file_(w, "/index.html");
+    }
+
+    return handle_file_(w, r.get_uri());
 }
 
 void WebGuiPipeline::initialize_fs_() {

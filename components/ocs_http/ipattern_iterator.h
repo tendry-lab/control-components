@@ -8,16 +8,20 @@
 
 #pragma once
 
-#include <functional>
-
-#include "ocs_http/irequest.h"
-#include "ocs_http/iresponse_writer.h"
+#include "ocs_http/ihandler.h"
 
 namespace ocs {
 namespace http {
 
-//! HTTP endpoint handler.
-using HandlerFunc = std::function<status::StatusCode(IResponseWriter& w, IRequest& r)>;
+//! Pattern iterator.
+class IPatternIterator {
+public:
+    //! Destroy.
+    virtual ~IPatternIterator() = default;
+
+    //! Handle pattern.
+    virtual void iterate_pattern(const char* pattern, IHandler& handler) = 0;
+};
 
 } // namespace http
 } // namespace ocs

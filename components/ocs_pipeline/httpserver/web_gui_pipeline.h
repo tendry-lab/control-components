@@ -18,7 +18,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class WebGuiPipeline : public core::NonCopyable<> {
+class WebGuiPipeline : private http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -27,6 +27,8 @@ public:
     explicit WebGuiPipeline(http::IRouter& router);
 
 private:
+    status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest& r) override;
+
     void initialize_fs_();
     status::StatusCode handle_root_(http::IResponseWriter& w);
     status::StatusCode handle_file_(http::IResponseWriter& w, const char* filename);

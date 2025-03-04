@@ -6,8 +6,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ocs_pipeline/httpserver/sht41_handler.h"
+#include <cstring>
+
 #include "ocs_algo/response_ops.h"
+#include "ocs_pipeline/httpserver/sht41_handler.h"
 
 namespace ocs {
 namespace pipeline {
@@ -18,18 +20,23 @@ SHT41Handler::SHT41Handler(scheduler::AsyncFuncScheduler& func_scheduler,
                            sensor::sht41::Sensor& sensor)
     : func_scheduler_(func_scheduler)
     , sensor_(sensor) {
-    router.add(http::IRouter::Method::Get, "/api/v1/sensor/sht41/reset",
-               [this](http::IResponseWriter& w, http::IRequest& r) {
-                   return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
-                       return sensor.reset();
-                   });
-               });
-    router.add(http::IRouter::Method::Get, "/api/v1/sensor/sht41/heat",
-               [this](http::IResponseWriter& w, http::IRequest& r) {
-                   return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
-                       return sensor.heat();
-                   });
-               });
+    router.add(http::IRouter::Method::Get, "/api/v1/sensor/sht41/reset", *this);
+    router.add(http::IRouter::Method::Get, "/api/v1/sensor/sht41/heat", *this);
+}
+
+status::StatusCode SHT41Handler::serve_http(http::IResponseWriter& w, http::IRequest& r) {
+    if (!strcmp(r.get_uri(), "/api/v1/sensor/sht41/reset")) {
+        return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
+            return sensor.reset();
+        });
+    }
+    if (!strcmp(r.get_uri(), "/api/v1/sensor/sht41/heat")) {
+        return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
+            return sensor.heat();
+        });
+    }
+
+    return status::StatusCode::InvalidArg;
 }
 
 status::StatusCode

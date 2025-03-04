@@ -11,6 +11,7 @@
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_mutex.h"
+#include "ocs_http/ihandler.h"
 #include "ocs_http/iresponse_writer.h"
 #include "ocs_http/irouter.h"
 #include "ocs_net/mdns_config.h"
@@ -20,7 +21,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class MdnsHandler : public core::NonCopyable<> {
+class MdnsHandler : private http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -33,8 +34,7 @@ public:
                 scheduler::ITask& reboot_task);
 
 private:
-    status::StatusCode handle_update_(http::IResponseWriter&,
-                                      const algo::UriOps::Values&);
+    status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
 
     core::StaticMutex mu_;
     net::MdnsConfig& config_;
