@@ -6,10 +6,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <cstring>
-
-#include "ocs_algo/response_ops.h"
 #include "ocs_pipeline/httpserver/sht41_handler.h"
+#include "ocs_algo/response_ops.h"
+#include "ocs_algo/uri_ops.h"
 
 namespace ocs {
 namespace pipeline {
@@ -25,12 +24,14 @@ SHT41Handler::SHT41Handler(scheduler::AsyncFuncScheduler& func_scheduler,
 }
 
 status::StatusCode SHT41Handler::serve_http(http::IResponseWriter& w, http::IRequest& r) {
-    if (!strcmp(r.get_uri(), "/api/v1/sensor/sht41/reset")) {
+    const auto path = algo::UriOps::parse_path(r.get_uri());
+
+    if (path == "/api/v1/sensor/sht41/reset") {
         return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
             return sensor.reset();
         });
     }
-    if (!strcmp(r.get_uri(), "/api/v1/sensor/sht41/heat")) {
+    if (path == "/api/v1/sensor/sht41/heat") {
         return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
             return sensor.heat();
         });
