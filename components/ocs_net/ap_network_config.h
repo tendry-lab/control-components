@@ -77,6 +77,7 @@ private:
     static constexpr const char* max_conn_key_ = "max_conn";
 
     static constexpr unsigned max_ssid_len_ = 31;
+    static constexpr uint8_t default_password_len_ = 12;
 
     storage::IStorage& storage_;
 
