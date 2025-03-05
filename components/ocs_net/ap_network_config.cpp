@@ -42,12 +42,8 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
                      status::code_to_str(code));
         }
 
-        std::string builtin_password = device_info.get_fw_name();
-        builtin_password += "-";
-        builtin_password += std::string(device_info.get_device_id(), 7);
-
-        strncpy(password_, builtin_password.c_str(),
-                std::min(max_password_len, builtin_password.size()));
+        strncpy(password_, ssid_,
+                std::min(default_password_len_, static_cast<uint8_t>(strlen(ssid_))));
     }
 
     code =
