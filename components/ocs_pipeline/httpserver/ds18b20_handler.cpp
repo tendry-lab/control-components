@@ -129,11 +129,13 @@ DS18B20Handler::DS18B20Handler(http::IRouter& router,
 
 status::StatusCode DS18B20Handler::serve_http(http::IResponseWriter& w,
                                               http::IRequest& r) {
-    if (!strcmp(r.get_uri(), "/api/v1/sensor/ds18b20/scan")) {
+    const auto path = algo::UriOps::parse_path(r.get_uri());
+
+    if (path == "/api/v1/sensor/ds18b20/scan") {
         return handle_scan_(w, r);
     }
 
-    if (!strcmp(r.get_uri(), "/api/v1/sensor/ds18b20/read_configuration")) {
+    if (path == "/api/v1/sensor/ds18b20/read_configuration") {
         return handle_configuration_(
             w, r, read_wait_interval_, read_response_buffer_size_,
             [this](cJSON* json, sensor::ds18b20::Sensor& sensor) {
@@ -141,11 +143,11 @@ status::StatusCode DS18B20Handler::serve_http(http::IResponseWriter& w,
             });
     }
 
-    if (!strcmp(r.get_uri(), "/api/v1/sensor/ds18b20/write_configuration")) {
+    if (path == "/api/v1/sensor/ds18b20/write_configuration") {
         return handle_write_configuration_(w, r);
     }
 
-    if (!strcmp(r.get_uri(), "/api/v1/sensor/ds18b20/erase_configuration")) {
+    if (path == "/api/v1/sensor/ds18b20/erase_configuration") {
         return handle_configuration_(
             w, r, erase_wait_interval_, erase_response_buffer_size_,
             [this](cJSON* json, sensor::ds18b20::Sensor& sensor) {
