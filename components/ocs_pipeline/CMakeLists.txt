@@ -23,8 +23,6 @@ idf_component_register(
     "jsonfmt/registration_formatter.cpp"
     "jsonfmt/version_formatter.cpp"
     "jsonfmt/system_state_formatter.cpp"
-    "jsonfmt/console_task.cpp"
-    "jsonfmt/console_pipeline.cpp"
     "jsonfmt/sht41_sensor_formatter.cpp"
     "jsonfmt/bme280_sensor_formatter.cpp"
     "jsonfmt/ds18b20_sensor_formatter.cpp"
