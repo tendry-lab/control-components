@@ -8,6 +8,7 @@ idf_component_register(
     "ds18b20/test_parse_configuration.cpp"
 
     "ldr/test_analog_sensor.cpp"
+    "soil/test_analog_sensor.cpp"
 
     REQUIRES
     "unity"
