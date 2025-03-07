@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include <atomic>
-#include <memory>
-
 #include "ocs_control/fsm_block.h"
 #include "ocs_control/ifsm_handler.h"
 #include "ocs_core/noncopyable.h"
