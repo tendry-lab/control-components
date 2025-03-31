@@ -9,97 +9,74 @@ on:
       - '*'
 
 jobs:
-  build:
+  build-firmware:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project:
+          - name: "unittest"
+            config: ".env/unittest_configuration"
+
+          - name: "ds18b20-verifier"
+            config: ".env/ds18b20_verifier_configuration"
+
+          - name: "ds-rom-code-scanner"
+            config: ".env/ds_rom_code_scanner_configuration"
+
+          - name: "sht41-verifier"
+            config: ".env/sht41_verifier_configuration"
     env:
-      PROJECT_PATH: project
+      SOURCE_PATH: project
       IDF_PATH: esp-idf
       IDF_VERSION: v5.3.1
       CONFIGURATION_PATH_CCACHE: .env/ccache
-      CONFIGURATION_PATH_UNIT_TESTS: .env/esp32_configuration_unit_tests
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
         with:
-          path: ${{ env.PROJECT_PATH }}
+          path: ${{ env.SOURCE_PATH }}
 
-      - name: fmt check formatting
-        uses: ./project/.github/actions/core/fmt
-        with:
-          PROJECT_PATH: ${{ env.PROJECT_PATH }}
-          CONTROL_COMPONENTS_PATH: ${{ env.PROJECT_PATH }}
-
-      - name: esp32 setup env
+      - name: setup ESP32 environment
         uses: ./project/.github/actions/esp32/env
         with:
           IDF_PATH: ${{ env.IDF_PATH }}
           IDF_VERSION: ${{ env.IDF_VERSION }}
 
-      - name: system setup env
+      - name: setup system environment
         uses: ./project/.github/actions/system/env
 
-      - name: system setup ccache
+      - name: setup ccache
         uses: ./project/.github/actions/system/ccache
         with:
           CONFIGURATION_PATH_CCACHE: ${{ env.CONFIGURATION_PATH_CCACHE }}
 
-      - name: core format firmware build version
+      - name: format firmware build version
         id: version_formatter
         uses: ./project/.github/actions/core/version
 
-      - name: unittests prepare configuration
-        shell: bash
-        run: |
-          echo "CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED=y" >> ${{ env.CONFIGURATION_PATH_UNIT_TESTS }}
-          echo "CONFIG_OCS_CORE_FW_VERSION=\"${{ steps.version_formatter.outputs.build_version }}\"" >> ${{ env.CONFIGURATION_PATH_UNIT_TESTS }}
-          echo "CONFIG_OCS_CORE_FW_NAME=\"unittests\"" >> ${{ env.CONFIGURATION_PATH_UNIT_TESTS }}
+      - name: check formatting
+        uses: ./project/.github/actions/core/fmt
+        with:
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.name }}
+          CONTROL_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}
 
-      - name: unittests build
+      - name: prepare configuration
+        uses: ./project/.github/actions/core/config
+        with:
+          PROJECT_NAME: ${{ matrix.project.name }}
+          BUILD_CONFIG_PATH: ${{ matrix.project.config }}
+          PROJECT_CONFIG_PATH: ${{ env.SOURCE_PATH }}/projects/config.yml
+
+      - name: build firmware
         uses: ./project/.github/actions/esp32/project
         with:
           IDF_PATH: ${{ env.IDF_PATH }}
-          PROJECT_PATH: ${{ env.PROJECT_PATH }}/tests
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.name }}
           CONFIGURATION_PATH_CCACHE: ${{ env.CONFIGURATION_PATH_CCACHE }}
-          CONFIGURATION_PATH_PROJECT: ${{ env.CONFIGURATION_PATH_UNIT_TESTS }}
+          CONFIGURATION_PATH_PROJECT: ${{ matrix.project.config }}
 
-      - name: ds18b20-verifier build
-        uses: ./project/.github/actions/esp32/project
-        with:
-          IDF_PATH: ${{ env.IDF_PATH }}
-          PROJECT_PATH: ${{ env.PROJECT_PATH }}/tools/ds18b20-verifier
-
-      - name: ds-rom-code-scanner build
-        uses: ./project/.github/actions/esp32/project
-        with:
-          IDF_PATH: ${{ env.IDF_PATH }}
-          PROJECT_PATH: ${{ env.PROJECT_PATH }}/tools/ds-rom-code-scanner
-
-      - name: sht41-verifier build
-        uses: ./project/.github/actions/esp32/project
-        with:
-          IDF_PATH: ${{ env.IDF_PATH }}
-          PROJECT_PATH: ${{ env.PROJECT_PATH }}/tools/sht41-verifier
-
-      - name: unittests upload
+      - name: upload firmware
         uses: ./project/.github/actions/esp32/upload
         with:
-          PROJECT_PATH: ${{ env.PROJECT_PATH }}/tests
-          PROJECT_ID: unittests
-
-      - name: ds18b20-verifier upload
-        uses: ./project/.github/actions/esp32/upload
-        with:
-          PROJECT_PATH: ${{ env.PROJECT_PATH }}/tools/ds18b20-verifier
-          PROJECT_ID: ds18b20-verifier
-
-      - name: ds-rom-code-scanner upload
-        uses: ./project/.github/actions/esp32/upload
-        with:
-          PROJECT_PATH: ${{ env.PROJECT_PATH }}/tools/ds-rom-code-scanner
-          PROJECT_ID: ds-rom-code-scanner
-
-      - name: sht41-verifier upload
-        uses: ./project/.github/actions/esp32/upload
-        with:
-          PROJECT_PATH: ${{ env.PROJECT_PATH }}/tools/sht41-verifier
-          PROJECT_ID: sht41-verifier
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.name }}
+          PROJECT_ID: ${{ matrix.project.name }}
