@@ -13,13 +13,13 @@ runs:
   using: "composite"
   steps:
     - name: Check Code Formatting
-      run: "${{ inputs.CONTROL_COMPONENTS_PATH }}/tools/scripts/check_format.sh"
+      run: "${{ inputs.CONTROL_COMPONENTS_PATH }}/scripts/check_format.sh"
       shell: bash
       env:
         PROJECT_PATH: "${{ inputs.PROJECT_PATH }}"
 
     - name: Check License Headers
-      run: "${{ inputs.CONTROL_COMPONENTS_PATH }}/tools/scripts/check_license.sh"
+      run: "${{ inputs.CONTROL_COMPONENTS_PATH }}/scripts/check_license.sh"
       shell: bash
       env:
           PROJECT_PATH: "${{ inputs.PROJECT_PATH }}"

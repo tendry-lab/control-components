@@ -4,7 +4,7 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.16)
 
-list(APPEND EXTRA_COMPONENT_DIRS "../components")
+list(APPEND EXTRA_COMPONENT_DIRS "../../components")
 
 set(TEST_COMPONENTS
     ocs_net
