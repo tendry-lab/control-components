@@ -4,11 +4,9 @@ inputs:
   PROJECT_PATH:
     description: "Path for the project to upload"
     required: true
-    default: "project"
-  PROJECT_ID:
-    description: "Project unique identifier"
+  PROJECT_NAME:
+    description: "Project name"
     required: true
-    default: "project"
   BUILD_VERSION:
     description: "Build version"
     required: true
@@ -18,7 +16,7 @@ runs:
       - name: esp32 upload project
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.PROJECT_ID }}-${{ inputs.BUILD_VERSION }}
+          name: ${{ inputs.PROJECT_NAME }}-${{ inputs.BUILD_VERSION }}
           path: |
             ${{ inputs.PROJECT_PATH }}/build/bootloader/*.bin
             ${{ inputs.PROJECT_PATH }}/build/partition_table/*.bin
