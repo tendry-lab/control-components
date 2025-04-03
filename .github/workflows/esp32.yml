@@ -36,6 +36,12 @@ jobs:
         with:
           path: ${{ env.SOURCE_PATH }}
 
+      - name: check formatting
+        uses: ./project/.github/actions/core/fmt
+        with:
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.name }}
+          CONTROL_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}
+
       - name: setup ESP32 environment
         uses: ./project/.github/actions/esp32/env
         with:
@@ -53,12 +59,6 @@ jobs:
       - name: format firmware build version
         id: version_formatter
         uses: ./project/.github/actions/core/version
-
-      - name: check formatting
-        uses: ./project/.github/actions/core/fmt
-        with:
-          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.name }}
-          CONTROL_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}
 
       - name: prepare configuration
         uses: ./project/.github/actions/core/config
