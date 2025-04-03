@@ -9,13 +9,16 @@ inputs:
     description: "Project unique identifier"
     required: true
     default: "project"
+  BUILD_VERSION:
+    description: "Build version"
+    required: true
 runs:
   using: "composite"
   steps:
       - name: esp32 upload project
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.PROJECT_ID }}
+          name: ${{ inputs.PROJECT_ID }}-${{ inputs.BUILD_VERSION }}
           path: |
             ${{ inputs.PROJECT_PATH }}/build/bootloader/*.bin
             ${{ inputs.PROJECT_PATH }}/build/partition_table/*.bin
