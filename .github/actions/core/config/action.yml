@@ -4,6 +4,9 @@ inputs:
   PROJECT_NAME:
     description: "Unique project identifier"
     required: true
+  BUILD_VERSION:
+    description: "Build version"
+    required: true
   BUILD_CONFIG_PATH:
     description: "Path where to store the project configurations"
     required: true
@@ -35,6 +38,6 @@ runs:
         FW_DESCRIPTION=$(yq eval ".projects[\"${{ inputs.PROJECT_NAME }}\"].desc" "${{ inputs.PROJECT_CONFIG_PATH }}")
 
         # Append general firmware metadata.
-        echo "CONFIG_OCS_CORE_FW_VERSION=\"${{ steps.version_formatter.outputs.build_version }}\"" >> "${{ inputs.BUILD_CONFIG_PATH }}"
+        echo "CONFIG_OCS_CORE_FW_VERSION=\"${{ inputs.BUILD_VERSION }}\"" >> "${{ inputs.BUILD_CONFIG_PATH }}"
         echo "CONFIG_OCS_CORE_FW_NAME=\"${{ inputs.PROJECT_NAME }}\"" >> "${{ inputs.BUILD_CONFIG_PATH }}"
         echo "CONFIG_OCS_CORE_FW_DESCRIPTION=\"$FW_DESCRIPTION\"" >> "${{ inputs.BUILD_CONFIG_PATH }}"

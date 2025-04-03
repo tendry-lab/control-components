@@ -64,6 +64,7 @@ jobs:
         uses: ./project/.github/actions/core/config
         with:
           PROJECT_NAME: ${{ matrix.project.name }}
+          BUILD_VERSION: ${{ steps.version_formatter.outputs.build_version }}
           BUILD_CONFIG_PATH: ${{ matrix.project.config }}
           PROJECT_CONFIG_PATH: ${{ env.SOURCE_PATH }}/projects/config.yml
 
