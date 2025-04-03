@@ -1,17 +1,17 @@
-name: "Project Configuration Reader"
-description: "Read project configuration"
+name: "Project Configuration Formatter"
+description: "Format project configuration"
 inputs:
   PROJECT_NAME:
-    description: "Unique project identifier"
+    description: "Project name"
     required: true
   BUILD_VERSION:
     description: "Build version"
     required: true
   BUILD_CONFIG_PATH:
-    description: "Path where to store the project configurations"
+    description: "Path where to store the project build configuration"
     required: true
   PROJECT_CONFIG_PATH:
-    description: "Path where configurations for all projects is stored"
+    description: "Path where the configuration for all projects is stored"
     required: true
 runs:
   using: "composite"
