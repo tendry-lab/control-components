@@ -18,3 +18,7 @@
 - Add WiFi STA mode
 - Add mDNS server
 - Add GitHub CI actions
+
+**Toolchain**
+
+- ESP-IDF version: [v5.3.1](https://github.com/espressif/esp-idf/releases/tag/v5.3.1)
