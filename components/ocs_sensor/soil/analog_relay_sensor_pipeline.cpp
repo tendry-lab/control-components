@@ -42,8 +42,9 @@ AnalogRelaySensorPipeline::AnalogRelaySensorPipeline(
         clock, reboot_handler, task_scheduler, storage_builder, id, params.fsm_block));
     configASSERT(fsm_block_pipeline_);
 
-    sensor_.reset(new (std::nothrow) AnalogSensor(
-        *reader_, adc_converter, fsm_block_pipeline_->get_block(), config));
+    sensor_.reset(new (std::nothrow) AnalogSensor(*reader_, adc_converter,
+                                                  fsm_block_pipeline_->get_block(),
+                                                  config, params.sensor));
     configASSERT(sensor_);
 
     relay_sensor_.reset(new (std::nothrow) AnalogRelaySensor(

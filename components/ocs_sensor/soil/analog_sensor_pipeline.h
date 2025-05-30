@@ -32,6 +32,7 @@ public:
         io::adc::Channel adc_channel { static_cast<io::adc::Channel>(0) };
         control::FsmBlockPipeline::Params fsm_block;
         core::Time read_interval { 0 };
+        AnalogSensor::Params sensor;
     };
 
     //! Initialize.

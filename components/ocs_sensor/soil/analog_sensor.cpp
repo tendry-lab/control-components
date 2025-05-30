@@ -31,11 +31,17 @@ const char* log_tag = "soil_analog_sensor";
 
 } // namespace
 
+uint8_t AnalogSensor::get_status_count() {
+    return OCS_ARRAY_SIZE(statuses_);
+}
+
 AnalogSensor::AnalogSensor(io::adc::IReader& reader,
                            io::adc::IConverter& converter,
                            control::FsmBlock& fsm_block,
-                           const AnalogConfig& config)
+                           const AnalogConfig& config,
+                           AnalogSensor::Params params)
     : config_(config)
+    , params_(params)
     , reader_(reader)
     , converter_(converter)
     , fsm_block_(fsm_block) {
@@ -61,6 +67,14 @@ status::StatusCode AnalogSensor::run() {
     fsm_block_.update();
     fsm_block_.set_next(static_cast<control::FsmBlock::State>(calculate_status_(raw)));
 
+    Data data;
+    data.raw = raw;
+    data.voltage = voltage;
+    data.moisture = calculate_moisture_(raw);
+
+    data.status_progress = calculate_status_progress_(raw);
+    override_status_progress_(data);
+
     if (fsm_block_.is_in_transit()) {
         const auto code = fsm_block_.transit();
         if (code != status::StatusCode::OK) {
@@ -73,7 +87,13 @@ status::StatusCode AnalogSensor::run() {
         }
     }
 
-    update_data_(raw, voltage);
+    data.prev_status = parse_status(fsm_block_.previous_state());
+    data.curr_status = parse_status(fsm_block_.current_state());
+    data.prev_status_duration = fsm_block_.previous_state_duration();
+    data.curr_status_duration = fsm_block_.current_state_duration();
+    data.write_count = fsm_block_.write_count();
+
+    data_.set(data);
 
     return status::StatusCode::OK;
 }
@@ -124,23 +144,32 @@ uint8_t AnalogSensor::calculate_status_progress_(int raw) const {
 }
 
 uint16_t AnalogSensor::get_status_len_() const {
-    return (config_.get_max() - config_.get_min()) / OCS_ARRAY_SIZE(statuses_);
+    return (config_.get_max() - config_.get_min()) / get_status_count();
 }
 
-void AnalogSensor::update_data_(int raw, int voltage) {
-    Data data;
+void AnalogSensor::override_status_progress_(AnalogSensor::Data& data) {
+    if (!params_.status_progress_threshold) {
+        return;
+    }
 
-    data.raw = raw;
-    data.voltage = voltage;
-    data.moisture = calculate_moisture_(raw);
-    data.prev_status = parse_status(fsm_block_.previous_state());
-    data.curr_status = parse_status(fsm_block_.current_state());
-    data.prev_status_duration = fsm_block_.previous_state_duration();
-    data.curr_status_duration = fsm_block_.current_state_duration();
-    data.write_count = fsm_block_.write_count();
-    data.status_progress = calculate_status_progress_(raw);
+    if (!fsm_block_.is_in_transit()) {
+        return;
+    }
 
-    data_.set(data);
+    if (data.status_progress > params_.status_progress_threshold) {
+        return;
+    }
+
+    if (parse_status(fsm_block_.current_state()) == SoilStatus::None) {
+        return;
+    }
+
+    if (parse_status(fsm_block_.next_state()) == SoilStatus::Error) {
+        return;
+    }
+
+    data.status_progress = status_progress_max_ - 1;
+    fsm_block_.set_next(fsm_block_.current_state());
 }
 
 } // namespace soil

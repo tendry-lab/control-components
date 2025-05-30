@@ -57,7 +57,10 @@ TEST_CASE("Soil analog sensor: receive in range", "[ocs_sensor], [soil_analog_se
 
     TestAdcReader reader;
     TestAdcConverter converter;
-    AnalogSensor sensor(reader, converter, fsm_block, config);
+    AnalogSensor sensor(reader, converter, fsm_block, config,
+                        AnalogSensor::Params {
+                            .status_progress_threshold = 0,
+                        });
 
     const int raw = def_min + 1;
     TEST_ASSERT_TRUE(raw < def_max);
@@ -91,7 +94,10 @@ TEST_CASE("Soil analog sensor: receive out of range",
 
     TestAdcReader reader;
     TestAdcConverter converter;
-    AnalogSensor sensor(reader, converter, fsm_block, config);
+    AnalogSensor sensor(reader, converter, fsm_block, config,
+                        AnalogSensor::Params {
+                            .status_progress_threshold = 0,
+                        });
 
     int raw = def_min - 1;
     reader.value = raw;
@@ -132,7 +138,10 @@ TEST_CASE("Soil analog sensor: read config invalid",
 
     TestAdcReader reader;
     TestAdcConverter converter;
-    AnalogSensor sensor(reader, converter, fsm_block, config);
+    AnalogSensor sensor(reader, converter, fsm_block, config,
+                        AnalogSensor::Params {
+                            .status_progress_threshold = 0,
+                        });
 
     const int raw = (def_min + def_max) / 2;
     reader.value = raw;
@@ -150,8 +159,10 @@ TEST_CASE("Soil analog sensor: validate each status",
     const uint16_t def_min = 10;
     const uint16_t def_max = 26;
     const char* id = "test";
-    const unsigned status_count = 4;
-    const unsigned status_interval = (def_max - def_min) / status_count;
+
+    const unsigned status_interval =
+        (def_max - def_min) / AnalogSensor::get_status_count();
+
     const core::Time resolution = core::Duration::second;
 
     test::MemoryStorage config_storage;
@@ -165,7 +176,10 @@ TEST_CASE("Soil analog sensor: validate each status",
     control::FsmBlock fsm_block(clock, fsm_block_storage, resolution, "test_block");
     TestAdcReader reader;
     TestAdcConverter converter;
-    AnalogSensor sensor(reader, converter, fsm_block, config);
+    AnalogSensor sensor(reader, converter, fsm_block, config,
+                        AnalogSensor::Params {
+                            .status_progress_threshold = 0,
+                        });
 
     // Check initial state, no previously saved state.
     auto data = sensor.get_data();
@@ -328,8 +342,9 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
     const uint16_t def_max = 26;
     const char* id = "test";
     const core::Time resolution = core::Duration::second;
-    const unsigned status_count = 4;
-    const unsigned status_interval = (def_max - def_min) / status_count;
+
+    const unsigned status_interval =
+        (def_max - def_min) / AnalogSensor::get_status_count();
 
     test::MemoryStorage config_storage;
     AnalogConfig config(config_storage, def_min, def_max,
@@ -344,7 +359,10 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
     TestAdcConverter converter;
 
     control::FsmBlock fsm_block1(clock, fsm_block_storage, resolution, "test_block1");
-    AnalogSensor sensor1(reader, converter, fsm_block1, config);
+    AnalogSensor sensor1(reader, converter, fsm_block1, config,
+                         AnalogSensor::Params {
+                             .status_progress_threshold = 0,
+                         });
 
     // Saturated.
     reader.value = def_min;
@@ -375,7 +393,10 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
     TEST_ASSERT_EQUAL(1, data1.write_count);
 
     control::FsmBlock fsm_block2(clock, fsm_block_storage, resolution, "test_block2");
-    AnalogSensor sensor2(reader, converter, fsm_block2, config);
+    AnalogSensor sensor2(reader, converter, fsm_block2, config,
+                         AnalogSensor::Params {
+                             .status_progress_threshold = 0,
+                         });
 
     // Wet.
     reader.value += status_interval;
@@ -391,6 +412,53 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
     TEST_ASSERT_EQUAL(0, data2.curr_status_duration);
     TEST_ASSERT_EQUAL(0, data2.status_progress);
     TEST_ASSERT_EQUAL(2, data2.write_count);
+}
+
+TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid states",
+          "[ocs_sensor], [soil_analog_sensor]") {
+    const uint16_t def_min = 10;
+    const uint16_t def_max = 26;
+    const char* id = "test";
+
+    const unsigned status_interval = (def_max - def_min) / status_count;
+    const unsigned status_threshold = status_interval / 4;
+
+    test::MemoryStorage config_storage;
+    AnalogConfig config(config_storage, def_min, def_max,
+                        static_cast<io::adc::Bitwidth>(10),
+                        AnalogConfig::OversamplingMode::Mode_1, id);
+    TEST_ASSERT_TRUE(config.valid());
+
+    test::MemoryStorage fsm_block_storage;
+    test::TestClock clock;
+    control::FsmBlock fsm_block(clock, fsm_block_storage, core::Duration::second,
+                                "test_block");
+
+    TestAdcReader reader;
+    TestAdcConverter converter;
+    AnalogSensor sensor(reader, converter, fsm_block, config,
+                        AnalogSensor::Params {
+                            .status_progress_threshold = status_threshold,
+                        });
+
+    int raw = def_min;
+    reader.value = raw;
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, sensor.run());
+
+    const auto data = sensor.get_data();
+    TEST_ASSERT_EQUAL(raw, data.raw);
+    TEST_ASSERT_EQUAL(raw, data.voltage);
+    // Just started, no previous status, threshold shouldn't be taken into account.
+    TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
+}
+
+TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid to valid",
+          "[ocs_sensor], [soil_analog_sensor]") {
+}
+
+TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid to invalid",
+          "[ocs_sensor], [soil_analog_sensor]") {
 }
 
 } // namespace soil

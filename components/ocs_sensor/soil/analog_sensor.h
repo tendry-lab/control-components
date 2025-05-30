@@ -23,6 +23,12 @@ namespace soil {
 
 class AnalogSensor : public scheduler::ITask, public core::NonCopyable<> {
 public:
+    //! Various sensors parameters.
+    struct Params {
+        //! Threshold to reach for a status to be valid, in percentage (0-100).
+        uint8_t status_progress_threshold { 3 };
+    };
+
     //! Various sensor characteristics.
     struct Data {
         int raw { 0 };
@@ -36,6 +42,9 @@ public:
         uint8_t status_progress { 0 };
     };
 
+    //! Return the number of known soil moisture statuses.
+    static uint8_t get_status_count();
+
     //! Initialize.
     //!
     //! @params
@@ -43,10 +52,12 @@ public:
     //!  - @p converter to convert the ADC reading to voltage.
     //!  - @p fsm_block to measure the soil status duration.
     //!  - @p config to read the sensor configuration.
+    //!  - @p params to apply sensor-specific settings.
     AnalogSensor(io::adc::IReader& reader,
                  io::adc::IConverter& converter,
                  control::FsmBlock& fsm_block,
-                 const AnalogConfig& config);
+                 const AnalogConfig& config,
+                 Params params);
 
     //! Read sensor data.
     status::StatusCode run() override;
@@ -61,7 +72,7 @@ private:
     uint8_t calculate_status_progress_(int raw) const;
     uint16_t get_status_len_() const;
 
-    void update_data_(int raw, int voltage);
+    void override_status_progress_(Data& data);
 
     // Saturated, Wet, Depletion, Dry.
     static constexpr SoilStatus statuses_[] = {
@@ -71,7 +82,11 @@ private:
         SoilStatus::Dry,
     };
 
+    static constexpr uint8_t status_progress_max_ = 100;
+
     const AnalogConfig& config_;
+
+    const Params params_;
 
     io::adc::IReader& reader_;
     io::adc::IConverter& converter_;
