@@ -64,7 +64,12 @@ private:
     void update_data_(int raw, int voltage);
 
     // Saturated, Wet, Depletion, Dry.
-    static const uint8_t status_count_ { 4 };
+    static constexpr SoilStatus statuses_[] = {
+        SoilStatus::Saturated,
+        SoilStatus::Wet,
+        SoilStatus::Depletion,
+        SoilStatus::Dry,
+    };
 
     const AnalogConfig& config_;
 
