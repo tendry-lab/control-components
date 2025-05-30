@@ -8,6 +8,7 @@
 
 #include "ocs_sensor/soil/analog_sensor.h"
 #include "ocs_core/log.h"
+#include "ocs_core/macros.h"
 #include "ocs_core/time.h"
 #include "ocs_status/code_to_str.h"
 
@@ -103,18 +104,10 @@ SoilStatus AnalogSensor::calculate_status_(int raw) const {
         return SoilStatus::Error;
     }
 
-    if (raw < config_.get_min() + get_status_len_()) {
-        return SoilStatus::Saturated;
-    }
-    if (raw < config_.get_min() + get_status_len_() + get_status_len_()) {
-        return SoilStatus::Wet;
-    }
-    if (raw
-        < config_.get_min() + get_status_len_() + get_status_len_() + get_status_len_()) {
-        return SoilStatus::Depletion;
-    }
+    const auto offset = raw - config_.get_min();
+    const auto status_index = offset / get_status_len_();
 
-    return SoilStatus::Dry;
+    return statuses_[status_index];
 }
 
 uint8_t AnalogSensor::calculate_status_progress_(int raw) const {
@@ -131,7 +124,7 @@ uint8_t AnalogSensor::calculate_status_progress_(int raw) const {
 }
 
 uint16_t AnalogSensor::get_status_len_() const {
-    return (config_.get_max() - config_.get_min()) / status_count_;
+    return (config_.get_max() - config_.get_min()) / OCS_ARRAY_SIZE(statuses_);
 }
 
 void AnalogSensor::update_data_(int raw, int voltage) {
