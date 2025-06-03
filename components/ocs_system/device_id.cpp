@@ -32,8 +32,7 @@ DeviceID::DeviceID() {
 
     security::ShaGenerator generator(engine);
 
-    generator.add(reinterpret_cast<const uint8_t*>("open-control-systems-"),
-                  strlen("open-control-systems-"));
+    generator.add(reinterpret_cast<const uint8_t*>("tendry-lab-"), strlen("tendry-lab-"));
 
     uint8_t mac[6];
     memset(mac, 0, sizeof(mac));
