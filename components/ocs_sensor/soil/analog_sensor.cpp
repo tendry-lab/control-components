@@ -9,7 +9,6 @@
 #include "ocs_sensor/soil/analog_sensor.h"
 #include "ocs_algo/math_ops.h"
 #include "ocs_core/log.h"
-#include "ocs_core/macros.h"
 #include "ocs_core/time.h"
 #include "ocs_status/code_to_str.h"
 
@@ -126,7 +125,7 @@ uint8_t AnalogSensor::calculate_status_progress_(int raw) const {
 }
 
 uint16_t AnalogSensor::get_status_len_() const {
-    return (config_.get_max() - config_.get_min()) / OCS_ARRAY_SIZE(statuses_);
+    return (config_.get_max() - config_.get_min()) / get_status_count();
 }
 
 void AnalogSensor::update_data_(int raw, int voltage) {

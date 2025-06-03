@@ -150,8 +150,10 @@ TEST_CASE("Soil analog sensor: validate each status",
     const uint16_t def_min = 10;
     const uint16_t def_max = 26;
     const char* id = "test";
-    const unsigned status_count = 4;
-    const unsigned status_interval = (def_max - def_min) / status_count;
+
+    const unsigned status_interval =
+        (def_max - def_min) / AnalogSensor::get_status_count();
+
     const core::Time resolution = core::Duration::second;
 
     test::MemoryStorage config_storage;
@@ -328,8 +330,9 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
     const uint16_t def_max = 26;
     const char* id = "test";
     const core::Time resolution = core::Duration::second;
-    const unsigned status_count = 4;
-    const unsigned status_interval = (def_max - def_min) / status_count;
+
+    const unsigned status_interval =
+        (def_max - def_min) / AnalogSensor::get_status_count();
 
     test::MemoryStorage config_storage;
     AnalogConfig config(config_storage, def_min, def_max,
