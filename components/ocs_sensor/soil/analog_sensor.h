@@ -10,6 +10,7 @@
 
 #include "ocs_control/fsm_block.h"
 #include "ocs_control/ifsm_handler.h"
+#include "ocs_core/macros.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/spmc_node.h"
 #include "ocs_io/adc/iconverter.h"
@@ -35,6 +36,11 @@ public:
         uint64_t write_count { 0 };
         uint8_t status_progress { 0 };
     };
+
+    //! Return the number of valid soil moisture statuses.
+    static constexpr uint8_t get_status_count() {
+        return OCS_ARRAY_SIZE(statuses_);
+    }
 
     //! Initialize.
     //!
