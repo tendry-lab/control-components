@@ -9,7 +9,7 @@ All components are located in the `components` directory. It's a default directo
 These components can be manually copied into the project `components` directory, or added as a git submodule:
 
 ```bash
-git submodule add https://github.com/open-control-systems/control-components.git control-components
+git submodule add https://github.com/tendry-lab/control-components.git control-components
 git submodule update --init --recursive
 ```
 

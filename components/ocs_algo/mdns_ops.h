@@ -25,7 +25,7 @@ struct MdnsOps {
     //!    - http://device.local:8081/api/v1
     //!
     //! @reference
-    //!   https://github.com/open-control-systems/device-hub/blob/master/docs/features.md#mdns-auto-discovery
+    //!   https://github.com/tendry-lab/device-hub/blob/master/docs/features.md#mdns-auto-discovery
     static void
     enable_autodiscovery(net::MdnsService& service, const char* type, const char* path);
 };

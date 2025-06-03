@@ -17,7 +17,7 @@ The current focus is on the low-cost solutions based on the ESP32 MCUs. Other pl
 
 ## Build Status
 
-- [![ESP32](https://github.com/open-control-systems/esp-components/actions/workflows/esp32.yml/badge.svg)](https://github.com/open-control-systems/esp-components/actions/workflows/esp32.yml)
+- [![ESP32](https://github.com/tendry-lab/esp-components/actions/workflows/esp32.yml/badge.svg)](https://github.com/tendry-lab/esp-components/actions/workflows/esp32.yml)
 
 ## License
 
