@@ -27,7 +27,7 @@ public:
     struct Data {
         int raw { 0 };
         int voltage { 0 };
-        int moisture { 0 };
+        double moisture { 0 };
         SoilStatus prev_status { SoilStatus::None };
         SoilStatus curr_status { SoilStatus::None };
         core::Time prev_status_duration { 0 };
@@ -56,7 +56,7 @@ public:
 
 private:
     bool is_invalid_input_(int raw) const;
-    int calculate_moisture_(int raw) const;
+    double calculate_moisture_(int raw) const;
     SoilStatus calculate_status_(int raw) const;
     uint8_t calculate_status_progress_(int raw) const;
     uint16_t get_status_len_() const;

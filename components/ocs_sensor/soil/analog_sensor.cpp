@@ -7,6 +7,7 @@
  */
 
 #include "ocs_sensor/soil/analog_sensor.h"
+#include "ocs_algo/math_ops.h"
 #include "ocs_core/log.h"
 #include "ocs_core/macros.h"
 #include "ocs_core/time.h"
@@ -86,17 +87,18 @@ bool AnalogSensor::is_invalid_input_(int raw) const {
     return raw < config_.get_min() || raw > config_.get_max();
 }
 
-int AnalogSensor::calculate_moisture_(int raw) const {
+double AnalogSensor::calculate_moisture_(int raw) const {
     if (is_invalid_input_(raw)) {
         return 0;
     }
 
     const int range = config_.get_max() - config_.get_min();
     const int offset = raw - config_.get_min();
-    const float loss = static_cast<float>(offset) / range;
-    const float remain = 1 - loss;
 
-    return 100 * remain;
+    const double loss = static_cast<double>(offset) / range;
+    const double remain = 1 - loss;
+
+    return algo::MathOps::round_floor(100 * remain, 2);
 }
 
 SoilStatus AnalogSensor::calculate_status_(int raw) const {
