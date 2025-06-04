@@ -15,7 +15,7 @@
 namespace ocs {
 namespace net {
 
-class ip_addr_to_str : public core::NonCopyable<> {
+class ip_addr_to_str : private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit ip_addr_to_str(ip_addr_t addr);

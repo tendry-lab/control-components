@@ -17,7 +17,7 @@ namespace ocs {
 namespace fmt {
 namespace json {
 
-class FanoutFormatter : public IFormatter, public core::NonCopyable<> {
+class FanoutFormatter : public IFormatter, private core::NonCopyable<> {
 public:
     //! Propogate the call to the underlying formatters.
     status::StatusCode format(cJSON* json) override;

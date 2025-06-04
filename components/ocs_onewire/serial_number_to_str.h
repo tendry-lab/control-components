@@ -17,7 +17,7 @@ namespace ocs {
 namespace onewire {
 
 //! Format sensor serial number to string.
-class serial_number_to_str : public core::NonCopyable<> {
+class serial_number_to_str : private core::NonCopyable<> {
 public:
     static constexpr unsigned str_length = strlen("AA:BB:CC:DD:EE:FF");
 

@@ -18,7 +18,7 @@
 namespace ocs {
 namespace sensor {
 
-class AnalogConfig : public core::NonCopyable<> {
+class AnalogConfig : private core::NonCopyable<> {
 public:
     //! Number of times a value is measured before available to be read.
     //! By default a value is measured once.

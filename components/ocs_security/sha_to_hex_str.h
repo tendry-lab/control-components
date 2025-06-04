@@ -15,7 +15,7 @@
 namespace ocs {
 namespace security {
 
-class sha_to_hex_str : public core::NonCopyable<> {
+class sha_to_hex_str : private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

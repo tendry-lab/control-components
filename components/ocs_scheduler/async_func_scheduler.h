@@ -20,7 +20,7 @@
 namespace ocs {
 namespace scheduler {
 
-class AsyncFuncScheduler : public ITask, public core::NonCopyable<> {
+class AsyncFuncScheduler : public ITask, private core::NonCopyable<> {
 public:
     using FuturePtr = std::shared_ptr<core::Future>;
     using Func = std::function<status::StatusCode()>;

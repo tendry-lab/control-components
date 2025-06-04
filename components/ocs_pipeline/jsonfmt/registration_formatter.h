@@ -20,7 +20,7 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class RegistrationFormatter : public fmt::json::IFormatter, public core::NonCopyable<> {
+class RegistrationFormatter : public fmt::json::IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit RegistrationFormatter(const system::DeviceInfo& device_info);

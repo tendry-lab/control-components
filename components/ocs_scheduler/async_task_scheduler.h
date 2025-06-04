@@ -21,7 +21,7 @@
 namespace ocs {
 namespace scheduler {
 
-class AsyncTaskScheduler : public ITaskScheduler, public core::NonCopyable<> {
+class AsyncTaskScheduler : public ITaskScheduler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -59,7 +59,7 @@ public:
     status::StatusCode run() override;
 
 private:
-    class Node : public ITask, public core::NonCopyable<> {
+    class Node : public ITask, private core::NonCopyable<> {
     public:
         Node(ITask& task,
              EventGroupHandle_t event_group,

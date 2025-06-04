@@ -15,7 +15,7 @@ namespace ocs {
 namespace io {
 namespace gpio {
 
-class GpioGuard : public core::NonCopyable<> {
+class GpioGuard : private core::NonCopyable<> {
 public:
     //! Turn on @p gpio on initialization.
     explicit GpioGuard(IGpio& gpio);

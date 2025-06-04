@@ -20,7 +20,7 @@
 namespace ocs {
 namespace http {
 
-class ClientReader : public core::NonCopyable<> {
+class ClientReader : private core::NonCopyable<> {
 public:
     struct Params {
         //! Domain or IP as string.

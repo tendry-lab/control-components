@@ -21,7 +21,7 @@ namespace ocs {
 namespace sensor {
 namespace sht41 {
 
-class SensorPipeline : public core::NonCopyable<> {
+class SensorPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         core::Time read_interval { 0 };

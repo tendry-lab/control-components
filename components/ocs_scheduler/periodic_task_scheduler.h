@@ -23,7 +23,7 @@
 namespace ocs {
 namespace scheduler {
 
-class PeriodicTaskScheduler : public ITaskScheduler, public core::NonCopyable<> {
+class PeriodicTaskScheduler : public ITaskScheduler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
@@ -71,7 +71,7 @@ public:
     status::StatusCode run() override;
 
 private:
-    class Node : public ITask, public core::NonCopyable<> {
+    class Node : public ITask, private core::NonCopyable<> {
     public:
         Node(core::IClock& clock, ITask& task, const char* id, core::Time interval);
 

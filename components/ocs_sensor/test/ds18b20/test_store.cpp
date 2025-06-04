@@ -19,7 +19,7 @@ namespace ds18b20 {
 
 namespace {
 
-struct TestDelayer : public system::IRtDelayer, public core::NonCopyable<> {
+struct TestDelayer : public system::IRtDelayer, private core::NonCopyable<> {
     status::StatusCode delay(core::Time delay) {
         if (delay < core::Duration::millisecond) {
             return status::StatusCode::InvalidArg;

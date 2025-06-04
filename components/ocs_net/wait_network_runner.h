@@ -17,7 +17,7 @@
 namespace ocs {
 namespace net {
 
-class WaitNetworkRunner : public INetworkRunner, public core::NonCopyable<> {
+class WaitNetworkRunner : public INetworkRunner, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

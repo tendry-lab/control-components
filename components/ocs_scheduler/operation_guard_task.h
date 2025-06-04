@@ -14,7 +14,7 @@
 namespace ocs {
 namespace scheduler {
 
-class OperationGuardTask : public ITask, public core::NonCopyable<> {
+class OperationGuardTask : public ITask, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

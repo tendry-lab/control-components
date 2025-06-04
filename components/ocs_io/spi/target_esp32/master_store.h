@@ -16,7 +16,7 @@ namespace ocs {
 namespace io {
 namespace spi {
 
-class MasterStore : public IStore, public core::NonCopyable<> {
+class MasterStore : public IStore, private core::NonCopyable<> {
 public:
     struct Params {
         //! MOSI line.

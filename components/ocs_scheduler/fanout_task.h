@@ -16,7 +16,7 @@
 namespace ocs {
 namespace scheduler {
 
-class FanoutTask : public ITask, public core::NonCopyable<> {
+class FanoutTask : public ITask, private core::NonCopyable<> {
 public:
     //! Propagate call to the underlying tasks.
     status::StatusCode run() override;

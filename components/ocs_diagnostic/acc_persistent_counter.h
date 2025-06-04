@@ -14,7 +14,7 @@
 namespace ocs {
 namespace diagnostic {
 
-class AccPersistentCounter : public BasicPersistentCounter, public core::NonCopyable<> {
+class AccPersistentCounter : public BasicPersistentCounter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

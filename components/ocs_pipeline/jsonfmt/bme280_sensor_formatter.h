@@ -16,7 +16,7 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class BME280SensorFormatter : public fmt::json::IFormatter, public core::NonCopyable<> {
+class BME280SensorFormatter : public fmt::json::IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit BME280SensorFormatter(sensor::bme280::Sensor& sensor);

@@ -16,7 +16,7 @@
 namespace ocs {
 namespace system {
 
-class FanoutRebootHandler : public IRebootHandler, public core::NonCopyable<> {
+class FanoutRebootHandler : public IRebootHandler, private core::NonCopyable<> {
 public:
     //! Deliver reboot event to the underlying handlers.
     void handle_reboot() override;

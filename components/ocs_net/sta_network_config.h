@@ -16,7 +16,7 @@ namespace ocs {
 namespace net {
 
 //! WiFi STA configuration.
-class StaNetworkConfig : public INetworkConfig, public core::NonCopyable<> {
+class StaNetworkConfig : public INetworkConfig, private core::NonCopyable<> {
 public:
     //! Minimum WiFi STA ssid length.
     static constexpr unsigned min_ssid_len = 1;

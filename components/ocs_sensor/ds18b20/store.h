@@ -23,7 +23,7 @@ namespace ocs {
 namespace sensor {
 namespace ds18b20 {
 
-class Store : public scheduler::ITask, public core::NonCopyable<> {
+class Store : public scheduler::ITask, private core::NonCopyable<> {
 public:
     using SensorList = std::vector<Sensor*>;
 
@@ -57,7 +57,7 @@ public:
     scheduler::AsyncFuncScheduler::FuturePtr schedule(io::gpio::Gpio gpio, Func func);
 
 private:
-    class Node : public scheduler::ITask, public core::NonCopyable<> {
+    class Node : public scheduler::ITask, private core::NonCopyable<> {
     public:
         //! Initialize.
         Node(system::IRtDelayer& delayer,

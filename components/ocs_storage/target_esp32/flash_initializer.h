@@ -13,7 +13,7 @@
 namespace ocs {
 namespace storage {
 
-class FlashInitializer : public core::NonCopyable<> {
+class FlashInitializer : private core::NonCopyable<> {
 public:
     //! Initialize NVS.
     FlashInitializer();

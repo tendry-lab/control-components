@@ -18,7 +18,7 @@
 namespace ocs {
 namespace core {
 
-class StreamTransceiver : public core::NonCopyable<> {
+class StreamTransceiver : private core::NonCopyable<> {
 public:
     using Buffer = std::vector<uint8_t>;
 

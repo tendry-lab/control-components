@@ -15,7 +15,7 @@ namespace ocs {
 namespace system {
 
 //! Various device characteristics.
-class DeviceInfo : public core::NonCopyable<> {
+class DeviceInfo : private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

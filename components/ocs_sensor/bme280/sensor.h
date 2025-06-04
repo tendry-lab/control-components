@@ -25,7 +25,7 @@ namespace bme280 {
 //!
 //! @references
 //!  https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme280-ds002.pdf
-class Sensor : public scheduler::ITask, public core::NonCopyable<> {
+class Sensor : public scheduler::ITask, private core::NonCopyable<> {
 public:
     //! Various sensor characteristics.
     struct Data {

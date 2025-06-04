@@ -27,7 +27,7 @@ namespace ocs {
 namespace pipeline {
 namespace basic {
 
-class SystemPipeline : public core::NonCopyable<> {
+class SystemPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         struct TaskScheduler {

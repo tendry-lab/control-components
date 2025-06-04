@@ -18,7 +18,7 @@
 namespace ocs {
 namespace system {
 
-class SystemStateBuilder : public core::NonCopyable<> {
+class SystemStateBuilder : private core::NonCopyable<> {
 public:
     struct State {
         configRUN_TIME_COUNTER_TYPE total_time { 0 };

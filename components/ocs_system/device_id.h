@@ -16,7 +16,7 @@
 namespace ocs {
 namespace system {
 
-class DeviceID : public core::NonCopyable<> {
+class DeviceID : private core::NonCopyable<> {
 public:
     //! Initialize.
     DeviceID();

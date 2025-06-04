@@ -26,7 +26,7 @@ namespace pipeline {
 namespace basic {
 
 // Select between WiFi AP and STA networks.
-class SelectNetworkPipeline : public core::NonCopyable<> {
+class SelectNetworkPipeline : private core::NonCopyable<> {
 public:
     //! Initialize.
     SelectNetworkPipeline(storage::StorageBuilder& storage_builder,

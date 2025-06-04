@@ -13,7 +13,7 @@
 namespace ocs {
 namespace control {
 
-class TestFsmBlockStorage : public storage::IStorage, public core::NonCopyable<> {
+class TestFsmBlockStorage : public storage::IStorage, private core::NonCopyable<> {
 public:
     TestFsmBlockStorage(status::StatusCode read_status = status::StatusCode::OK,
                         status::StatusCode write_status = status::StatusCode::OK,

@@ -16,7 +16,7 @@
 namespace ocs {
 namespace sensor {
 
-class AnalogConfigStore : public core::NonCopyable<> {
+class AnalogConfigStore : private core::NonCopyable<> {
 public:
     using ConfigList = std::vector<AnalogConfig*>;
 

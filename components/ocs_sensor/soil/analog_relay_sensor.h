@@ -23,7 +23,7 @@ namespace sensor {
 namespace soil {
 
 //! Activate the sensor only when the relay is energized.
-class AnalogRelaySensor : public scheduler::ITask, public core::NonCopyable<> {
+class AnalogRelaySensor : public scheduler::ITask, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

@@ -14,7 +14,7 @@
 namespace ocs {
 namespace system {
 
-class DefaultClock : public core::IClock, public core::NonCopyable<> {
+class DefaultClock : public core::IClock, private core::NonCopyable<> {
 public:
     //! Return time in microseconds since boot.
     core::Time now() override;

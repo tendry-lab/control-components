@@ -23,7 +23,7 @@ namespace pipeline {
 namespace basic {
 
 //! Pipeline to initialize system-wide counters.
-class SystemCounterPipeline : public core::NonCopyable<> {
+class SystemCounterPipeline : private core::NonCopyable<> {
 public:
     //! Initilize counters.
     SystemCounterPipeline(core::IClock& clock,

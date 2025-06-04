@@ -17,7 +17,7 @@ namespace core {
 //! Implements a sort of condition variable, a rendezvous point for the
 //! FreeRTOS task, waiting for the asynchronous event to be occurred, and the ISR,
 //! signaling the FreeRTOS task about the asynchronous event.
-class AsyncFlagIsr : public BasicAsyncFlag, public NonCopyable<> {
+class AsyncFlagIsr : public BasicAsyncFlag, private NonCopyable<> {
 public:
     //! Signal the asynchronous event from ISR.
     status::StatusCode signal() override;

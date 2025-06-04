@@ -20,7 +20,7 @@
 namespace ocs {
 namespace control {
 
-class FsmStore : public scheduler::ITask, public core::NonCopyable<> {
+class FsmStore : public scheduler::ITask, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

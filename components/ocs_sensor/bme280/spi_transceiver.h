@@ -16,7 +16,7 @@ namespace ocs {
 namespace sensor {
 namespace bme280 {
 
-class SpiTransceiver : public ITransceiver, public core::NonCopyable<> {
+class SpiTransceiver : public ITransceiver, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

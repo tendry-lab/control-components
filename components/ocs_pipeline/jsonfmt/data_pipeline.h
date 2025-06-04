@@ -25,7 +25,7 @@ namespace pipeline {
 namespace jsonfmt {
 
 //! Component to handle telemetry and registration data.
-class DataPipeline : public core::NonCopyable<> {
+class DataPipeline : private core::NonCopyable<> {
 public:
     //! Initialize.
     DataPipeline(core::IClock& clock,

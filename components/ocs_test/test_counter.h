@@ -14,7 +14,7 @@
 namespace ocs {
 namespace test {
 
-struct TestCounter : public diagnostic::BasicCounter, public core::NonCopyable<> {
+struct TestCounter : public diagnostic::BasicCounter, private core::NonCopyable<> {
     explicit TestCounter(const char* id);
 
     diagnostic::ICounter::Value get() const override;

@@ -26,7 +26,7 @@ namespace sht41 {
 //!
 //! @reference
 //!  - https://sensirion.com/products/catalog/SEK-SHT41
-class Sensor : public scheduler::ITask, public core::NonCopyable<> {
+class Sensor : public scheduler::ITask, private core::NonCopyable<> {
 public:
     //! Various sensor characteristics.
     struct Data {

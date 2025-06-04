@@ -23,7 +23,7 @@ namespace ocs {
 namespace sensor {
 namespace ldr {
 
-class AnalogSensorPipeline : public core::NonCopyable<> {
+class AnalogSensorPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         io::adc::Channel adc_channel { static_cast<io::adc::Channel>(0) };

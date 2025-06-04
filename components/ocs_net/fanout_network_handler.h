@@ -16,7 +16,7 @@
 namespace ocs {
 namespace net {
 
-class FanoutNetworkHandler : public INetworkHandler, public core::NonCopyable<> {
+class FanoutNetworkHandler : public INetworkHandler, private core::NonCopyable<> {
 public:
     //! Notify subscribers about network connection.
     void handle_connect() override;

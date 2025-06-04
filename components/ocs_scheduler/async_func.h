@@ -18,7 +18,7 @@
 namespace ocs {
 namespace scheduler {
 
-class AsyncFunc : public ITask, public core::NonCopyable<> {
+class AsyncFunc : public ITask, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

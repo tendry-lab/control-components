@@ -19,7 +19,7 @@ namespace ocs {
 namespace sensor {
 namespace ds18b20 {
 
-class SensorPipeline : public core::NonCopyable<> {
+class SensorPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         //! 1-Wire Data pin.

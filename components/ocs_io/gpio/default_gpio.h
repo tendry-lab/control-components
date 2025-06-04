@@ -16,7 +16,7 @@ namespace io {
 namespace gpio {
 
 //! High logic level is used to enable GPIO.
-class DefaultGpio : public BasicGpio, public core::NonCopyable<> {
+class DefaultGpio : public BasicGpio, private core::NonCopyable<> {
 public:
     //! Initialize.
     DefaultGpio(const char* id, Gpio gpio);

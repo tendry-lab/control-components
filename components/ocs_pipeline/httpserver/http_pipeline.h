@@ -26,7 +26,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class HttpPipeline : public net::INetworkHandler, public core::NonCopyable<> {
+class HttpPipeline : public net::INetworkHandler, private core::NonCopyable<> {
 public:
     struct DataParams {
         //! Buffer size to hold the formatted JSON data, in bytes.

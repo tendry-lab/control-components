@@ -26,7 +26,7 @@ namespace control {
 
 namespace {
 
-class TestHandler : public IFsmHandler, public core::NonCopyable<> {
+class TestHandler : public IFsmHandler, private core::NonCopyable<> {
 public:
     TestHandler(status::StatusCode state_result = status::StatusCode::OK,
                 status::StatusCode transit_result = status::StatusCode::OK)

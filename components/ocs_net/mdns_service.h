@@ -17,7 +17,7 @@
 namespace ocs {
 namespace net {
 
-class MdnsService : public core::NonCopyable<> {
+class MdnsService : private core::NonCopyable<> {
 public:
     //! Known mDNS services.
     //!

@@ -14,7 +14,7 @@
 namespace ocs {
 namespace system {
 
-class SuspenderGuard : public core::NonCopyable<> {
+class SuspenderGuard : private core::NonCopyable<> {
 public:
     //! Suspend on initialization.
     explicit SuspenderGuard(ISuspender& suspender);

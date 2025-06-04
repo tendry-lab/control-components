@@ -18,7 +18,7 @@
 namespace ocs {
 namespace core {
 
-class Future : public NonCopyable<> {
+class Future : private NonCopyable<> {
 public:
     //! Initialize.
     Future();

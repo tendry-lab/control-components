@@ -25,7 +25,7 @@ namespace ocs {
 namespace net {
 
 //! Handle WiFi AP (access-point) mode network operations.
-class ApNetwork : public INetwork, public IApNetwork, public core::NonCopyable<> {
+class ApNetwork : public INetwork, public IApNetwork, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

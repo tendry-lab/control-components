@@ -16,7 +16,7 @@
 namespace ocs {
 namespace http {
 
-class Header : public IHeader, public core::NonCopyable<> {
+class Header : public IHeader, private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit Header(httpd_req_t& req);

@@ -19,7 +19,7 @@ namespace fmt {
 namespace json {
 
 template <unsigned Size>
-class StaticFormatter : public IFormatter, public core::NonCopyable<> {
+class StaticFormatter : public IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.
     StaticFormatter() {

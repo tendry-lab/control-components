@@ -17,7 +17,7 @@ namespace ocs {
 namespace io {
 namespace gpio {
 
-class DelayGpio : public IGpio, public core::NonCopyable<> {
+class DelayGpio : public IGpio, private core::NonCopyable<> {
 public:
     struct Params {
         //! Interval to wait after the GPIO is flipped.

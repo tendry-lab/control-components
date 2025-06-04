@@ -15,7 +15,7 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class SystemFormatter : public fmt::json::IFormatter, public core::NonCopyable<> {
+class SystemFormatter : public fmt::json::IFormatter, private core::NonCopyable<> {
 public:
     //! Format system metrics into @p json.
     status::StatusCode format(cJSON* json) override;

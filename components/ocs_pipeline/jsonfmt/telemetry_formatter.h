@@ -18,7 +18,7 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class TelemetryFormatter : public fmt::json::IFormatter, public core::NonCopyable<> {
+class TelemetryFormatter : public fmt::json::IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.
     TelemetryFormatter();

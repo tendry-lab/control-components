@@ -16,7 +16,7 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class SHT41SensorFormatter : public fmt::json::IFormatter, public core::NonCopyable<> {
+class SHT41SensorFormatter : public fmt::json::IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit SHT41SensorFormatter(sensor::sht41::Sensor& sensor);

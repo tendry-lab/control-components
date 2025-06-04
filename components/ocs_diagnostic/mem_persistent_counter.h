@@ -14,7 +14,7 @@
 namespace ocs {
 namespace diagnostic {
 
-class MemPersistentCounter : public BasicPersistentCounter, public core::NonCopyable<> {
+class MemPersistentCounter : public BasicPersistentCounter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
