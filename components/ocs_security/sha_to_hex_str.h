@@ -27,7 +27,7 @@ public:
     const char* c_str() const;
 
 private:
-    static const constexpr unsigned max_hash_length_ =
+    static constexpr unsigned max_hash_length_ =
         algo::ShaEngineOps::hash_lenght(IShaEngine::Algorithm::SHA512);
 
     char buf_[max_hash_length_ + 1];

@@ -29,7 +29,7 @@ public:
     const char* id() const;
 
 private:
-    static const constexpr unsigned bufsize_ = 15;
+    static constexpr unsigned bufsize_ = 15;
 
     char buf_[bufsize_ + 1];
 };

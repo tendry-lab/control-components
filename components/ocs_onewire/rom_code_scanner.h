@@ -34,7 +34,7 @@ private:
     status::StatusCode scan_(uint8_t* buf, unsigned size);
     uint8_t handle_discrepancy_(const uint8_t* buf, int position);
 
-    static const unsigned bits_in_byte_ = 8;
+    static constexpr unsigned bits_in_byte_ = 8;
 
     Bus& bus_;
 

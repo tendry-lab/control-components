@@ -37,15 +37,15 @@ private:
     using HandleConfigurationFunc =
         std::function<status::StatusCode(cJSON*, sensor::ds18b20::Sensor&)>;
 
-    static const unsigned scan_response_buffer_size_ { 256 };
-    static const unsigned read_response_buffer_size_ { 256 };
-    static const unsigned write_response_buffer_size_ { 256 };
-    static const unsigned erase_response_buffer_size_ { 256 };
+    static constexpr unsigned scan_response_buffer_size_ { 256 };
+    static constexpr unsigned read_response_buffer_size_ { 256 };
+    static constexpr unsigned write_response_buffer_size_ { 256 };
+    static constexpr unsigned erase_response_buffer_size_ { 256 };
 
-    static const TickType_t scan_wait_interval_ { pdMS_TO_TICKS(10 * 1000) };
-    static const TickType_t read_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
-    static const TickType_t write_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
-    static const TickType_t erase_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
+    static constexpr TickType_t scan_wait_interval_ { pdMS_TO_TICKS(10 * 1000) };
+    static constexpr TickType_t read_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
+    static constexpr TickType_t write_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
+    static constexpr TickType_t erase_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
 
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
 
