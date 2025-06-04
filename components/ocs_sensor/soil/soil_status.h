@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace ocs {
 namespace sensor {
 namespace soil {
@@ -16,7 +18,7 @@ namespace soil {
 //!
 //! @reference
 //!  - https://connectedcrops.ca/the-ultimate-guide-to-soil-moisture/
-enum class SoilStatus {
+enum class SoilStatus : uint8_t {
     //! Default status.
     None,
 

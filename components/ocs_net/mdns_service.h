@@ -23,13 +23,13 @@ public:
     //!
     //! @references
     //!  See common services: http://www.dns-sd.org/serviceTypes.html
-    enum class ServiceType {
+    enum class ServiceType : uint8_t {
         //! HTTP mDNS service.
         Http,
     };
 
     //! Known transport protocols.
-    enum class Proto {
+    enum class Proto : uint8_t {
         //! For application protocols that run over TCP.
         Tcp,
     };

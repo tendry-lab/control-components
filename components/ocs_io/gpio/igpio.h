@@ -17,7 +17,7 @@ namespace gpio {
 class IGpio {
 public:
     //! Possible GPIO directions.
-    enum class Direction {
+    enum class Direction : uint8_t {
         Output,
         Input,
     };
