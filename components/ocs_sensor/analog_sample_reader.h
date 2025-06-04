@@ -33,7 +33,17 @@ public:
     status::StatusCode read(int& raw) override;
 
 private:
-    static constexpr core::Time delay_interval_ { core::Duration::microsecond * 60 };
+    // The delay interval was selected experimentally to ensure that the ADC unit has
+    // enough time to stabilize the reading for each channel.
+    //
+    // @remarks
+    // - When the low-pass RC filter is used, changing the delay interval doesn't
+    //   significantly affect the overall quality of the ADC readings.
+    //
+    // ADC reading statistics for 2 sensors (each with low-pass RC filter):
+    //  - ADC reading time: 101-117 usec (1 sample), 6.5–7.5 ms (64 samples)
+    //  - Standard deviation: less than 0.2%
+    static constexpr core::Time delay_interval_ { core::Duration::microsecond * 40 };
 
     const AnalogConfig& config_;
 
