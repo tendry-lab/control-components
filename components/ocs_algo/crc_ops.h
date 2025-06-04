@@ -15,7 +15,7 @@ namespace algo {
 
 struct CrcOps {
     //! https://en.wikipedia.org/wiki/Bit_numbering.
-    enum class BitOrder {
+    enum class BitOrder : uint8_t {
         //! Least significan bit first.
         LSB,
         //! Most significan bit first.

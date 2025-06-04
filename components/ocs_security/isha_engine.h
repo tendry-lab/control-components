@@ -18,7 +18,7 @@ namespace security {
 class IShaEngine {
 public:
     //! Known SHA algorithms.
-    enum class Algorithm {
+    enum class Algorithm : uint8_t {
         SHA1,
         SHA256,
         SHA512,

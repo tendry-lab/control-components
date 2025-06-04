@@ -8,11 +8,13 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace ocs {
 namespace status {
 
 //! Status code.
-enum class StatusCode {
+enum class StatusCode : uint8_t {
     //! Status indicating a success of an operation.
     OK,
 
