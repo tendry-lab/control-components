@@ -31,7 +31,7 @@ namespace sensor {
 namespace soil {
 
 //! The sensor is only powered when the relay is activated.
-class AnalogRelaySensorPipeline : public core::NonCopyable<> {
+class AnalogRelaySensorPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         io::adc::Channel adc_channel { static_cast<io::adc::Channel>(0) };

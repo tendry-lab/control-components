@@ -20,7 +20,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class TimePipeline : public core::NonCopyable<> {
+class TimePipeline : private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

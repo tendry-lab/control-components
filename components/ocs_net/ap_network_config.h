@@ -17,7 +17,7 @@ namespace ocs {
 namespace net {
 
 //! WiFi AP configuration.
-class ApNetworkConfig : public INetworkConfig, public core::NonCopyable<> {
+class ApNetworkConfig : public INetworkConfig, private core::NonCopyable<> {
 public:
     //! Minimum WiFi AP password length.
     static constexpr unsigned min_password_len = 8;

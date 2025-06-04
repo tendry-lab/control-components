@@ -18,7 +18,7 @@
 namespace ocs {
 namespace test {
 
-class MemoryStorage : public storage::IStorage, public core::NonCopyable<> {
+class MemoryStorage : public storage::IStorage, private core::NonCopyable<> {
 public:
     status::StatusCode probe(const char* key, size_t& size) override;
     status::StatusCode read(const char* key, void* value, size_t size) override;

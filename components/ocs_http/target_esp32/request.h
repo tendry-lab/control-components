@@ -16,7 +16,7 @@
 namespace ocs {
 namespace http {
 
-class Request : public IRequest, public core::NonCopyable<> {
+class Request : public IRequest, private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit Request(httpd_req_t& req);

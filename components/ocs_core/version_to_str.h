@@ -16,7 +16,7 @@
 namespace ocs {
 namespace core {
 
-class version_to_str : public NonCopyable<> {
+class version_to_str : private NonCopyable<> {
 public:
     //! Initialize.
     explicit version_to_str(Version version);

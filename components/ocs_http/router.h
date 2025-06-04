@@ -19,7 +19,7 @@
 namespace ocs {
 namespace http {
 
-class Router : public IRouter, public core::NonCopyable<> {
+class Router : public IRouter, private core::NonCopyable<> {
 public:
     //! Register HTTP endpoint.
     void add(Method method, const char* pattern, IHandler& handler) override;

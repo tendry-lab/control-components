@@ -16,7 +16,7 @@
 namespace ocs {
 namespace net {
 
-class ResetNetworkRunner : public INetworkRunner, public core::NonCopyable<> {
+class ResetNetworkRunner : public INetworkRunner, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

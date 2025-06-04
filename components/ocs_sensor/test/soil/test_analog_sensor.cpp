@@ -20,7 +20,7 @@ namespace soil {
 
 namespace {
 
-struct TestAdcReader : public io::adc::IReader, public core::NonCopyable<> {
+struct TestAdcReader : public io::adc::IReader, private core::NonCopyable<> {
     status::StatusCode read(int& raw) override {
         raw = value;
 
@@ -30,7 +30,7 @@ struct TestAdcReader : public io::adc::IReader, public core::NonCopyable<> {
     int value { 0 };
 };
 
-struct TestAdcConverter : public io::adc::IConverter, public core::NonCopyable<> {
+struct TestAdcConverter : public io::adc::IConverter, private core::NonCopyable<> {
     status::StatusCode convert(int& voltage, int raw) override {
         voltage = raw;
 

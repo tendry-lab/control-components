@@ -18,7 +18,7 @@
 namespace ocs {
 namespace storage {
 
-class StorageBuilder : public core::NonCopyable<> {
+class StorageBuilder : private core::NonCopyable<> {
 public:
     using IStoragePtr = std::unique_ptr<IStorage>;
 

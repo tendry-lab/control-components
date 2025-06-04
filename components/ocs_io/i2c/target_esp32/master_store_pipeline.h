@@ -18,7 +18,7 @@ namespace ocs {
 namespace io {
 namespace i2c {
 
-class MasterStorePipeline : public core::NonCopyable<> {
+class MasterStorePipeline : private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit MasterStorePipeline(IStore::Params);

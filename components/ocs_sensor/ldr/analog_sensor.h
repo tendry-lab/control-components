@@ -19,7 +19,7 @@ namespace ocs {
 namespace sensor {
 namespace ldr {
 
-class AnalogSensor : public scheduler::ITask, public core::NonCopyable<> {
+class AnalogSensor : public scheduler::ITask, private core::NonCopyable<> {
 public:
     //! Various sensor characteristics.
     struct Data {

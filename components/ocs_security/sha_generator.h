@@ -16,7 +16,7 @@
 namespace ocs {
 namespace security {
 
-class ShaGenerator : public core::NonCopyable<> {
+class ShaGenerator : private core::NonCopyable<> {
 public:
     using Data = std::vector<uint8_t>;
 

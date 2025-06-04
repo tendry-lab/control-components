@@ -35,7 +35,7 @@ template <typename T> T random(T range_from, T range_to) {
     return distr(generator);
 }
 
-class TestTask : public NonCopyable<> {
+class TestTask : private NonCopyable<> {
 public:
     TestTask(ILocker& locker, Cond& cond, const char* id, unsigned stack_size)
         : id_(id)

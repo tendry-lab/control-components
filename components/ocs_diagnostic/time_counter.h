@@ -16,7 +16,7 @@
 namespace ocs {
 namespace diagnostic {
 
-class TimeCounter : public BasicCounter, public core::NonCopyable<> {
+class TimeCounter : public BasicCounter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

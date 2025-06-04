@@ -15,7 +15,7 @@
 namespace ocs {
 namespace system {
 
-class Rebooter : public IRebooter, public core::NonCopyable<> {
+class Rebooter : public IRebooter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

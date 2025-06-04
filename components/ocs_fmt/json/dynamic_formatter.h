@@ -17,7 +17,7 @@ namespace ocs {
 namespace fmt {
 namespace json {
 
-class DynamicFormatter : public IFormatter, public core::NonCopyable<> {
+class DynamicFormatter : public IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

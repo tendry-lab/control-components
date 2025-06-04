@@ -18,7 +18,7 @@ namespace ocs {
 namespace io {
 namespace i2c {
 
-class MasterStore : public IStore, public core::NonCopyable<> {
+class MasterStore : public IStore, private core::NonCopyable<> {
 public:
     //! Initialize I2C master bus.
     explicit MasterStore(IStore::Params params);

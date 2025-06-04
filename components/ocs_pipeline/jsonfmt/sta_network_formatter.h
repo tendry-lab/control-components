@@ -16,7 +16,7 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class StaNetworkFormatter : public fmt::json::IFormatter, public core::NonCopyable<> {
+class StaNetworkFormatter : public fmt::json::IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

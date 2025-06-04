@@ -17,7 +17,7 @@ namespace ocs {
 namespace core {
 
 //! RAII resource locker.
-class LockGuard : public NonCopyable<> {
+class LockGuard : private NonCopyable<> {
 public:
     //! Acquire the resource.
     //!

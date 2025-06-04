@@ -17,7 +17,7 @@
 namespace ocs {
 namespace http {
 
-class ResponseWriter : public IResponseWriter, public core::NonCopyable<> {
+class ResponseWriter : public IResponseWriter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

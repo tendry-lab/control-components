@@ -14,7 +14,7 @@
 namespace ocs {
 namespace test {
 
-class StatusStorage : public storage::IStorage, public core::NonCopyable<> {
+class StatusStorage : public storage::IStorage, private core::NonCopyable<> {
 public:
     explicit StatusStorage(storage::IStorage& storage);
 

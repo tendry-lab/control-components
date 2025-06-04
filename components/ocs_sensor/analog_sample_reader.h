@@ -17,7 +17,7 @@
 namespace ocs {
 namespace sensor {
 
-class AnalogSampleReader : public io::adc::IReader, public core::NonCopyable<> {
+class AnalogSampleReader : public io::adc::IReader, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

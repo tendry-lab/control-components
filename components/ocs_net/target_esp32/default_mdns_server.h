@@ -14,7 +14,7 @@
 namespace ocs {
 namespace net {
 
-class DefaultMdnsServer : public BasicMdnsServer, public core::NonCopyable<> {
+class DefaultMdnsServer : public BasicMdnsServer, private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit DefaultMdnsServer(const char* hostname);

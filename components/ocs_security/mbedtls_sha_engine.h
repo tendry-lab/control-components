@@ -14,7 +14,7 @@
 namespace ocs {
 namespace security {
 
-class MbedTlsShaEngine : public BasicShaEngine, public core::NonCopyable<> {
+class MbedTlsShaEngine : public BasicShaEngine, private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit MbedTlsShaEngine(IShaEngine::Algorithm algorithm);

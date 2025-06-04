@@ -17,7 +17,7 @@ namespace ocs {
 namespace fmt {
 namespace json {
 
-class FuncFormatter : public IFormatter, public core::NonCopyable<> {
+class FuncFormatter : public IFormatter, private core::NonCopyable<> {
 public:
     //! Lambda used for JSON formatting.
     using Func = std::function<status::StatusCode(cJSON* json)>;

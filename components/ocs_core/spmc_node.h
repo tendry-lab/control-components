@@ -26,7 +26,7 @@ namespace core {
 //! The consumer acquires the data with the read atomic operation, so it should
 //! use the acquire memory order. The producer only performs an atomic write
 //! operation, so it should use the release memory order.
-template <typename T> class SpmcNode : public NonCopyable<> {
+template <typename T> class SpmcNode : private NonCopyable<> {
 public:
     //! Get the underlying data.
     T get() const {

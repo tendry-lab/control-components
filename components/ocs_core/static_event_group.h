@@ -17,7 +17,7 @@ namespace ocs {
 namespace core {
 
 //! Static FreeRTOS event group.
-class StaticEventGroup : public NonCopyable<> {
+class StaticEventGroup : private NonCopyable<> {
 public:
     //! Initialize.
     StaticEventGroup();

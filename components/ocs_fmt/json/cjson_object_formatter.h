@@ -18,7 +18,7 @@ namespace ocs {
 namespace fmt {
 namespace json {
 
-class CjsonObjectFormatter : public core::NonCopyable<> {
+class CjsonObjectFormatter : private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit CjsonObjectFormatter(cJSON* json);

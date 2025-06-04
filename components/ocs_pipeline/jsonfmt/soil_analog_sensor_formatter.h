@@ -17,7 +17,7 @@ namespace pipeline {
 namespace jsonfmt {
 
 class SoilAnalogSensorFormatter : public fmt::json::IFormatter,
-                                  public core::NonCopyable<> {
+                                  private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit SoilAnalogSensorFormatter(sensor::soil::AnalogSensor& sensor);

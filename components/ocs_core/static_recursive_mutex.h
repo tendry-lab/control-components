@@ -15,7 +15,7 @@ namespace ocs {
 namespace core {
 
 //! FreeRTOS recursive mutex to be used in FreeRTOS tasks.
-class StaticRecursiveMutex : public BasicStaticRecursiveMutex, public NonCopyable<> {
+class StaticRecursiveMutex : public BasicStaticRecursiveMutex, private NonCopyable<> {
 public:
     //! Lock the mutex.
     status::StatusCode lock(TickType_t wait = portMAX_DELAY) override;

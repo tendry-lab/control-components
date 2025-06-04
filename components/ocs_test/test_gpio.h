@@ -14,7 +14,7 @@
 namespace ocs {
 namespace test {
 
-class TestGpio : public io::gpio::IGpio, public core::NonCopyable<> {
+class TestGpio : public io::gpio::IGpio, private core::NonCopyable<> {
 public:
     TestGpio(status::StatusCode flip_code,
              status::StatusCode turn_on_code,

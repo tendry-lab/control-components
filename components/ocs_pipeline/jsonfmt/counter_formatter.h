@@ -18,7 +18,7 @@ namespace jsonfmt {
 
 class CounterFormatter : public fmt::json::IFormatter,
                          public diagnostic::BasicCounterHolder,
-                         public core::NonCopyable<> {
+                         private core::NonCopyable<> {
 public:
     //! Format the underlying counters into @p json.
     status::StatusCode format(cJSON* json) override;

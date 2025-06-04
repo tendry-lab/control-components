@@ -22,7 +22,7 @@ namespace ocs {
 namespace sensor {
 namespace soil {
 
-class AnalogSensor : public scheduler::ITask, public core::NonCopyable<> {
+class AnalogSensor : public scheduler::ITask, private core::NonCopyable<> {
 public:
     //! Various sensors parameters.
     struct Params {

@@ -16,7 +16,7 @@
 namespace ocs {
 namespace test {
 
-class TestTask : public scheduler::ITask, public core::NonCopyable<> {
+class TestTask : public scheduler::ITask, private core::NonCopyable<> {
 public:
     explicit TestTask(status::StatusCode code);
 

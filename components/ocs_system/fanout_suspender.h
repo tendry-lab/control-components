@@ -18,7 +18,7 @@
 namespace ocs {
 namespace system {
 
-class FanoutSuspender : public ISuspender, public core::NonCopyable<> {
+class FanoutSuspender : public ISuspender, private core::NonCopyable<> {
 public:
     //! Suspend the system.
     status::StatusCode suspend() override;

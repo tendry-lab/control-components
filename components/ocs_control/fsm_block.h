@@ -22,7 +22,7 @@ namespace control {
 //! FSM state.
 class FsmBlock : public system::IRebootHandler,
                  public scheduler::ITask,
-                 public core::NonCopyable<> {
+                 private core::NonCopyable<> {
 public:
     using State = uint16_t;
 

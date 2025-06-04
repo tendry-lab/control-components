@@ -15,7 +15,7 @@
 namespace ocs {
 namespace core {
 
-class RateLimiter : public core::NonCopyable<> {
+class RateLimiter : private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

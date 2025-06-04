@@ -20,7 +20,7 @@ namespace ocs {
 namespace io {
 namespace spi {
 
-class MasterTransceiver : public ITransceiver, public core::NonCopyable<> {
+class MasterTransceiver : public ITransceiver, private core::NonCopyable<> {
 public:
     using DevicePtr = std::shared_ptr<spi_device_t>;
     static DevicePtr make_device_shared(spi_device_t* device);

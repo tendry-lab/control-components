@@ -14,7 +14,7 @@
 namespace ocs {
 namespace scheduler {
 
-class ConstantDelayEstimator : public IDelayEstimator, public core::NonCopyable<> {
+class ConstantDelayEstimator : public IDelayEstimator, private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit ConstantDelayEstimator(TickType_t delay);

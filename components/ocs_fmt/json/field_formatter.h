@@ -19,7 +19,7 @@ namespace ocs {
 namespace fmt {
 namespace json {
 
-class FieldFormatter : public IFormatter, public core::NonCopyable<> {
+class FieldFormatter : public IFormatter, private core::NonCopyable<> {
 public:
     enum class Type : uint8_t {
         Object,

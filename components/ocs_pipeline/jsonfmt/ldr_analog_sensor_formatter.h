@@ -17,7 +17,7 @@ namespace pipeline {
 namespace jsonfmt {
 
 class LdrAnalogSensorFormatter : public fmt::json::IFormatter,
-                                 public core::NonCopyable<> {
+                                 private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit LdrAnalogSensorFormatter(sensor::ldr::AnalogSensor& sensor);

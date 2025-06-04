@@ -20,7 +20,7 @@ namespace adc {
 //! Convert ADC raw data to calibrated voltage.
 //!
 //! https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/peripherals/adc_calibration.html#adc-calibration-line-fitting-scheme
-class LineFittingConverter : public BasicConverter, public core::NonCopyable<> {
+class LineFittingConverter : public BasicConverter, private core::NonCopyable<> {
 public:
     //! Initialize.
     LineFittingConverter(adc_unit_t unit, adc_atten_t atten, adc_bitwidth_t bitwidth);

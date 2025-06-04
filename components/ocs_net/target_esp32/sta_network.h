@@ -23,7 +23,7 @@ namespace ocs {
 namespace net {
 
 //! Handle WiFi STA (station) network operations.
-class StaNetwork : public INetwork, public IStaNetwork, public core::NonCopyable<> {
+class StaNetwork : public INetwork, public IStaNetwork, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

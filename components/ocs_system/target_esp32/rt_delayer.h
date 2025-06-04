@@ -14,7 +14,7 @@
 namespace ocs {
 namespace system {
 
-class RtDelayer : public IRtDelayer, public core::NonCopyable<> {
+class RtDelayer : public IRtDelayer, private core::NonCopyable<> {
 public:
     //! Highly-accurate delay based on the builtin ets_delay_us().
     status::StatusCode delay(core::Time delay) override;

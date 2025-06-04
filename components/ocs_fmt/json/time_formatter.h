@@ -17,7 +17,7 @@ namespace ocs {
 namespace fmt {
 namespace json {
 
-class TimeFormatter : public IFormatter, public core::NonCopyable<> {
+class TimeFormatter : public IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

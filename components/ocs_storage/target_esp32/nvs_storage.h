@@ -19,7 +19,7 @@
 namespace ocs {
 namespace storage {
 
-class NvsStorage : public IStorage, public core::NonCopyable<> {
+class NvsStorage : public IStorage, private core::NonCopyable<> {
 public:
     //! Maximum number of symbols for the storage namespace, without NULL character.
     static constexpr unsigned max_namespace_len = NVS_KEY_NAME_MAX_SIZE - 1;

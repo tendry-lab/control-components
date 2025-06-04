@@ -26,7 +26,7 @@ namespace sensor {
 namespace soil {
 
 //! Periodically read the soil moisture data.
-class AnalogSensorPipeline : public core::NonCopyable<> {
+class AnalogSensorPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         io::adc::Channel adc_channel { static_cast<io::adc::Channel>(0) };

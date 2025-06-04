@@ -24,7 +24,7 @@ namespace ocs {
 namespace io {
 namespace adc {
 
-class OneshotStore : public IStore, public core::NonCopyable<> {
+class OneshotStore : public IStore, private core::NonCopyable<> {
 public:
     //! Initialize ADC unit.
     OneshotStore(adc_unit_t unit, adc_atten_t atten, adc_bitwidth_t bitwidth);

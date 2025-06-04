@@ -18,7 +18,7 @@
 namespace ocs {
 namespace scheduler {
 
-class HighResolutionTimer : public ITimer, public core::NonCopyable<> {
+class HighResolutionTimer : public ITimer, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

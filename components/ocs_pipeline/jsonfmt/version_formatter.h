@@ -15,7 +15,7 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class VersionFormatter : public fmt::json::StringFormatter, public core::NonCopyable<> {
+class VersionFormatter : public fmt::json::StringFormatter, private core::NonCopyable<> {
 public:
     //! Add ESP-IDF version on initialization.
     VersionFormatter();

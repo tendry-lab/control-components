@@ -13,7 +13,7 @@
 namespace ocs {
 namespace core {
 
-class OperationGuard : public NonCopyable<> {
+class OperationGuard : private NonCopyable<> {
 public:
     //! Suspend FreeRTOS scheduler to ensure a running task won't be preempted.
     //!

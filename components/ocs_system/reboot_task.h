@@ -15,7 +15,7 @@
 namespace ocs {
 namespace system {
 
-class RebootTask : public scheduler::ITask, public core::NonCopyable<> {
+class RebootTask : public scheduler::ITask, private core::NonCopyable<> {
 public:
     //! Initialize.
     explicit RebootTask(IRebooter& rebooter);

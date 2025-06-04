@@ -22,7 +22,7 @@ namespace ocs {
 namespace sensor {
 namespace ds18b20 {
 
-class Sensor : public scheduler::ITask, public core::NonCopyable<> {
+class Sensor : public scheduler::ITask, private core::NonCopyable<> {
 public:
     //! Various sensor configuration.
     struct OCS_ATTR_PACKED Configuration {

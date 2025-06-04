@@ -20,7 +20,7 @@ namespace ocs {
 namespace io {
 namespace i2c {
 
-class MasterTransceiver : public ITransceiver, public core::NonCopyable<> {
+class MasterTransceiver : public ITransceiver, private core::NonCopyable<> {
 public:
     using DevicePtr = std::shared_ptr<i2c_master_dev_t>;
     static DevicePtr make_device_shared(i2c_master_dev_t* device);

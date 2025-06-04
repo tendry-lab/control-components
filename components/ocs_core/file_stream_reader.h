@@ -18,7 +18,7 @@
 namespace ocs {
 namespace core {
 
-class FileStreamReader : public IStreamReader, public core::NonCopyable<> {
+class FileStreamReader : public IStreamReader, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

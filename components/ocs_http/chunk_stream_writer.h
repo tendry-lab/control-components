@@ -16,7 +16,7 @@ namespace ocs {
 namespace http {
 
 //! Use chunked-encoding and send the response in the form of chunks.
-class ChunkStreamWriter : public core::IStreamWriter, public core::NonCopyable<> {
+class ChunkStreamWriter : public core::IStreamWriter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

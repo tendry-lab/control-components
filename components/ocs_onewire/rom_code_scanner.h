@@ -16,7 +16,7 @@
 namespace ocs {
 namespace onewire {
 
-class RomCodeScanner : public core::NonCopyable<> {
+class RomCodeScanner : private core::NonCopyable<> {
 public:
     //! Initialize.
     //!

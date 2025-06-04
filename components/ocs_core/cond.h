@@ -21,7 +21,7 @@ namespace ocs {
 namespace core {
 
 //! FreeRTOS condition variable.
-class Cond : public NonCopyable<> {
+class Cond : private NonCopyable<> {
 public:
     //! Initialize.
     //!

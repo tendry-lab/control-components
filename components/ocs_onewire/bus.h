@@ -35,7 +35,7 @@ namespace onewire {
 //!  https://www.analog.com/media/en/technical-documentation/data-sheets/ds18b20.pdf
 //!  https://pdfserv.maximintegrated.com/en/an/AN937.pdf
 //!  https://www.analog.com/en/resources/technical-articles/1wire-communication-through-software.html
-class Bus : public core::NonCopyable<> {
+class Bus : private core::NonCopyable<> {
 public:
     struct Params {
         core::Time reset_pulse_interval { 0 };

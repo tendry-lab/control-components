@@ -19,7 +19,7 @@
 namespace ocs {
 namespace control {
 
-class FsmBlockPipeline : public core::NonCopyable<> {
+class FsmBlockPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         //! How often the FSM block should be persisted.

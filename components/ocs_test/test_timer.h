@@ -14,7 +14,7 @@
 namespace ocs {
 namespace test {
 
-class TestTimer : public scheduler::ITimer, public core::NonCopyable<> {
+class TestTimer : public scheduler::ITimer, private core::NonCopyable<> {
 public:
     explicit TestTimer(status::StatusCode code);
 

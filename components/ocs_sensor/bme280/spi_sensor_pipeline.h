@@ -20,7 +20,7 @@ namespace ocs {
 namespace sensor {
 namespace bme280 {
 
-class SpiSensorPipeline : public core::NonCopyable<> {
+class SpiSensorPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         core::Time read_interval { 0 };

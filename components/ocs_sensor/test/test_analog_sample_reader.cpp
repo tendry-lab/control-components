@@ -50,13 +50,13 @@ int compute_avg(const Samples& samples) {
 
 namespace {
 
-struct TestDelayer : public system::IRtDelayer, public core::NonCopyable<> {
+struct TestDelayer : public system::IRtDelayer, private core::NonCopyable<> {
     status::StatusCode delay(core::Time) {
         return status::StatusCode::OK;
     }
 };
 
-class TestAdcReader : public io::adc::IReader, public core::NonCopyable<> {
+class TestAdcReader : public io::adc::IReader, private core::NonCopyable<> {
 public:
     TestAdcReader() = default;
 

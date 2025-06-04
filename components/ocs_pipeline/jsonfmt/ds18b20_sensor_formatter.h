@@ -18,7 +18,7 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class DS18B20SensorFormatter : public fmt::json::IFormatter, public core::NonCopyable<> {
+class DS18B20SensorFormatter : public fmt::json::IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
