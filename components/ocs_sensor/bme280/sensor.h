@@ -139,8 +139,8 @@ private:
     // 10 fractional bits). Output value of “47445” represents 47445/1024 = 46.333 %RH.
     BME280_U32_t BME280_compensate_H_int32_(BME280_S32_t adc_H);
 
-    static const TickType_t wait_reset_interval_ { pdMS_TO_TICKS(10) };
-    static const TickType_t wait_measurement_interval_ { pdMS_TO_TICKS(10) };
+    static constexpr TickType_t wait_reset_interval_ { pdMS_TO_TICKS(10) };
+    static constexpr TickType_t wait_measurement_interval_ { pdMS_TO_TICKS(10) };
 
     const Params params_;
 

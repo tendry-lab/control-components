@@ -29,19 +29,19 @@ using Time = int64_t;
 //! print(seconds * Duration::second) // prints 10 * 1000 * 1000
 struct Duration {
     //! One microsecond represented in microseconds.
-    static const Time microsecond = 1;
+    static constexpr Time microsecond = 1;
 
     //! One millisecond represented in microseconds.
-    static const Time millisecond = 1000 * microsecond;
+    static constexpr Time millisecond = 1000 * microsecond;
 
     //! One second represented in microseconds.
-    static const Time second = 1000 * millisecond;
+    static constexpr Time second = 1000 * millisecond;
 
     //! One minute represented in microseconds.
-    static const Time minute = 60 * second;
+    static constexpr Time minute = 60 * second;
 
     //! One hour represented in microseconds.
-    static const Time hour = 60 * minute;
+    static constexpr Time hour = 60 * minute;
 };
 
 } // namespace core

@@ -33,8 +33,8 @@ private:
     status::StatusCode handle_root_(http::IResponseWriter& w);
     status::StatusCode handle_file_(http::IResponseWriter& w, const char* filename);
 
-    static const constexpr char* mount_point_ = "/web_gui";
-    static const size_t buffer_size_ = 1024;
+    static constexpr const char* mount_point_ = "/web_gui";
+    static constexpr unsigned buffer_size_ = 1024;
 
     bool valid_ { false };
     core::StreamTransceiver::Buffer buffer_;

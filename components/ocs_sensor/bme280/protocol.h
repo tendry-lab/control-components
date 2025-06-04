@@ -22,7 +22,7 @@ using RegisterAddress = uint8_t;
 //! The “id” register contains the chip identification number, which is 0x60. This
 //! number can be read as soon as the device finished the power-on-reset.
 struct OCS_ATTR_PACKED RegisterID {
-    static const RegisterAddress address = 0xD0;
+    static constexpr RegisterAddress address = 0xD0;
 
     uint8_t value { 0 };
 };
@@ -32,8 +32,8 @@ static_assert(sizeof(RegisterID) == 1);
 //! complete power-on-reset procedure. Writing other values than 0xB6 has no effect.
 //! The readout value is always 0x00.
 struct OCS_ATTR_PACKED RegisterReset {
-    static const RegisterAddress address = 0xE0;
-    static const uint8_t reset_value = 0xB6;
+    static constexpr RegisterAddress address = 0xE0;
+    static constexpr uint8_t reset_value = 0xB6;
 
     uint8_t value { 0 };
 };
@@ -43,7 +43,7 @@ static_assert(sizeof(RegisterReset) == 1);
 //! device. Changes to this register only become effective after a write operation
 //! to “ctrl_meas”.
 struct OCS_ATTR_PACKED RegisterCtrlHum {
-    static const RegisterAddress address = 0xF2;
+    static constexpr RegisterAddress address = 0xF2;
 
     //! Controls oversampling of humidity data.
     uint8_t osrs_h : 3 { 0 };
@@ -53,7 +53,7 @@ static_assert(sizeof(RegisterCtrlHum) == 1);
 
 //! The “status” register contains two bits which indicate the status of the device.
 struct OCS_ATTR_PACKED RegisterStatus {
-    static const RegisterAddress address = 0xF3;
+    static constexpr RegisterAddress address = 0xF3;
 
     //! Automatically set to ‘1’ when the NVM data are being copied to image registers
     //! and back to ‘0’ when the copying is done. The data are copied at
@@ -74,7 +74,7 @@ static_assert(sizeof(RegisterStatus) == 1);
 
 //! Register sets the pressure and temperature data acquisition options of the device.
 struct OCS_ATTR_PACKED RegisterCtrlMeas {
-    static const RegisterAddress address = 0xF4;
+    static constexpr RegisterAddress address = 0xF4;
 
     //! Controls the sensor mode of the device.
     uint8_t mode : 2 { 0 };
@@ -91,7 +91,7 @@ static_assert(sizeof(RegisterCtrlMeas) == 1);
 //! Writes to the “config” register in normal mode may be ignored. In sleep mode
 //! writes are not ignored.
 struct OCS_ATTR_PACKED RegisterConfig {
-    static const RegisterAddress address = 0xF5;
+    static constexpr RegisterAddress address = 0xF5;
 
     //! Enables 3-wire SPI interface when set to ‘1’.
     uint8_t spi3w_en : 1 { 0 };
@@ -128,7 +128,7 @@ static_assert(sizeof(RegisterConfig) == 1);
 
 struct OCS_ATTR_PACKED RegisterData {
     //! 0xF7 - 0xFE.
-    static const RegisterAddress address = 0xF7;
+    static constexpr RegisterAddress address = 0xF7;
 
     //! Contains the MSB part [19:12] of the raw pressure measurement output data.
     uint8_t press_msb { 0 };
@@ -159,7 +159,7 @@ static_assert(sizeof(RegisterData) == 8);
 
 struct OCS_ATTR_PACKED CalibrationData1 {
     // 0x88-0xA1.
-    static const RegisterAddress address = 0x88;
+    static constexpr RegisterAddress address = 0x88;
 
     uint16_t dig_T1 { 0 };
     int16_t dig_T2 { 0 };

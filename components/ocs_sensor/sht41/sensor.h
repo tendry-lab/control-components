@@ -113,13 +113,13 @@ private:
     //  - 1100ms - heater-on duration.
     //  - 10ms - high precision measurement duration.
     //  - 50ms - for random delays.
-    static const TickType_t heating_long_pulse_delay_ = pdMS_TO_TICKS(1100 + 10 + 50);
+    static constexpr TickType_t heating_long_pulse_delay_ = pdMS_TO_TICKS(1100 + 10 + 50);
 
     // Short pulse timings:
     //  - 110ms - heater-on duration.
     //  - 10ms - high precision measurement duration.
     //  - 50ms - for random delays.
-    static const TickType_t heating_short_pulse_delay_ = pdMS_TO_TICKS(110 + 10 + 50);
+    static constexpr TickType_t heating_short_pulse_delay_ = pdMS_TO_TICKS(110 + 10 + 50);
 
     const Params params_;
 
