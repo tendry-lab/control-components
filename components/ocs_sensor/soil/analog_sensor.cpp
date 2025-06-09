@@ -127,7 +127,7 @@ SoilStatus AnalogSensor::calculate_status_(int raw) const {
     return statuses_[status_index];
 }
 
-uint8_t AnalogSensor::calculate_status_progress_(int raw) const {
+double AnalogSensor::calculate_status_progress_(int raw) const {
     if (is_invalid_input_(raw)) {
         return 0;
     }
@@ -167,7 +167,7 @@ void AnalogSensor::override_status_progress_(AnalogSensor::Data& data) {
     }
 
     double moisture = 0;
-    int progress = 0;
+    double progress = 0;
 
     if (current_status != SoilStatus::Error) {
         static constexpr double moisture_per_status =
@@ -177,7 +177,7 @@ void AnalogSensor::override_status_progress_(AnalogSensor::Data& data) {
             moisture_per_status * static_cast<uint8_t>(current_status);
 
         moisture = 100 - algo::MathOps::round_floor(moisture_used, 2);
-        progress = 99;
+        progress = 99.99;
     }
 
     data.moisture = moisture;

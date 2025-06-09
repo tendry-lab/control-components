@@ -40,7 +40,7 @@ public:
         core::Time prev_status_duration { 0 };
         core::Time curr_status_duration { 0 };
         uint64_t write_count { 0 };
-        uint8_t status_progress { 0 };
+        double status_progress { 0 };
     };
 
     //! Return the number of valid soil moisture statuses.
@@ -72,7 +72,7 @@ private:
     bool is_invalid_input_(int raw) const;
     double calculate_moisture_(int raw) const;
     SoilStatus calculate_status_(int raw) const;
-    uint8_t calculate_status_progress_(int raw) const;
+    double calculate_status_progress_(int raw) const;
     uint16_t get_status_len_() const;
 
     void override_status_progress_(Data& data);
