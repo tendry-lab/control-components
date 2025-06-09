@@ -456,7 +456,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     // Just started, no previous status, threshold shouldn't be taken into account.
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(expected_moisture, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(expected_moisture, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::None, data.prev_status);
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
@@ -475,7 +475,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     data = sensor.get_data();
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(expected_moisture, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(expected_moisture, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::None, data.prev_status);
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
@@ -497,7 +497,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     data = sensor.get_data();
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(expected_moisture, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(expected_moisture, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::None, data.prev_status);
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
@@ -514,7 +514,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     data = sensor.get_data();
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(expected_moisture, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(expected_moisture, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::None, data.prev_status);
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
@@ -534,7 +534,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     data = sensor.get_data();
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(expected_moisture, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(expected_moisture, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.prev_status);
     TEST_ASSERT_EQUAL(4, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Wet, data.curr_status);
@@ -584,7 +584,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
     // Just started, no previous status, threshold shouldn't be taken into account.
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(expected_moisture, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(expected_moisture, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::None, data.prev_status);
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
@@ -602,7 +602,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
 
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(0, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.prev_status);
     TEST_ASSERT_EQUAL(1, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
@@ -621,7 +621,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
 
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(0, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.prev_status);
     TEST_ASSERT_EQUAL(1, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
@@ -639,7 +639,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
 
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(0, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.prev_status);
     TEST_ASSERT_EQUAL(1, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
@@ -660,7 +660,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
 
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(expected_moisture, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(expected_moisture, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.prev_status);
     TEST_ASSERT_EQUAL(3, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
@@ -678,7 +678,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
 
     TEST_ASSERT_EQUAL(reader.value, data.raw);
     TEST_ASSERT_EQUAL(reader.value, data.voltage);
-    TEST_ASSERT_EQUAL(0, data.moisture);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.moisture);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.prev_status);
     TEST_ASSERT_EQUAL(1, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
