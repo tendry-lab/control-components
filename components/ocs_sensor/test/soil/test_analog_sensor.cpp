@@ -105,7 +105,7 @@ TEST_CASE("Soil analog sensor: receive out of range",
     TEST_ASSERT_EQUAL(status::StatusCode::OK, sensor.run());
 
     auto data = sensor.get_data();
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
 
     raw = def_max + 1;
@@ -113,7 +113,7 @@ TEST_CASE("Soil analog sensor: receive out of range",
     TEST_ASSERT_EQUAL(status::StatusCode::OK, sensor.run());
 
     data = sensor.get_data();
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
 }
 
@@ -198,7 +198,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(1, data.write_count);
 
     // Still saturated.
@@ -213,7 +213,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
     TEST_ASSERT_EQUAL(1, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(50, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(50, data.status_progress);
     TEST_ASSERT_EQUAL(1, data.write_count);
 
     // Wet.
@@ -228,7 +228,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     TEST_ASSERT_EQUAL(2, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Wet, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(2, data.write_count);
 
     // Still wet.
@@ -243,7 +243,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     TEST_ASSERT_EQUAL(2, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Wet, data.curr_status);
     TEST_ASSERT_EQUAL(1, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(50, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(50, data.status_progress);
     TEST_ASSERT_EQUAL(2, data.write_count);
 
     // Depletion
@@ -258,7 +258,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     TEST_ASSERT_EQUAL(2, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Depletion, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(3, data.write_count);
 
     // Still depletion.
@@ -273,7 +273,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     TEST_ASSERT_EQUAL(2, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Depletion, data.curr_status);
     TEST_ASSERT_EQUAL(1, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(50, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(50, data.status_progress);
     TEST_ASSERT_EQUAL(3, data.write_count);
 
     // Dry.
@@ -288,7 +288,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     TEST_ASSERT_EQUAL(2, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Dry, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(4, data.write_count);
 
     // Still dry.
@@ -303,7 +303,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     TEST_ASSERT_EQUAL(2, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Dry, data.curr_status);
     TEST_ASSERT_EQUAL(1, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(50, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(50, data.status_progress);
     TEST_ASSERT_EQUAL(4, data.write_count);
 
     // Error.
@@ -318,7 +318,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     TEST_ASSERT_EQUAL(2, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(5, data.write_count);
 
     // Still error.
@@ -333,7 +333,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     TEST_ASSERT_EQUAL(2, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
     TEST_ASSERT_EQUAL(1, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(5, data.write_count);
 }
 
@@ -376,7 +376,7 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
     TEST_ASSERT_EQUAL(0, data1.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data1.curr_status);
     TEST_ASSERT_EQUAL(0, data1.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data1.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data1.status_progress);
     TEST_ASSERT_EQUAL(1, data1.write_count);
 
     // Still saturated.
@@ -390,7 +390,7 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
     TEST_ASSERT_EQUAL(0, data1.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data1.curr_status);
     TEST_ASSERT_EQUAL(1, data1.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data1.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data1.status_progress);
     TEST_ASSERT_EQUAL(1, data1.write_count);
 
     control::FsmBlock fsm_block2(clock, fsm_block_storage, resolution, "test_block2");
@@ -411,7 +411,7 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
     TEST_ASSERT_EQUAL(2, data2.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Wet, data2.curr_status);
     TEST_ASSERT_EQUAL(0, data2.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data2.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data2.status_progress);
     TEST_ASSERT_EQUAL(2, data2.write_count);
 }
 
@@ -461,7 +461,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(1, data.write_count);
 
     // Still saturated.
@@ -480,7 +480,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
     TEST_ASSERT_EQUAL(1, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(50, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(50, data.status_progress);
     TEST_ASSERT_EQUAL(1, data.write_count);
 
     // Saturated has finished. Now wet, but below the required threshold, which means we
@@ -502,7 +502,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
     TEST_ASSERT_EQUAL(2, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(99, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(99.99, data.status_progress);
     TEST_ASSERT_EQUAL(1, data.write_count);
 
     clock.value += resolution;
@@ -519,7 +519,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
     TEST_ASSERT_EQUAL(3, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(99, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(99.99, data.status_progress);
     TEST_ASSERT_EQUAL(1, data.write_count);
 
     clock.value += resolution;
@@ -539,7 +539,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     TEST_ASSERT_EQUAL(4, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Wet, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(50, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(50, data.status_progress);
     TEST_ASSERT_EQUAL(2, data.write_count);
 }
 
@@ -589,7 +589,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(1, data.write_count);
 
     // Move to error state immediately.
@@ -607,7 +607,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
     TEST_ASSERT_EQUAL(1, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(2, data.write_count);
 
     // Try to leave error state.
@@ -626,7 +626,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
     TEST_ASSERT_EQUAL(1, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
     TEST_ASSERT_EQUAL(1, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(2, data.write_count);
 
     clock.value += resolution;
@@ -644,7 +644,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
     TEST_ASSERT_EQUAL(1, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
     TEST_ASSERT_EQUAL(2, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(2, data.write_count);
 
     clock.value += resolution;
@@ -665,7 +665,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
     TEST_ASSERT_EQUAL(3, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(50, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(50, data.status_progress);
     TEST_ASSERT_EQUAL(3, data.write_count);
 
     // Back again to error state.
@@ -683,7 +683,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
     TEST_ASSERT_EQUAL(1, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Error, data.curr_status);
     TEST_ASSERT_EQUAL(0, data.curr_status_duration);
-    TEST_ASSERT_EQUAL(0, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(0, data.status_progress);
     TEST_ASSERT_EQUAL(4, data.write_count);
 }
 
