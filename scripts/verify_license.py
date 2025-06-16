@@ -10,7 +10,7 @@ import argparse
 from datetime import date
 
 license_text = f"""/*
- * Copyright (c) {date.today().year}, Open Control Systems authors
+ * Copyright (c) {date.today().year}, Tendry Lab authors
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
