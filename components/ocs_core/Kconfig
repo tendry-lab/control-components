@@ -16,4 +16,10 @@ menu "OCS Core Configuration"
         default "firmware"
         help
             Firmware description.
+
+    config OCS_CORE_PRODUCT_NAME
+        string "Product Name"
+        default "product"
+        help
+            Product name.
 endmenu
