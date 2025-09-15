@@ -71,7 +71,7 @@ SystemPipeline::SystemPipeline(SystemPipeline::Params params) {
 
     device_info_.reset(new (std::nothrow) system::DeviceInfo(
         CONFIG_OCS_CORE_FW_NAME, CONFIG_OCS_CORE_FW_VERSION,
-        CONFIG_OCS_CORE_FW_DESCRIPTION));
+        CONFIG_OCS_CORE_FW_DESCRIPTION, CONFIG_OCS_CORE_PRODUCT_NAME));
     configASSERT(device_info_);
 }
 

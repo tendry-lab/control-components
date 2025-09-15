@@ -40,6 +40,7 @@ RegistrationFormatter::RegistrationFormatter(const system::DeviceInfo& device_in
     version_formatter_->add("fw_name", device_info.get_fw_name());
     version_formatter_->add("fw_description", device_info.get_fw_description());
     version_formatter_->add("device_id", device_info.get_device_id());
+    version_formatter_->add("product_name", device_info.get_product_name());
 
     fanout_formatter_->add(*version_formatter_);
 }

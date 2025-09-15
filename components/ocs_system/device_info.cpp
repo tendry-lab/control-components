@@ -13,10 +13,12 @@ namespace system {
 
 DeviceInfo::DeviceInfo(const char* fw_name,
                        const char* fw_version,
-                       const char* fw_description)
+                       const char* fw_description,
+                       const char* product_name)
     : fw_name_(fw_name)
     , fw_version_(fw_version)
-    , fw_description_(fw_description) {
+    , fw_description_(fw_description)
+    , product_name_(product_name) {
 }
 
 const char* DeviceInfo::get_fw_name() const {
@@ -33,6 +35,10 @@ const char* DeviceInfo::get_fw_version() const {
 
 const char* DeviceInfo::get_device_id() const {
     return device_id_.get_id();
+}
+
+const char* DeviceInfo::get_product_name() const {
+    return product_name_.c_str();
 }
 
 } // namespace system

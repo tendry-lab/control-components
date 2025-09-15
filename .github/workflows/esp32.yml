@@ -14,16 +14,20 @@ jobs:
     strategy:
       matrix:
         project:
-          - name: "unittest"
+          - project_name: "unittest"
+            product_name: "tests"
             config: ".env/unittest_configuration"
 
-          - name: "ds18b20-verifier"
+          - project_name: "ds18b20-verifier"
+            product_name: "ds-onewire"
             config: ".env/ds18b20_verifier_configuration"
 
-          - name: "ds-rom-code-scanner"
+          - project_name: "ds-rom-code-scanner"
+            product_name: "ds-onewire"
             config: ".env/ds_rom_code_scanner_configuration"
 
-          - name: "sht41-verifier"
+          - project_name: "sht41-verifier"
+            product_name: "sht41"
             config: ".env/sht41_verifier_configuration"
     env:
       SOURCE_PATH: project
@@ -39,7 +43,7 @@ jobs:
       - name: check formatting
         uses: ./project/.github/actions/core/fmt
         with:
-          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.name }}
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
           CONTROL_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}
 
       - name: setup ESP32 environment
@@ -63,7 +67,8 @@ jobs:
       - name: prepare configuration
         uses: ./project/.github/actions/core/config
         with:
-          PROJECT_NAME: ${{ matrix.project.name }}
+          PROJECT_NAME: ${{ matrix.project.project_name }}
+          PRODUCT_NAME: ${{ matrix.project.product_name }}
           BUILD_VERSION: ${{ steps.version_formatter.outputs.build_version }}
           BUILD_CONFIG_PATH: ${{ matrix.project.config }}
           PROJECT_CONFIG_PATH: ${{ env.SOURCE_PATH }}/projects/config.yml
@@ -72,13 +77,13 @@ jobs:
         uses: ./project/.github/actions/esp32/project
         with:
           IDF_PATH: ${{ env.IDF_PATH }}
-          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.name }}
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
           CONFIGURATION_PATH_CCACHE: ${{ env.CONFIGURATION_PATH_CCACHE }}
           CONFIGURATION_PATH_PROJECT: ${{ matrix.project.config }}
 
       - name: upload firmware
         uses: ./project/.github/actions/esp32/upload
         with:
-          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.name }}
-          PROJECT_NAME: ${{ matrix.project.name }}
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
+          PROJECT_NAME: ${{ matrix.project.project_name }}
           BUILD_VERSION: ${{ steps.version_formatter.outputs.build_version }}

@@ -4,6 +4,9 @@ inputs:
   PROJECT_NAME:
     description: "Project name"
     required: true
+  PRODUCT_NAME:
+    description: "Product name"
+    required: true
   BUILD_VERSION:
     description: "Build version"
     required: true
@@ -41,3 +44,4 @@ runs:
         echo "CONFIG_OCS_CORE_FW_VERSION=\"${{ inputs.BUILD_VERSION }}\"" >> "${{ inputs.BUILD_CONFIG_PATH }}"
         echo "CONFIG_OCS_CORE_FW_NAME=\"${{ inputs.PROJECT_NAME }}\"" >> "${{ inputs.BUILD_CONFIG_PATH }}"
         echo "CONFIG_OCS_CORE_FW_DESCRIPTION=\"$FW_DESCRIPTION\"" >> "${{ inputs.BUILD_CONFIG_PATH }}"
+        echo "CONFIG_OCS_CORE_PRODUCT_NAME=\"${{ inputs.PRODUCT_NAME }}\"" >> "${{ inputs.BUILD_CONFIG_PATH }}"
