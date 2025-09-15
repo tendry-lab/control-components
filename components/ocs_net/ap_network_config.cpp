@@ -28,8 +28,12 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
     memset(ssid_, 0, sizeof(ssid_));
     memset(password_, 0, sizeof(password_));
 
-    std::string builtin_ssid = device_info.get_fw_name();
+    std::string builtin_ssid = device_info.get_product_name();
     builtin_ssid += "-";
+    // Ensure default SSID contains at least default_password_len_ characters
+    // from the device ID.
+    configASSERT(builtin_ssid.size() < max_ssid_len_);
+    configASSERT(max_ssid_len_ - builtin_ssid.size() >= default_password_len_);
     builtin_ssid += device_info.get_device_id();
 
     strncpy(ssid_, builtin_ssid.c_str(),
@@ -43,8 +47,11 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
                      status::code_to_str(code));
         }
 
+        const uint8_t password_len =
+            strlen(device_info.get_product_name()) + 1 + default_password_len_;
+
         strncpy(password_, ssid_,
-                std::min(default_password_len_, static_cast<uint8_t>(strlen(ssid_))));
+                std::min(password_len, static_cast<uint8_t>(strlen(ssid_))));
     }
 
     code =
