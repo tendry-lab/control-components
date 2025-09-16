@@ -18,7 +18,10 @@ namespace jsonfmt {
 status::StatusCode ToolchainFormatter::format(cJSON* json) {
     fmt::json::CjsonObjectFormatter formatter(json);
 
-    if (!formatter.add_string_ref_cs("esp_idf_version", esp_get_idf_version())) {
+    if (!formatter.add_string_ref_cs("toolchain_name", "ESP-IDF")) {
+        return status::StatusCode::NoMem;
+    }
+    if (!formatter.add_string_ref_cs("toolchain_version", esp_get_idf_version())) {
         return status::StatusCode::NoMem;
     }
 
