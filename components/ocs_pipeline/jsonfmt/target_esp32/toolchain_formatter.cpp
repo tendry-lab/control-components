@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2024, Tendry Lab authors
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+#include "esp_system.h"
+
+#include "ocs_fmt/json/cjson_object_formatter.h"
+#include "ocs_pipeline/jsonfmt/toolchain_formatter.h"
+
+namespace ocs {
+namespace pipeline {
+namespace jsonfmt {
+
+status::StatusCode ToolchainFormatter::format(cJSON* json) {
+    fmt::json::CjsonObjectFormatter formatter(json);
+
+    if (!formatter.add_string_ref_cs("esp_idf_version", esp_get_idf_version())) {
+        return status::StatusCode::NoMem;
+    }
+
+    return status::StatusCode::OK;
+}
+
+} // namespace jsonfmt
+} // namespace pipeline
+} // namespace ocs

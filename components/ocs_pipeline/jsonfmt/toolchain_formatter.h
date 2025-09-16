@@ -6,17 +6,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "esp_system.h"
+#pragma once
 
-#include "ocs_pipeline/jsonfmt/version_formatter.h"
+#include "ocs_core/noncopyable.h"
+#include "ocs_fmt/json/iformatter.h"
 
 namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-VersionFormatter::VersionFormatter() {
-    add("version_esp_idf", esp_get_idf_version());
-}
+class ToolchainFormatter : public fmt::json::IFormatter, private core::NonCopyable<> {
+public:
+    // Format toolchain information into @p json.
+    status::StatusCode format(cJSON* json) override;
+};
 
 } // namespace jsonfmt
 } // namespace pipeline
