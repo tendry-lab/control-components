@@ -13,7 +13,7 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/fanout_formatter.h"
 #include "ocs_fmt/json/iformatter.h"
-#include "ocs_pipeline/jsonfmt/version_formatter.h"
+#include "ocs_fmt/json/string_formatter.h"
 #include "ocs_system/device_info.h"
 
 namespace ocs {
@@ -32,7 +32,8 @@ public:
 
 private:
     std::unique_ptr<fmt::json::FanoutFormatter> fanout_formatter_;
-    std::unique_ptr<VersionFormatter> version_formatter_;
+    std::unique_ptr<fmt::json::IFormatter> toolchain_formatter_;
+    std::unique_ptr<fmt::json::StringFormatter> string_formatter_;
 };
 
 } // namespace jsonfmt

@@ -21,13 +21,14 @@ idf_component_register(
     "jsonfmt/counter_formatter.cpp"
     "jsonfmt/telemetry_formatter.cpp"
     "jsonfmt/registration_formatter.cpp"
-    "jsonfmt/version_formatter.cpp"
     "jsonfmt/system_state_formatter.cpp"
     "jsonfmt/sht41_sensor_formatter.cpp"
     "jsonfmt/bme280_sensor_formatter.cpp"
     "jsonfmt/ds18b20_sensor_formatter.cpp"
     "jsonfmt/ldr_analog_sensor_formatter.cpp"
     "jsonfmt/soil_analog_sensor_formatter.cpp"
+
+    "jsonfmt/target_esp32/toolchain_formatter.cpp"
 
     "basic/system_pipeline.cpp"
     "basic/system_counter_pipeline.cpp"
