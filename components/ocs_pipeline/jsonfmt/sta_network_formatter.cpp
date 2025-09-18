@@ -44,6 +44,10 @@ status::StatusCode StaNetworkFormatter::format(cJSON* json) {
         return status::StatusCode::NoMem;
     }
 
+    if (!formatter.add_string_ref_cs("network_op_mode", "sta")) {
+        return status::StatusCode::NoMem;
+    }
+
     return status::StatusCode::OK;
 }
 
