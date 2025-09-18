@@ -38,6 +38,10 @@ status::StatusCode ApNetworkFormatter::format(cJSON* json) {
         return status::StatusCode::NoMem;
     }
 
+    if (!formatter.add_string_ref_cs("network_op_mode", "ap")) {
+        return status::StatusCode::NoMem;
+    }
+
     return status::StatusCode::OK;
 }
 
