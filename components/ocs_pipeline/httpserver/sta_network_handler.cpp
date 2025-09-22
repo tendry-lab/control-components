@@ -106,10 +106,6 @@ status::StatusCode StaNetworkHandler::handle_update_(http::IResponseWriter& w,
 }
 
 status::StatusCode StaNetworkHandler::handle_get_(http::IResponseWriter& w) {
-    if (!config_.valid()) {
-        return status::StatusCode::InvalidState;
-    }
-
     fmt::json::CjsonUniqueBuilder builder;
 
     auto json = builder.make_object();
