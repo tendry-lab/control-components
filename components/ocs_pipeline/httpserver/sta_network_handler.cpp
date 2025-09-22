@@ -121,8 +121,11 @@ status::StatusCode StaNetworkHandler::handle_get_(http::IResponseWriter& w) {
     if (!object_formatter.add_string_ref_cs("ssid", config_.get_ssid())) {
         return status::StatusCode::NoMem;
     }
+    if (!object_formatter.add_string_ref_cs("password", "")) {
+        return status::StatusCode::NoMem;
+    }
 
-    fmt::json::DynamicFormatter json_formatter(64);
+    fmt::json::DynamicFormatter json_formatter(72);
 
     const auto code = json_formatter.format(json.get());
     if (code != status::StatusCode::OK) {

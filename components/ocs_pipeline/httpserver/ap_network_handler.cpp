@@ -126,6 +126,9 @@ status::StatusCode ApNetworkHandler::handle_get_(http::IResponseWriter& w) {
     if (!object_formatter.add_number_cs("max_conn", config_.get_max_conn())) {
         return status::StatusCode::NoMem;
     }
+    if (!object_formatter.add_string_ref_cs("password", "")) {
+        return status::StatusCode::NoMem;
+    }
 
     fmt::json::DynamicFormatter json_formatter(64);
 
