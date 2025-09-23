@@ -10,6 +10,9 @@
 
 #include "ocs_algo/response_ops.h"
 #include "ocs_core/lock_guard.h"
+#include "ocs_fmt/json/cjson_builder.h"
+#include "ocs_fmt/json/cjson_object_formatter.h"
+#include "ocs_fmt/json/dynamic_formatter.h"
 #include "ocs_pipeline/httpserver/mdns_handler.h"
 
 namespace ocs {
@@ -29,9 +32,38 @@ status::StatusCode MdnsHandler::serve_http(http::IResponseWriter& w, http::IRequ
 
     const auto values = algo::UriOps::parse_query(r.get_uri());
     if (!values.size()) {
-        return status::StatusCode::InvalidArg;
+        return handle_get_(w);
     }
 
+    return handle_update_(w, values);
+}
+
+status::StatusCode MdnsHandler::handle_get_(http::IResponseWriter& w) {
+    fmt::json::CjsonUniqueBuilder builder;
+
+    auto json = builder.make_object();
+    if (!json) {
+        return status::StatusCode::NoMem;
+    }
+
+    fmt::json::CjsonObjectFormatter object_formatter(json.get());
+
+    if (!object_formatter.add_string_ref_cs("hostname", config_.get_hostname())) {
+        return status::StatusCode::NoMem;
+    }
+
+    fmt::json::DynamicFormatter json_formatter(64);
+
+    auto code = json_formatter.format(json.get());
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
+
+    return algo::ResponseOps::write_json(w, json_formatter.c_str());
+}
+
+status::StatusCode MdnsHandler::handle_update_(http::IResponseWriter& w,
+                                               const algo::UriOps::Values& values) {
     status::StatusCode code = status::StatusCode::OK;
 
     const auto reset = values.find("reset");
