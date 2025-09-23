@@ -38,19 +38,42 @@ http "bonsai-firmware.local/api/v1/telemetry"
 
 **Receive registration data**
 
-```bash
 http "bonsai-firmware.local/api/v1/registration"
-```
+
+*WiFi STA mode*
 
 ```json
 {
-    "fw_name": "bonsai-growlab",
-    "fw_version": "0.0.1",
-    "network_ip": "192.168.1.144",
-    "network_rssi": -46,
-    "network_signal_strength": "excellent",
-    "network_ssid": "SSID",
-    "version_esp_idf": "v5.2.1"
+    "device_id": "4729289878299275A131A71065E3865F39587987",
+    "toolchain_name": "ESP-IDF",
+    "toolchain_version": "v5.2.1",
+    "fw_description": "firmware",
+    "fw_name": "firmware",
+    "fw_version": "0.0.0",
+    "network_sta_ip": "192.168.1.22",
+    "network_sta_rssi": -63,
+    "network_sta_signal_strength": "fair",
+    "network_sta_ssid": "SSID",
+    "product_name": "product",
+    "timestamp": 1758007003
+}
+```
+
+*WiFi AP Mode*
+
+```json
+{
+    "device_id": "4729289878299275A131A71065E3865F39587987",
+    "toolchain_name": "ESP-IDF",
+    "toolchain_version": "v5.2.1",
+    "fw_description": "firmware",
+    "fw_name": "firmware",
+    "fw_version": "0.0.0",
+    "network_ap_channel": 1,
+    "network_ap_cur_conn": 1,
+    "network_ap_max_conn": 5,
+    "product_name": "product",
+    "timestamp": 1758011517
 }
 ```
 
@@ -142,7 +165,8 @@ http "bonsai-firmware.local/api/v1/config/wifi/ap"
 ```json
 {
     "channel": 6,
-    "max_conn": 7
+    "max_conn": 7,
+    "password": ""
 }
 ```
 
@@ -175,7 +199,8 @@ http "bonsai-firmware.local/api/v1/config/wifi/sta"
 ```json
 {
     "retry": 4,
-    "ssid": "router-ssid"
+    "ssid": "router-ssid",
+    "password": ""
 }
 ```
 
