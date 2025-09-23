@@ -25,7 +25,7 @@ TimeHandler::TimeHandler(http::IRouter& router, time_t start_point)
 
 status::StatusCode TimeHandler::serve_http(http::IResponseWriter& w, http::IRequest& r) {
     const auto values = algo::UriOps::parse_query(r.get_uri());
-    const auto it = values.find("value");
+    const auto it = values.find("timestamp");
 
     if (it == values.end()) {
         auto timestamp = algo::TimeOps::get_time();
