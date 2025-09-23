@@ -142,6 +142,16 @@ http "bonsai-firmware.local/api/v1/system/time?timestamp=1733233869"
 OK
 ```
 
+**Get mDNS configuration**
+
+http "bonsai-firmware.local/api/v1/config/mdns"
+
+```json
+{
+    "hostname": "bonsai-firmware"
+}
+```
+
 **Set mDNS configuration**
 
 http "bonsai-firmware.local/api/v1/config/mdns?hostname=test-lab"

@@ -36,6 +36,11 @@ public:
 private:
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
 
+    status::StatusCode handle_update_(http::IResponseWriter& w,
+                                      const algo::UriOps::Values&);
+
+    status::StatusCode handle_get_(http::IResponseWriter& w);
+
     core::StaticMutex mu_;
     net::MdnsConfig& config_;
     scheduler::ITask& reboot_task_;
