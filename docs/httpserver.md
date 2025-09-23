@@ -136,7 +136,7 @@ http "bonsai-firmware.local/api/v1/system/time"
 
 **Set system time**
 
-http "bonsai-firmware.local/api/v1/system/time?value=1733233869"
+http "bonsai-firmware.local/api/v1/system/time?timestamp=1733233869"
 
 ```txt
 OK
