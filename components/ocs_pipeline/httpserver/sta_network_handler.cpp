@@ -21,12 +21,10 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-StaNetworkHandler::StaNetworkHandler(http::IRouter& router,
-                                     net::StaNetworkConfig& config,
+StaNetworkHandler::StaNetworkHandler(net::StaNetworkConfig& config,
                                      scheduler::ITask& reboot_task)
     : config_(config)
     , reboot_task_(reboot_task) {
-    router.add(http::IRouter::Method::Get, "/api/v1/config/wifi/sta", *this);
 }
 
 status::StatusCode StaNetworkHandler::serve_http(http::IResponseWriter& w,
