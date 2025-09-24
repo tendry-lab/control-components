@@ -19,12 +19,9 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-MdnsHandler::MdnsHandler(http::IRouter& router,
-                         net::MdnsConfig& config,
-                         scheduler::ITask& reboot_task)
+MdnsHandler::MdnsHandler(net::MdnsConfig& config, scheduler::ITask& reboot_task)
     : config_(config)
     , reboot_task_(reboot_task) {
-    router.add(http::IRouter::Method::Get, "/api/v1/config/mdns", *this);
 }
 
 status::StatusCode MdnsHandler::serve_http(http::IResponseWriter& w, http::IRequest& r) {

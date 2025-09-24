@@ -13,7 +13,7 @@
 #include "ocs_http/irouter.h"
 #include "ocs_http/iserver.h"
 #include "ocs_net/fanout_network_handler.h"
-#include "ocs_pipeline/httpserver/mdns_handler.h"
+#include "ocs_net/mdns_config.h"
 #include "ocs_pipeline/httpserver/system_handler.h"
 #include "ocs_scheduler/itask.h"
 
@@ -55,6 +55,7 @@ public:
 
     http::IHandler& get_registration_handler();
     http::IHandler& get_telemetry_handler();
+    http::IHandler& get_mdns_handler();
 
 private:
     http::IServer& server_;
@@ -62,7 +63,7 @@ private:
     std::unique_ptr<http::IHandler> telemetry_handler_;
     std::unique_ptr<http::IHandler> registration_handler_;
     std::unique_ptr<SystemHandler> system_handler_;
-    std::unique_ptr<MdnsHandler> mdns_handler_;
+    std::unique_ptr<http::IHandler> mdns_handler_;
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
     std::unique_ptr<SystemStateHandler> system_state_handler_;
