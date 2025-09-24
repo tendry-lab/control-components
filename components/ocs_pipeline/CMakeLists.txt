@@ -9,7 +9,6 @@ idf_component_register(
     "httpserver/mdns_handler.cpp"
     "httpserver/web_gui_pipeline.cpp"
     "httpserver/time_handler.cpp"
-    "httpserver/time_pipeline.cpp"
     "httpserver/ap_network_handler.cpp"
     "httpserver/sta_network_handler.cpp"
     "httpserver/analog_config_store_handler.cpp"
