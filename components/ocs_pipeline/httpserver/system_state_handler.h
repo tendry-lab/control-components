@@ -13,24 +13,25 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/dynamic_formatter.h"
 #include "ocs_http/ihandler.h"
-#include "ocs_http/irouter.h"
+#include "ocs_http/irequest.h"
+#include "ocs_http/iresponse_writer.h"
 
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class SystemStateHandler : private http::IHandler, private core::NonCopyable<> {
+class SystemStateHandler : public http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p router to register endpoint to receive system statistics.
     //!  - @p response_size - system state response size, in bytes.
-    SystemStateHandler(http::IRouter& router, unsigned response_size);
+    SystemStateHandler(unsigned response_size);
 
-private:
+    // Get system state over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
 
+private:
     std::unique_ptr<fmt::json::IFormatter> state_json_formatter_;
     std::unique_ptr<fmt::json::DynamicFormatter> json_formatter_;
 };
