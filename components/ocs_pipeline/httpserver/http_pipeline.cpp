@@ -13,6 +13,10 @@
 #include "ocs_pipeline/httpserver/reboot_handler.h"
 #include "ocs_status/code_to_str.h"
 
+#ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
+#include "ocs_pipeline/httpserver/system_state_handler.h"
+#endif // CONFIG_FREERTOS_USE_TRACE_FACILITY
+
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
