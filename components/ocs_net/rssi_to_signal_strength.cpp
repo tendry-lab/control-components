@@ -13,22 +13,22 @@ namespace net {
 
 const char* rssi_to_signal_strength(int rssi) {
     if (rssi > -50) {
-        return "excellent";
+        return "Excellent";
     }
 
     if (rssi > -60) {
-        return "good";
+        return "Good";
     }
 
     if (rssi > -70) {
-        return "fair";
+        return "Fair";
     }
 
     if (rssi > -80) {
-        return "poor";
+        return "Poor";
     }
 
-    return "unreliable";
+    return "Unreliable";
 }
 
 } // namespace net
