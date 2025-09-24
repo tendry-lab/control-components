@@ -58,12 +58,9 @@ const char* log_tag = "analog_config_store_handler";
 } // namespace
 
 AnalogConfigStoreHandler::AnalogConfigStoreHandler(
-    scheduler::AsyncFuncScheduler& func_scheduler,
-    http::IRouter& router,
-    sensor::AnalogConfigStore& store)
+    scheduler::AsyncFuncScheduler& func_scheduler, sensor::AnalogConfigStore& store)
     : func_scheduler_(func_scheduler)
     , store_(store) {
-    router.add(http::IRouter::Method::Get, "/api/v1/config/sensor/analog", *this);
 }
 
 status::StatusCode AnalogConfigStoreHandler::serve_http(http::IResponseWriter& w,

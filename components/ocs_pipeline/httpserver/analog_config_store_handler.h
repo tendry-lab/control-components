@@ -11,7 +11,8 @@
 #include "ocs_algo/uri_ops.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_http/ihandler.h"
-#include "ocs_http/irouter.h"
+#include "ocs_http/irequest.h"
+#include "ocs_http/iresponse_writer.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_sensor/analog_config_store.h"
 
@@ -19,22 +20,21 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class AnalogConfigStoreHandler : private http::IHandler, private core::NonCopyable<> {
+class AnalogConfigStoreHandler : public http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
     //!  - @p func_scheduler to schedule asynchronous configuration updates. config should
     //!    be modified in the same context as a sensor that uses that config.
-    //!  - @p router to register HTTP endpoints.
     //!  - @p store to access sensor configurations.
     AnalogConfigStoreHandler(scheduler::AsyncFuncScheduler& func_scheduler,
-                             http::IRouter& router,
                              sensor::AnalogConfigStore& store);
 
-private:
+    // Update analog sensor configuration over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
 
+private:
     status::StatusCode handle_all_(http::IResponseWriter& w);
 
     status::StatusCode handle_single_(http::IResponseWriter& w,
