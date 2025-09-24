@@ -4,7 +4,7 @@ idf_component_register(
     "httpserver/ds18b20_handler.cpp"
     "httpserver/sht41_handler.cpp"
     "httpserver/data_handler.cpp"
-    "httpserver/system_handler.cpp"
+    "httpserver/reboot_handler.cpp"
     "httpserver/system_state_handler.cpp"
     "httpserver/mdns_handler.cpp"
     "httpserver/web_gui_pipeline.cpp"

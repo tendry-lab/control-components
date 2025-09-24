@@ -10,6 +10,7 @@
 #include "ocs_core/log.h"
 #include "ocs_pipeline/httpserver/data_handler.h"
 #include "ocs_pipeline/httpserver/mdns_handler.h"
+#include "ocs_pipeline/httpserver/reboot_handler.h"
 #include "ocs_status/code_to_str.h"
 
 namespace ocs {
@@ -41,8 +42,8 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
         registration_formatter, params.registration.buffer_size));
     configASSERT(registration_handler_);
 
-    system_handler_.reset(new (std::nothrow) SystemHandler(router, reboot_task));
-    configASSERT(system_handler_);
+    reboot_handler_.reset(new (std::nothrow) RebootHandler(reboot_task));
+    configASSERT(reboot_handler_);
 
     mdns_handler_.reset(new (std::nothrow) MdnsHandler(mdns_config, reboot_task));
     configASSERT(mdns_handler_);
@@ -83,6 +84,10 @@ http::IHandler& HttpPipeline::get_telemetry_handler() {
 
 http::IHandler& HttpPipeline::get_mdns_handler() {
     return *mdns_handler_;
+}
+
+http::IHandler& HttpPipeline::get_reboot_handler() {
+    return *reboot_handler_;
 }
 
 } // namespace httpserver
