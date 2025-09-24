@@ -16,10 +16,6 @@
 #include "ocs_net/mdns_config.h"
 #include "ocs_scheduler/itask.h"
 
-#ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
-#include "ocs_pipeline/httpserver/system_state_handler.h"
-#endif // CONFIG_FREERTOS_USE_TRACE_FACILITY
-
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
@@ -66,7 +62,7 @@ private:
     std::unique_ptr<http::IHandler> mdns_handler_;
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
-    std::unique_ptr<SystemStateHandler> system_state_handler_;
+    std::unique_ptr<http::IHandler> system_state_handler_;
 #endif // CONFIG_FREERTOS_USE_TRACE_FACILITY
 };
 
