@@ -18,9 +18,8 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-TimeHandler::TimeHandler(http::IRouter& router, time_t start_point)
+TimeHandler::TimeHandler(time_t start_point)
     : start_point_(start_point) {
-    router.add(http::IRouter::Method::Get, "/api/v1/system/time", *this);
 }
 
 status::StatusCode TimeHandler::serve_http(http::IResponseWriter& w, http::IRequest& r) {
