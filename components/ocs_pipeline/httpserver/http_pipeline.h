@@ -14,7 +14,6 @@
 #include "ocs_http/iserver.h"
 #include "ocs_net/fanout_network_handler.h"
 #include "ocs_net/mdns_config.h"
-#include "ocs_pipeline/httpserver/system_handler.h"
 #include "ocs_scheduler/itask.h"
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
@@ -56,13 +55,14 @@ public:
     http::IHandler& get_registration_handler();
     http::IHandler& get_telemetry_handler();
     http::IHandler& get_mdns_handler();
+    http::IHandler& get_reboot_handler();
 
 private:
     http::IServer& server_;
 
     std::unique_ptr<http::IHandler> telemetry_handler_;
     std::unique_ptr<http::IHandler> registration_handler_;
-    std::unique_ptr<SystemHandler> system_handler_;
+    std::unique_ptr<http::IHandler> reboot_handler_;
     std::unique_ptr<http::IHandler> mdns_handler_;
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY

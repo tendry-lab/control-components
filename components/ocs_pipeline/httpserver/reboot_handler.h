@@ -9,25 +9,27 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_http/irouter.h"
+#include "ocs_http/ihandler.h"
+#include "ocs_http/irequest.h"
+#include "ocs_http/iresponse_writer.h"
 #include "ocs_scheduler/itask.h"
 
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class SystemHandler : private http::IHandler, private core::NonCopyable<> {
+class RebootHandler : public http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p router to register HTTP endpoints.
     //!  - @p reboot_task to initiate the reboot process.
-    SystemHandler(http::IRouter& router, scheduler::ITask& reboot_task);
+    explicit RebootHandler(scheduler::ITask& reboot_task);
 
-private:
+    // Reboot system over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest& r) override;
 
+private:
     scheduler::ITask& reboot_task_;
 };
 
