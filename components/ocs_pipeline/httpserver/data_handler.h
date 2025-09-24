@@ -14,31 +14,26 @@
 #include "ocs_fmt/json/dynamic_formatter.h"
 #include "ocs_fmt/json/fanout_formatter.h"
 #include "ocs_http/ihandler.h"
-#include "ocs_http/irouter.h"
+#include "ocs_http/irequest.h"
+#include "ocs_http/iresponse_writer.h"
 
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class DataHandler : private http::IHandler, private core::NonCopyable<> {
+class DataHandler : public http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p router to register the HTTP endpoint.
     //!  - @p formatter to format the data.
-    //!  - @p path - URI path.
-    //!  - @p id - unique data ID, to distinguish one data from another.
     //!  - @p buffer_size to hold the formatted JSON data, in bytes.
-    DataHandler(http::IRouter& router,
-                fmt::json::IFormatter& formatter,
-                const char* path,
-                const char* id,
-                unsigned buffer_size);
+    DataHandler(fmt::json::IFormatter& formatter, unsigned buffer_size);
 
-private:
+    // Get data over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
 
+private:
     std::unique_ptr<fmt::json::FanoutFormatter> fanout_formatter_;
     std::unique_ptr<fmt::json::DynamicFormatter> json_formatter_;
 };
