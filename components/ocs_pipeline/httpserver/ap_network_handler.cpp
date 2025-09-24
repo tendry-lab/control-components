@@ -21,12 +21,10 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-ApNetworkHandler::ApNetworkHandler(http::IRouter& router,
-                                   net::ApNetworkConfig& config,
+ApNetworkHandler::ApNetworkHandler(net::ApNetworkConfig& config,
                                    scheduler::ITask& reboot_task)
     : config_(config)
     , reboot_task_(reboot_task) {
-    router.add(http::IRouter::Method::Get, "/api/v1/config/wifi/ap", *this);
 }
 
 status::StatusCode ApNetworkHandler::serve_http(http::IResponseWriter& w,
