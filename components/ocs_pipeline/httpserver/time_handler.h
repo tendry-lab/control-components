@@ -11,24 +11,26 @@
 #include <ctime>
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_http/irouter.h"
+#include "ocs_http/ihandler.h"
+#include "ocs_http/irequest.h"
+#include "ocs_http/iresponse_writer.h"
 
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class TimeHandler : private http::IHandler, private core::NonCopyable<> {
+class TimeHandler : public http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p router to register HTTP endpoint.
     //!  - @p start_point - point in time begin with the system time is valid.
-    TimeHandler(http::IRouter& router, time_t start_point);
+    explicit TimeHandler(time_t start_point);
 
-private:
+    // Set/get system time over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest& r) override;
 
+private:
     const time_t start_point_ { 0 };
 };
 
