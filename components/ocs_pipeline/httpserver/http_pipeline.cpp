@@ -48,8 +48,11 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
     configASSERT(mdns_handler_);
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
-    system_state_handler_.reset(new (std::nothrow) SystemStateHandler(router, 1024 * 2));
+    system_state_handler_.reset(new (std::nothrow) SystemStateHandler(1024 * 2));
     configASSERT(system_state_handler_);
+
+    router.add(http::IRouter::Method::Get, "/api/v1/system/report",
+               *system_state_handler_);
 #endif // CONFIG_FREERTOS_USE_TRACE_FACILITY
 }
 

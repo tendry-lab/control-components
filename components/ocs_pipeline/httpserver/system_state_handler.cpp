@@ -17,14 +17,12 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-SystemStateHandler::SystemStateHandler(http::IRouter& router, unsigned response_size) {
+SystemStateHandler::SystemStateHandler(unsigned response_size) {
     state_json_formatter_.reset(new (std::nothrow) jsonfmt::SystemStateFormatter());
     configASSERT(state_json_formatter_);
 
     json_formatter_.reset(new (std::nothrow) fmt::json::DynamicFormatter(response_size));
     configASSERT(json_formatter_);
-
-    router.add(http::IRouter::Method::Get, "/api/v1/system/report", *this);
 }
 
 status::StatusCode SystemStateHandler::serve_http(http::IResponseWriter& w,
