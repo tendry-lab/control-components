@@ -13,7 +13,6 @@
 #include "ocs_http/irouter.h"
 #include "ocs_http/iserver.h"
 #include "ocs_net/fanout_network_handler.h"
-#include "ocs_pipeline/httpserver/data_handler.h"
 #include "ocs_pipeline/httpserver/mdns_handler.h"
 #include "ocs_pipeline/httpserver/system_handler.h"
 #include "ocs_scheduler/itask.h"
@@ -54,11 +53,14 @@ public:
     //! Stop HTTP server.
     void handle_disconnect() override;
 
+    http::IHandler& get_registration_handler();
+    http::IHandler& get_telemetry_handler();
+
 private:
     http::IServer& server_;
 
-    std::unique_ptr<DataHandler> telemetry_handler_;
-    std::unique_ptr<DataHandler> registration_handler_;
+    std::unique_ptr<http::IHandler> telemetry_handler_;
+    std::unique_ptr<http::IHandler> registration_handler_;
     std::unique_ptr<SystemHandler> system_handler_;
     std::unique_ptr<MdnsHandler> mdns_handler_;
 

@@ -17,11 +17,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-DataHandler::DataHandler(http::IRouter& router,
-                         fmt::json::IFormatter& formatter,
-                         const char* path,
-                         const char* id,
-                         unsigned buffer_size) {
+DataHandler::DataHandler(fmt::json::IFormatter& formatter, unsigned buffer_size) {
     fanout_formatter_.reset(new (std::nothrow) fmt::json::FanoutFormatter());
     configASSERT(fanout_formatter_);
 
@@ -31,8 +27,6 @@ DataHandler::DataHandler(http::IRouter& router,
     configASSERT(json_formatter_);
 
     fanout_formatter_->add(*json_formatter_);
-
-    router.add(http::IRouter::Method::Get, path, *this);
 }
 
 status::StatusCode DataHandler::serve_http(http::IResponseWriter& w, http::IRequest&) {

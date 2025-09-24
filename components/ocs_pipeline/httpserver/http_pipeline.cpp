@@ -8,6 +8,7 @@
 
 #include "ocs_pipeline/httpserver/http_pipeline.h"
 #include "ocs_core/log.h"
+#include "ocs_pipeline/httpserver/data_handler.h"
 #include "ocs_status/code_to_str.h"
 
 namespace ocs {
@@ -32,13 +33,11 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
     network_handler.add(*this);
 
     telemetry_handler_.reset(new (std::nothrow) DataHandler(
-        router, telemetry_formatter, "/api/v1/telemetry", "http_telemetry_handler",
-        params.telemetry.buffer_size));
+        telemetry_formatter, params.telemetry.buffer_size));
     configASSERT(telemetry_handler_);
 
     registration_handler_.reset(new (std::nothrow) DataHandler(
-        router, registration_formatter, "/api/v1/registration",
-        "http_registration_handler", params.registration.buffer_size));
+        registration_formatter, params.registration.buffer_size));
     configASSERT(registration_handler_);
 
     system_handler_.reset(new (std::nothrow) SystemHandler(router, reboot_task));
@@ -71,6 +70,14 @@ void HttpPipeline::handle_disconnect() {
                  "failed to stop HTTP server when on network disconnect: code=%s",
                  status::code_to_str(code));
     }
+}
+
+http::IHandler& HttpPipeline::get_registration_handler() {
+    return *registration_handler_;
+}
+
+http::IHandler& HttpPipeline::get_telemetry_handler() {
+    return *telemetry_handler_;
 }
 
 } // namespace httpserver
