@@ -64,6 +64,21 @@ PeriodicTaskScheduler::add(ITask& task, const char* id, core::Time interval) {
     return status::StatusCode::OK;
 }
 
+status::StatusCode PeriodicTaskScheduler::remove(const char* id) {
+    configASSERT(id);
+
+    const auto count = std::erase_if(nodes_, [id](const auto& node) {
+        return strcmp(id, node->id()) == 0;
+    });
+
+    if (!count) {
+        return status::StatusCode::NoData;
+    }
+
+    configASSERT(count == 1);
+    return status::StatusCode::OK;
+}
+
 status::StatusCode PeriodicTaskScheduler::start() {
     ocs_logi(log_tag_.c_str(),
              "start tasks scheduling: count=%u/%u task_min_interval=%lli(ms)", count(),

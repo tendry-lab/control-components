@@ -165,5 +165,92 @@ TEST_CASE("Periodic task scheduler: max number of tasks overflow",
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 }
 
+TEST_CASE("Periodic task scheduler: add/remove multiple tasks",
+          "[ocs_scheduler], [periodic_task_scheduler]") {
+    const unsigned task_count = 10;
+    const TickType_t delay = pdMS_TO_TICKS(10);
+    const core::Time interval = core::Duration::second;
+
+    test::TestClock clock;
+    clock.value = 42;
+
+    ConstantDelayEstimator estimator(delay);
+
+    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+
+    using TaskPtr = std::shared_ptr<test::TestTask>;
+    using TaskList = std::vector<TaskPtr>;
+    TaskList tasks;
+
+    for (unsigned n = 0; n < task_count; ++n) {
+        TaskPtr task(new (std::nothrow) test::TestTask(status::StatusCode::OK));
+        TEST_ASSERT_NOT_NULL(task);
+
+        tasks.push_back(task);
+    }
+
+    for (unsigned n = 0; n < task_count; ++n) {
+        const std::string id = "test_task_" + std::to_string(n);
+        TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                          task_scheduler.add(*tasks[n], id.c_str(), interval));
+    }
+
+    // The first run is always allowed.
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+    for (const auto& task : tasks) {
+        TEST_ASSERT_EQUAL(1, task->run_call_count());
+    }
+    for (auto& task : tasks) {
+        task->reset(status::StatusCode::OK);
+    }
+
+    for (unsigned n = task_count / 2; n < task_count; ++n) {
+        const std::string id = "test_task_" + std::to_string(n);
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.remove(id.c_str()));
+    }
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+    for (const auto& task : tasks) {
+        TEST_ASSERT_EQUAL(0, task->run_call_count());
+    }
+
+    for (unsigned n = task_count / 2; n < task_count; ++n) {
+        const std::string id = "test_task_" + std::to_string(n);
+        TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                          task_scheduler.add(*tasks[n], id.c_str(), interval));
+    }
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+    for (unsigned n = 0; n < task_count / 2; ++n) {
+        TEST_ASSERT_EQUAL(0, tasks[n]->run_call_count());
+    }
+    // The first run is always allowed.
+    for (unsigned n = task_count / 2; n < task_count; ++n) {
+        TEST_ASSERT_EQUAL(1, tasks[n]->run_call_count());
+    }
+
+    for (auto& task : tasks) {
+        task->reset(status::StatusCode::OK);
+    }
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+    for (const auto& task : tasks) {
+        TEST_ASSERT_EQUAL(0, task->run_call_count());
+    }
+
+    clock.value += interval;
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+    for (const auto& task : tasks) {
+        TEST_ASSERT_EQUAL(1, task->run_call_count());
+    }
+    for (auto& task : tasks) {
+        task->reset(status::StatusCode::OK);
+    }
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+    for (const auto& task : tasks) {
+        TEST_ASSERT_EQUAL(0, task->run_call_count());
+    }
+}
+
 } // namespace scheduler
 } // namespace ocs

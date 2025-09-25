@@ -34,6 +34,9 @@ public:
     //!  - @p interval - task running frequency.
     virtual status::StatusCode add(ITask& task, const char* id, core::Time interval) = 0;
 
+    //! Remove task by @p id.
+    virtual status::StatusCode remove(const char* id) = 0;
+
     //! Start scheduling registered tasks.
     virtual status::StatusCode start() = 0;
 

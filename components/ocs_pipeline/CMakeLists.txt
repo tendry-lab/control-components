@@ -12,6 +12,7 @@ idf_component_register(
     "httpserver/ap_network_handler.cpp"
     "httpserver/sta_network_handler.cpp"
     "httpserver/analog_config_store_handler.cpp"
+    "httpserver/locate_handler.cpp"
 
     "jsonfmt/data_pipeline.cpp"
     "jsonfmt/ap_network_formatter.cpp"
@@ -26,6 +27,7 @@ idf_component_register(
     "jsonfmt/ds18b20_sensor_formatter.cpp"
     "jsonfmt/ldr_analog_sensor_formatter.cpp"
     "jsonfmt/soil_analog_sensor_formatter.cpp"
+    "jsonfmt/locate_formatter.cpp"
 
     "jsonfmt/target_esp32/toolchain_formatter.cpp"
 

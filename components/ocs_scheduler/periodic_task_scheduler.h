@@ -59,7 +59,10 @@ public:
     //!  - If there are too many tasks added to the same scheduler, it is possible that
     //!    the total time required to run all these tasks will be greater then the
     //!    minimum periodic interval.
-    status::StatusCode add(ITask& task, const char* id, core::Time interval);
+    status::StatusCode add(ITask& task, const char* id, core::Time interval) override;
+
+    //! Remove task by @p id.
+    status::StatusCode remove(const char* id) override;
 
     //! Start tasks scheduling.
     status::StatusCode start() override;

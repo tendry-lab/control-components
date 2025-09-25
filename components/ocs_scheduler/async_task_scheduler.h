@@ -49,6 +49,9 @@ public:
     //!  run() call.
     status::StatusCode add(ITask& task, const char* id, core::Time interval) override;
 
+    //! Remove task by @p id.
+    status::StatusCode remove(const char* id) override;
+
     //! Start tasks scheduling.
     status::StatusCode start() override;
 

@@ -62,6 +62,10 @@ AsyncTaskScheduler::add(ITask& task, const char* id, core::Time interval) {
     return status::StatusCode::OK;
 }
 
+status::StatusCode AsyncTaskScheduler::remove(const char* id) {
+    return status::StatusCode::Error;
+}
+
 status::StatusCode AsyncTaskScheduler::start() {
     ocs_logi(log_tag_.c_str(), "start tasks scheduling: count=%u/%u", count(),
              max_count());
