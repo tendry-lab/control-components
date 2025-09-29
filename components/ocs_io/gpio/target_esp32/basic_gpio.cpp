@@ -32,14 +32,7 @@ int BasicGpio::get() {
 }
 
 status::StatusCode BasicGpio::flip() {
-    const auto err = gpio_set_level(gpio_, !gpio_get_level(gpio_));
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "flip failed: id=%s err=%s", id_.c_str(), esp_err_to_name(err));
-
-        return status::StatusCode::Error;
-    }
-
-    return status::StatusCode::OK;
+    return get() == enable_value_ ? turn_off() : turn_on();
 }
 
 status::StatusCode BasicGpio::turn_on() {
