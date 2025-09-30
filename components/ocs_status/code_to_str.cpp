@@ -31,6 +31,8 @@ const char* code_to_str(StatusCode status) {
         return "Timeout";
     case StatusCode::NotModified:
         return "NotModified";
+    case StatusCode::NotSupported:
+        return "NotSupported";
 
     case StatusCode::Last:
         break;

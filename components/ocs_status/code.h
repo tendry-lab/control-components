@@ -42,6 +42,9 @@ enum class StatusCode : uint8_t {
     //! An operation hasn't changed the resource.
     NotModified,
 
+    //! An operation isn't supported.
+    NotSupported,
+
     //! Invalid status code.
     Last,
 };
