@@ -29,8 +29,10 @@ const char* code_to_str(StatusCode status) {
         return "InvalidState";
     case StatusCode::Timeout:
         return "Timeout";
+    case StatusCode::NotModified:
+        return "NotModified";
 
-    default:
+    case StatusCode::Last:
         break;
     }
 
