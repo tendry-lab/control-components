@@ -3,6 +3,9 @@ idf_component_register(
     "fsm_store.cpp"
     "fsm_block.cpp"
     "fsm_block_pipeline.cpp"
+    "basic_led.cpp"
+    "gpio_led.cpp"
+    "led_locator.cpp"
 
     REQUIRES
     "freertos"

@@ -236,6 +236,50 @@ http "bonsai-firmware.local/api/v1/config/wifi/sta?reset=1"
 OK
 ```
 
+**Get device locating status**
+
+*Locating enabled*
+
+http "bonsai-firmware.local/api/v1/system/locate"
+
+```txt
+1
+```
+
+*Locating disabled*
+
+http "bonsai-firmware.local/api/v1/system/locate"
+
+```txt
+0
+```
+
+**Enable device locating**
+
+http "bonsai-firmware.local/api/v1/system/locate?value=1"
+
+```txt
+OK
+```
+
+**Disable device locating**
+
+http "bonsai-firmware.local/api/v1/system/locate?value=0"
+
+```txt
+OK
+```
+
+**Toggle device locating**
+
+*Toggle - switch to the opposite state.*
+
+http "bonsai-firmware.local/api/v1/system/locate?value=2"
+
+```txt
+OK
+```
+
 **Sensors APIs**
 
 - [DS18B20](sensors/ds18b20.md#HTTP-API)
