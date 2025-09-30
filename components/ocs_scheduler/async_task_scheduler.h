@@ -33,9 +33,6 @@ public:
     //! Maximum number of tasks to which a scheduler can deliver asynchronous events.
     unsigned max_count() const override;
 
-    //! Return number of registered tasks to which asynchronous events are delivered.
-    unsigned count() const override;
-
     //! Add task to be executed once per interval.
     //!
     //! @params
@@ -48,6 +45,9 @@ public:
     //!  high-resolution timer schedules the task execution, which is handled during the
     //!  run() call.
     status::StatusCode add(ITask& task, const char* id, core::Time interval) override;
+
+    //! Remove task by @p id.
+    status::StatusCode remove(const char* id) override;
 
     //! Start tasks scheduling.
     status::StatusCode start() override;

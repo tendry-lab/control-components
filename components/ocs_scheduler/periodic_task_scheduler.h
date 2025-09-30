@@ -40,9 +40,6 @@ public:
     //! Return the maximum configured number of tasks a scheduler can handle.
     unsigned max_count() const override;
 
-    //! Return the number of registered tasks.
-    unsigned count() const override;
-
     //! Add task to be executed periodically once per interval.
     //!
     //! @params
@@ -59,7 +56,10 @@ public:
     //!  - If there are too many tasks added to the same scheduler, it is possible that
     //!    the total time required to run all these tasks will be greater then the
     //!    minimum periodic interval.
-    status::StatusCode add(ITask& task, const char* id, core::Time interval);
+    status::StatusCode add(ITask& task, const char* id, core::Time interval) override;
+
+    //! Remove task by @p id.
+    status::StatusCode remove(const char* id) override;
 
     //! Start tasks scheduling.
     status::StatusCode start() override;
@@ -78,6 +78,9 @@ private:
         status::StatusCode run() override;
 
         const char* id() const;
+        bool alive() const;
+
+        void set_alive(bool alive);
 
     private:
         const std::string id_;
@@ -85,17 +88,19 @@ private:
         ITask& task_;
 
         core::RateLimiter limiter_;
+        bool alive_ { false };
     };
 
     using NodePtr = std::shared_ptr<Node>;
     using NodeList = std::vector<NodePtr>;
 
+    static NodePtr node_exist_(const NodeList& nodes, const char* id);
+    static void node_remove_(NodeList& nodes, const char* id);
+
     void run_();
 
     const unsigned max_count_ { 0 };
     const std::string log_tag_;
-
-    core::Time task_min_interval_ { INT64_MAX };
 
     core::Time total_ts_min_ { INT64_MAX };
     core::Time total_ts_max_ { INT64_MIN };
@@ -103,7 +108,9 @@ private:
     core::IClock& clock_;
     IDelayEstimator& estimator_;
 
-    NodeList nodes_;
+    NodeList nodes_to_add_;
+    NodeList nodes_to_remove_;
+    NodeList nodes_all_;
 };
 
 } // namespace scheduler

@@ -30,10 +30,6 @@ unsigned AsyncTaskScheduler::max_count() const {
     return (sizeof(EventBits_t) * 8) - 8;
 }
 
-unsigned AsyncTaskScheduler::count() const {
-    return nodes_.size();
-}
-
 status::StatusCode
 AsyncTaskScheduler::add(ITask& task, const char* id, core::Time interval) {
     configASSERT(id);
@@ -62,8 +58,12 @@ AsyncTaskScheduler::add(ITask& task, const char* id, core::Time interval) {
     return status::StatusCode::OK;
 }
 
+status::StatusCode AsyncTaskScheduler::remove(const char* id) {
+    return status::StatusCode::NotSupported;
+}
+
 status::StatusCode AsyncTaskScheduler::start() {
-    ocs_logi(log_tag_.c_str(), "start tasks scheduling: count=%u/%u", count(),
+    ocs_logi(log_tag_.c_str(), "start tasks scheduling: count=%u/%u", nodes_.size(),
              max_count());
 
     for (auto& node : nodes_) {
@@ -88,7 +88,7 @@ status::StatusCode AsyncTaskScheduler::start() {
 }
 
 status::StatusCode AsyncTaskScheduler::stop() {
-    ocs_logi(log_tag_.c_str(), "stop tasks scheduling: count=%u/%u", count(),
+    ocs_logi(log_tag_.c_str(), "stop tasks scheduling: count=%u/%u", nodes_.size(),
              max_count());
 
     for (auto& node : nodes_) {

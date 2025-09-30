@@ -23,9 +23,6 @@ public:
     //! Return the maximum number of tasks a scheduler can handle.
     virtual unsigned max_count() const = 0;
 
-    //! Return the number of registered tasks.
-    virtual unsigned count() const = 0;
-
     //! Add task to be executed periodically once per interval.
     //!
     //! @params
@@ -33,6 +30,9 @@ public:
     //!  - @p id - unique task identifier.
     //!  - @p interval - task running frequency.
     virtual status::StatusCode add(ITask& task, const char* id, core::Time interval) = 0;
+
+    //! Remove task by @p id.
+    virtual status::StatusCode remove(const char* id) = 0;
 
     //! Start scheduling registered tasks.
     virtual status::StatusCode start() = 0;
