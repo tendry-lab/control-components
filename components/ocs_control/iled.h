@@ -35,11 +35,11 @@ public:
         //! Unrecoverable error.
         FatalError,
 
-        //! Factory settings reset.
-        FSR,
-
         //! Device locating.
         Locate,
+
+        //! Factory settings reset.
+        FSR,
     };
 
     //! Destroy.

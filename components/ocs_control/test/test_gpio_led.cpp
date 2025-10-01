@@ -26,7 +26,7 @@ TEST_CASE("GPIO led: lock/unlock", "[ocs_core], [gpio_led]") {
     TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_lock(ILED::Priority::Locate));
     TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_lock(ILED::Priority::Locate));
 
-    TEST_ASSERT_EQUAL(status::StatusCode::Error, led.try_lock(ILED::Priority::FSR));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_lock(ILED::Priority::FSR));
 
     TEST_ASSERT_EQUAL(status::StatusCode::Error,
                       led.try_lock(ILED::Priority::FatalError));
