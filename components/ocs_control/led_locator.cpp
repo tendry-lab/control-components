@@ -79,7 +79,15 @@ bool LEDLocator::get() const {
 
 status::StatusCode LEDLocator::run() {
     for (unsigned n = 0; n < leds_.size(); ++n) {
-        const auto code = leds_[n]->flip();
+        auto code = leds_[n]->try_lock(ILED::Priority::Locate);
+        if (code != status::StatusCode::OK) {
+            ocs_loge(log_tag, "failed to lock LED on locating: pos=%u code=%s", n,
+                     status::code_to_str(code));
+
+            return code;
+        }
+
+        code = leds_[n]->flip();
         if (code != status::StatusCode::OK) {
             ocs_loge(log_tag, "failed to flip LED: %s", status::code_to_str(code));
 
