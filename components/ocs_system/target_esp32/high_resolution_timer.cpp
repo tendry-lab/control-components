@@ -11,11 +11,11 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_scheduler/target_esp32/high_resolution_timer.h"
 #include "ocs_status/code_to_str.h"
+#include "ocs_system/target_esp32/high_resolution_timer.h"
 
 namespace ocs {
-namespace scheduler {
+namespace system {
 
 namespace {
 
@@ -23,7 +23,7 @@ const char* log_tag = "high_resolution_timer";
 
 } // namespace
 
-HighResolutionTimer::HighResolutionTimer(ITask& task,
+HighResolutionTimer::HighResolutionTimer(scheduler::ITask& task,
                                          const char* name,
                                          core::Time interval)
     : interval_(interval)
@@ -79,5 +79,5 @@ void HighResolutionTimer::handle_cb_(void* arg) {
     }
 }
 
-} // namespace scheduler
+} // namespace system
 } // namespace ocs

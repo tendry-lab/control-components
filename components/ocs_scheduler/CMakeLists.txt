@@ -8,13 +8,9 @@ idf_component_register(
     "periodic_task_scheduler.cpp"
     "constant_delay_estimator.cpp"
     "operation_guard_task.cpp"
-    "timer_builder.cpp"
-
-    "target_esp32/high_resolution_timer.cpp"
 
     REQUIRES
     "freertos"
-    "esp_timer"
     "ocs_core"
 
     INCLUDE_DIRS

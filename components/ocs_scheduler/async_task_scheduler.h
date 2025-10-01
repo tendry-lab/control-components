@@ -16,7 +16,7 @@
 #include "ocs_core/static_event_group.h"
 #include "ocs_scheduler/idelay_estimator.h"
 #include "ocs_scheduler/itask_scheduler.h"
-#include "ocs_scheduler/itimer.h"
+#include "ocs_system/itimer.h"
 
 namespace ocs {
 namespace scheduler {
@@ -82,7 +82,7 @@ private:
         ITask& task_;
 
         std::unique_ptr<ITask> async_task_;
-        std::unique_ptr<ITimer> timer_;
+        std::unique_ptr<system::ITimer> timer_;
     };
 
     using NodePtr = std::shared_ptr<Node>;

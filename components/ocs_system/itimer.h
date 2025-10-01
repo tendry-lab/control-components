@@ -11,7 +11,7 @@
 #include "ocs_status/code.h"
 
 namespace ocs {
-namespace scheduler {
+namespace system {
 
 class ITimer {
 public:
@@ -25,5 +25,5 @@ public:
     virtual status::StatusCode stop() = 0;
 };
 
-} // namespace scheduler
+} // namespace system
 } // namespace ocs

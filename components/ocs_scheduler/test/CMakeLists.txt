@@ -6,8 +6,6 @@ idf_component_register(
     "test_async_func_scheduler.cpp"
     "test_periodic_task_scheduler.cpp"
 
-    "target_esp32/test_high_resolution_timer.cpp"
-
     REQUIRES
     "unity"
     "ocs_scheduler"
