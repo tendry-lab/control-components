@@ -13,10 +13,10 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/time.h"
 #include "ocs_scheduler/itask.h"
-#include "ocs_scheduler/itimer.h"
+#include "ocs_system/itimer.h"
 
 namespace ocs {
-namespace scheduler {
+namespace system {
 
 class HighResolutionTimer : public ITimer, private core::NonCopyable<> {
 public:
@@ -26,7 +26,7 @@ public:
     //!  - @p task to be invoked periodically at the configured interval.
     //!  - @p name to distinguish one timer from another.
     //!  - @p interval - timer interval.
-    HighResolutionTimer(ITask& task, const char* name, core::Time interval);
+    HighResolutionTimer(scheduler::ITask& task, const char* name, core::Time interval);
 
     //! Destroy timer.
     ~HighResolutionTimer();
@@ -42,10 +42,10 @@ private:
 
     const core::Time interval_ { 0 };
 
-    ITask& task_;
+    scheduler::ITask& task_;
 
     esp_timer_handle_t handle_ { nullptr };
 };
 
-} // namespace scheduler
+} // namespace system
 } // namespace ocs

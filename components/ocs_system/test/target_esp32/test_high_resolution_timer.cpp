@@ -8,14 +8,14 @@
 
 #include "unity.h"
 
-#include "ocs_scheduler/target_esp32/high_resolution_timer.h"
+#include "ocs_system/target_esp32/high_resolution_timer.h"
 #include "ocs_test/test_task.h"
 
 namespace ocs {
-namespace scheduler {
+namespace system {
 
 TEST_CASE("High resolution timer: handle events in periodic task",
-          "[ocs_scheduler], [high_resolution_timer]") {
+          "[ocs_system], [high_resolution_timer]") {
     test::TestTask task(status::StatusCode::OK);
     HighResolutionTimer timer(task, "test", core::Duration::millisecond * 100);
 
@@ -24,5 +24,5 @@ TEST_CASE("High resolution timer: handle events in periodic task",
     TEST_ASSERT_EQUAL(status::StatusCode::OK, timer.stop());
 }
 
-} // namespace scheduler
+} // namespace system
 } // namespace ocs

@@ -16,6 +16,7 @@ idf_component_register(
     "target_esp32/rt_delayer.cpp"
     "target_esp32/platform_builder.cpp"
     "target_esp32/randomizer.cpp"
+    "target_esp32/high_resolution_timer.cpp"
 
     REQUIRES
     "esp_timer"

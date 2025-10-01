@@ -9,12 +9,12 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_scheduler/itimer.h"
+#include "ocs_system/itimer.h"
 
 namespace ocs {
 namespace test {
 
-class TestTimer : public scheduler::ITimer, private core::NonCopyable<> {
+class TestTimer : public system::ITimer, private core::NonCopyable<> {
 public:
     explicit TestTimer(status::StatusCode code);
 

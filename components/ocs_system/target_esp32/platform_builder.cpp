@@ -7,6 +7,7 @@
  */
 
 #include "ocs_system/platform_builder.h"
+#include "ocs_system/target_esp32/high_resolution_timer.h"
 #include "ocs_system/target_esp32/randomizer.h"
 #include "ocs_system/target_esp32/rebooter.h"
 #include "ocs_system/target_esp32/rt_delayer.h"
@@ -24,6 +25,11 @@ PlatformBuilder::IRebooterPtr PlatformBuilder::make_rebooter(IRebootHandler& han
 
 PlatformBuilder::IRandomizerPtr PlatformBuilder::make_randomizer() {
     return IRandomizerPtr(new (std::nothrow) Randomizer());
+}
+
+PlatformBuilder::ITimerPtr PlatformBuilder::make_high_resolution_timer(
+    scheduler::ITask& task, const char* name, core::Time interval) {
+    return ITimerPtr(new (std::nothrow) HighResolutionTimer(task, name, interval));
 }
 
 } // namespace system
