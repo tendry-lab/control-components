@@ -16,6 +16,9 @@ namespace control {
 
 class BasicLED : public ILED, private core::NonCopyable<BasicLED> {
 public:
+    //! Destroy.
+    virtual ~BasicLED() = default;
+
     //! Mark LED as in use.
     status::StatusCode try_lock(Priority priority) override;
 
