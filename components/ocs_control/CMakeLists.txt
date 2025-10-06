@@ -6,6 +6,9 @@ idf_component_register(
     "basic_led.cpp"
     "gpio_led.cpp"
     "led_locator.cpp"
+    "gpio_button.cpp"
+    "button_event_handler.cpp"
+    "reset_fsm.cpp"
 
     REQUIRES
     "freertos"
