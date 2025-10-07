@@ -9,6 +9,7 @@ idf_component_register(
     "gpio_button.cpp"
     "button_event_handler.cpp"
     "system_fsm.cpp"
+    "led_task.cpp"
 
     REQUIRES
     "freertos"
