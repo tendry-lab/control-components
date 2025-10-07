@@ -11,22 +11,22 @@
 #include "ocs_control/ibutton_handler.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_event_group.h"
-#include "ocs_scheduler/ievent_handler.h"
 #include "ocs_scheduler/itask.h"
+#include "ocs_system/irebooter.h"
 
 namespace ocs {
 namespace control {
 
-class ResetFsm : public IButtonHandler,
-                 public scheduler::ITask,
-                 private core::NonCopyable<> {
+class SystemFsm : public IButtonHandler,
+                  public scheduler::ITask,
+                  private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p handler to be called when the button is pressed (ignored during the FSR).
+    //!  - @p rebooter to be called when the button is pressed (ignored during the FSR).
     //!  - @p release_interval - ensure button is released within the provided interval.
-    ResetFsm(scheduler::IEventHandler& handler, core::Time release_interval);
+    SystemFsm(system::IRebooter& rebooter, core::Time release_interval);
 
     //! Handle asynchronous button events.
     status::StatusCode run() override;
@@ -40,7 +40,7 @@ public:
 private:
     const core::Time release_interval_ { 0 };
 
-    scheduler::IEventHandler& handler_;
+    system::IRebooter& rebooter_;
 
     core::StaticEventGroup event_group_;
 };

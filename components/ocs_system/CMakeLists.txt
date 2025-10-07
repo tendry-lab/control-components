@@ -9,7 +9,6 @@ idf_component_register(
     "suspender_guard.cpp"
     "device_id.cpp"
     "device_info.cpp"
-    "reboot_event_handler.cpp"
 
     "target_esp32/default_clock.cpp"
     "target_esp32/rebooter.cpp"
