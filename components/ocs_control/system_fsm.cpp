@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ocs_control/reset_fsm.h"
+#include "ocs_control/system_fsm.h"
 
 #define EVENT_BITS_BUTTON_PRESSED BIT0
 #define EVENT_BITS_ALL (EVENT_BITS_BUTTON_PRESSED)
@@ -14,25 +14,23 @@
 namespace ocs {
 namespace control {
 
-ResetFsm::ResetFsm(scheduler::IEventHandler& handler, core::Time release_interval)
+SystemFsm::SystemFsm(system::IRebooter& rebooter, core::Time release_interval)
     : release_interval_(release_interval)
-    , handler_(handler) {
+    , rebooter_(rebooter) {
 }
 
-status::StatusCode ResetFsm::run() {
+status::StatusCode SystemFsm::run() {
     const EventBits_t bits =
         xEventGroupWaitBits(event_group_.get(), EVENT_BITS_ALL, pdTRUE, pdFALSE, 0);
 
-    status::StatusCode code = status::StatusCode::OK;
-
     if (bits & EVENT_BITS_BUTTON_PRESSED) {
-        code = handler_.handle_event();
+        rebooter_.reboot();
     }
 
-    return code;
+    return status::StatusCode::OK;
 }
 
-status::StatusCode ResetFsm::handle_pressed(core::Time duration) {
+status::StatusCode SystemFsm::handle_pressed(core::Time duration) {
     if (duration > release_interval_) {
         return status::StatusCode::Error;
     }

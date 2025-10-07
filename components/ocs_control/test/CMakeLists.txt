@@ -6,7 +6,7 @@ idf_component_register(
     "test_gpio_led.cpp"
     "test_led_locator.cpp"
     "test_button_event_handler.cpp"
-    "test_reset_fsm.cpp"
+    "test_system_fsm.cpp"
 
     REQUIRES
     "unity"
