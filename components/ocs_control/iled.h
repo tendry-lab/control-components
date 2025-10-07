@@ -38,8 +38,8 @@ public:
         //! Device locating.
         Locate,
 
-        //! Factory settings reset.
-        FSR,
+        //! High-priority system events (button pressed, system initialization, FSR).
+        System,
     };
 
     //! Destroy.

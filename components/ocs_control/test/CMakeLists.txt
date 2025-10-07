@@ -11,4 +11,5 @@ idf_component_register(
     REQUIRES
     "unity"
     "ocs_control"
+    "ocs_scheduler"
 )
