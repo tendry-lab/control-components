@@ -40,7 +40,13 @@ jobs:
         with:
           path: ${{ env.SOURCE_PATH }}
 
-      - name: check formatting
+      - name: check library formatting
+        uses: ./project/.github/actions/core/fmt
+        with:
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/components
+          CONTROL_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}
+
+      - name: check project formatting
         uses: ./project/.github/actions/core/fmt
         with:
           PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
