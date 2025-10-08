@@ -25,10 +25,10 @@ struct TestButton : public IButton, private core::NonCopyable<> {
 };
 
 struct TestButtonHandler : public IButtonHandler, private core::NonCopyable<> {
-    core::Time pressed_duration { 0 };
+    system::Time pressed_duration { 0 };
     unsigned pressed_call_count { 0 };
 
-    status::StatusCode handle_pressed(core::Time duration) {
+    status::StatusCode handle_pressed(system::Time duration) {
         pressed_duration = duration;
         ++pressed_call_count;
 
@@ -48,7 +48,7 @@ TEST_CASE("Button event handler: pressed/released",
     TEST_ASSERT_EQUAL(0, button_handler.pressed_duration);
     TEST_ASSERT_EQUAL(0, button_handler.pressed_call_count);
 
-    clock.value = core::Duration::second * 10;
+    clock.value = system::Duration::second * 10;
     TEST_ASSERT_EQUAL(status::StatusCode::OK, event_handler.handle_event());
     TEST_ASSERT_EQUAL(0, button_handler.pressed_duration);
     TEST_ASSERT_EQUAL(0, button_handler.pressed_call_count);
@@ -58,23 +58,23 @@ TEST_CASE("Button event handler: pressed/released",
     TEST_ASSERT_EQUAL(0, button_handler.pressed_duration);
     TEST_ASSERT_EQUAL(0, button_handler.pressed_call_count);
 
-    clock.value += core::Duration::second;
+    clock.value += system::Duration::second;
 
     button.pressed = true;
     TEST_ASSERT_EQUAL(status::StatusCode::OK, event_handler.handle_event());
     TEST_ASSERT_EQUAL(0, button_handler.pressed_duration);
     TEST_ASSERT_EQUAL(0, button_handler.pressed_call_count);
 
-    clock.value += core::Duration::second;
+    clock.value += system::Duration::second;
 
     button.pressed = false;
     TEST_ASSERT_EQUAL(status::StatusCode::OK, event_handler.handle_event());
-    TEST_ASSERT_EQUAL(2 * core::Duration::second, button_handler.pressed_duration);
+    TEST_ASSERT_EQUAL(2 * system::Duration::second, button_handler.pressed_duration);
     TEST_ASSERT_EQUAL(1, button_handler.pressed_call_count);
 
     button.pressed = false;
     TEST_ASSERT_EQUAL(status::StatusCode::OK, event_handler.handle_event());
-    TEST_ASSERT_EQUAL(2 * core::Duration::second, button_handler.pressed_duration);
+    TEST_ASSERT_EQUAL(2 * system::Duration::second, button_handler.pressed_duration);
     TEST_ASSERT_EQUAL(1, button_handler.pressed_call_count);
 
     button_handler.pressed_duration = 0;
@@ -84,18 +84,18 @@ TEST_CASE("Button event handler: pressed/released",
     TEST_ASSERT_EQUAL(0, button_handler.pressed_duration);
     TEST_ASSERT_EQUAL(1, button_handler.pressed_call_count);
 
-    clock.value += core::Duration::second;
+    clock.value += system::Duration::second;
 
     button.pressed = true;
     TEST_ASSERT_EQUAL(status::StatusCode::OK, event_handler.handle_event());
     TEST_ASSERT_EQUAL(0, button_handler.pressed_duration);
     TEST_ASSERT_EQUAL(1, button_handler.pressed_call_count);
 
-    clock.value += 2 * core::Duration::second;
+    clock.value += 2 * system::Duration::second;
 
     button.pressed = false;
     TEST_ASSERT_EQUAL(status::StatusCode::OK, event_handler.handle_event());
-    TEST_ASSERT_EQUAL(3 * core::Duration::second, button_handler.pressed_duration);
+    TEST_ASSERT_EQUAL(3 * system::Duration::second, button_handler.pressed_duration);
     TEST_ASSERT_EQUAL(2, button_handler.pressed_call_count);
 }
 

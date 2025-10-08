@@ -10,10 +10,10 @@
 
 #include <string>
 
-#include "ocs_core/iclock.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_scheduler/itask.h"
 #include "ocs_storage/istorage.h"
+#include "ocs_system/iclock.h"
 #include "ocs_system/ireboot_handler.h"
 
 namespace ocs {
@@ -33,9 +33,9 @@ public:
     //!  - @p storage to persist the block state.
     //!  - @p resolution - state interval resolution (in milliseconds, seconds, ...).
     //!  - @p id to distinguish one block from another.
-    FsmBlock(core::IClock& clock,
+    FsmBlock(system::IClock& clock,
              storage::IStorage& storage,
-             core::Time resolution,
+             system::Time resolution,
              const char* id);
 
     //! Save block state to the storage.
@@ -60,10 +60,10 @@ public:
     State next_state() const;
 
     //! Return the previous FSM state duration.
-    core::Time previous_state_duration() const;
+    system::Time previous_state_duration() const;
 
     //! Return the current FSM state duration.
-    core::Time current_state_duration() const;
+    system::Time current_state_duration() const;
 
     //! Return the number of times the block was persisted in the storage.
     //!
@@ -88,9 +88,9 @@ private:
     status::StatusCode write_();
 
     const std::string log_tag_;
-    const core::Time resolution_ { 0 };
+    const system::Time resolution_ { 0 };
 
-    core::IClock& clock_;
+    system::IClock& clock_;
     storage::IStorage& storage_;
 
     //! Previous machine state.
@@ -103,16 +103,16 @@ private:
     State next_state_ { 0 };
 
     //! Time spend in the previous machine state.
-    core::Time prev_state_dur_ { 0 };
+    system::Time prev_state_dur_ { 0 };
 
     //! Time spend in the current machine state.
-    core::Time curr_state_dur_ { 0 };
+    system::Time curr_state_dur_ { 0 };
 
     // Number of time a block was saved to the storage.
     uint64_t write_count_ { 0 };
 
-    core::Time start_ts_ { 0 };
-    core::Time saved_ts_ { 0 };
+    system::Time start_ts_ { 0 };
+    system::Time saved_ts_ { 0 };
 };
 
 } // namespace control

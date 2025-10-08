@@ -12,12 +12,12 @@
 #include <string>
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_core/time.h"
 #include "ocs_io/adc/istore.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_sensor/analog_config.h"
 #include "ocs_sensor/ldr/analog_sensor.h"
 #include "ocs_system/irt_delayer.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace sensor {
@@ -27,7 +27,7 @@ class AnalogSensorPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         io::adc::Channel adc_channel { static_cast<io::adc::Channel>(0) };
-        core::Time read_interval { 0 };
+        system::Time read_interval { 0 };
     };
 
     //! Initialize.

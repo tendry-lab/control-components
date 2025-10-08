@@ -28,7 +28,7 @@ PlatformBuilder::IRandomizerPtr PlatformBuilder::make_randomizer() {
 }
 
 PlatformBuilder::ITimerPtr PlatformBuilder::make_high_resolution_timer(
-    scheduler::ITask& task, const char* name, core::Time interval) {
+    scheduler::ITask& task, const char* name, system::Time interval) {
     return ITimerPtr(new (std::nothrow) HighResolutionTimer(task, name, interval));
 }
 

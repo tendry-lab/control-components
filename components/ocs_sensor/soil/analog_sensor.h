@@ -37,8 +37,8 @@ public:
         double moisture { 0 };
         SoilStatus prev_status { SoilStatus::None };
         SoilStatus curr_status { SoilStatus::None };
-        core::Time prev_status_duration { 0 };
-        core::Time curr_status_duration { 0 };
+        system::Time prev_status_duration { 0 };
+        system::Time curr_status_duration { 0 };
         uint64_t write_count { 0 };
         double status_progress { 0 };
     };

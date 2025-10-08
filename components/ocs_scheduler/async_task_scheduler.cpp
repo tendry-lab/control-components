@@ -31,10 +31,10 @@ unsigned AsyncTaskScheduler::max_count() const {
 }
 
 status::StatusCode
-AsyncTaskScheduler::add(ITask& task, const char* id, core::Time interval) {
+AsyncTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
     configASSERT(id);
     configASSERT(interval > 0);
-    configASSERT(interval >= core::Duration::microsecond);
+    configASSERT(interval >= system::Duration::microsecond);
 
     if (nodes_.size() == max_count()) {
         return status::StatusCode::Error;
@@ -129,7 +129,7 @@ void AsyncTaskScheduler::run_(EventBits_t bits) {
 AsyncTaskScheduler::Node::Node(ITask& task,
                                EventGroupHandle_t even_group,
                                EventBits_t event,
-                               core::Time interval,
+                               system::Time interval,
                                const char* id)
     : id_(id)
     , event_(event)

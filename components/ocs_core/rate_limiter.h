@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "ocs_core/iclock.h"
 #include "ocs_core/noncopyable.h"
-#include "ocs_core/time.h"
+#include "ocs_system/iclock.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace core {
@@ -22,16 +22,16 @@ public:
     //! @params
     //!  - @p clock to count the time passed since last operation.
     //!  - @p interval - how often the operation may be performed.
-    RateLimiter(core::IClock& clock, core::Time interval);
+    RateLimiter(system::IClock& clock, system::Time interval);
 
     //! Retur true if an operation can be performed.
     bool allow();
 
 private:
-    const Time interval_ { 0 };
+    const system::Time interval_ { 0 };
 
-    core::IClock& clock_;
-    core::Time start_ { 0 };
+    system::IClock& clock_;
+    system::Time start_ { 0 };
 };
 
 } // namespace core

@@ -100,15 +100,15 @@ Store::Node::Node(system::IRtDelayer& delayer,
     bus_.reset(new (std::nothrow) onewire::Bus(
         delayer, *gpio_,
         onewire::Bus::Params {
-            .reset_pulse_interval = core::Duration::microsecond * 480,
-            .presence_pulse_interval = core::Duration::microsecond * 60,
-            .write_slot_interval = core::Duration::microsecond * 60,
-            .write_bit_interval = core::Duration::microsecond * 10,
-            .write_recovery_interval = core::Duration::microsecond * 1,
-            .read_slot_interval = core::Duration::microsecond * 60,
-            .read_bit_init_interval = core::Duration::microsecond * 5,
-            .read_bit_rc_interval = core::Duration::microsecond * 5,
-            .read_recovery_interval = core::Duration::microsecond * 1,
+            .reset_pulse_interval = system::Duration::microsecond * 480,
+            .presence_pulse_interval = system::Duration::microsecond * 60,
+            .write_slot_interval = system::Duration::microsecond * 60,
+            .write_bit_interval = system::Duration::microsecond * 10,
+            .write_recovery_interval = system::Duration::microsecond * 1,
+            .read_slot_interval = system::Duration::microsecond * 60,
+            .read_bit_init_interval = system::Duration::microsecond * 5,
+            .read_bit_rc_interval = system::Duration::microsecond * 5,
+            .read_recovery_interval = system::Duration::microsecond * 1,
         }));
     configASSERT(bus_);
 }

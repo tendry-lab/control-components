@@ -37,7 +37,7 @@ public:
     SystemFsm(system::IRebooter& rebooter,
               scheduler::ITaskScheduler& task_scheduler,
               ILED& led,
-              core::Time release_interval);
+              system::Time release_interval);
 
     //! Handle asynchronous button events.
     status::StatusCode run() override;
@@ -46,7 +46,7 @@ public:
     //!
     //! @remarks
     //!  ISR safe.
-    status::StatusCode handle_pressed(core::Time duration) override;
+    status::StatusCode handle_pressed(system::Time duration) override;
 
 private:
     enum class State : uint8_t {
@@ -67,12 +67,12 @@ private:
 
     bool button_pressed_();
 
-    static constexpr core::Time led_task_interval_ = core::Duration::second / 2;
+    static constexpr system::Time led_task_interval_ = system::Duration::second / 2;
     static constexpr unsigned led_flip_count_init_ = 6;
     static constexpr unsigned led_flip_count_button_pressed_ = 2;
     static constexpr const char* led_task_id_ = "sys_fsm_led";
 
-    const core::Time release_interval_ { 0 };
+    const system::Time release_interval_ { 0 };
 
     system::IRebooter& rebooter_;
     scheduler::ITaskScheduler& task_scheduler_;

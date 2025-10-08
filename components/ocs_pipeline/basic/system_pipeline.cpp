@@ -45,7 +45,7 @@ SystemPipeline::SystemPipeline(SystemPipeline::Params params) {
     configASSERT(func_scheduler_);
 
     configASSERT(task_scheduler_->add(*func_scheduler_, "system_async_func_scheduler",
-                                      core::Duration::millisecond * 500)
+                                      system::Duration::millisecond * 500)
                  == status::StatusCode::OK);
 
     fanout_reboot_handler_.reset(new (std::nothrow) system::FanoutRebootHandler());
@@ -85,7 +85,7 @@ status::StatusCode SystemPipeline::start() {
     return status::StatusCode::OK;
 }
 
-core::IClock& SystemPipeline::get_clock() {
+system::IClock& SystemPipeline::get_clock() {
     return *default_clock_;
 }
 

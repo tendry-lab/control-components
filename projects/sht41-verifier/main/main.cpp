@@ -48,7 +48,7 @@ extern "C" void app_main(void) {
             sensor::sht41::Sensor::Params {
                 .send_wait_interval =
                     pdMS_TO_TICKS(CONFIG_OCS_TOOLS_SHT41_VERIFIER_I2C_SEND_WAIT_INTERVAL),
-                .bus_wait_interval = core::Duration::second * 5,
+                .bus_wait_interval = system::Duration::second * 5,
                 .measure_command = sensor::sht41::Sensor::Command::MeasureHighPrecision,
             }));
     configASSERT(sensor);

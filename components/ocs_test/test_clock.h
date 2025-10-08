@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include "ocs_core/iclock.h"
 #include "ocs_core/noncopyable.h"
+#include "ocs_system/iclock.h"
 
 namespace ocs {
 namespace test {
 
-struct TestClock : public core::IClock, private core::NonCopyable<> {
-    core::Time now() override;
+struct TestClock : public system::IClock, private core::NonCopyable<> {
+    system::Time now() override;
 
-    core::Time value { 0 };
+    system::Time value { 0 };
 };
 
 } // namespace test

@@ -11,7 +11,7 @@
 namespace ocs {
 namespace control {
 
-ButtonEventHandler::ButtonEventHandler(core::IClock& clock,
+ButtonEventHandler::ButtonEventHandler(system::IClock& clock,
                                        IButton& button,
                                        IButtonHandler& handler)
     : clock_(clock)
@@ -32,7 +32,7 @@ status::StatusCode ButtonEventHandler::handle_event() {
         return status::StatusCode::OK;
     }
 
-    const core::Time duration = clock_.now() - pressed_ts_;
+    const system::Time duration = clock_.now() - pressed_ts_;
 
     pressed_ts_ = 0;
     was_pressed_ = false;

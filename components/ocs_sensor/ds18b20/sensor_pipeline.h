@@ -34,7 +34,7 @@ public:
         //! FreeRTOS scheduler. Very frequent sensor readings can lead to the overall
         //! performance degradation. If the frequent sensor readings are needed it's
         //! better to disable the sensor reading protection.
-        core::Time read_interval { 0 };
+        system::Time read_interval { 0 };
 
         //! Disable sensor reading protection.
         bool disable_operation_guard { false };

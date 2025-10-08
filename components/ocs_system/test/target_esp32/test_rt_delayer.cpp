@@ -17,7 +17,7 @@ TEST_CASE("Rt delayer: delay", "[ocs_system], [rt_delayer]") {
     RtDelayer delayer;
 
     for (unsigned n = 0; n < 10; ++n) {
-        delayer.delay(core::Duration::microsecond * 100);
+        delayer.delay(system::Duration::microsecond * 100);
     }
 }
 

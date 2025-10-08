@@ -9,10 +9,10 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_core/time.h"
 #include "ocs_io/adc/ireader.h"
 #include "ocs_sensor/analog_config.h"
 #include "ocs_system/irt_delayer.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace sensor {
@@ -43,7 +43,7 @@ private:
     // ADC reading statistics for 2 sensors (each with low-pass RC filter):
     //  - ADC reading time: 101-117 usec (1 sample), 6.5–7.5 ms (64 samples)
     //  - Standard deviation: less than 0.2%
-    static constexpr core::Time delay_interval_ { core::Duration::microsecond * 40 };
+    static constexpr system::Time delay_interval_ { system::Duration::microsecond * 40 };
 
     const AnalogConfig& config_;
 

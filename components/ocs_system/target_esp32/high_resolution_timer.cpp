@@ -25,7 +25,7 @@ const char* log_tag = "high_resolution_timer";
 
 HighResolutionTimer::HighResolutionTimer(scheduler::ITask& task,
                                          const char* name,
-                                         core::Time interval)
+                                         system::Time interval)
     : interval_(interval)
     , task_(task) {
     configASSERT(name);

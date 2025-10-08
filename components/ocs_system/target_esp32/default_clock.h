@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include "ocs_core/iclock.h"
 #include "ocs_core/noncopyable.h"
+#include "ocs_system/iclock.h"
 
 namespace ocs {
 namespace system {
 
-class DefaultClock : public core::IClock, private core::NonCopyable<> {
+class DefaultClock : public IClock, private core::NonCopyable<> {
 public:
     //! Return time in microseconds since boot.
-    core::Time now() override;
+    system::Time now() override;
 };
 
 } // namespace system

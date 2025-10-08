@@ -53,7 +53,7 @@ TEST_CASE("Soil analog sensor: receive in range", "[ocs_sensor], [soil_analog_se
 
     test::MemoryStorage fsm_block_storage;
     test::TestClock clock;
-    control::FsmBlock fsm_block(clock, fsm_block_storage, core::Duration::second,
+    control::FsmBlock fsm_block(clock, fsm_block_storage, system::Duration::second,
                                 "test_block");
 
     TestAdcReader reader;
@@ -90,7 +90,7 @@ TEST_CASE("Soil analog sensor: receive out of range",
 
     test::MemoryStorage fsm_block_storage;
     test::TestClock clock;
-    control::FsmBlock fsm_block(clock, fsm_block_storage, core::Duration::second,
+    control::FsmBlock fsm_block(clock, fsm_block_storage, system::Duration::second,
                                 "test_block");
 
     TestAdcReader reader;
@@ -134,7 +134,7 @@ TEST_CASE("Soil analog sensor: read config invalid",
 
     test::MemoryStorage fsm_block_storage;
     test::TestClock clock;
-    control::FsmBlock fsm_block(clock, fsm_block_storage, core::Duration::second,
+    control::FsmBlock fsm_block(clock, fsm_block_storage, system::Duration::second,
                                 "test_block");
 
     TestAdcReader reader;
@@ -164,7 +164,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     const unsigned status_interval =
         (def_max - def_min) / AnalogSensor::get_status_count();
 
-    const core::Time resolution = core::Duration::second;
+    const system::Time resolution = system::Duration::second;
 
     test::MemoryStorage config_storage;
     AnalogConfig config(config_storage, def_min, def_max,
@@ -342,7 +342,7 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
     const uint16_t def_min = 10;
     const uint16_t def_max = 26;
     const char* id = "test";
-    const core::Time resolution = core::Duration::second;
+    const system::Time resolution = system::Duration::second;
 
     const unsigned status_interval =
         (def_max - def_min) / AnalogSensor::get_status_count();
@@ -420,7 +420,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     const uint16_t def_min = 10;
     const uint16_t def_max = 26;
     const char* id = "test";
-    const core::Time resolution = core::Duration::second;
+    const system::Time resolution = system::Duration::second;
 
     const uint16_t range = def_max - def_min;
     TEST_ASSERT_TRUE((range % AnalogSensor::get_status_count()) == 0);
@@ -548,7 +548,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
     const uint16_t def_min = 10;
     const uint16_t def_max = 26;
     const char* id = "test";
-    const core::Time resolution = core::Duration::second;
+    const system::Time resolution = system::Duration::second;
 
     const uint16_t range = def_max - def_min;
     TEST_ASSERT_TRUE((range % AnalogSensor::get_status_count()) == 0);

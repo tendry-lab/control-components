@@ -44,7 +44,7 @@ public:
     //!  This scheduler can be considered as a precise scheduler. Once per interval
     //!  high-resolution timer schedules the task execution, which is handled during the
     //!  run() call.
-    status::StatusCode add(ITask& task, const char* id, core::Time interval) override;
+    status::StatusCode add(ITask& task, const char* id, system::Time interval) override;
 
     //! Remove task by @p id.
     status::StatusCode remove(const char* id) override;
@@ -64,7 +64,7 @@ private:
         Node(ITask& task,
              EventGroupHandle_t event_group,
              EventBits_t event,
-             core::Time interval,
+             system::Time interval,
              const char* id);
 
         status::StatusCode run() override;

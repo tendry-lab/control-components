@@ -14,7 +14,7 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-DataPipeline::DataPipeline(core::IClock& clock,
+DataPipeline::DataPipeline(system::IClock& clock,
                            storage::StorageBuilder& storage_builder,
                            scheduler::ITaskScheduler& task_scheduler,
                            system::FanoutRebootHandler& reboot_handler,

@@ -13,7 +13,7 @@
 namespace ocs {
 namespace system {
 
-core::Time DefaultClock::now() {
+system::Time DefaultClock::now() {
     return esp_timer_get_time();
 }
 

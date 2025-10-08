@@ -19,7 +19,7 @@
 namespace ocs {
 namespace scheduler {
 
-PeriodicTaskScheduler::PeriodicTaskScheduler(core::IClock& clock,
+PeriodicTaskScheduler::PeriodicTaskScheduler(system::IClock& clock,
                                              IDelayEstimator& estimator,
                                              const char* id,
                                              unsigned max_count)
@@ -35,10 +35,10 @@ unsigned PeriodicTaskScheduler::max_count() const {
 }
 
 status::StatusCode
-PeriodicTaskScheduler::add(ITask& task, const char* id, core::Time interval) {
+PeriodicTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
     configASSERT(id);
     configASSERT(interval > 0);
-    configASSERT(interval >= core::Duration::millisecond);
+    configASSERT(interval >= system::Duration::millisecond);
 
     if (node_exist_(nodes_all_, id) || node_exist_(nodes_to_add_, id)) {
         return status::StatusCode::InvalidArg;
@@ -164,10 +164,10 @@ void PeriodicTaskScheduler::run_() {
     nodes_to_remove_.clear();
 }
 
-PeriodicTaskScheduler::Node::Node(core::IClock& clock,
+PeriodicTaskScheduler::Node::Node(system::IClock& clock,
                                   ITask& task,
                                   const char* id,
-                                  core::Time interval)
+                                  system::Time interval)
     : id_(id)
     , task_(task)
     , limiter_(clock, interval) {

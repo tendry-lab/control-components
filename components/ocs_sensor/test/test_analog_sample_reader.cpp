@@ -51,7 +51,7 @@ int compute_avg(const Samples& samples) {
 namespace {
 
 struct TestDelayer : public system::IRtDelayer, private core::NonCopyable<> {
-    status::StatusCode delay(core::Time) {
+    status::StatusCode delay(system::Time) {
         return status::StatusCode::OK;
     }
 };

@@ -11,9 +11,9 @@
 #include "esp_timer.h"
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_core/time.h"
 #include "ocs_scheduler/itask.h"
 #include "ocs_system/itimer.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace system {
@@ -26,7 +26,7 @@ public:
     //!  - @p task to be invoked periodically at the configured interval.
     //!  - @p name to distinguish one timer from another.
     //!  - @p interval - timer interval.
-    HighResolutionTimer(scheduler::ITask& task, const char* name, core::Time interval);
+    HighResolutionTimer(scheduler::ITask& task, const char* name, system::Time interval);
 
     //! Destroy timer.
     ~HighResolutionTimer();
@@ -40,7 +40,7 @@ public:
 private:
     static void handle_cb_(void* arg);
 
-    const core::Time interval_ { 0 };
+    const system::Time interval_ { 0 };
 
     scheduler::ITask& task_;
 

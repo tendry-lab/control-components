@@ -9,8 +9,8 @@
 #include "ocs_sensor/soil/analog_sensor.h"
 #include "ocs_algo/math_ops.h"
 #include "ocs_core/log.h"
-#include "ocs_core/time.h"
 #include "ocs_status/code_to_str.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace sensor {

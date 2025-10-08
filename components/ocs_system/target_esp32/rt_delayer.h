@@ -17,7 +17,7 @@ namespace system {
 class RtDelayer : public IRtDelayer, private core::NonCopyable<> {
 public:
     //! Highly-accurate delay based on the builtin ets_delay_us().
-    status::StatusCode delay(core::Time delay) override;
+    status::StatusCode delay(system::Time delay) override;
 };
 
 } // namespace system

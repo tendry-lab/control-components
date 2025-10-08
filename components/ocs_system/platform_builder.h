@@ -10,13 +10,13 @@
 
 #include <memory>
 
-#include "ocs_core/time.h"
 #include "ocs_scheduler/itask.h"
 #include "ocs_system/irandomizer.h"
 #include "ocs_system/ireboot_handler.h"
 #include "ocs_system/irebooter.h"
 #include "ocs_system/irt_delayer.h"
 #include "ocs_system/itimer.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace system {
@@ -43,7 +43,7 @@ struct PlatformBuilder {
     //!  - @p interval - timer interval.
     static ITimerPtr make_high_resolution_timer(scheduler::ITask& task,
                                                 const char* name,
-                                                core::Time interval);
+                                                system::Time interval);
 };
 
 } // namespace system

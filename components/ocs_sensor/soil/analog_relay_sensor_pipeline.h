@@ -15,7 +15,6 @@
 #include "freertos/task.h"
 
 #include "ocs_control/fsm_block_pipeline.h"
-#include "ocs_core/iclock.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/adc/istore.h"
 #include "ocs_io/gpio/types.h"
@@ -24,6 +23,7 @@
 #include "ocs_sensor/soil/analog_sensor.h"
 #include "ocs_storage/storage_builder.h"
 #include "ocs_system/fanout_reboot_handler.h"
+#include "ocs_system/iclock.h"
 #include "ocs_system/irt_delayer.h"
 
 namespace ocs {
@@ -36,14 +36,14 @@ public:
     struct Params {
         io::adc::Channel adc_channel { static_cast<io::adc::Channel>(0) };
         control::FsmBlockPipeline::Params fsm_block;
-        core::Time read_interval { 0 };
+        system::Time read_interval { 0 };
         io::gpio::Gpio relay_gpio { static_cast<io::gpio::Gpio>(-1) };
         TickType_t power_on_delay_interval { 0 };
         AnalogSensor::Params sensor;
     };
 
     //! Initialize.
-    AnalogRelaySensorPipeline(core::IClock& clock,
+    AnalogRelaySensorPipeline(system::IClock& clock,
                               io::adc::IStore& adc_store,
                               io::adc::IConverter& adc_converter,
                               storage::StorageBuilder& storage_builder,

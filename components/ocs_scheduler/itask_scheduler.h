@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "ocs_core/time.h"
 #include "ocs_scheduler/itask.h"
 #include "ocs_status/code.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace scheduler {
@@ -29,7 +29,8 @@ public:
     //!  - @p task - task to be executed periodically.
     //!  - @p id - unique task identifier.
     //!  - @p interval - task running frequency.
-    virtual status::StatusCode add(ITask& task, const char* id, core::Time interval) = 0;
+    virtual status::StatusCode
+    add(ITask& task, const char* id, system::Time interval) = 0;
 
     //! Remove task by @p id.
     virtual status::StatusCode remove(const char* id) = 0;

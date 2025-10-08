@@ -11,7 +11,7 @@
 #include <cstdint>
 
 namespace ocs {
-namespace core {
+namespace system {
 
 //! Microseconds.
 using Time = int64_t;
@@ -44,5 +44,5 @@ struct Duration {
     static constexpr Time hour = 60 * minute;
 };
 
-} // namespace core
+} // namespace system
 } // namespace ocs

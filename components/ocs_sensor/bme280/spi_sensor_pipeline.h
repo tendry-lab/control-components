@@ -9,12 +9,12 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_core/time.h"
 #include "ocs_io/gpio/types.h"
 #include "ocs_io/spi/istore.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_sensor/bme280/itransceiver.h"
 #include "ocs_sensor/bme280/sensor.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace sensor {
@@ -23,7 +23,7 @@ namespace bme280 {
 class SpiSensorPipeline : private core::NonCopyable<> {
 public:
     struct Params {
-        core::Time read_interval { 0 };
+        system::Time read_interval { 0 };
         io::gpio::Gpio cs_gpio { static_cast<io::gpio::Gpio>(-1) };
         Sensor::Params sensor;
     };

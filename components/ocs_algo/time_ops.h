@@ -11,8 +11,8 @@
 #include <ctime>
 #include <optional>
 
-#include "ocs_core/time.h"
 #include "ocs_status/code.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace algo {

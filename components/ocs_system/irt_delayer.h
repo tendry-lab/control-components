@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "ocs_core/time.h"
 #include "ocs_status/code.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace system {
@@ -25,7 +25,7 @@ public:
     //! @notes
     //!  The implementation can monopolize CPU time, potentially decreasing the
     //!  performance of other tasks in the system.
-    virtual status::StatusCode delay(core::Time delay) = 0;
+    virtual status::StatusCode delay(system::Time delay) = 0;
 };
 
 } // namespace system
