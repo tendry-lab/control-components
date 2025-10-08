@@ -19,19 +19,19 @@ namespace net {
 class StaNetworkConfig : public INetworkConfig, private core::NonCopyable<> {
 public:
     //! Minimum WiFi STA ssid length.
-    static constexpr unsigned min_ssid_len = 1;
+    static constexpr uint8_t min_ssid_len = 1;
     //! Maximum WiFi STA ssid length.
-    static constexpr unsigned max_ssid_len = 31;
+    static constexpr uint8_t max_ssid_len = 31;
 
     //! Minimum WiFi STA password length.
-    static constexpr unsigned min_password_len = 8;
+    static constexpr uint8_t min_password_len = 8;
     //! Maximum WiFi STA password length.
-    static constexpr unsigned max_password_len = 63;
+    static constexpr uint8_t max_password_len = 63;
 
     //! Minimum WiFi STA retry count.
-    static constexpr unsigned min_max_retry_count = 1;
+    static constexpr uint8_t min_max_retry_count = 1;
     //! Maximum WiFi STA retry count.
-    static constexpr unsigned max_max_retry_count = 5;
+    static constexpr uint8_t max_max_retry_count = 5;
 
     //! Initialize.
     //!

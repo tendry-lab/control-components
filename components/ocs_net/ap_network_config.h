@@ -20,19 +20,19 @@ namespace net {
 class ApNetworkConfig : public INetworkConfig, private core::NonCopyable<> {
 public:
     //! Minimum WiFi AP password length.
-    static constexpr unsigned min_password_len = 8;
+    static constexpr uint8_t min_password_len = 8;
     //! Maximum WiFi AP password length.
-    static constexpr unsigned max_password_len = 63;
+    static constexpr uint8_t max_password_len = 63;
 
     //! Minimum WiFi AP channel.
-    static constexpr unsigned min_channel = 1;
+    static constexpr uint8_t min_channel = 1;
     //! Maximum WiFi AP channel.
-    static constexpr unsigned max_channel = 13;
+    static constexpr uint8_t max_channel = 13;
 
     //! Minimum number of simultaneous STA connections.
-    static constexpr unsigned min_max_conn = 1;
+    static constexpr uint8_t min_max_conn = 1;
     //! Maximum number of simultaneous STA connections.
-    static constexpr unsigned max_max_conn = 7;
+    static constexpr uint8_t max_max_conn = 7;
 
     //! Initialize.
     //!
