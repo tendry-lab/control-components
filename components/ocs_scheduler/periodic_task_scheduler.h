@@ -28,7 +28,7 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p clock to check if it's a time to run a task.
+    //!  - @p clock to measure the time taken for a single round of execution.
     //!  - @p estimator to estimate the required delay after each round of execution.
     //!  - @p id to distinguish one scheduler from another.
     //!  - @p max_count - maximum number of tasks the scheduler can handle.
