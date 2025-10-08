@@ -46,10 +46,16 @@ public:
     virtual ~ILED() = default;
 
     //! Mark LED as in use.
+    //!
+    //! @remarks
+    //!  Lock/unlock operations should be performed with the same priority.
     virtual status::StatusCode try_lock(Priority priority) = 0;
 
     //! Mark LED as free to use.
-    virtual status::StatusCode unlock() = 0;
+    //!
+    //! @remarks
+    //!  Lock/unlock operations should be performed with the same priority.
+    virtual status::StatusCode try_unlock(Priority priority) = 0;
 
     //! Turn on LED.
     //!

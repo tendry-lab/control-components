@@ -149,7 +149,13 @@ status::StatusCode LEDLocator::handle_turn_on_() {
 
     if (code != status::StatusCode::OK) {
         for (unsigned n = 0; n < leds_.size(); ++n) {
-            configASSERT(leds_[n]->unlock() == status::StatusCode::OK);
+            const auto c = leds_[n]->try_unlock(ILED::Priority::Locate);
+            if (c != status::StatusCode::OK) {
+                ocs_loge(
+                    log_tag,
+                    "failed to unlock LED on locating enabling failure: pos=%u code=%s",
+                    n, status::code_to_str(c));
+            }
         }
 
         return code;
@@ -163,7 +169,7 @@ status::StatusCode LEDLocator::handle_turn_on_() {
 
 status::StatusCode LEDLocator::handle_turn_off_() {
     for (unsigned n = 0; n < leds_.size(); ++n) {
-        auto code = leds_[n]->try_lock(ILED::Priority::Locate);
+        const auto code = leds_[n]->try_lock(ILED::Priority::Locate);
         if (code != status::StatusCode::OK) {
             ocs_loge(log_tag, "failed to lock LED on locating disabling: pos=%u code=%s",
                      n, status::code_to_str(code));
@@ -172,7 +178,9 @@ status::StatusCode LEDLocator::handle_turn_off_() {
         }
 
         configASSERT(leds_[n]->turn_off() == status::StatusCode::OK);
-        configASSERT(leds_[n]->unlock() == status::StatusCode::OK);
+
+        configASSERT(leds_[n]->try_unlock(ILED::Priority::Locate)
+                     == status::StatusCode::OK);
     }
 
     configASSERT(task_scheduler_.remove(task_id_) == status::StatusCode::OK);
