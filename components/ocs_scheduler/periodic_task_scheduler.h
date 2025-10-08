@@ -13,12 +13,12 @@
 #include <string>
 #include <vector>
 
-#include "ocs_core/iclock.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/rate_limiter.h"
 #include "ocs_scheduler/idelay_estimator.h"
 #include "ocs_scheduler/itask.h"
 #include "ocs_scheduler/itask_scheduler.h"
+#include "ocs_system/iclock.h"
 
 namespace ocs {
 namespace scheduler {
@@ -32,7 +32,7 @@ public:
     //!  - @p estimator to estimate the required delay after each round of execution.
     //!  - @p id to distinguish one scheduler from another.
     //!  - @p max_count - maximum number of tasks the scheduler can handle.
-    PeriodicTaskScheduler(core::IClock& clock,
+    PeriodicTaskScheduler(system::IClock& clock,
                           IDelayEstimator& estimator,
                           const char* id,
                           unsigned max_count);
@@ -56,7 +56,7 @@ public:
     //!  - If there are too many tasks added to the same scheduler, it is possible that
     //!    the total time required to run all these tasks will be greater then the
     //!    minimum periodic interval.
-    status::StatusCode add(ITask& task, const char* id, core::Time interval) override;
+    status::StatusCode add(ITask& task, const char* id, system::Time interval) override;
 
     //! Remove task by @p id.
     status::StatusCode remove(const char* id) override;
@@ -73,7 +73,7 @@ public:
 private:
     class Node : public ITask, private core::NonCopyable<> {
     public:
-        Node(core::IClock& clock, ITask& task, const char* id, core::Time interval);
+        Node(system::IClock& clock, ITask& task, const char* id, system::Time interval);
 
         status::StatusCode run() override;
 
@@ -102,10 +102,10 @@ private:
     const unsigned max_count_ { 0 };
     const std::string log_tag_;
 
-    core::Time total_ts_min_ { INT64_MAX };
-    core::Time total_ts_max_ { INT64_MIN };
+    system::Time total_ts_min_ { INT64_MAX };
+    system::Time total_ts_max_ { INT64_MIN };
 
-    core::IClock& clock_;
+    system::IClock& clock_;
     IDelayEstimator& estimator_;
 
     NodeList nodes_to_add_;

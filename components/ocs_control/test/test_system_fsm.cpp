@@ -33,8 +33,8 @@ struct TestRebooter : public system::IRebooter, private core::NonCopyable<> {
 
 TEST_CASE("System FSM: button is pressed before LED reaction on system initialization",
           "[system_fsm], [ocs_control]") {
-    const core::Time want_release_interval = core::Duration::second;
-    const core::Time got_release_interval = want_release_interval / 2;
+    const system::Time want_release_interval = system::Duration::second;
+    const system::Time got_release_interval = want_release_interval / 2;
 
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
@@ -74,8 +74,8 @@ TEST_CASE("System FSM: button is pressed before LED reaction on system initializ
 
 TEST_CASE("System FSM: button is pressed after LED reaction on system initialization",
           "[system_fsm], [ocs_control]") {
-    const core::Time want_release_interval = core::Duration::second;
-    const core::Time got_release_interval = want_release_interval / 2;
+    const system::Time want_release_interval = system::Duration::second;
+    const system::Time got_release_interval = want_release_interval / 2;
 
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
@@ -114,8 +114,8 @@ TEST_CASE("System FSM: button is pressed after LED reaction on system initializa
 
 TEST_CASE("System FSM: button is pressed during LED reaction on system initialization",
           "[system_fsm], [ocs_control]") {
-    const core::Time want_release_interval = core::Duration::second;
-    const core::Time got_release_interval = want_release_interval / 2;
+    const system::Time want_release_interval = system::Duration::second;
+    const system::Time got_release_interval = want_release_interval / 2;
 
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
@@ -158,8 +158,8 @@ TEST_CASE("System FSM: button is pressed during LED reaction on system initializ
 
 TEST_CASE("System FSM: button isn't released within interval",
           "[system_fsm], [ocs_control]") {
-    const core::Time want_release_interval = core::Duration::second;
-    const core::Time got_release_interval = want_release_interval * 2;
+    const system::Time want_release_interval = system::Duration::second;
+    const system::Time got_release_interval = want_release_interval * 2;
 
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));

@@ -12,40 +12,40 @@
 #include "unity.h"
 
 #include "ocs_algo/time_ops.h"
-#include "ocs_core/time.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace algo {
 
 TEST_CASE("Time ops: after: check equal", "[ocs_algo], [time_ops]") {
-    const core::Time start = 237;
-    const core::Time interval = 331;
-    const core::Time now = start + interval;
+    const system::Time start = 237;
+    const system::Time interval = 331;
+    const system::Time now = start + interval;
 
     TEST_ASSERT_TRUE(TimeOps::after(start, now, interval));
 }
 
 TEST_CASE("Time ops: after: check less", "[ocs_algo], [time_ops]") {
-    const core::Time start = 237;
-    const core::Time interval = 331;
-    const core::Time now = start + interval - 1;
+    const system::Time start = 237;
+    const system::Time interval = 331;
+    const system::Time now = start + interval - 1;
 
     TEST_ASSERT_FALSE(TimeOps::after(start, now, interval));
 }
 
 TEST_CASE("Time ops: after: check greater", "[ocs_algo], [time_ops]") {
-    const core::Time start = 237;
-    const core::Time interval = 331;
-    const core::Time now = start + interval + 1;
+    const system::Time start = 237;
+    const system::Time interval = 331;
+    const system::Time now = start + interval + 1;
 
     TEST_ASSERT_TRUE(TimeOps::after(start, now, interval));
 }
 
 TEST_CASE("Time ops: after: check back in time", "[ocs_algo], [time_ops]") {
     { // check signed
-        const core::Time start = -123;
-        const core::Time interval = 321;
-        const core::Time now = start + interval;
+        const system::Time start = -123;
+        const system::Time interval = 321;
+        const system::Time now = start + interval;
 
         TEST_ASSERT_TRUE(TimeOps::after(start, now, interval));
     }

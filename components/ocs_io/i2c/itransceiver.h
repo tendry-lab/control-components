@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "ocs_core/time.h"
 #include "ocs_status/code.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace io {
@@ -27,7 +27,7 @@ public:
     //!  - @p timeout - interval to wait for the operation to complete,
     //!       -1 means wait forever.
     virtual status::StatusCode
-    send(const uint8_t* buf, unsigned size, core::Time timeout) = 0;
+    send(const uint8_t* buf, unsigned size, system::Time timeout) = 0;
 
     //! Receive data from the I2C device.
     //!
@@ -36,7 +36,7 @@ public:
     //!  - @p timeout - interval to wait for the operation to complete,
     //!       -1 means wait forever.
     virtual status::StatusCode
-    receive(uint8_t* buf, unsigned size, core::Time timeout) = 0;
+    receive(uint8_t* buf, unsigned size, system::Time timeout) = 0;
 };
 
 } // namespace i2c

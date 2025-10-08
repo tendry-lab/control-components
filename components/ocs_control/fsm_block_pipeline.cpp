@@ -15,7 +15,7 @@
 namespace ocs {
 namespace control {
 
-FsmBlockPipeline::FsmBlockPipeline(core::IClock& clock,
+FsmBlockPipeline::FsmBlockPipeline(system::IClock& clock,
                                    system::FanoutRebootHandler& reboot_handler,
                                    scheduler::ITaskScheduler& task_scheduler,
                                    storage::StorageBuilder& storage_builder,

@@ -38,15 +38,15 @@ namespace onewire {
 class Bus : private core::NonCopyable<> {
 public:
     struct Params {
-        core::Time reset_pulse_interval { 0 };
-        core::Time presence_pulse_interval { 0 };
-        core::Time write_slot_interval { 0 };
-        core::Time write_bit_interval { 0 };
-        core::Time write_recovery_interval { 0 };
-        core::Time read_slot_interval { 0 };
-        core::Time read_bit_init_interval { 0 };
-        core::Time read_bit_rc_interval { 0 };
-        core::Time read_recovery_interval { 0 };
+        system::Time reset_pulse_interval { 0 };
+        system::Time presence_pulse_interval { 0 };
+        system::Time write_slot_interval { 0 };
+        system::Time write_bit_interval { 0 };
+        system::Time write_recovery_interval { 0 };
+        system::Time read_slot_interval { 0 };
+        system::Time read_bit_init_interval { 0 };
+        system::Time read_bit_rc_interval { 0 };
+        system::Time read_recovery_interval { 0 };
     };
 
     //! Initialize.
@@ -91,9 +91,9 @@ private:
 
     const unsigned bits_in_byte_ = 8;
 
-    core::Time reset_remain_time_slot_ { 0 };
-    core::Time write_remain_time_slot_ { 0 };
-    core::Time read_remain_time_slot_ { 0 };
+    system::Time reset_remain_time_slot_ { 0 };
+    system::Time write_remain_time_slot_ { 0 };
+    system::Time read_remain_time_slot_ { 0 };
 
     system::IRtDelayer& delayer_;
     io::gpio::IGpio& gpio_;

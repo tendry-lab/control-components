@@ -15,10 +15,10 @@
 
 #include "ocs_control/gpio_led.h"
 #include "ocs_control/led_locator.h"
-#include "ocs_core/time.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_scheduler/constant_delay_estimator.h"
 #include "ocs_scheduler/periodic_task_scheduler.h"
+#include "ocs_system/time.h"
 #include "ocs_test/test_clock.h"
 #include "ocs_test/test_gpio.h"
 
@@ -90,7 +90,7 @@ TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") 
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        task_scheduler.add(func_scheduler, "foo", core::Duration::millisecond * 10));
+        task_scheduler.add(func_scheduler, "foo", system::Duration::millisecond * 10));
 
     LEDLocator locator(task_scheduler, func_scheduler);
 

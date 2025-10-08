@@ -20,12 +20,12 @@ namespace ds18b20 {
 namespace {
 
 struct TestDelayer : public system::IRtDelayer, private core::NonCopyable<> {
-    status::StatusCode delay(core::Time delay) {
-        if (delay < core::Duration::millisecond) {
+    status::StatusCode delay(system::Time delay) {
+        if (delay < system::Duration::millisecond) {
             return status::StatusCode::InvalidArg;
         }
 
-        vTaskDelay(pdMS_TO_TICKS(delay / core::Duration::millisecond));
+        vTaskDelay(pdMS_TO_TICKS(delay / system::Duration::millisecond));
 
         return status::StatusCode::OK;
     }

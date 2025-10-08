@@ -16,9 +16,9 @@
 #include "ocs_control/ilocator.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_mutex.h"
-#include "ocs_core/time.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_scheduler/itask_scheduler.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace control {
@@ -78,7 +78,7 @@ private:
 
     static constexpr const char* task_id_ = "led_locator_task";
     static constexpr TickType_t wait_timeout_ = pdMS_TO_TICKS(1000 * 5);
-    static constexpr core::Time task_interval_ = core::Duration::second / 2;
+    static constexpr system::Time task_interval_ = system::Duration::second / 2;
 
     scheduler::ITaskScheduler& task_scheduler_;
     scheduler::AsyncFuncScheduler& func_scheduler_;

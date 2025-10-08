@@ -13,9 +13,9 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/spmc_node.h"
-#include "ocs_core/time.h"
 #include "ocs_scheduler/itask.h"
 #include "ocs_sensor/bme280/itransceiver.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace sensor {

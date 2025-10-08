@@ -42,7 +42,7 @@ TEST_CASE("Async task scheduler: wait for events",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        scheduler.add(task, "test_task", core::Duration::millisecond * 100));
+        scheduler.add(task, "test_task", system::Duration::millisecond * 100));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.start());
     TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.run());
@@ -61,10 +61,10 @@ TEST_CASE("Async task scheduler: register same task multiple times",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        scheduler.add(task, "test_task", core::Duration::millisecond * 100));
+        scheduler.add(task, "test_task", system::Duration::millisecond * 100));
     TEST_ASSERT_EQUAL(
         status::StatusCode::InvalidArg,
-        scheduler.add(task, "test_task", core::Duration::millisecond * 100));
+        scheduler.add(task, "test_task", system::Duration::millisecond * 100));
 }
 
 TEST_CASE("Async task scheduler: register maximum tasks",
@@ -86,9 +86,9 @@ TEST_CASE("Async task scheduler: register maximum tasks",
     for (unsigned n = 0; n < tasks.size(); ++n) {
         const std::string task_id = std::string("test_task_") + std::to_string(n);
 
-        TEST_ASSERT_EQUAL(
-            status::StatusCode::OK,
-            scheduler.add(*tasks[n], task_id.c_str(), core::Duration::millisecond * 30));
+        TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                          scheduler.add(*tasks[n], task_id.c_str(),
+                                        system::Duration::millisecond * 30));
     }
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.start());
@@ -129,9 +129,9 @@ TEST_CASE("Async task scheduler: register maximum tasks: some failed",
     for (unsigned n = 0; n < tasks.size(); ++n) {
         const std::string task_id = std::string("test_task_") + std::to_string(n);
 
-        TEST_ASSERT_EQUAL(
-            status::StatusCode::OK,
-            scheduler.add(*tasks[n], task_id.c_str(), core::Duration::millisecond * 30));
+        TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                          scheduler.add(*tasks[n], task_id.c_str(),
+                                        system::Duration::millisecond * 30));
     }
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.start());
@@ -167,15 +167,16 @@ TEST_CASE("Async task scheduler: register tasks overflow",
     for (unsigned n = 0; n < tasks.size(); ++n) {
         const std::string task_id = std::string("test_task_") + std::to_string(n);
 
-        TEST_ASSERT_EQUAL(
-            status::StatusCode::OK,
-            scheduler.add(*tasks[n], task_id.c_str(), core::Duration::millisecond * 30));
+        TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                          scheduler.add(*tasks[n], task_id.c_str(),
+                                        system::Duration::millisecond * 30));
     }
 
     test::TestTask task(status::StatusCode::OK);
 
-    TEST_ASSERT_EQUAL(status::StatusCode::Error,
-                      scheduler.add(task, "test_task", core::Duration::millisecond * 10));
+    TEST_ASSERT_EQUAL(
+        status::StatusCode::Error,
+        scheduler.add(task, "test_task", system::Duration::millisecond * 10));
 }
 
 } // namespace scheduler

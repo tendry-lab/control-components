@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "ocs_core/time.h"
 #include "ocs_status/code.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace control {
@@ -20,7 +20,7 @@ public:
     virtual ~IButtonHandler() = default;
 
     //! Handle the button being pressed for @p duration.
-    virtual status::StatusCode handle_pressed(core::Time duration) = 0;
+    virtual status::StatusCode handle_pressed(system::Time duration) = 0;
 };
 
 } // namespace control

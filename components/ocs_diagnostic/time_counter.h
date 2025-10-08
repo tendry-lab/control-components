@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "ocs_core/iclock.h"
 #include "ocs_core/noncopyable.h"
-#include "ocs_core/time.h"
 #include "ocs_diagnostic/basic_counter.h"
+#include "ocs_system/iclock.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
 namespace diagnostic {
@@ -24,7 +24,7 @@ public:
     //!  - @p clock to read a time since boot.
     //!  - @p id - counter identifier.
     //!  - @p resolution - time resolution used to count the value.
-    TimeCounter(core::IClock& clock, const char* id, core::Time resolution);
+    TimeCounter(system::IClock& clock, const char* id, system::Time resolution);
 
     //! Return time since boot with the configured resolution.
     ICounter::Value get() const override;
@@ -33,11 +33,11 @@ public:
     void reset();
 
 private:
-    const core::Time resolution_ = core::Duration::microsecond;
+    const system::Time resolution_ = system::Duration::microsecond;
 
-    core::IClock& clock_;
+    system::IClock& clock_;
 
-    core::Time offset_ { 0 };
+    system::Time offset_ { 0 };
 };
 
 } // namespace diagnostic

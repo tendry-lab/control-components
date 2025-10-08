@@ -22,7 +22,7 @@ namespace ocs {
 namespace scheduler {
 
 TEST_CASE("Periodic task scheduler: add", "[ocs_scheduler], [periodic_task_scheduler]") {
-    const core::Time interval = core::Duration::second;
+    const system::Time interval = system::Duration::second;
     const TickType_t delay = pdMS_TO_TICKS(10);
     const char* task_id = "test_task";
 
@@ -68,9 +68,9 @@ TEST_CASE("Periodic task scheduler: add-duplicate: pending",
     PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task, "test_task", core::Duration::second));
+                      task_scheduler.add(task, "test_task", system::Duration::second));
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg,
-                      task_scheduler.add(task, "test_task", core::Duration::second));
+                      task_scheduler.add(task, "test_task", system::Duration::second));
 }
 
 TEST_CASE("Periodic task scheduler: add-duplicate: active",
@@ -84,12 +84,12 @@ TEST_CASE("Periodic task scheduler: add-duplicate: active",
     PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task, "test_task", core::Duration::second));
+                      task_scheduler.add(task, "test_task", system::Duration::second));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
 
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg,
-                      task_scheduler.add(task, "test_task", core::Duration::second));
+                      task_scheduler.add(task, "test_task", system::Duration::second));
 }
 
 TEST_CASE("Periodic task scheduler: add-remove",
@@ -105,14 +105,14 @@ TEST_CASE("Periodic task scheduler: add-remove",
     test::TestTask task2(status::StatusCode::OK);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task1, "test_task_1", core::Duration::second));
+                      task_scheduler.add(task1, "test_task_1", system::Duration::second));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
     TEST_ASSERT_EQUAL(1, task1.run_call_count());
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task2, "test_task_2", core::Duration::second));
+                      task_scheduler.add(task2, "test_task_2", system::Duration::second));
     TEST_ASSERT_EQUAL(1, task1.run_call_count());
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 
@@ -138,14 +138,14 @@ TEST_CASE("Periodic task scheduler: add-remove-add",
     test::TestTask task2(status::StatusCode::OK);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task1, "test_task_1", core::Duration::second));
+                      task_scheduler.add(task1, "test_task_1", system::Duration::second));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
     TEST_ASSERT_EQUAL(1, task1.run_call_count());
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task2, "test_task_2", core::Duration::second));
+                      task_scheduler.add(task2, "test_task_2", system::Duration::second));
     TEST_ASSERT_EQUAL(1, task1.run_call_count());
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 
@@ -153,7 +153,7 @@ TEST_CASE("Periodic task scheduler: add-remove-add",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::InvalidArg,
-        task_scheduler.add(task1, "test_task_1", core::Duration::hour * 100));
+        task_scheduler.add(task1, "test_task_1", system::Duration::hour * 100));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
 
@@ -162,7 +162,7 @@ TEST_CASE("Periodic task scheduler: add-remove-add",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        task_scheduler.add(task1, "test_task_1", core::Duration::hour * 100));
+        task_scheduler.add(task1, "test_task_1", system::Duration::hour * 100));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
     TEST_ASSERT_EQUAL(2, task1.run_call_count());
@@ -182,14 +182,14 @@ TEST_CASE("Periodic task scheduler: add-remove-remove",
     test::TestTask task2(status::StatusCode::OK);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task1, "test_task_1", core::Duration::second));
+                      task_scheduler.add(task1, "test_task_1", system::Duration::second));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
     TEST_ASSERT_EQUAL(1, task1.run_call_count());
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task2, "test_task_2", core::Duration::second));
+                      task_scheduler.add(task2, "test_task_2", system::Duration::second));
     TEST_ASSERT_EQUAL(1, task1.run_call_count());
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 
@@ -217,14 +217,14 @@ TEST_CASE("Periodic task scheduler: add-remove-collapse",
     test::TestTask task2(status::StatusCode::OK);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task1, "test_task_1", core::Duration::second));
+                      task_scheduler.add(task1, "test_task_1", system::Duration::second));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
     TEST_ASSERT_EQUAL(1, task1.run_call_count());
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task2, "test_task_2", core::Duration::second));
+                      task_scheduler.add(task2, "test_task_2", system::Duration::second));
     TEST_ASSERT_EQUAL(1, task1.run_call_count());
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 
@@ -237,7 +237,7 @@ TEST_CASE("Periodic task scheduler: add-remove-collapse",
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task2, "test_task_2", core::Duration::second));
+                      task_scheduler.add(task2, "test_task_2", system::Duration::second));
     TEST_ASSERT_EQUAL(2, task1.run_call_count());
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 
@@ -260,10 +260,10 @@ TEST_CASE("Periodic task scheduler: add-remove-run",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        task_scheduler.add(func_scheduler, "func_task", core::Duration::second));
+        task_scheduler.add(func_scheduler, "func_task", system::Duration::second));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task, "test_task", core::Duration::second));
+                      task_scheduler.add(task, "test_task", system::Duration::second));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
     TEST_ASSERT_EQUAL(1, task.run_call_count());
@@ -284,7 +284,7 @@ TEST_CASE("Periodic task scheduler: add multiple tasks",
           "[ocs_scheduler], [periodic_task_scheduler]") {
     const unsigned task_count = 10;
     const TickType_t delay = pdMS_TO_TICKS(10);
-    const core::Time interval = core::Duration::second;
+    const system::Time interval = system::Duration::second;
 
     test::TestClock clock;
     clock.value = 42;
@@ -342,7 +342,7 @@ TEST_CASE("Periodic task scheduler: add multiple tasks",
 
 TEST_CASE("Periodic task scheduler: max number of tasks overflow: pending",
           "[ocs_scheduler], [periodic_task_scheduler]") {
-    const core::Time interval = core::Duration::second;
+    const system::Time interval = system::Duration::second;
     const TickType_t delay = pdMS_TO_TICKS(10);
 
     test::TestClock clock;
@@ -386,22 +386,22 @@ TEST_CASE("Periodic task scheduler: max number of tasks overflow: active",
     test::TestTask task3(status::StatusCode::OK);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task1, "test_task_1", core::Duration::second));
+                      task_scheduler.add(task1, "test_task_1", system::Duration::second));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                      task_scheduler.add(task2, "test_task_2", core::Duration::second));
+                      task_scheduler.add(task2, "test_task_2", system::Duration::second));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
 
     TEST_ASSERT_EQUAL(status::StatusCode::Error,
-                      task_scheduler.add(task3, "test_task_3", core::Duration::second));
+                      task_scheduler.add(task3, "test_task_3", system::Duration::second));
 }
 
 TEST_CASE("Periodic task scheduler: add/remove multiple tasks",
           "[ocs_scheduler], [periodic_task_scheduler]") {
     const unsigned task_count = 10;
     const TickType_t delay = pdMS_TO_TICKS(10);
-    const core::Time interval = core::Duration::second;
+    const system::Time interval = system::Duration::second;
 
     test::TestClock clock;
     clock.value = 42;

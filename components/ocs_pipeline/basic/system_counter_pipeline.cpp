@@ -18,13 +18,13 @@ namespace pipeline {
 namespace basic {
 
 SystemCounterPipeline::SystemCounterPipeline(
-    core::IClock& clock,
+    system::IClock& clock,
     storage::IStorage& storage,
     system::FanoutRebootHandler& reboot_handler,
     scheduler::ITaskScheduler& task_scheduler,
     diagnostic::BasicCounterHolder& counter_holder) {
     uptime_counter_.reset(new (std::nothrow) diagnostic::TimeCounter(
-        clock, "c_sys_uptime", core::Duration::second));
+        clock, "c_sys_uptime", system::Duration::second));
     configASSERT(uptime_counter_);
 
     uptime_persistent_counter_.reset(
@@ -35,7 +35,7 @@ SystemCounterPipeline::SystemCounterPipeline(
     counter_holder.add(*uptime_persistent_counter_);
 
     lifetime_counter_.reset(new (std::nothrow) diagnostic::TimeCounter(
-        clock, "c_sys_lifetime", core::Duration::second));
+        clock, "c_sys_lifetime", system::Duration::second));
     configASSERT(lifetime_counter_);
 
     lifetime_persistent_counter_.reset(
@@ -43,7 +43,7 @@ SystemCounterPipeline::SystemCounterPipeline(
     configASSERT(lifetime_persistent_counter_);
 
     configASSERT(task_scheduler.add(*lifetime_persistent_counter_,
-                                    "lifetime_counter_task", core::Duration::hour)
+                                    "lifetime_counter_task", system::Duration::hour)
                  == status::StatusCode::OK);
 
     reboot_handler.add(*lifetime_persistent_counter_);

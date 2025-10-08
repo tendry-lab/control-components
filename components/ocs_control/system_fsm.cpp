@@ -18,7 +18,7 @@ namespace control {
 SystemFsm::SystemFsm(system::IRebooter& rebooter,
                      scheduler::ITaskScheduler& task_scheduler,
                      ILED& led,
-                     core::Time release_interval)
+                     system::Time release_interval)
     : release_interval_(release_interval)
     , rebooter_(rebooter)
     , task_scheduler_(task_scheduler)
@@ -43,7 +43,7 @@ status::StatusCode SystemFsm::run() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode SystemFsm::handle_pressed(core::Time duration) {
+status::StatusCode SystemFsm::handle_pressed(system::Time duration) {
     if (duration > release_interval_) {
         return status::StatusCode::Error;
     }

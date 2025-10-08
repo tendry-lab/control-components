@@ -48,7 +48,7 @@ status::StatusCode MasterStorePipeline::reset_() {
     const uint8_t command = 0x06;
 
     OCS_STATUS_RETURN_ON_ERROR(
-        transceiver_->send(&command, sizeof(command), core::Duration::second * 5));
+        transceiver_->send(&command, sizeof(command), system::Duration::second * 5));
 
     return status::StatusCode::OK;
 }

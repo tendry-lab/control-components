@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "ocs_core/time.h"
+#include "ocs_system/time.h"
 
 namespace ocs {
-namespace core {
+namespace system {
 
 class IClock {
 public:
@@ -19,8 +19,8 @@ public:
     virtual ~IClock() = default;
 
     //! Get time in microseconds since boot.
-    virtual Time now() = 0;
+    virtual system::Time now() = 0;
 };
 
-} // namespace core
+} // namespace system
 } // namespace ocs

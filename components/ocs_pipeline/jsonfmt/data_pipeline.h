@@ -10,7 +10,6 @@
 
 #include <memory>
 
-#include "ocs_core/iclock.h"
 #include "ocs_fmt/json/fanout_formatter.h"
 #include "ocs_pipeline/basic/system_counter_pipeline.h"
 #include "ocs_pipeline/jsonfmt/counter_formatter.h"
@@ -19,6 +18,7 @@
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_storage/storage_builder.h"
 #include "ocs_system/fanout_reboot_handler.h"
+#include "ocs_system/iclock.h"
 
 namespace ocs {
 namespace pipeline {
@@ -28,7 +28,7 @@ namespace jsonfmt {
 class DataPipeline : private core::NonCopyable<> {
 public:
     //! Initialize.
-    DataPipeline(core::IClock& clock,
+    DataPipeline(system::IClock& clock,
                  storage::StorageBuilder& storage_builder,
                  scheduler::ITaskScheduler& task_scheduler,
                  system::FanoutRebootHandler& reboot_handler,

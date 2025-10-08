@@ -16,7 +16,7 @@ namespace sensor {
 namespace soil {
 
 AnalogRelaySensorPipeline::AnalogRelaySensorPipeline(
-    core::IClock& clock,
+    system::IClock& clock,
     io::adc::IStore& adc_store,
     io::adc::IConverter& adc_converter,
     storage::StorageBuilder& storage_builder,

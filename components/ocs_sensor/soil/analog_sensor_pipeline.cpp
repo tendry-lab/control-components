@@ -15,7 +15,7 @@ namespace ocs {
 namespace sensor {
 namespace soil {
 
-AnalogSensorPipeline::AnalogSensorPipeline(core::IClock& clock,
+AnalogSensorPipeline::AnalogSensorPipeline(system::IClock& clock,
                                            io::adc::IStore& adc_store,
                                            io::adc::IConverter& adc_converter,
                                            storage::StorageBuilder& storage_builder,

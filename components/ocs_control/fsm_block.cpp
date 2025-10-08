@@ -16,9 +16,9 @@
 namespace ocs {
 namespace control {
 
-FsmBlock::FsmBlock(core::IClock& clock,
+FsmBlock::FsmBlock(system::IClock& clock,
                    storage::IStorage& storage,
-                   core::Time resolution,
+                   system::Time resolution,
                    const char* id)
     : log_tag_(id)
     , resolution_(resolution)
@@ -74,11 +74,11 @@ FsmBlock::State FsmBlock::next_state() const {
     return next_state_;
 }
 
-core::Time FsmBlock::previous_state_duration() const {
+system::Time FsmBlock::previous_state_duration() const {
     return prev_state_dur_;
 }
 
-core::Time FsmBlock::current_state_duration() const {
+system::Time FsmBlock::current_state_duration() const {
     return curr_state_dur_;
 }
 

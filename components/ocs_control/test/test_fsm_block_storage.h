@@ -27,8 +27,8 @@ public:
 
     FsmBlock::State prev_state { 0 };
     FsmBlock::State curr_state { 0 };
-    core::Time prev_state_duration { 0 };
-    core::Time curr_state_duration { 0 };
+    system::Time prev_state_duration { 0 };
+    system::Time curr_state_duration { 0 };
     uint64_t write_count { 0 };
 
     status::StatusCode read_status { status::StatusCode::OK };

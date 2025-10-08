@@ -10,13 +10,13 @@
 
 #include <memory>
 
-#include "ocs_core/iclock.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_diagnostic/basic_counter_holder.h"
 #include "ocs_diagnostic/basic_persistent_counter.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_storage/istorage.h"
 #include "ocs_system/fanout_reboot_handler.h"
+#include "ocs_system/iclock.h"
 
 namespace ocs {
 namespace pipeline {
@@ -26,7 +26,7 @@ namespace basic {
 class SystemCounterPipeline : private core::NonCopyable<> {
 public:
     //! Initilize counters.
-    SystemCounterPipeline(core::IClock& clock,
+    SystemCounterPipeline(system::IClock& clock,
                           storage::IStorage& storage,
                           system::FanoutRebootHandler& reboot_handler,
                           scheduler::ITaskScheduler& task_scheduler,

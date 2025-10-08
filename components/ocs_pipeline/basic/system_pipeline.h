@@ -10,7 +10,6 @@
 
 #include <memory>
 
-#include "ocs_core/iclock.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_scheduler/idelay_estimator.h"
@@ -20,6 +19,7 @@
 #include "ocs_storage/target_esp32/flash_initializer.h"
 #include "ocs_system/device_info.h"
 #include "ocs_system/fanout_reboot_handler.h"
+#include "ocs_system/iclock.h"
 #include "ocs_system/irebooter.h"
 #include "ocs_system/platform_builder.h"
 
@@ -47,7 +47,7 @@ public:
 
     const system::DeviceInfo& get_device_info() const;
 
-    core::IClock& get_clock();
+    system::IClock& get_clock();
     storage::StorageBuilder& get_storage_builder();
     scheduler::AsyncFuncScheduler& get_func_scheduler();
     scheduler::ITaskScheduler& get_task_scheduler();
@@ -59,7 +59,7 @@ private:
     std::unique_ptr<storage::FlashInitializer> flash_initializer_;
     std::unique_ptr<storage::StorageBuilder> storage_builder_;
 
-    std::unique_ptr<core::IClock> default_clock_;
+    std::unique_ptr<system::IClock> default_clock_;
 
     std::unique_ptr<scheduler::IDelayEstimator> delay_estimator_;
     std::unique_ptr<scheduler::ITaskScheduler> task_scheduler_;

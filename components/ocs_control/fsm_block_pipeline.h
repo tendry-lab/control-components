@@ -23,10 +23,10 @@ class FsmBlockPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         //! How often the FSM block should be persisted.
-        core::Time state_save_interval { 0 };
+        system::Time state_save_interval { 0 };
 
         //! State interval resolution (in milliseconds, seconds, ...).
-        core::Time state_interval_resolution { 0 };
+        system::Time state_interval_resolution { 0 };
     };
 
     //! Initialize.
@@ -37,7 +37,7 @@ public:
     //!  - @p task_scheduler to register FSM tasks.
     //!  - @p storage_builder to build storage for FSM block.
     //!  - @p id to distinguish one FSM from another.
-    FsmBlockPipeline(core::IClock& clock,
+    FsmBlockPipeline(system::IClock& clock,
                      system::FanoutRebootHandler& reboot_handler,
                      scheduler::ITaskScheduler& task_scheduler,
                      storage::StorageBuilder& storage_builder,
