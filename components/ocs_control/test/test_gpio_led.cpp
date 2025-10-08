@@ -51,7 +51,8 @@ TEST_CASE("GPIO led: lock/unlock", "[ocs_core], [gpio_led]") {
     TEST_ASSERT_EQUAL(1, gpio.turn_off_call_count);
     TEST_ASSERT_EQUAL(1, gpio.flip_call_count);
 
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.unlock());
+    TEST_ASSERT_EQUAL(status::StatusCode::Error, led.try_unlock(ILED::Priority::Default));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_unlock(ILED::Priority::System));
 
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidState, led.turn_on());
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidState, led.turn_off());

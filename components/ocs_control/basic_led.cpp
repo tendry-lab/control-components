@@ -24,7 +24,11 @@ status::StatusCode BasicLED::try_lock(ILED::Priority priority) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode BasicLED::unlock() {
+status::StatusCode BasicLED::try_unlock(ILED::Priority priority) {
+    if (priority_ != priority) {
+        return status::StatusCode::Error;
+    }
+
     inuse_ = false;
     priority_ = ILED::Priority::None;
 

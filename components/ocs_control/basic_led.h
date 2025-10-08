@@ -23,7 +23,7 @@ public:
     status::StatusCode try_lock(Priority priority) override;
 
     //! Mark LED as free to use.
-    status::StatusCode unlock() override;
+    status::StatusCode try_unlock(Priority priority) override;
 
 protected:
     bool inuse_ { false };

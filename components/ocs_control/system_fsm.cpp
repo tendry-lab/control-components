@@ -114,7 +114,7 @@ void SystemFsm::remove_led_task_() {
 
     led_task_ = nullptr;
 
-    configASSERT(led_.unlock() == status::StatusCode::OK);
+    configASSERT(led_.try_unlock(ILED::Priority::System) == status::StatusCode::OK);
 }
 
 bool SystemFsm::button_pressed_() {
