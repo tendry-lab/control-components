@@ -49,7 +49,7 @@ TEST_CASE("System FSM: button is pressed before LED reaction on system initializ
     SystemFsm fsm(rebooter, task_scheduler, led, want_release_interval);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, fsm.handle_pressed(got_release_interval));
-    taskYIELD();
+    vTaskDelay(pdMS_TO_TICKS(10));
 
     // Start the LED reaction on system initialization.
     TEST_ASSERT_EQUAL(status::StatusCode::OK, fsm.run());
@@ -175,7 +175,7 @@ TEST_CASE("System FSM: button isn't released within interval",
 
     TEST_ASSERT_EQUAL(status::StatusCode::Error,
                       fsm.handle_pressed(got_release_interval));
-    taskYIELD();
+    vTaskDelay(pdMS_TO_TICKS(10));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, fsm.run());
     TEST_ASSERT_EQUAL(0, rebooter.call_count);
