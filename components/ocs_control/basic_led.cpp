@@ -14,7 +14,7 @@ namespace control {
 status::StatusCode BasicLED::try_lock(ILED::Priority priority) {
     if (inuse_) {
         if (priority_ > priority) {
-            return status::StatusCode::Error;
+            return status::StatusCode::InvalidArg;
         }
     }
 
@@ -26,7 +26,7 @@ status::StatusCode BasicLED::try_lock(ILED::Priority priority) {
 
 status::StatusCode BasicLED::try_unlock(ILED::Priority priority) {
     if (priority_ != priority) {
-        return status::StatusCode::Error;
+        return status::StatusCode::InvalidArg;
     }
 
     inuse_ = false;
