@@ -75,7 +75,6 @@ private:
     status::StatusCode turn_off_();
     status::StatusCode handle_turn_on_();
     status::StatusCode handle_turn_off_();
-    void unlock_leds_();
 
     static constexpr const char* task_id_ = "led_locator_task";
     static constexpr TickType_t wait_timeout_ = pdMS_TO_TICKS(1000 * 5);
