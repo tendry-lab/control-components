@@ -27,7 +27,7 @@ SelectNetworkPipeline::SelectNetworkPipeline(storage::StorageBuilder& storage_bu
     configASSERT(sta_config_);
 
     net::INetwork* network = nullptr;
-    net::INetworkConfig* network_config = nullptr;
+    storage::IConfig* network_config = nullptr;
 
     if (sta_config_->valid()) {
         sta_.reset(new (std::nothrow) net::StaNetwork(network_handler, *sta_config_));

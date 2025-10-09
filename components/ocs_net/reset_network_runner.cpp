@@ -20,7 +20,7 @@ const char* log_tag = "reset_network_runner";
 } // namespace
 
 ResetNetworkRunner::ResetNetworkRunner(INetworkRunner& runner,
-                                       INetworkConfig& config,
+                                       storage::IConfig& config,
                                        system::IRebooter& rebooter)
     : runner_(runner)
     , config_(config)

@@ -34,6 +34,15 @@ MdnsConfig::MdnsConfig(storage::IStorage& storage, const system::DeviceInfo& dev
     }
 }
 
+status::StatusCode MdnsConfig::reset() {
+    auto code = storage_.erase(hostname_key_);
+    if (code == status::StatusCode::NoData) {
+        code = status::StatusCode::NotModified;
+    }
+
+    return code;
+}
+
 const char* MdnsConfig::get_hostname() const {
     return hostname_;
 }
@@ -61,15 +70,6 @@ status::StatusCode MdnsConfig::configure(const char* hostname) {
     }
 
     return status::StatusCode::NotModified;
-}
-
-status::StatusCode MdnsConfig::reset() {
-    auto code = storage_.erase(hostname_key_);
-    if (code == status::StatusCode::NoData) {
-        code = status::StatusCode::NotModified;
-    }
-
-    return code;
 }
 
 } // namespace net

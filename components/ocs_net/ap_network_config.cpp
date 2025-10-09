@@ -75,6 +75,15 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
     }
 }
 
+status::StatusCode ApNetworkConfig::reset() {
+    auto code = storage_.erase_all();
+    if (code == status::StatusCode::NoData) {
+        code = status::StatusCode::NotModified;
+    }
+
+    return code;
+}
+
 const char* ApNetworkConfig::get_ssid() const {
     return ssid_;
 }
@@ -135,15 +144,6 @@ ApNetworkConfig::configure(uint8_t channel, uint8_t max_conn, const char* passwo
     }
 
     return modified ? status::StatusCode::OK : status::StatusCode::NotModified;
-}
-
-status::StatusCode ApNetworkConfig::reset() {
-    auto code = storage_.erase_all();
-    if (code == status::StatusCode::NoData) {
-        code = status::StatusCode::NotModified;
-    }
-
-    return code;
 }
 
 } // namespace net

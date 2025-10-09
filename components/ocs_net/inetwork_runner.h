@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "ocs_status/code.h"
+
 namespace ocs {
 namespace net {
 
