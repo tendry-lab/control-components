@@ -10,6 +10,7 @@
 
 #include <memory>
 
+#include "ocs_control/config_fsr_handler.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_net/ap_network_config.h"
 #include "ocs_net/inetwork_handler.h"
@@ -31,6 +32,7 @@ public:
     //! Initialize.
     SelectNetworkPipeline(storage::StorageBuilder& storage_builder,
                           net::INetworkHandler& network_handler,
+                          control::ConfigFsrHandler& fsr_handler,
                           system::IRebooter& rebooter,
                           const system::DeviceInfo& device_info);
 

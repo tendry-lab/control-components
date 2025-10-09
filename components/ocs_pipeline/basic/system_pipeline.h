@@ -10,6 +10,7 @@
 
 #include <memory>
 
+#include "ocs_control/config_fsr_handler.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_scheduler/idelay_estimator.h"
@@ -54,6 +55,7 @@ public:
     scheduler::ITask& get_reboot_task();
     system::IRebooter& get_rebooter();
     system::FanoutRebootHandler& get_reboot_handler();
+    control::ConfigFsrHandler& get_fsr_handler();
 
 private:
     std::unique_ptr<storage::FlashInitializer> flash_initializer_;
@@ -74,6 +76,7 @@ private:
     std::unique_ptr<scheduler::ITask> reboot_task_async_;
 
     std::unique_ptr<system::DeviceInfo> device_info_;
+    std::unique_ptr<control::ConfigFsrHandler> fsr_handler_;
 };
 
 } // namespace basic
