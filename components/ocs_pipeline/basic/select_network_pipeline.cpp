@@ -18,6 +18,7 @@ namespace basic {
 
 SelectNetworkPipeline::SelectNetworkPipeline(storage::StorageBuilder& storage_builder,
                                              net::INetworkHandler& network_handler,
+                                             control::ConfigFsrHandler& fsr_handler,
                                              system::IRebooter& rebooter,
                                              const system::DeviceInfo& device_info) {
     sta_config_storage_ = storage_builder.make(sta_config_storage_id_);
@@ -65,6 +66,11 @@ SelectNetworkPipeline::SelectNetworkPipeline(storage::StorageBuilder& storage_bu
 
     runner_ = reset_runner_.get();
     configASSERT(runner_);
+
+    if (auto config = get_ap_config(); config) {
+        fsr_handler.add(*config);
+    }
+    fsr_handler.add(get_sta_config());
 }
 
 net::INetworkRunner& SelectNetworkPipeline::get_runner() {

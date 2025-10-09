@@ -10,6 +10,8 @@ idf_component_register(
     "button_event_handler.cpp"
     "system_fsm.cpp"
     "led_task.cpp"
+    "flip_led_task.cpp"
+    "config_fsr_handler.cpp"
 
     REQUIRES
     "freertos"

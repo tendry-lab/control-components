@@ -7,7 +7,11 @@
  */
 
 #include "ocs_control/system_fsm.h"
+#include "ocs_algo/time_ops.h"
+#include "ocs_control/flip_led_task.h"
 #include "ocs_control/led_task.h"
+#include "ocs_core/log.h"
+#include "ocs_status/code_to_str.h"
 
 #define EVENT_BITS_BUTTON_PRESSED BIT0
 #define EVENT_BITS_ALL (EVENT_BITS_BUTTON_PRESSED)
@@ -15,24 +19,50 @@
 namespace ocs {
 namespace control {
 
+namespace {
+
+const char* log_tag = "system_fsm";
+
+} // namespace
+
 SystemFsm::SystemFsm(system::IRebooter& rebooter,
+                     system::IClock& clock,
                      scheduler::ITaskScheduler& task_scheduler,
+                     IFsrHandler& handler,
                      ILED& led,
-                     system::Time release_interval)
-    : release_interval_(release_interval)
+                     IButton& button,
+                     Params params)
+    : params_(params)
     , rebooter_(rebooter)
+    , clock_(clock)
     , task_scheduler_(task_scheduler)
-    , led_(led) {
+    , handler_(handler)
+    , led_(led)
+    , button_(button) {
 }
 
 status::StatusCode SystemFsm::run() {
+    const auto button_was_pressed = button_was_pressed_();
+
     switch (state_) {
     case State::Init:
         handle_state_init_();
         break;
 
     case State::WaitReset:
-        handle_state_wait_reset_();
+        handle_state_wait_reset_(button_was_pressed);
+        break;
+
+    case State::FsrWaitBegin:
+        handle_state_fsr_wait_begin_();
+        break;
+
+    case State::FsrWaitConfirm:
+        handle_state_fsr_wait_confirm_(button_was_pressed);
+        break;
+
+    case State::FsrDone:
+        handle_state_fsr_done_();
         break;
 
     case State::WaitInitDone:
@@ -44,7 +74,7 @@ status::StatusCode SystemFsm::run() {
 }
 
 status::StatusCode SystemFsm::handle_pressed(system::Time duration) {
-    if (duration > release_interval_) {
+    if (duration > params_.release_interval) {
         return status::StatusCode::Error;
     }
 
@@ -59,7 +89,7 @@ status::StatusCode SystemFsm::handle_pressed(system::Time duration) {
 }
 
 status::StatusCode SystemFsm::handle_event() {
-    remove_led_task_();
+    remove_task_();
 
     switch (state_) {
     case State::WaitInitDone:
@@ -80,44 +110,131 @@ status::StatusCode SystemFsm::handle_event() {
 }
 
 void SystemFsm::handle_state_init_() {
-    add_led_task_(led_flip_count_init_);
+    if (!button_.get()) {
+        add_led_task_(flip_count_init_);
+        state_ = State::WaitInitDone;
 
-    state_ = State::WaitInitDone;
+        return;
+    }
+
+    configASSERT(!fsr_update_ts_);
+
+    fsr_update_ts_ = clock_.now();
+    state_ = State::FsrWaitBegin;
+
+    ocs_logi(log_tag, "FSR requested: wait begin");
 }
 
-void SystemFsm::handle_state_wait_reset_() {
-    if (button_pressed_()) {
-        add_led_task_(led_flip_count_button_pressed_);
-
+void SystemFsm::handle_state_wait_reset_(bool was_pressed) {
+    if (was_pressed) {
+        add_led_task_(flip_count_button_pressed_);
         state_ = State::WaitResetDone;
     }
 }
 
-void SystemFsm::add_led_task_(unsigned flip_count) {
-    configASSERT(!led_task_);
+void SystemFsm::handle_state_fsr_wait_begin_() {
+    configASSERT(fsr_update_ts_);
 
-    led_task_.reset(new (std::nothrow)
-                        LEDTask(*this, led_, ILED::Priority::System, flip_count));
-    configASSERT(led_task_);
+    if (!button_.get()) {
+        fsr_update_ts_ = 0;
+        state_ = State::WaitReset;
+
+        ocs_logw(log_tag, "FSR canceled: button released too quickly");
+
+        return;
+    }
+
+    const auto now = clock_.now();
+
+    if (!algo::TimeOps::after(fsr_update_ts_, now, params_.fsr_wait_begin_interval)) {
+        return;
+    }
+
+    add_fsr_task_();
+
+    fsr_update_ts_ = now;
+    state_ = State::FsrWaitConfirm;
+
+    ocs_logi(log_tag, "FSR started: wait confirmation");
+}
+
+void SystemFsm::handle_state_fsr_wait_confirm_(bool was_pressed) {
+    configASSERT(fsr_update_ts_);
+
+    const auto expired = algo::TimeOps::after(fsr_update_ts_, clock_.now(),
+                                              params_.fsr_wait_confirm_interval);
+    if (expired) {
+        remove_task_();
+
+        fsr_update_ts_ = 0;
+        state_ = State::WaitReset;
+
+        ocs_logw(log_tag, "FSR canceled: isn't confirmed within timeout");
+
+        return;
+    }
+
+    if (!was_pressed) {
+        return;
+    }
+
+    const auto code = handler_.handle_fsr();
+    if (code != status::StatusCode::OK) {
+        ocs_logw(log_tag, "FSR handler failed: code=%s", status::code_to_str(code));
+    }
+
+    remove_task_();
+
+    fsr_update_ts_ = 0;
+    state_ = State::FsrDone;
+
+    ocs_logi(log_tag, "FSR completed");
+}
+
+void SystemFsm::handle_state_fsr_done_() {
+    add_led_task_(flip_count_button_pressed_);
+    state_ = State::WaitResetDone;
+}
+
+void SystemFsm::add_fsr_task_() {
+    configASSERT(!task_);
+
+    task_.reset(new (std::nothrow) FlipLedTask(led_, ILED::Priority::System));
+    configASSERT(task_);
 
     configASSERT(led_.try_lock(ILED::Priority::System) == status::StatusCode::OK);
     configASSERT(led_.turn_off() == status::StatusCode::OK);
 
-    configASSERT(task_scheduler_.add(*led_task_, led_task_id_, led_task_interval_)
+    configASSERT(task_scheduler_.add(*task_, task_id_, task_interval_)
                  == status::StatusCode::OK);
 }
 
-void SystemFsm::remove_led_task_() {
-    configASSERT(led_task_);
+void SystemFsm::add_led_task_(unsigned flip_count) {
+    configASSERT(!task_);
 
-    configASSERT(task_scheduler_.remove(led_task_id_) == status::StatusCode::OK);
+    task_.reset(new (std::nothrow)
+                    LEDTask(*this, led_, ILED::Priority::System, flip_count));
+    configASSERT(task_);
 
-    led_task_ = nullptr;
+    configASSERT(led_.try_lock(ILED::Priority::System) == status::StatusCode::OK);
+    configASSERT(led_.turn_off() == status::StatusCode::OK);
 
+    configASSERT(task_scheduler_.add(*task_, task_id_, task_interval_)
+                 == status::StatusCode::OK);
+}
+
+void SystemFsm::remove_task_() {
+    configASSERT(task_);
+
+    configASSERT(task_scheduler_.remove(task_id_) == status::StatusCode::OK);
+    task_ = nullptr;
+
+    configASSERT(led_.try_lock(ILED::Priority::System) == status::StatusCode::OK);
+    configASSERT(led_.turn_off() == status::StatusCode::OK);
     configASSERT(led_.try_unlock(ILED::Priority::System) == status::StatusCode::OK);
 }
 
-bool SystemFsm::button_pressed_() {
+bool SystemFsm::button_was_pressed_() {
     const EventBits_t bits =
         xEventGroupWaitBits(event_group_.get(), EVENT_BITS_ALL, pdTRUE, pdFALSE, 0);
 
