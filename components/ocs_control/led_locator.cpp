@@ -24,13 +24,13 @@ const char* log_tag = "led_locator";
 
 } // namespace
 
-LEDLocator::LEDLocator(scheduler::ITaskScheduler& task_scheduler,
+LedLocator::LedLocator(scheduler::ITaskScheduler& task_scheduler,
                        scheduler::AsyncFuncScheduler& func_scheduler)
     : task_scheduler_(task_scheduler)
     , func_scheduler_(func_scheduler) {
 }
 
-void LEDLocator::add(ILED& led) {
+void LedLocator::add(ILed& led) {
     const auto it = std::find_if(leds_.begin(), leds_.end(), [&led](const auto& l) {
         return l == &led;
     });
@@ -39,7 +39,7 @@ void LEDLocator::add(ILED& led) {
     leds_.push_back(&led);
 }
 
-status::StatusCode LEDLocator::turn_on() {
+status::StatusCode LedLocator::turn_on() {
     configASSERT(leds_.size());
 
     core::LockGuard lock(mu_);
@@ -51,7 +51,7 @@ status::StatusCode LEDLocator::turn_on() {
     return turn_on_();
 }
 
-status::StatusCode LEDLocator::turn_off() {
+status::StatusCode LedLocator::turn_off() {
     configASSERT(leds_.size());
 
     core::LockGuard lock(mu_);
@@ -63,7 +63,7 @@ status::StatusCode LEDLocator::turn_off() {
     return turn_off_();
 }
 
-status::StatusCode LEDLocator::flip() {
+status::StatusCode LedLocator::flip() {
     configASSERT(leds_.size());
 
     core::LockGuard lock(mu_);
@@ -71,15 +71,15 @@ status::StatusCode LEDLocator::flip() {
     return enabled_ ? turn_off_() : turn_on_();
 }
 
-bool LEDLocator::get() const {
+bool LedLocator::get() const {
     core::LockGuard lock(mu_);
 
     return enabled_;
 }
 
-status::StatusCode LEDLocator::run() {
+status::StatusCode LedLocator::run() {
     for (unsigned n = 0; n < leds_.size(); ++n) {
-        const auto code = leds_[n]->try_lock(ILED::Priority::Locate);
+        const auto code = leds_[n]->try_lock(ILed::Priority::Locate);
         if (code != status::StatusCode::OK) {
             ocs_loge(log_tag, "failed to lock LED on locating: pos=%u code=%s", n,
                      status::code_to_str(code));
@@ -93,7 +93,7 @@ status::StatusCode LEDLocator::run() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode LEDLocator::turn_on_() {
+status::StatusCode LedLocator::turn_on_() {
     auto future = func_scheduler_.add([this]() {
         return handle_turn_on_();
     });
@@ -112,7 +112,7 @@ status::StatusCode LEDLocator::turn_on_() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode LEDLocator::turn_off_() {
+status::StatusCode LedLocator::turn_off_() {
     auto future = func_scheduler_.add([this]() {
         return handle_turn_off_();
     });
@@ -132,11 +132,11 @@ status::StatusCode LEDLocator::turn_off_() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode LEDLocator::handle_turn_on_() {
+status::StatusCode LedLocator::handle_turn_on_() {
     status::StatusCode code = status::StatusCode::OK;
 
     for (unsigned n = 0; n < leds_.size(); ++n) {
-        code = leds_[n]->try_lock(ILED::Priority::Locate);
+        code = leds_[n]->try_lock(ILed::Priority::Locate);
         if (code != status::StatusCode::OK) {
             ocs_loge(log_tag, "failed to lock LED on locating enabling: pos=%u code=%s",
                      n, status::code_to_str(code));
@@ -149,7 +149,7 @@ status::StatusCode LEDLocator::handle_turn_on_() {
 
     if (code != status::StatusCode::OK) {
         for (unsigned n = 0; n < leds_.size(); ++n) {
-            const auto c = leds_[n]->try_unlock(ILED::Priority::Locate);
+            const auto c = leds_[n]->try_unlock(ILed::Priority::Locate);
             if (c != status::StatusCode::OK) {
                 ocs_loge(
                     log_tag,
@@ -167,9 +167,9 @@ status::StatusCode LEDLocator::handle_turn_on_() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode LEDLocator::handle_turn_off_() {
+status::StatusCode LedLocator::handle_turn_off_() {
     for (unsigned n = 0; n < leds_.size(); ++n) {
-        const auto code = leds_[n]->try_lock(ILED::Priority::Locate);
+        const auto code = leds_[n]->try_lock(ILed::Priority::Locate);
         if (code != status::StatusCode::OK) {
             ocs_loge(log_tag, "failed to lock LED on locating disabling: pos=%u code=%s",
                      n, status::code_to_str(code));
@@ -179,7 +179,7 @@ status::StatusCode LEDLocator::handle_turn_off_() {
 
         configASSERT(leds_[n]->turn_off() == status::StatusCode::OK);
 
-        configASSERT(leds_[n]->try_unlock(ILED::Priority::Locate)
+        configASSERT(leds_[n]->try_unlock(ILed::Priority::Locate)
                      == status::StatusCode::OK);
     }
 

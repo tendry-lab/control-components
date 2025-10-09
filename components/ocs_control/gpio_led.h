@@ -15,13 +15,13 @@
 namespace ocs {
 namespace control {
 
-class GpioLED : public BasicLED, private core::NonCopyable<> {
+class GpioLed : public BasicLed, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
     //!  - @p gpio to control LED.
-    explicit GpioLED(io::gpio::IGpio& gpio);
+    explicit GpioLed(io::gpio::IGpio& gpio);
 
     //! Turn on LED.
     status::StatusCode turn_on() override;

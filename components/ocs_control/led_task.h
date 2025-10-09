@@ -26,8 +26,8 @@ public:
     //!  - @p priority - on each flip LED is locked with @p priority.
     //!  - @p flip_count - number of times the LED should blink.
     LEDTask(scheduler::IEventHandler& handler,
-            ILED& led,
-            ILED::Priority priority,
+            ILed& led,
+            ILed::Priority priority,
             unsigned flip_count);
 
     //! Flip LED on each task run.
@@ -41,12 +41,12 @@ public:
     status::StatusCode run() override;
 
 private:
-    const ILED::Priority priority_ { ILED::Priority::None };
+    const ILed::Priority priority_ { ILed::Priority::None };
 
     unsigned flip_count_ { 0 };
 
     scheduler::IEventHandler& handler_;
-    ILED& led_;
+    ILed& led_;
 };
 
 } // namespace control

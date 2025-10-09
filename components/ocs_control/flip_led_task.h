@@ -22,15 +22,15 @@ public:
     //! @params
     //!  - @p led to control LED.
     //!  - @p priority - on each flip LED is locked with @p priority.
-    FlipLedTask(ILED& led, ILED::Priority priority);
+    FlipLedTask(ILed& led, ILed::Priority priority);
 
     //! Flip LED on each task run.
     status::StatusCode run() override;
 
 private:
-    const ILED::Priority priority_ { ILED::Priority::None };
+    const ILed::Priority priority_ { ILed::Priority::None };
 
-    ILED& led_;
+    ILed& led_;
 };
 
 } // namespace control

@@ -55,7 +55,7 @@ public:
               system::IClock& clock,
               scheduler::ITaskScheduler& task_scheduler,
               IFsrHandler& handler,
-              ILED& led,
+              ILed& led,
               IButton& button,
               Params params);
 
@@ -106,7 +106,7 @@ private:
     system::IClock& clock_;
     scheduler::ITaskScheduler& task_scheduler_;
     IFsrHandler& handler_;
-    ILED& led_;
+    ILed& led_;
     IButton& button_;
 
     std::unique_ptr<scheduler::ITask> task_;

@@ -22,7 +22,7 @@ namespace control {
 //!  priority should be able to lock the resource, that was previously locked by other
 //!  component with lower priority. When the resource is no longer required, it should be
 //!  unlocked.
-class ILED {
+class ILed {
 public:
     //! Locking priority.
     enum class Priority : uint8_t {
@@ -43,7 +43,7 @@ public:
     };
 
     //! Destroy.
-    virtual ~ILED() = default;
+    virtual ~ILed() = default;
 
     //! Mark LED as in use.
     //!

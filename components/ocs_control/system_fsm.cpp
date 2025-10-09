@@ -29,7 +29,7 @@ SystemFsm::SystemFsm(system::IRebooter& rebooter,
                      system::IClock& clock,
                      scheduler::ITaskScheduler& task_scheduler,
                      IFsrHandler& handler,
-                     ILED& led,
+                     ILed& led,
                      IButton& button,
                      Params params)
     : params_(params)
@@ -199,10 +199,10 @@ void SystemFsm::handle_state_fsr_done_() {
 void SystemFsm::add_fsr_task_() {
     configASSERT(!task_);
 
-    task_.reset(new (std::nothrow) FlipLedTask(led_, ILED::Priority::System));
+    task_.reset(new (std::nothrow) FlipLedTask(led_, ILed::Priority::System));
     configASSERT(task_);
 
-    configASSERT(led_.try_lock(ILED::Priority::System) == status::StatusCode::OK);
+    configASSERT(led_.try_lock(ILed::Priority::System) == status::StatusCode::OK);
     configASSERT(led_.turn_off() == status::StatusCode::OK);
 
     configASSERT(task_scheduler_.add(*task_, task_id_, task_interval_)
@@ -213,10 +213,10 @@ void SystemFsm::add_led_task_(unsigned flip_count) {
     configASSERT(!task_);
 
     task_.reset(new (std::nothrow)
-                    LEDTask(*this, led_, ILED::Priority::System, flip_count));
+                    LEDTask(*this, led_, ILed::Priority::System, flip_count));
     configASSERT(task_);
 
-    configASSERT(led_.try_lock(ILED::Priority::System) == status::StatusCode::OK);
+    configASSERT(led_.try_lock(ILed::Priority::System) == status::StatusCode::OK);
     configASSERT(led_.turn_off() == status::StatusCode::OK);
 
     configASSERT(task_scheduler_.add(*task_, task_id_, task_interval_)
@@ -229,9 +229,9 @@ void SystemFsm::remove_task_() {
     configASSERT(task_scheduler_.remove(task_id_) == status::StatusCode::OK);
     task_ = nullptr;
 
-    configASSERT(led_.try_lock(ILED::Priority::System) == status::StatusCode::OK);
+    configASSERT(led_.try_lock(ILed::Priority::System) == status::StatusCode::OK);
     configASSERT(led_.turn_off() == status::StatusCode::OK);
-    configASSERT(led_.try_unlock(ILED::Priority::System) == status::StatusCode::OK);
+    configASSERT(led_.try_unlock(ILed::Priority::System) == status::StatusCode::OK);
 }
 
 bool SystemFsm::button_was_pressed_() {

@@ -23,7 +23,7 @@
 namespace ocs {
 namespace control {
 
-class LEDLocator : public ILocator,
+class LedLocator : public ILocator,
                    private scheduler::ITask,
                    private core::NonCopyable<> {
 public:
@@ -35,7 +35,7 @@ public:
     //!
     //! @remarks
     //!  All operations on the LEDs should be scheduled on the same task scheduler.
-    LEDLocator(scheduler::ITaskScheduler& task_scheduler,
+    LedLocator(scheduler::ITaskScheduler& task_scheduler,
                scheduler::AsyncFuncScheduler& func_scheduler);
 
     //! Enable device locating.
@@ -66,7 +66,7 @@ public:
     //!
     //! @remarks
     //!  - LED should be added only once.
-    void add(ILED& led);
+    void add(ILed& led);
 
 private:
     status::StatusCode run() override;
@@ -83,7 +83,7 @@ private:
     scheduler::ITaskScheduler& task_scheduler_;
     scheduler::AsyncFuncScheduler& func_scheduler_;
 
-    std::vector<ILED*> leds_;
+    std::vector<ILed*> leds_;
 
     mutable core::StaticMutex mu_;
     bool enabled_ { false };
