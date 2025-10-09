@@ -15,8 +15,8 @@ namespace ocs {
 namespace control {
 
 LEDTask::LEDTask(scheduler::IEventHandler& handler,
-                 ILED& led,
-                 ILED::Priority priority,
+                 ILed& led,
+                 ILed::Priority priority,
                  unsigned flip_count)
     : priority_(priority)
     , flip_count_(flip_count)

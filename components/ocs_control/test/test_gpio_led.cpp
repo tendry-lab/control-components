@@ -17,22 +17,22 @@ namespace control {
 TEST_CASE("GPIO led: lock/unlock", "[ocs_core], [gpio_led]") {
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
-    GpioLED led(gpio);
+    GpioLed led(gpio);
 
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidState, led.turn_on());
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidState, led.turn_off());
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidState, led.flip());
 
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_lock(ILED::Priority::Locate));
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_lock(ILED::Priority::Locate));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_lock(ILed::Priority::Locate));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_lock(ILed::Priority::Locate));
 
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_lock(ILED::Priority::System));
-
-    TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg,
-                      led.try_lock(ILED::Priority::FatalError));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_lock(ILed::Priority::System));
 
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg,
-                      led.try_lock(ILED::Priority::Default));
+                      led.try_lock(ILed::Priority::FatalError));
+
+    TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg,
+                      led.try_lock(ILed::Priority::Default));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, led.turn_on());
     TEST_ASSERT_TRUE(gpio.get());
@@ -53,9 +53,9 @@ TEST_CASE("GPIO led: lock/unlock", "[ocs_core], [gpio_led]") {
     TEST_ASSERT_EQUAL(1, gpio.flip_call_count);
 
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg,
-                      led.try_unlock(ILED::Priority::Default));
+                      led.try_unlock(ILed::Priority::Default));
 
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_unlock(ILED::Priority::System));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, led.try_unlock(ILed::Priority::System));
 
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidState, led.turn_on());
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidState, led.turn_off());

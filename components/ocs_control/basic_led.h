@@ -14,10 +14,10 @@
 namespace ocs {
 namespace control {
 
-class BasicLED : public ILED, private core::NonCopyable<BasicLED> {
+class BasicLed : public ILed, private core::NonCopyable<BasicLed> {
 public:
     //! Destroy.
-    virtual ~BasicLED() = default;
+    virtual ~BasicLed() = default;
 
     //! Mark LED as in use.
     status::StatusCode try_lock(Priority priority) override;

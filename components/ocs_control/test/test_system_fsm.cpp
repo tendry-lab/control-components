@@ -57,7 +57,7 @@ TEST_CASE("System FSM: button is pressed before LED reaction on system initializ
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
-    GpioLED led(gpio);
+    GpioLed led(gpio);
 
     TestRebooter rebooter;
     TestFsrHandler handler;
@@ -99,7 +99,7 @@ TEST_CASE("System FSM: button is pressed after LED reaction on system initializa
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
-    GpioLED led(gpio);
+    GpioLed led(gpio);
 
     TestRebooter rebooter;
     TestFsrHandler handler;
@@ -140,7 +140,7 @@ TEST_CASE("System FSM: button is pressed during LED reaction on system initializ
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
-    GpioLED led(gpio);
+    GpioLed led(gpio);
 
     TestRebooter rebooter;
     TestFsrHandler handler;
@@ -188,7 +188,7 @@ TEST_CASE("System FSM: button isn't released within interval",
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
-    GpioLED led(gpio);
+    GpioLed led(gpio);
 
     TestRebooter rebooter;
     TestFsrHandler handler;
@@ -220,7 +220,7 @@ TEST_CASE("System FSM: handle FSR", "[system_fsm], [ocs_control]") {
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
-    GpioLED led(gpio);
+    GpioLed led(gpio);
 
     TestRebooter rebooter;
     TestFsrHandler handler;
@@ -299,7 +299,7 @@ TEST_CASE("System FSM: FSR canceled: released too quickly",
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
-    GpioLED led(gpio);
+    GpioLed led(gpio);
 
     TestRebooter rebooter;
     TestFsrHandler handler;
@@ -356,7 +356,7 @@ TEST_CASE("System FSM: FSR canceled: isn't confirmed within timeout",
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
-    GpioLED led(gpio);
+    GpioLed led(gpio);
 
     TestRebooter rebooter;
     TestFsrHandler handler;

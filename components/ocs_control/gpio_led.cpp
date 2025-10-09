@@ -11,11 +11,11 @@
 namespace ocs {
 namespace control {
 
-GpioLED::GpioLED(io::gpio::IGpio& gpio)
+GpioLed::GpioLed(io::gpio::IGpio& gpio)
     : gpio_(gpio) {
 }
 
-status::StatusCode GpioLED::turn_on() {
+status::StatusCode GpioLed::turn_on() {
     if (!inuse_) {
         return status::StatusCode::InvalidState;
     }
@@ -23,7 +23,7 @@ status::StatusCode GpioLED::turn_on() {
     return gpio_.turn_on();
 }
 
-status::StatusCode GpioLED::turn_off() {
+status::StatusCode GpioLed::turn_off() {
     if (!inuse_) {
         return status::StatusCode::InvalidState;
     }
@@ -31,7 +31,7 @@ status::StatusCode GpioLED::turn_off() {
     return gpio_.turn_off();
 }
 
-status::StatusCode GpioLED::flip() {
+status::StatusCode GpioLed::flip() {
     if (!inuse_) {
         return status::StatusCode::InvalidState;
     }

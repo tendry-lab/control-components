@@ -11,7 +11,7 @@
 namespace ocs {
 namespace control {
 
-status::StatusCode BasicLED::try_lock(ILED::Priority priority) {
+status::StatusCode BasicLed::try_lock(ILed::Priority priority) {
     if (inuse_) {
         if (priority_ > priority) {
             return status::StatusCode::InvalidArg;
@@ -24,13 +24,13 @@ status::StatusCode BasicLED::try_lock(ILED::Priority priority) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode BasicLED::try_unlock(ILED::Priority priority) {
+status::StatusCode BasicLed::try_unlock(ILed::Priority priority) {
     if (priority_ != priority) {
         return status::StatusCode::InvalidArg;
     }
 
     inuse_ = false;
-    priority_ = ILED::Priority::None;
+    priority_ = ILed::Priority::None;
 
     return status::StatusCode::OK;
 }

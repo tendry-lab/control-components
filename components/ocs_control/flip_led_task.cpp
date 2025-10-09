@@ -14,7 +14,7 @@
 namespace ocs {
 namespace control {
 
-FlipLedTask::FlipLedTask(ILED& led, ILED::Priority priority)
+FlipLedTask::FlipLedTask(ILed& led, ILed::Priority priority)
     : priority_(priority)
     , led_(led) {
 }
