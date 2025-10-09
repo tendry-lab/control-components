@@ -35,7 +35,7 @@ MdnsConfig::MdnsConfig(storage::IStorage& storage, const system::DeviceInfo& dev
 }
 
 status::StatusCode MdnsConfig::reset() {
-    auto code = storage_.erase(hostname_key_);
+    auto code = storage_.erase_all();
     if (code == status::StatusCode::NoData) {
         code = status::StatusCode::NotModified;
     }
