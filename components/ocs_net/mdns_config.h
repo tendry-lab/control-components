@@ -9,13 +9,14 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
+#include "ocs_storage/iconfig.h"
 #include "ocs_storage/istorage.h"
 #include "ocs_system/device_info.h"
 
 namespace ocs {
 namespace net {
 
-class MdnsConfig : private core::NonCopyable<> {
+class MdnsConfig : public storage::IConfig, private core::NonCopyable<> {
 public:
     // Maximum length of the mDNS hostname.
     static constexpr unsigned max_hostname_len = 31;
@@ -27,6 +28,12 @@ public:
     //!  - @p device_info to use as a fallback for mDNS configuration.
     MdnsConfig(storage::IStorage& storage, const system::DeviceInfo& device_info);
 
+    //! Reset mDNS configuration.
+    //!
+    //! @remarks
+    //!  - Changes are applied on the component initialization.
+    status::StatusCode reset() override;
+
     //! Return the configured mDNS hostname.
     const char* get_hostname() const;
 
@@ -35,12 +42,6 @@ public:
     //! @remarks
     //!  - Changes are applied on the component initialization.
     status::StatusCode configure(const char* hostname);
-
-    //! Reset mDNS configuration.
-    //!
-    //! @remarks
-    //!  - Changes are applied on the component initialization.
-    status::StatusCode reset();
 
 private:
     static constexpr const char* hostname_key_ = "host";

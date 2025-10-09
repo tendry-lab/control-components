@@ -9,8 +9,8 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_net/inetwork_config.h"
 #include "ocs_net/inetwork_runner.h"
+#include "ocs_storage/iconfig.h"
 #include "ocs_system/irebooter.h"
 
 namespace ocs {
@@ -25,7 +25,7 @@ public:
     //!  - @p config to reset the network configuration.
     //!  - @p rebooter to reboot the system if the configuration was reset.
     ResetNetworkRunner(INetworkRunner& runner,
-                       INetworkConfig& config,
+                       storage::IConfig& config,
                        system::IRebooter& rebooter);
 
     //! If the network fails to start, the network configuration is reset.
@@ -38,7 +38,7 @@ private:
     void reset_();
 
     INetworkRunner& runner_;
-    INetworkConfig& config_;
+    storage::IConfig& config_;
     system::IRebooter& rebooter_;
 };
 

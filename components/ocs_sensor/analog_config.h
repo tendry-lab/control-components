@@ -13,12 +13,13 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/adc/types.h"
+#include "ocs_storage/iconfig.h"
 #include "ocs_storage/istorage.h"
 
 namespace ocs {
 namespace sensor {
 
-class AnalogConfig : private core::NonCopyable<> {
+class AnalogConfig : public storage::IConfig, private core::NonCopyable<> {
 public:
     //! Number of times a value is measured before available to be read.
     //! By default a value is measured once.
@@ -51,6 +52,12 @@ public:
                  OversamplingMode def_oversampling_mode,
                  const char* id);
 
+    //! Reset analog sensor configuration.
+    //!
+    //! @remarks
+    //!  - Changes are applied immediately.
+    status::StatusCode reset() override;
+
     //! Return true if the config is valid.
     //!
     //! @remarks
@@ -79,12 +86,6 @@ public:
     //!  - @p min should be less than @p max.
     //!  - @p sample_count can be 1, 8, 16, 32, 64. See @OversamplingMode.
     status::StatusCode configure(uint16_t min, uint16_t max, uint8_t sample_count);
-
-    //! Reset analog sensor configuration.
-    //!
-    //! @remarks
-    //!  - Changes are applied immediately.
-    status::StatusCode reset();
 
 private:
     const std::string id_;

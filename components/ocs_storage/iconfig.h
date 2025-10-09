@@ -11,16 +11,16 @@
 #include "ocs_status/code.h"
 
 namespace ocs {
-namespace net {
+namespace storage {
 
-class INetworkConfig {
+class IConfig {
 public:
     //! Destroy.
-    virtual ~INetworkConfig() = default;
+    virtual ~IConfig() = default;
 
-    //! Reset the network configuration.
+    //! Reset configuration.
     virtual status::StatusCode reset() = 0;
 };
 
-} // namespace net
+} // namespace storage
 } // namespace ocs

@@ -9,14 +9,14 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_net/inetwork_config.h"
+#include "ocs_storage/iconfig.h"
 #include "ocs_storage/istorage.h"
 
 namespace ocs {
 namespace net {
 
 //! WiFi STA configuration.
-class StaNetworkConfig : public INetworkConfig, private core::NonCopyable<> {
+class StaNetworkConfig : public storage::IConfig, private core::NonCopyable<> {
 public:
     //! Minimum WiFi STA ssid length.
     static constexpr uint8_t min_ssid_len = 1;
@@ -38,6 +38,12 @@ public:
     //! @params
     //!  - @p storage to persist WiFi STA configuration.
     explicit StaNetworkConfig(storage::IStorage& storage);
+
+    //! Reset WiFi STA configuration.
+    //!
+    //! @remarks
+    //!  - Changes are applied on the component initialization.
+    status::StatusCode reset() override;
 
     //! Return true if the WiFi STA configuration exists and is valid.
     bool valid() const;
@@ -63,12 +69,6 @@ public:
     //!  - Changes are applied on the component initialization.
     status::StatusCode
     configure(uint8_t max_retry_count, const char* ssid, const char* password);
-
-    //! Reset WiFi STA configuration.
-    //!
-    //! @remarks
-    //!  - Changes are applied on the component initialization.
-    status::StatusCode reset() override;
 
 private:
     static constexpr uint8_t default_max_retry_count_ = 5;

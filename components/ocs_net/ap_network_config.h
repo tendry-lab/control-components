@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_net/inetwork_config.h"
+#include "ocs_storage/iconfig.h"
 #include "ocs_storage/istorage.h"
 #include "ocs_system/device_info.h"
 
@@ -17,7 +17,7 @@ namespace ocs {
 namespace net {
 
 //! WiFi AP configuration.
-class ApNetworkConfig : public INetworkConfig, private core::NonCopyable<> {
+class ApNetworkConfig : public storage::IConfig, private core::NonCopyable<> {
 public:
     //! Minimum WiFi AP password length.
     static constexpr uint8_t min_password_len = 8;
@@ -40,6 +40,12 @@ public:
     //!  - @p storage to persist WiFi AP configuration.
     //!  - @p device_info to use as a fallback for WiFi AP configuration.
     ApNetworkConfig(storage::IStorage& storage, const system::DeviceInfo& device_info);
+
+    //! Reset WiFi AP configuration.
+    //!
+    //! @remarks
+    //!  - Changes are applied on the component initialization.
+    status::StatusCode reset() override;
 
     //! Return WiFi AP SSID.
     const char* get_ssid() const;
@@ -64,12 +70,6 @@ public:
     //! @remarks
     //!  - Changes are applied on the component initialization.
     status::StatusCode configure(uint8_t channel, uint8_t max_conn, const char* password);
-
-    //! Reset WiFi AP configuration.
-    //!
-    //! @remarks
-    //!  - Changes are applied on the component initialization.
-    status::StatusCode reset() override;
 
 private:
     static constexpr const char* password_key_ = "password";
