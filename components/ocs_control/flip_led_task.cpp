@@ -14,12 +14,19 @@
 namespace ocs {
 namespace control {
 
-FlipLedTask::FlipLedTask(ILed& led, ILed::Priority priority)
+FlipLedTask::FlipLedTask(scheduler::IEventHandler& handler,
+                         ILed& led,
+                         ILed::Priority priority,
+                         unsigned flip_count)
     : priority_(priority)
+    , flip_count_(flip_count)
+    , handler_(handler)
     , led_(led) {
 }
 
 status::StatusCode FlipLedTask::run() {
+    configASSERT(flip_count_);
+
     auto code = led_.try_lock(priority_);
     if (code != status::StatusCode::OK) {
         return code;
@@ -28,6 +35,11 @@ status::StatusCode FlipLedTask::run() {
     code = led_.flip();
     if (code != status::StatusCode::OK) {
         return code;
+    }
+
+    --flip_count_;
+    if (!flip_count_) {
+        return handler_.handle_event();
     }
 
     return status::StatusCode::OK;

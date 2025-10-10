@@ -9,7 +9,6 @@
 #include "ocs_control/system_fsm.h"
 #include "ocs_algo/time_ops.h"
 #include "ocs_control/flip_led_task.h"
-#include "ocs_control/led_task.h"
 #include "ocs_core/log.h"
 #include "ocs_status/code_to_str.h"
 
@@ -20,6 +19,33 @@ namespace ocs {
 namespace control {
 
 namespace {
+
+class FsrLedTask : public scheduler::ITask, private core::NonCopyable<> {
+public:
+    FsrLedTask(ILed& led, ILed::Priority priority)
+        : priority_(priority)
+        , led_(led) {
+    }
+
+    status::StatusCode run() override {
+        auto code = led_.try_lock(priority_);
+        if (code != status::StatusCode::OK) {
+            return code;
+        }
+
+        code = led_.flip();
+        if (code != status::StatusCode::OK) {
+            return code;
+        }
+
+        return status::StatusCode::OK;
+    }
+
+private:
+    const ILed::Priority priority_ { ILed::Priority::None };
+
+    ILed& led_;
+};
 
 const char* log_tag = "system_fsm";
 
@@ -199,7 +225,7 @@ void SystemFsm::handle_state_fsr_done_() {
 void SystemFsm::add_fsr_task_() {
     configASSERT(!task_);
 
-    task_.reset(new (std::nothrow) FlipLedTask(led_, ILed::Priority::System));
+    task_.reset(new (std::nothrow) FsrLedTask(led_, ILed::Priority::System));
     configASSERT(task_);
 
     configASSERT(led_.try_lock(ILed::Priority::System) == status::StatusCode::OK);
@@ -213,7 +239,7 @@ void SystemFsm::add_led_task_(unsigned flip_count) {
     configASSERT(!task_);
 
     task_.reset(new (std::nothrow)
-                    LEDTask(*this, led_, ILed::Priority::System, flip_count));
+                    FlipLedTask(*this, led_, ILed::Priority::System, flip_count));
     configASSERT(task_);
 
     configASSERT(led_.try_lock(ILed::Priority::System) == status::StatusCode::OK);
