@@ -4,11 +4,8 @@ inputs:
   PROJECT_PATH:
     description: "Path for the project to upload"
     required: true
-  PROJECT_NAME:
-    description: "Project name"
-    required: true
-  BUILD_VERSION:
-    description: "Build version"
+  ARTIFACT_NAME:
+    description: "Artifact name to upload"
     required: true
 runs:
   using: "composite"
@@ -16,7 +13,7 @@ runs:
       - name: esp32 upload project
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.PROJECT_NAME }}-${{ inputs.BUILD_VERSION }}
+          name: ${{ inputs.ARTIFACT_NAME }}
           path: |
             ${{ inputs.PROJECT_PATH }}/build/bootloader/*.bin
             ${{ inputs.PROJECT_PATH }}/build/partition_table/*.bin
