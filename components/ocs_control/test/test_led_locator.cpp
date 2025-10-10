@@ -92,16 +92,14 @@ TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") 
         status::StatusCode::OK,
         task_scheduler.add(func_scheduler, "foo", system::Duration::millisecond * 10));
 
-    LedLocator locator(task_scheduler, func_scheduler);
-
-    AsyncTestRunner runner(task_scheduler, "test", 1024 * 2);
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, runner.start());
-
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
     GpioLed led(gpio);
 
-    locator.add(led);
+    LedLocator locator(task_scheduler, func_scheduler, led);
+
+    AsyncTestRunner runner(task_scheduler, "test", 1024 * 2);
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, runner.start());
 
     TEST_ASSERT_FALSE(locator.get());
 

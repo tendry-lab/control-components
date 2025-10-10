@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <vector>
-
 #include "freertos/FreeRTOS.h"
 
 #include "ocs_control/iled.h"
@@ -32,11 +30,13 @@ public:
     //! @params
     //!  - @p task_scheduler to execute the locating procedure.
     //!  - @p func_scheduler to schedule the locating procedure.
+    //!  - @p led to periodically flip during the locating procedure.
     //!
     //! @remarks
     //!  All operations on the LEDs should be scheduled on the same task scheduler.
     LedLocator(scheduler::ITaskScheduler& task_scheduler,
-               scheduler::AsyncFuncScheduler& func_scheduler);
+               scheduler::AsyncFuncScheduler& func_scheduler,
+               ILed& led);
 
     //! Enable device locating.
     //!
@@ -62,12 +62,6 @@ public:
     //!  Can be called from multiple tasks.
     bool get() const override;
 
-    //! Add @p led to be used during the locating procedure.
-    //!
-    //! @remarks
-    //!  - LED should be added only once.
-    void add(ILed& led);
-
 private:
     status::StatusCode run() override;
 
@@ -83,7 +77,7 @@ private:
     scheduler::ITaskScheduler& task_scheduler_;
     scheduler::AsyncFuncScheduler& func_scheduler_;
 
-    std::vector<ILed*> leds_;
+    ILed& led_;
 
     mutable core::StaticMutex mu_;
     bool enabled_ { false };
