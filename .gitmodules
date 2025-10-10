@@ -1,0 +1,3 @@
+[submodule "ci-components"]
+	path = ci-components
+	url = https://github.com/tendry-lab/ci-components.git
