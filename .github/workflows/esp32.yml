@@ -9,8 +9,10 @@ on:
       - '*'
 
 jobs:
-  build-firmware:
+  firmware_build:
     runs-on: ubuntu-latest
+    outputs:
+      build_version: ${{ steps.version_formatter.outputs.build_version }}
     strategy:
       matrix:
         project:
@@ -92,3 +94,25 @@ jobs:
         with:
           PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
           ARTIFACT_NAME: ${{ matrix.project.project_name }}-${{ steps.version_formatter.outputs.build_version }}
+
+  firmware_release:
+    runs-on: ubuntu-latest
+    needs: firmware_build
+    if: github.ref_type == 'tag'
+    permissions:
+      contents: write
+    env:
+      SOURCE_PATH: project
+      PROJECT_NAME: control-components
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.SOURCE_PATH }}
+          submodules: recursive
+
+      - name: Create release
+        uses: ./project/ci-components/.github/actions/core/release-create
+        with:
+          DOWNLOAD_ARTIFACT_PATH: artifacts
+          RELEASE_ARCHIVE_NAME: "${{ env.PROJECT_NAME }}-${{ needs.firmware_build.outputs.build_version }}.zip"
