@@ -26,7 +26,12 @@ public:
 
     //! Minimum WiFi AP channel.
     static constexpr uint8_t min_channel = 1;
+
     //! Maximum WiFi AP channel.
+    //!
+    //! @remarks
+    //!  - The US allows 1-11.
+    //!  - The EU and most other countries allows 1-13.
     static constexpr uint8_t max_channel = 13;
 
     //! Minimum number of simultaneous STA connections.
