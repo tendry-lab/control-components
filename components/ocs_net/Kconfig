@@ -12,7 +12,7 @@ menu "OCS Network Configuration"
             config OCS_NETWORK_WIFI_AP_CHANNEL
                 int "WiFi Channel"
                 range 1 13
-                default 1
+                default 6
                 help
                     WiFi channel (network channel).
 
