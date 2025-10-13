@@ -41,6 +41,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: ${{ env.SOURCE_PATH }}
+          submodules: recursive
 
       - name: check library formatting
         uses: ./project/.github/actions/core/fmt
@@ -70,7 +71,7 @@ jobs:
 
       - name: format firmware build version
         id: version_formatter
-        uses: ./project/.github/actions/core/version
+        uses: ./project/ci-components/.github/actions/core/version
 
       - name: prepare configuration
         uses: ./project/.github/actions/core/config
