@@ -56,7 +56,7 @@ jobs:
           CI_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}/ci-components
 
       - name: setup ESP32 environment
-        uses: ./project/.github/actions/esp32/env
+        uses: ./project/ci-components/.github/actions/esp32/env
         with:
           IDF_PATH: ${{ env.IDF_PATH }}
           IDF_VERSION: ${{ env.IDF_VERSION }}
@@ -73,8 +73,8 @@ jobs:
         id: version_formatter
         uses: ./project/ci-components/.github/actions/core/version
 
-      - name: prepare configuration
-        uses: ./project/.github/actions/core/config
+      - name: prepare firmware configuration
+        uses: ./project/ci-components/.github/actions/esp32/config
         with:
           PROJECT_NAME: ${{ matrix.project.project_name }}
           PRODUCT_NAME: ${{ matrix.project.product_name }}
@@ -83,7 +83,7 @@ jobs:
           PROJECT_CONFIG_PATH: ${{ env.SOURCE_PATH }}/projects/config.yml
 
       - name: build firmware
-        uses: ./project/.github/actions/esp32/project
+        uses: ./project/ci-components/.github/actions/esp32/build
         with:
           IDF_PATH: ${{ env.IDF_PATH }}
           PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
@@ -91,7 +91,7 @@ jobs:
           CONFIGURATION_PATH_PROJECT: ${{ matrix.project.config }}
 
       - name: upload firmware
-        uses: ./project/.github/actions/esp32/upload
+        uses: ./project/ci-components/.github/actions/esp32/upload
         with:
           PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
           ARTIFACT_NAME: ${{ matrix.project.project_name }}-${{ steps.version_formatter.outputs.build_version }}
