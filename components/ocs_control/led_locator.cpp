@@ -136,15 +136,13 @@ status::StatusCode LedLocator::handle_turn_on_() {
 
 status::StatusCode LedLocator::handle_turn_off_() {
     const auto code = led_.try_lock(ILed::Priority::Locate);
-    if (code != status::StatusCode::OK) {
-        ocs_loge(log_tag, "failed to lock LED on locating disabling: %s",
+    if (code == status::StatusCode::OK) {
+        configASSERT(led_.turn_off() == status::StatusCode::OK);
+        configASSERT(led_.try_unlock(ILed::Priority::Locate) == status::StatusCode::OK);
+    } else {
+        ocs_logw(log_tag, "failed to lock LED on locating disabling: %s",
                  status::code_to_str(code));
-
-        return code;
     }
-
-    configASSERT(led_.turn_off() == status::StatusCode::OK);
-    configASSERT(led_.try_unlock(ILed::Priority::Locate) == status::StatusCode::OK);
 
     configASSERT(task_scheduler_.remove(task_id_) == status::StatusCode::OK);
 
