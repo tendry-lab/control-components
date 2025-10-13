@@ -44,16 +44,16 @@ jobs:
           submodules: recursive
 
       - name: check library formatting
-        uses: ./project/.github/actions/core/fmt
+        uses: ./project/ci-components/.github/actions/fmt/cpp
         with:
           PROJECT_PATH: ${{ env.SOURCE_PATH }}/components
-          CONTROL_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}
+          CI_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}/ci-components
 
       - name: check project formatting
-        uses: ./project/.github/actions/core/fmt
+        uses: ./project/ci-components/.github/actions/fmt/cpp
         with:
           PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
-          CONTROL_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}
+          CI_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}/ci-components
 
       - name: setup ESP32 environment
         uses: ./project/.github/actions/esp32/env
