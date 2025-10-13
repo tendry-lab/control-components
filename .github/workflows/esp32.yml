@@ -62,10 +62,10 @@ jobs:
           IDF_VERSION: ${{ env.IDF_VERSION }}
 
       - name: setup system environment
-        uses: ./project/.github/actions/system/env
+        uses: ./project/ci-components/.github/actions/system/env
 
       - name: setup ccache
-        uses: ./project/.github/actions/system/ccache
+        uses: ./project/ci-components/.github/actions/system/ccache
         with:
           CONFIGURATION_PATH_CCACHE: ${{ env.CONFIGURATION_PATH_CCACHE }}
 
