@@ -1,12 +1,19 @@
 ## Introduction
 
-`control-components` is a C++ library with basic building blocks for embedded and IoT development. It provides high-level abstractions for embedded and IoT applications: state machines, task schedulers, resource management, various system counters, analog and digital sensors, and many other things that the embedded developer has to implement from scratch for each new embedded system. The library is written in `C++17` with some features from `C++20`.
+Firmware foundation for ESP32-based devices built with modern C++ (C++17/C++20). mDNS server, HTTP server, WiFi configuration, sensor drivers.
 
-## Supported Platforms
+## Features
 
-The current focus is on the low-cost solutions based on the ESP32 MCUs. Other platforms will be added later. Most of the codebase is platform independent. Please refer to the list of installation instructions for the required platform:
+- mDNS service discovery
+- WiFi AP and STA modes
+- System and network monitoring
+- Builtin HTTP server
+- Analog and digital sensors
+- Factory reset and device locating
 
-- ESP32 [instructions](docs/install/esp32.md)
+## How To Use
+
+See the detailed [instructions](docs/install/esp32.md) on how to use the `control-components` in your project.
 
 ## Contribution
 
