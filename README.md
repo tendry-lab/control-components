@@ -1,4 +1,4 @@
-[![ESP32](https://github.com/tendry-lab/esp-components/actions/workflows/esp32.yml/badge.svg)](https://github.com/tendry-lab/esp-components/actions/workflows/esp32.yml)
+[![ESP32](https://github.com/tendry-lab/control-components/actions/workflows/esp32.yml/badge.svg?branch=master)](https://github.com/tendry-lab/control-components/actions/workflows/esp32.yml)
 
 ## Introduction
 
@@ -22,7 +22,7 @@ See the detailed [instructions](docs/install/esp32.md) on how to use the `contro
 - `master` - stable and ready-to-use branch. [Semver](https://semver.org/) is used for versioning.
 - Try to keep PR small.
 - New code should be similar to existing code. Use the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
-- Ensure the code is properly formatted and includes the licence header. Use [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html) and [`verify_license.py`](ci-components/scripts/fmt/verify_license.py).
+- Ensure the code is properly formatted. Use [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html).
 
 ## License
 
