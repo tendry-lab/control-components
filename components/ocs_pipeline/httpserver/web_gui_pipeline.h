@@ -5,11 +5,13 @@
 
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/stream_transceiver.h"
 #include "ocs_http/irouter.h"
+#include "ocs_storage/ifs_initializer.h"
 
 namespace ocs {
 namespace pipeline {
@@ -21,19 +23,24 @@ public:
     //!
     //! @params
     //!  - @p router to register endpoints to serve the Web GUI files.
-    explicit WebGuiPipeline(http::IRouter& router);
+    //!  - @p fs_initializer to check if FS has been properly initialized and mounted to
+    //!    the VFS.
+    //!  - @p mount_point - VFS mount point for the Web GUI files.
+    WebGuiPipeline(http::IRouter& router,
+                   storage::IFsInitializer& fs_initializer,
+                   const char* mount_point);
 
 private:
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest& r) override;
 
-    void initialize_fs_();
     status::StatusCode handle_root_(http::IResponseWriter& w);
     status::StatusCode handle_file_(http::IResponseWriter& w, const char* filename);
 
-    static constexpr const char* mount_point_ = "/web_gui";
     static constexpr unsigned buffer_size_ = 1024;
 
-    bool valid_ { false };
+    const std::string mount_point_;
+
+    storage::IFsInitializer& fs_initializer_;
     core::StreamTransceiver::Buffer buffer_;
 };
 

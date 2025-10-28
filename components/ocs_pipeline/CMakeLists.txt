@@ -36,8 +36,6 @@ idf_component_register(
     "basic/select_network_pipeline.cpp"
 
     REQUIRES
-    "spiffs"
-
     "ocs_io"
     "ocs_net"
     "ocs_http"
