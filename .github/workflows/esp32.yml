@@ -34,7 +34,7 @@ jobs:
     env:
       SOURCE_PATH: project
       IDF_PATH: esp-idf
-      IDF_VERSION: v5.3.1
+      IDF_VERSION: v5.5.1
       CONFIGURATION_PATH_CCACHE: .env/ccache
     steps:
       - name: checkout repository
