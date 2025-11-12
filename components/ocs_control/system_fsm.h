@@ -44,14 +44,14 @@ public:
     //!  - @p rebooter to be called when the button is pressed (ignored during the FSR).
     //!  - @p clock to measure the FSR state durations.
     //!  - @p task_scheduler to schedule the LED reactions.
-    //!  - @p handler to be called when the FSR is happened.
+    //!  - @p fsr_handler to be called when the FSR is happened.
     //!  - @p led to signalize about the system events.
     //!  - @p button to check if the FSR is requested.
     //!  - @p params - various configuration parameters.
     SystemFsm(system::IRebooter& rebooter,
               system::IClock& clock,
               scheduler::ITaskScheduler& task_scheduler,
-              IFsrHandler& handler,
+              IFsrHandler& fsr_handler,
               ILed& led,
               IButton& button,
               Params params);
@@ -102,7 +102,7 @@ private:
     system::IRebooter& rebooter_;
     system::IClock& clock_;
     scheduler::ITaskScheduler& task_scheduler_;
-    IFsrHandler& handler_;
+    IFsrHandler& fsr_handler_;
     ILed& led_;
     IButton& button_;
 
