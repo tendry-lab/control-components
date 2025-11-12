@@ -85,6 +85,8 @@ status::StatusCode StaNetwork::start() {
     strncpy(reinterpret_cast<char*>(wifi_config.sta.password), config_.get_password(),
             sizeof(wifi_config.sta.password));
 
+    wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
+
     auto err = esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "esp_wifi_set_config(): %s", esp_err_to_name(err));
