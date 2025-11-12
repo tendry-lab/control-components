@@ -28,7 +28,6 @@ public:
     struct Params {
         io::adc::Channel adc_channel { static_cast<io::adc::Channel>(0) };
         control::FsmBlockPipeline::Params fsm_block;
-        system::Time read_interval { 0 };
         AnalogSensor::Params sensor;
     };
 
@@ -48,8 +47,6 @@ public:
     AnalogSensor& get_sensor();
 
 private:
-    const std::string task_id_;
-
     io::adc::IStore::IReaderPtr adc_reader_;
     std::unique_ptr<io::adc::IReader> sample_reader_;
     io::adc::IReader* reader_ { nullptr };

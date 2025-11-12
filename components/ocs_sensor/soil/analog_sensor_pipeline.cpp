@@ -21,8 +21,7 @@ AnalogSensorPipeline::AnalogSensorPipeline(system::IClock& clock,
                                            scheduler::ITaskScheduler& task_scheduler,
                                            const AnalogConfig& config,
                                            const char* id,
-                                           AnalogSensorPipeline::Params params)
-    : task_id_(std::string(id) + "_task") {
+                                           AnalogSensorPipeline::Params params) {
     adc_reader_ = adc_store.add(params.adc_channel);
     configASSERT(adc_reader_);
 
@@ -44,9 +43,6 @@ AnalogSensorPipeline::AnalogSensorPipeline(system::IClock& clock,
                                                   fsm_block_pipeline_->get_block(),
                                                   config, params.sensor));
     configASSERT(sensor_);
-
-    configASSERT(task_scheduler.add(*sensor_, task_id_.c_str(), params.read_interval)
-                 == status::StatusCode::OK);
 }
 
 AnalogSensor& AnalogSensorPipeline::get_sensor() {
