@@ -51,7 +51,7 @@ const char* log_tag = "system_fsm";
 SystemFsm::SystemFsm(system::IRebooter& rebooter,
                      system::IClock& clock,
                      scheduler::ITaskScheduler& task_scheduler,
-                     IFsrHandler& handler,
+                     IFsrHandler& fsr_handler,
                      ILed& led,
                      IButton& button,
                      Params params)
@@ -59,7 +59,7 @@ SystemFsm::SystemFsm(system::IRebooter& rebooter,
     , rebooter_(rebooter)
     , clock_(clock)
     , task_scheduler_(task_scheduler)
-    , handler_(handler)
+    , fsr_handler_(fsr_handler)
     , led_(led)
     , button_(button) {
 }
@@ -201,7 +201,7 @@ void SystemFsm::handle_state_fsr_wait_confirm_(bool was_pressed) {
         return;
     }
 
-    const auto code = handler_.handle_fsr();
+    const auto code = fsr_handler_.handle_fsr();
     if (code != status::StatusCode::OK) {
         ocs_logw(log_tag, "FSR handler failed: code=%s", status::code_to_str(code));
     }
