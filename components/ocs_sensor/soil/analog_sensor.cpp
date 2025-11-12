@@ -134,7 +134,7 @@ double AnalogSensor::calculate_status_progress_(int raw) const {
     const int status_pos = offset - (get_status_len_() * status_index);
 
     const double progress = algo::MathOps::round_floor(
-        static_cast<double>(status_pos) / get_status_len_(), 2);
+        static_cast<double>(status_pos) / get_status_len_(), 1);
 
     return 100 * progress;
 }
@@ -174,7 +174,7 @@ void AnalogSensor::override_status_progress_(AnalogSensor::Data& data) {
             moisture_per_status * static_cast<uint8_t>(current_status);
 
         moisture = 100 - algo::MathOps::round_floor(moisture_used, 2);
-        progress = 99.99;
+        progress = 99.9;
     }
 
     data.moisture = moisture;
