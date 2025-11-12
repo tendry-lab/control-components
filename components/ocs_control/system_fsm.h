@@ -44,6 +44,7 @@ public:
     //!  - @p rebooter to be called when the button is pressed (ignored during the FSR).
     //!  - @p clock to measure the FSR state durations.
     //!  - @p task_scheduler to schedule the LED reactions.
+    //!  - @p init_handler to be called when the system initialization is completed.
     //!  - @p fsr_handler to be called when the FSR is happened.
     //!  - @p led to signalize about the system events.
     //!  - @p button to check if the FSR is requested.
@@ -51,6 +52,7 @@ public:
     SystemFsm(system::IRebooter& rebooter,
               system::IClock& clock,
               scheduler::ITaskScheduler& task_scheduler,
+              scheduler::IEventHandler& init_handler,
               IFsrHandler& fsr_handler,
               ILed& led,
               IButton& button,
@@ -79,6 +81,8 @@ private:
     //! Handle LED blinked required number of times.
     status::StatusCode handle_event() override;
 
+    void handle_init_done_();
+
     void handle_state_init_();
     void handle_state_wait_reset_(bool pressed);
 
@@ -102,6 +106,7 @@ private:
     system::IRebooter& rebooter_;
     system::IClock& clock_;
     scheduler::ITaskScheduler& task_scheduler_;
+    scheduler::IEventHandler& init_handler_;
     IFsrHandler& fsr_handler_;
     ILed& led_;
     IButton& button_;
