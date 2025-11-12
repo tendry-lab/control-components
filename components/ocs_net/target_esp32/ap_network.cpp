@@ -32,8 +32,8 @@ ApNetwork::ApNetwork(INetworkHandler& handler, const ApNetworkConfig& config)
     netif_ = make_netif_shared(esp_netif_create_default_wifi_ap());
     configASSERT(netif_);
 
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(
-        WIFI_EVENT, ESP_EVENT_ANY_ID, &handle_event_, this, &instance_any_id_));
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT, ESP_EVENT_ANY_ID,
+                                                        &handle_event_, this, nullptr));
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
@@ -41,9 +41,6 @@ ApNetwork::ApNetwork(INetworkHandler& handler, const ApNetworkConfig& config)
 }
 
 ApNetwork::~ApNetwork() {
-    ESP_ERROR_CHECK(esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID,
-                                                          &instance_any_id_));
-
     ESP_ERROR_CHECK(esp_wifi_deinit());
     ESP_ERROR_CHECK(esp_event_loop_delete_default());
 

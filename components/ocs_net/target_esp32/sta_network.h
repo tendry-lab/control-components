@@ -66,9 +66,6 @@ private:
 
     core::StaticEventGroup event_group_;
 
-    esp_event_handler_instance_t instance_any_id_ { nullptr };
-    esp_event_handler_instance_t instance_got_ip_ { nullptr };
-
     unsigned retry_count_ { 0 };
 };
 
