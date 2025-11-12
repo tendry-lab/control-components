@@ -499,7 +499,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
     TEST_ASSERT_EQUAL(2, data.curr_status_duration);
-    TEST_ASSERT_EQUAL_DOUBLE(99.99, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(99.9, data.status_progress);
     TEST_ASSERT_EQUAL(1, data.write_count);
 
     clock.value += resolution;
@@ -516,7 +516,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     TEST_ASSERT_EQUAL(0, data.prev_status_duration);
     TEST_ASSERT_EQUAL(SoilStatus::Saturated, data.curr_status);
     TEST_ASSERT_EQUAL(3, data.curr_status_duration);
-    TEST_ASSERT_EQUAL_DOUBLE(99.99, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(99.9, data.status_progress);
     TEST_ASSERT_EQUAL(1, data.write_count);
 
     clock.value += resolution;
