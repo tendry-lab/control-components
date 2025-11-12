@@ -51,6 +51,7 @@ const char* log_tag = "system_fsm";
 SystemFsm::SystemFsm(system::IRebooter& rebooter,
                      system::IClock& clock,
                      scheduler::ITaskScheduler& task_scheduler,
+                     scheduler::IEventHandler& init_handler,
                      IFsrHandler& fsr_handler,
                      ILed& led,
                      IButton& button,
@@ -59,6 +60,7 @@ SystemFsm::SystemFsm(system::IRebooter& rebooter,
     , rebooter_(rebooter)
     , clock_(clock)
     , task_scheduler_(task_scheduler)
+    , init_handler_(init_handler)
     , fsr_handler_(fsr_handler)
     , led_(led)
     , button_(button) {
@@ -116,7 +118,7 @@ status::StatusCode SystemFsm::handle_event() {
 
     switch (state_) {
     case State::WaitInitDone:
-        state_ = State::WaitReset;
+        handle_init_done_();
         break;
 
     case State::WaitResetDone:
@@ -130,6 +132,15 @@ status::StatusCode SystemFsm::handle_event() {
     }
 
     return status::StatusCode::OK;
+}
+
+void SystemFsm::handle_init_done_() {
+    const auto code = init_handler_.handle_event();
+    if (code != status::StatusCode::OK) {
+        ocs_logw(log_tag, "failed to handle initialization completion event");
+    }
+
+    state_ = State::WaitReset;
 }
 
 void SystemFsm::handle_state_init_() {
@@ -159,10 +170,11 @@ void SystemFsm::handle_state_fsr_wait_begin_() {
     configASSERT(fsr_update_ts_);
 
     if (!button_.get()) {
-        fsr_update_ts_ = 0;
-        state_ = State::WaitReset;
-
         ocs_logw(log_tag, "FSR canceled: button released too quickly");
+
+        fsr_update_ts_ = 0;
+
+        handle_init_done_();
 
         return;
     }
@@ -187,12 +199,13 @@ void SystemFsm::handle_state_fsr_wait_confirm_(bool was_pressed) {
     const auto expired = algo::TimeOps::after(fsr_update_ts_, clock_.now(),
                                               params_.fsr_wait_confirm_interval);
     if (expired) {
+        ocs_logw(log_tag, "FSR canceled: isn't confirmed within timeout");
+
         remove_task_();
 
         fsr_update_ts_ = 0;
-        state_ = State::WaitReset;
 
-        ocs_logw(log_tag, "FSR canceled: isn't confirmed within timeout");
+        handle_init_done_();
 
         return;
     }
