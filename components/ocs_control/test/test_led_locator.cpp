@@ -95,7 +95,7 @@ TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") 
 
     LedLocator locator(task_scheduler, func_scheduler, led);
 
-    AsyncTestRunner runner(task_scheduler, "test", 1024 * 2);
+    AsyncTestRunner runner(task_scheduler, "test", 1024 * 3);
     TEST_ASSERT_EQUAL(status::StatusCode::OK, runner.start());
 
     TEST_ASSERT_FALSE(locator.get());
@@ -204,7 +204,7 @@ TEST_CASE("LED locator: disable locating when the LED is locked by another compo
 
     LedLocator locator(task_scheduler, func_scheduler, led);
 
-    AsyncTestRunner runner(task_scheduler, "test", 1024 * 2);
+    AsyncTestRunner runner(task_scheduler, "test", 1024 * 3);
     TEST_ASSERT_EQUAL(status::StatusCode::OK, runner.start());
 
     TEST_ASSERT_FALSE(locator.get());
