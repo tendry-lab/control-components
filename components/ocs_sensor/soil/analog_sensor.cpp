@@ -109,8 +109,9 @@ double AnalogSensor::calculate_moisture_(int raw) const {
 
     const double loss = static_cast<double>(offset) / range;
     const double remain = 1 - loss;
+    const double moisture = 100 * remain;
 
-    return algo::MathOps::round_floor(100 * remain, 1);
+    return algo::MathOps::round_floor(moisture, 1);
 }
 
 SoilStatus AnalogSensor::calculate_status_(int raw) const {
