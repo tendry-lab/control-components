@@ -4,7 +4,6 @@
  */
 
 #include "ocs_pipeline/httpserver/http_pipeline.h"
-#include "ocs_core/log.h"
 #include "ocs_pipeline/httpserver/data_handler.h"
 #include "ocs_pipeline/httpserver/mdns_handler.h"
 #include "ocs_pipeline/httpserver/reboot_handler.h"
@@ -18,23 +17,12 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-namespace {
-
-const char* log_tag = "http_pipeline";
-
-} // namespace
-
 HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
-                           net::FanoutNetworkHandler& network_handler,
                            net::MdnsConfig& mdns_config,
-                           http::IServer& server,
                            http::IRouter& router,
                            fmt::json::IFormatter& telemetry_formatter,
                            fmt::json::FanoutFormatter& registration_formatter,
-                           Params params)
-    : server_(server) {
-    network_handler.add(*this);
-
+                           Params params) {
     telemetry_handler_.reset(new (std::nothrow) DataHandler(
         telemetry_formatter, params.telemetry.buffer_size));
     configASSERT(telemetry_handler_);
@@ -56,23 +44,6 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
     router.add(http::IRouter::Method::Get, "/api/v1/system/report",
                *system_state_handler_);
 #endif // CONFIG_FREERTOS_USE_TRACE_FACILITY
-}
-
-void HttpPipeline::handle_connect() {
-    const auto code = server_.start();
-    if (code != status::StatusCode::OK) {
-        ocs_loge(log_tag, "failed to start HTTP server on network connect: code=%s",
-                 status::code_to_str(code));
-    }
-}
-
-void HttpPipeline::handle_disconnect() {
-    const auto code = server_.stop();
-    if (code != status::StatusCode::OK) {
-        ocs_loge(log_tag,
-                 "failed to stop HTTP server when on network disconnect: code=%s",
-                 status::code_to_str(code));
-    }
 }
 
 http::IHandler& HttpPipeline::get_registration_handler() {
