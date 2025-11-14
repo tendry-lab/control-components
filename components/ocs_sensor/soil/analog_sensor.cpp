@@ -134,10 +134,9 @@ double AnalogSensor::calculate_status_progress_(int raw) const {
     const int status_index = offset / get_status_len_();
     const int status_pos = offset - (get_status_len_() * status_index);
 
-    const double progress = algo::MathOps::round_floor(
-        static_cast<double>(status_pos) / get_status_len_(), 1);
+    const double progress = 100 * (static_cast<double>(status_pos) / get_status_len_());
 
-    return 100 * progress;
+    return algo::MathOps::round_floor(progress, 1);
 }
 
 uint16_t AnalogSensor::get_status_len_() const {
