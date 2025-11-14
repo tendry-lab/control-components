@@ -684,6 +684,45 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
     TEST_ASSERT_EQUAL(4, data.write_count);
 }
 
+TEST_CASE("Soil analog sensor: validate moisture calculation",
+          "[ocs_sensor], [soil_analog_sensor]") {
+    const uint16_t def_min = 900;
+    const uint16_t def_max = 2300;
+    const char* id = "test";
+
+    test::MemoryStorage config_storage;
+    AnalogConfig config(config_storage, def_min, def_max,
+                        static_cast<io::adc::Bitwidth>(10),
+                        AnalogConfig::OversamplingMode::Mode_1, id);
+    TEST_ASSERT_TRUE(config.valid());
+
+    test::MemoryStorage fsm_block_storage;
+    test::TestClock clock;
+    control::FsmBlock fsm_block(clock, fsm_block_storage, system::Duration::second,
+                                "test_block");
+
+    TestAdcReader reader;
+    TestAdcConverter converter;
+    AnalogSensor sensor(reader, converter, fsm_block, config,
+                        AnalogSensor::Params {
+                            .status_progress_threshold = 0,
+                        });
+
+    const int raw = 1735;
+    reader.value = raw;
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, sensor.run());
+
+    const auto data = sensor.get_data();
+    TEST_ASSERT_EQUAL(raw, data.raw);
+    TEST_ASSERT_EQUAL(raw, data.voltage);
+    TEST_ASSERT_EQUAL_DOUBLE(40.3, data.moisture);
+    TEST_ASSERT_EQUAL(SoilStatus::None, data.prev_status);
+    TEST_ASSERT_EQUAL(SoilStatus::Depletion, data.curr_status);
+    TEST_ASSERT_EQUAL(1, data.write_count);
+    TEST_ASSERT_EQUAL_DOUBLE(38.6, data.status_progress);
+}
+
 } // namespace soil
 } // namespace sensor
 } // namespace ocs
