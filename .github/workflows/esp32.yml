@@ -43,17 +43,35 @@ jobs:
           path: ${{ env.SOURCE_PATH }}
           submodules: recursive
 
-      - name: check library formatting
-        uses: ./project/ci-components/.github/actions/fmt/cpp
-        with:
-          PROJECT_PATH: ${{ env.SOURCE_PATH }}/components
+      - name: check library license headers
+        env:
           CI_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}/ci-components
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/components
+        shell: bash
+        run: |
+          ${{ env.SOURCE_PATH }}/ci-components/scripts/fmt/check_license.sh
+
+      - name: check library formatting
+        env:
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/components
+        shell: bash
+        run: |
+          ${{ env.SOURCE_PATH }}/ci-components/scripts/fmt/cpp/check_format.sh
+
+      - name: check project license headers
+        env:
+          CI_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}/ci-components
+          PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
+        shell: bash
+        run: |
+          ${{ env.SOURCE_PATH }}/ci-components/scripts/fmt/check_license.sh
 
       - name: check project formatting
-        uses: ./project/ci-components/.github/actions/fmt/cpp
-        with:
+        env:
           PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
-          CI_COMPONENTS_PATH: ${{ env.SOURCE_PATH }}/ci-components
+        shell: bash
+        run: |
+          ${{ env.SOURCE_PATH }}/ci-components/scripts/fmt/cpp/check_format.sh
 
       - name: setup ESP32 environment
         uses: ./project/ci-components/.github/actions/esp32/env
