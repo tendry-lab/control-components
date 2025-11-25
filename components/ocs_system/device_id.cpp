@@ -24,12 +24,15 @@ const char* log_tag = "device_id";
 
 } // namespace
 
-DeviceID::DeviceID() {
+DeviceID::DeviceID(const char* uuid) {
+    configASSERT(uuid);
+    configASSERT(strlen(uuid));
+
     security::MbedTlsShaEngine engine(security::IShaEngine::Algorithm::SHA1);
 
     security::ShaGenerator generator(engine);
 
-    generator.add(reinterpret_cast<const uint8_t*>("tendry-lab-"), strlen("tendry-lab-"));
+    generator.add(reinterpret_cast<const uint8_t*>(uuid), strlen(uuid));
 
     uint8_t mac[6];
     memset(mac, 0, sizeof(mac));

@@ -68,7 +68,8 @@ SystemPipeline::SystemPipeline(SystemPipeline::Params params) {
 
     device_info_.reset(new (std::nothrow) system::DeviceInfo(
         CONFIG_OCS_CORE_FW_NAME, CONFIG_OCS_CORE_FW_VERSION,
-        CONFIG_OCS_CORE_FW_DESCRIPTION, CONFIG_OCS_CORE_PRODUCT_NAME));
+        CONFIG_OCS_CORE_FW_DESCRIPTION, CONFIG_OCS_CORE_PRODUCT_NAME,
+        CONFIG_OCS_CORE_COMPANY_UUID));
     configASSERT(device_info_);
 
     fsr_handler_.reset(new (std::nothrow) control::ConfigFsrHandler());
