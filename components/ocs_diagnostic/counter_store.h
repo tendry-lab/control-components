@@ -13,19 +13,15 @@
 namespace ocs {
 namespace diagnostic {
 
-class BasicCounterHolder : public core::NonCopyable<BasicCounterHolder> {
+class CounterStore : private core::NonCopyable<> {
 public:
     using CounterList = std::vector<ICounter*>;
 
-    //! Destroy.
-    virtual ~BasicCounterHolder() = default;
+    //! Return the underlying counters.
+    const CounterList& get() const;
 
     //! Add a new counter.
     void add(ICounter& counter);
-
-protected:
-    //! Return the underlying counters.
-    const CounterList& get_counters_() const;
 
 private:
     CounterList counters_;

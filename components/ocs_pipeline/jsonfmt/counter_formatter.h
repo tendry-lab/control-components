@@ -6,19 +6,26 @@
 #pragma once
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_diagnostic/basic_counter_holder.h"
+#include "ocs_diagnostic/counter_store.h"
 #include "ocs_fmt/json/iformatter.h"
 
 namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-class CounterFormatter : public fmt::json::IFormatter,
-                         public diagnostic::BasicCounterHolder,
-                         private core::NonCopyable<> {
+class CounterFormatter : public fmt::json::IFormatter, private core::NonCopyable<> {
 public:
+    //! Initialize.
+    //!
+    //! @params
+    //!  - @p store with all counters.
+    explicit CounterFormatter(diagnostic::CounterStore& store);
+
     //! Format the underlying counters into @p json.
     status::StatusCode format(cJSON* json) override;
+
+private:
+    diagnostic::CounterStore& store_;
 };
 
 } // namespace jsonfmt

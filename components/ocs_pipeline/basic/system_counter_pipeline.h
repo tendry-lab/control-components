@@ -8,8 +8,8 @@
 #include <memory>
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_diagnostic/basic_counter_holder.h"
 #include "ocs_diagnostic/basic_persistent_counter.h"
+#include "ocs_diagnostic/counter_store.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_storage/istorage.h"
 #include "ocs_system/fanout_reboot_handler.h"
@@ -27,7 +27,7 @@ public:
                           storage::IStorage& storage,
                           system::FanoutRebootHandler& reboot_handler,
                           scheduler::ITaskScheduler& task_scheduler,
-                          diagnostic::BasicCounterHolder& counter_holder);
+                          diagnostic::CounterStore& counter_store);
 
 private:
     std::unique_ptr<diagnostic::ICounter> uptime_counter_;

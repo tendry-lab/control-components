@@ -14,12 +14,11 @@ namespace ocs {
 namespace pipeline {
 namespace basic {
 
-SystemCounterPipeline::SystemCounterPipeline(
-    system::IClock& clock,
-    storage::IStorage& storage,
-    system::FanoutRebootHandler& reboot_handler,
-    scheduler::ITaskScheduler& task_scheduler,
-    diagnostic::BasicCounterHolder& counter_holder) {
+SystemCounterPipeline::SystemCounterPipeline(system::IClock& clock,
+                                             storage::IStorage& storage,
+                                             system::FanoutRebootHandler& reboot_handler,
+                                             scheduler::ITaskScheduler& task_scheduler,
+                                             diagnostic::CounterStore& counter_store) {
     uptime_counter_.reset(new (std::nothrow) diagnostic::TimeCounter(
         clock, "c_sys_uptime", system::Duration::second));
     configASSERT(uptime_counter_);
@@ -29,7 +28,7 @@ SystemCounterPipeline::SystemCounterPipeline(
     configASSERT(uptime_persistent_counter_);
 
     reboot_handler.add(*uptime_persistent_counter_);
-    counter_holder.add(*uptime_persistent_counter_);
+    counter_store.add(*uptime_persistent_counter_);
 
     lifetime_counter_.reset(new (std::nothrow) diagnostic::TimeCounter(
         clock, "c_sys_lifetime", system::Duration::second));
@@ -44,7 +43,7 @@ SystemCounterPipeline::SystemCounterPipeline(
                  == status::StatusCode::OK);
 
     reboot_handler.add(*lifetime_persistent_counter_);
-    counter_holder.add(*lifetime_persistent_counter_);
+    counter_store.add(*lifetime_persistent_counter_);
 }
 
 } // namespace basic
