@@ -7,6 +7,7 @@
 
 #include <memory>
 
+#include "ocs_diagnostic/counter_store.h"
 #include "ocs_fmt/json/fanout_formatter.h"
 #include "ocs_pipeline/basic/system_counter_pipeline.h"
 #include "ocs_pipeline/jsonfmt/counter_formatter.h"
@@ -33,13 +34,13 @@ public:
 
     fmt::json::FanoutFormatter& get_telemetry_formatter();
     fmt::json::FanoutFormatter& get_registration_formatter();
-    diagnostic::BasicCounterHolder& get_counter_holder();
 
 private:
     std::unique_ptr<TelemetryFormatter> telemetry_formatter_;
     std::unique_ptr<RegistrationFormatter> registration_formatter_;
 
     std::unique_ptr<storage::IStorage> system_counter_storage_;
+    std::unique_ptr<diagnostic::CounterStore> counter_store_;
     std::unique_ptr<CounterFormatter> counter_formatter_;
     std::unique_ptr<basic::SystemCounterPipeline> system_counter_pipeline_;
 };

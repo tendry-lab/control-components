@@ -10,10 +10,14 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
+CounterFormatter::CounterFormatter(diagnostic::CounterStore& store)
+    : store_(store) {
+}
+
 status::StatusCode CounterFormatter::format(cJSON* json) {
     fmt::json::CjsonObjectFormatter formatter(json);
 
-    for (auto& counter : get_counters_()) {
+    for (auto& counter : store_.get()) {
         if (!formatter.add_number_cs(counter->id(), counter->get())) {
             return status::StatusCode::NoMem;
         }
