@@ -16,7 +16,10 @@ namespace system {
 class DeviceID : private core::NonCopyable<> {
 public:
     //! Initialize.
-    DeviceID();
+    //!
+    //! @params
+    //!  - @p uuid - unique string identifier used during device ID generation.
+    explicit DeviceID(const char* uuid);
 
     //! Return human-readable unique string device identifier.
     const char* get_id() const;

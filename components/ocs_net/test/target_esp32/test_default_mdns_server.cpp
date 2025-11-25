@@ -44,7 +44,8 @@ TEST_CASE("Default mDNS server: start/stop", "[ocs_net], [default_mdns_server]")
     FanoutNetworkHandler handler;
 
     TestStorage storage;
-    system::DeviceInfo device_info("test-firmware", "0.0.0", "Test Firmware", "product");
+    system::DeviceInfo device_info("test-firmware", "0.0.0", "Test Firmware", "product",
+                                   "company");
     ApNetworkConfig config(storage, device_info);
 
     ApNetwork network(handler, config);

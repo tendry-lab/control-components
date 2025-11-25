@@ -21,10 +21,12 @@ public:
     //!  - @p fw_version - FW version in semver format.
     //!  - @p fw_description - a short user-friendly name that identifies the FW.
     //!  - @p product_name - unique product name to group related FWs.
+    //!  - @p company_uuid - unique company string identifier.
     DeviceInfo(const char* fw_name,
                const char* fw_version,
                const char* fw_description,
-               const char* product_name);
+               const char* product_name,
+               const char* company_uuid);
 
     const char* get_fw_name() const;
     const char* get_fw_version() const;

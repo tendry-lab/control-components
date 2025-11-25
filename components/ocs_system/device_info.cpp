@@ -11,11 +11,13 @@ namespace system {
 DeviceInfo::DeviceInfo(const char* fw_name,
                        const char* fw_version,
                        const char* fw_description,
-                       const char* product_name)
+                       const char* product_name,
+                       const char* company_uuid)
     : fw_name_(fw_name)
     , fw_version_(fw_version)
     , fw_description_(fw_description)
-    , product_name_(product_name) {
+    , product_name_(product_name)
+    , device_id_(company_uuid) {
 }
 
 const char* DeviceInfo::get_fw_name() const {

@@ -22,4 +22,10 @@ menu "OCS Core Configuration"
         default "product"
         help
             Product name.
+
+    config OCS_CORE_COMPANY_UUID
+        string "Company UUID"
+        default "company"
+        help
+            Unique company string identifier.
 endmenu

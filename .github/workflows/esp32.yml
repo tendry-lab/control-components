@@ -18,18 +18,22 @@ jobs:
         project:
           - project_name: "unittest"
             product_name: "tests"
+            company_uuid: "tendry-lab-"
             config: ".env/unittest_configuration"
 
           - project_name: "ds18b20-verifier"
             product_name: "ds-onewire"
+            company_uuid: "tendry-lab-"
             config: ".env/ds18b20_verifier_configuration"
 
           - project_name: "ds-rom-code-scanner"
             product_name: "ds-onewire"
+            company_uuid: "tendry-lab-"
             config: ".env/ds_rom_code_scanner_configuration"
 
           - project_name: "sht41-verifier"
             product_name: "sht41"
+            company_uuid: "tendry-lab-"
             config: ".env/sht41_verifier_configuration"
     env:
       SOURCE_PATH: project
@@ -96,6 +100,7 @@ jobs:
         with:
           PROJECT_NAME: ${{ matrix.project.project_name }}
           PRODUCT_NAME: ${{ matrix.project.product_name }}
+          COMPANY_UUID: ${{ matrix.project.company_uuid }}
           BUILD_VERSION: ${{ steps.version_formatter.outputs.build_version }}
           BUILD_CONFIG_PATH: ${{ matrix.project.config }}
           PROJECT_CONFIG_PATH: ${{ env.SOURCE_PATH }}/projects/config.yml
