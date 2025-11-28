@@ -106,7 +106,7 @@ TEST_CASE("Start HTTP server: WiFi valid credentials", "[ocs_http], [server]") {
         std::string response_;
     } http_handler(want_response);
 
-    router.add(http::IRouter::Method::Get, path, http_handler);
+    router.add(http::IRequest::Method::Get, path, http_handler);
 
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;
@@ -227,7 +227,7 @@ TEST_CASE("Start HTTP server: chunked response", "[ocs_http], [server]") {
         std::string response_;
     } http_handler(want_response);
 
-    router.add(http::IRouter::Method::Get, path, http_handler);
+    router.add(http::IRequest::Method::Get, path, http_handler);
 
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;

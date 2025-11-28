@@ -16,8 +16,8 @@ SHT41Handler::SHT41Handler(scheduler::AsyncFuncScheduler& func_scheduler,
                            sensor::sht41::Sensor& sensor)
     : func_scheduler_(func_scheduler)
     , sensor_(sensor) {
-    router.add(http::IRouter::Method::Get, "/api/v1/sensor/sht41/reset", *this);
-    router.add(http::IRouter::Method::Get, "/api/v1/sensor/sht41/heat", *this);
+    router.add(http::IRequest::Method::Get, "/api/v1/sensor/sht41/reset", *this);
+    router.add(http::IRequest::Method::Get, "/api/v1/sensor/sht41/heat", *this);
 }
 
 status::StatusCode SHT41Handler::serve_http(http::IResponseWriter& w, http::IRequest& r) {

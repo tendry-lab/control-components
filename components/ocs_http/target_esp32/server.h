@@ -42,17 +42,19 @@ public:
     status::StatusCode stop() override;
 
 private:
-    static esp_err_t handle_request_(httpd_req_t* req);
+    static esp_err_t handle_request_cb_(httpd_req_t* req);
 
     bool match_pattern(const char* reference_pattern,
                        const char* pattern_to_match,
                        size_t match_upto) override;
 
-    void iterate_pattern(const char* path, IHandler& handler) override;
+    void iterate_pattern(IRequest::Method method,
+                         const char* path,
+                         IHandler& handler) override;
 
     status::StatusCode register_uris_();
 
-    void handle_request_get_(httpd_req_t* req);
+    void handle_request_(httpd_req_t* req);
 
     IRouter& router_;
 

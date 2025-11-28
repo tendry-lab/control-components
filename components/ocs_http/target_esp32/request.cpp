@@ -16,5 +16,23 @@ const char* Request::get_uri() const {
     return req_.uri;
 }
 
+IRequest::Method Request::get_method() const {
+    switch (req_.method) {
+    case HTTP_GET:
+        return IRequest::Method::Get;
+    case HTTP_POST:
+        return IRequest::Method::Post;
+
+    default:
+        break;
+    }
+
+    return IRequest::Method::Unsupported;
+}
+
+size_t Request::get_content_length() const {
+    return req_.content_len;
+}
+
 } // namespace http
 } // namespace ocs

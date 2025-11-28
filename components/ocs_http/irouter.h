@@ -15,11 +15,6 @@ namespace http {
 
 class IRouter {
 public:
-    //! HTTP endpoint methods.
-    enum class Method : uint8_t {
-        Get,
-    };
-
     //! Destroy.
     virtual ~IRouter() = default;
 
@@ -27,16 +22,16 @@ public:
     //!
     //! @remarks
     //!  It's forbidden to register multiple handlers for the same pattern and method.
-    virtual void add(Method method, const char* pattern, IHandler& handler) = 0;
+    virtual void add(IRequest::Method method, const char* pattern, IHandler& handler) = 0;
 
     //! Receive a registered handler.
-    virtual IHandler* match(Method method,
+    virtual IHandler* match(IRequest::Method method,
                             const char* pattern,
                             size_t match_upto,
                             IPatternMatcher& matcher) = 0;
 
     //! Iterate over each registered handler.
-    virtual void for_each(Method method, IPatternIterator& iterator) = 0;
+    virtual void for_each(IRequest::Method method, IPatternIterator& iterator) = 0;
 };
 
 } // namespace http

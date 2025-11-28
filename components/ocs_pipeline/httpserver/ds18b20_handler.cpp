@@ -112,15 +112,15 @@ DS18B20Handler::DS18B20Handler(http::IRouter& router,
                                sensor::ds18b20::Store& store)
     : suspender_(suspender)
     , store_(store) {
-    router.add(http::IRouter::Method::Get, "/api/v1/sensor/ds18b20/scan", *this);
+    router.add(http::IRequest::Method::Get, "/api/v1/sensor/ds18b20/scan", *this);
 
-    router.add(http::IRouter::Method::Get, "/api/v1/sensor/ds18b20/read_configuration",
+    router.add(http::IRequest::Method::Get, "/api/v1/sensor/ds18b20/read_configuration",
                *this);
 
-    router.add(http::IRouter::Method::Get, "/api/v1/sensor/ds18b20/write_configuration",
+    router.add(http::IRequest::Method::Get, "/api/v1/sensor/ds18b20/write_configuration",
                *this);
 
-    router.add(http::IRouter::Method::Get, "/api/v1/sensor/ds18b20/erase_configuration",
+    router.add(http::IRequest::Method::Get, "/api/v1/sensor/ds18b20/erase_configuration",
                *this);
 }
 
