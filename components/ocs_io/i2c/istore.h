@@ -46,6 +46,12 @@ public:
         gpio::Gpio scl { static_cast<gpio::Gpio>(-1) };
     };
 
+    //! I2C general call address.
+    static constexpr uint8_t bus_fanout_address = 0x00;
+
+    //! I2C general call reset command.
+    static constexpr uint8_t bus_reset_command = 0x06;
+
     //! Destroy.
     virtual ~IStore() = default;
 

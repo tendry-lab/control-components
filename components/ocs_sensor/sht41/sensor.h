@@ -65,6 +65,9 @@ public:
     //! @params
     //!  - @p transceiver to communicate with the I2C device.
     //!  - @p storage to persist number of times the heater was activated.
+    //!
+    //! @remarks
+    //!  Sensor is reset on initialization.
     Sensor(io::i2c::ITransceiver& transceiver, storage::IStorage& storage, Params params);
 
     //! Read sensor data.

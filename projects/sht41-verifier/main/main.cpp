@@ -6,9 +6,11 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_io/i2c/target_esp32/master_store_pipeline.h"
+#include "ocs_io/i2c/target_esp32/master_store.h"
 #include "ocs_sensor/sht41/sensor.h"
+#include "ocs_status/code_to_str.h"
 #include "ocs_storage/storage_builder.h"
+#include "ocs_system/time.h"
 
 using namespace ocs;
 
@@ -19,19 +21,33 @@ const char* log_tag = "sht41_verifier";
 } // namespace
 
 extern "C" void app_main(void) {
-    std::unique_ptr<io::i2c::MasterStorePipeline> store_pipeline(
-        new (std::nothrow) io::i2c::MasterStorePipeline(io::i2c::IStore::Params {
+    const system::Time bus_wait_interval = system::Duration::second * 5;
+
+    std::unique_ptr<io::i2c::IStore> store(
+        new (std::nothrow) io::i2c::MasterStore(io::i2c::IStore::Params {
             .sda = static_cast<io::gpio::Gpio>(
                 CONFIG_OCS_TOOL_SHT41_VERIFIER_I2C_MASTER_SDA_GPIO),
             .scl = static_cast<io::gpio::Gpio>(
                 CONFIG_OCS_TOOL_SHT41_VERIFIER_I2C_MASTER_SCL_GPIO),
         }));
-    configASSERT(store_pipeline);
+    configASSERT(store);
 
-    io::i2c::IStore::ITransceiverPtr transceiver =
-        store_pipeline->get_store().add("sht41", io::i2c::IStore::AddressLength::Bit_7,
-                                        0x44, io::i2c::IStore::TransferSpeed::Fast);
-    configASSERT(transceiver);
+    io::i2c::IStore::ITransceiverPtr bus_transceiver = store->add(
+        "bus", io::i2c::IStore::AddressLength::Bit_7, io::i2c::IStore::bus_fanout_address,
+        io::i2c::IStore::TransferSpeed::Fast);
+    configASSERT(bus_transceiver);
+
+    const auto code = bus_transceiver->send(&io::i2c::IStore::bus_reset_command,
+                                            sizeof(io::i2c::IStore::bus_reset_command),
+                                            bus_wait_interval);
+    if (code != status::StatusCode::OK) {
+        ocs_logw(log_tag, "failed to reset i2c bus: %s", status::code_to_str(code));
+    }
+
+    io::i2c::IStore::ITransceiverPtr sensor_transceiver =
+        store->add("sht41", io::i2c::IStore::AddressLength::Bit_7, 0x44,
+                   io::i2c::IStore::TransferSpeed::Fast);
+    configASSERT(sensor_transceiver);
 
     std::unique_ptr<storage::StorageBuilder> storage_builder(
         new (std::nothrow) storage::StorageBuilder());
@@ -41,7 +57,7 @@ extern "C" void app_main(void) {
 
     std::unique_ptr<sensor::sht41::Sensor> sensor(
         new (std::nothrow) sensor::sht41::Sensor(
-            *transceiver, *storage,
+            *sensor_transceiver, *storage,
             sensor::sht41::Sensor::Params {
                 .send_wait_interval =
                     pdMS_TO_TICKS(CONFIG_OCS_TOOLS_SHT41_VERIFIER_I2C_SEND_WAIT_INTERVAL),
