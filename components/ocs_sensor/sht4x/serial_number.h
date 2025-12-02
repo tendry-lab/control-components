@@ -16,11 +16,11 @@
 
 namespace ocs {
 namespace sensor {
-namespace sht41 {
+namespace sht4x {
 
 //! SHT sensor serial number, MSB byte order.
 using SerialNumber = uint8_t[SHT_SENSOR_SERIAL_NUMBER_LEN];
 
-} // namespace sht41
+} // namespace sht4x
 } // namespace sensor
 } // namespace ocs

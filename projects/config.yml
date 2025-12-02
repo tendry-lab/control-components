@@ -5,7 +5,7 @@ projects:
       - CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED=y
   ds18b20-verifier:
     desc: "DS18B20 Sensor Verification"
-  sht41-verifier:
-    desc: "SHT41 Sensor Verification"
+  sht4x-verifier:
+    desc: "SHT4x Sensor Verification"
   ds-rom-code-scanner:
     desc: "DS Sensor Rom Code Scanner"

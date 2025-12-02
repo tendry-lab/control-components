@@ -9,23 +9,21 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_http/ihandler.h"
-#include "ocs_http/irouter.h"
 #include "ocs_scheduler/async_func_scheduler.h"
-#include "ocs_sensor/sht41/sensor.h"
+#include "ocs_sensor/sht4x/sensor.h"
 
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-class SHT41Handler : private http::IHandler, private core::NonCopyable<> {
+class SHT4xHandler : private http::IHandler, private core::NonCopyable<> {
 public:
     //! Initialize.
-    SHT41Handler(scheduler::AsyncFuncScheduler& func_scheduler,
-                 http::IRouter& router,
-                 sensor::sht41::Sensor& sensor);
+    SHT4xHandler(scheduler::AsyncFuncScheduler& func_scheduler,
+                 sensor::sht4x::Sensor& sensor);
 
 private:
-    using HandleOperationFunc = std::function<status::StatusCode(sensor::sht41::Sensor&)>;
+    using HandleOperationFunc = std::function<status::StatusCode(sensor::sht4x::Sensor&)>;
 
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
 
@@ -35,7 +33,7 @@ private:
     static const TickType_t wait_op_interval_ { pdMS_TO_TICKS(5 * 1000) };
 
     scheduler::AsyncFuncScheduler& func_scheduler_;
-    sensor::sht41::Sensor& sensor_;
+    sensor::sht4x::Sensor& sensor_;
 };
 
 } // namespace httpserver

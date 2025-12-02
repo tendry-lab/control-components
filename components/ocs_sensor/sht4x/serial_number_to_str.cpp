@@ -8,11 +8,11 @@
 
 #include "freertos/FreeRTOSConfig.h"
 
-#include "ocs_sensor/sht41/serial_number_to_str.h"
+#include "ocs_sensor/sht4x/serial_number_to_str.h"
 
 namespace ocs {
 namespace sensor {
-namespace sht41 {
+namespace sht4x {
 
 serial_number_to_str::serial_number_to_str(const SerialNumber& serial_number) {
     memset(buf_, 0, sizeof(buf_));
@@ -26,6 +26,6 @@ const char* serial_number_to_str::c_str() const {
     return buf_;
 }
 
-} // namespace sht41
+} // namespace sht4x
 } // namespace sensor
 } // namespace ocs

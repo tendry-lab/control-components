@@ -12,14 +12,14 @@
 #include "ocs_algo/crc_ops.h"
 #include "ocs_algo/math_ops.h"
 #include "ocs_core/log.h"
-#include "ocs_sensor/sht41/sensor.h"
-#include "ocs_sensor/sht41/serial_number_to_str.h"
+#include "ocs_sensor/sht4x/sensor.h"
+#include "ocs_sensor/sht4x/serial_number_to_str.h"
 #include "ocs_status/code_to_str.h"
 #include "ocs_status/macros.h"
 
 namespace ocs {
 namespace sensor {
-namespace sht41 {
+namespace sht4x {
 
 namespace {
 
@@ -28,14 +28,14 @@ uint8_t calculate_crc(uint8_t hi, uint8_t lo) {
     return algo::CrcOps::crc8(buf, sizeof(buf), 0xFF, 0x31, algo::CrcOps::BitOrder::MSB);
 }
 
-const char* log_tag = "sht41_sensor";
-
 } // namespace
 
 Sensor::Sensor(io::i2c::ITransceiver& transceiver,
                storage::IStorage& storage,
+               const char* id,
                Sensor::Params params)
     : params_(params)
+    , log_tag_(id)
     , transceiver_(transceiver)
     , storage_(storage) {
     configASSERT(params_.send_wait_interval);
@@ -47,16 +47,17 @@ Sensor::Sensor(io::i2c::ITransceiver& transceiver,
     configASSERT(heating_delay_);
 
     if (const auto code = read_heating_count_(); code != status::StatusCode::OK) {
-        ocs_loge(log_tag, "failed to read sensor heating count from storage: code=%s",
+        ocs_loge(log_tag_.c_str(),
+                 "failed to read sensor heating count from storage: code=%s",
                  status::code_to_str(code));
     }
 
     if (const auto code = read_serial_number_(); code != status::StatusCode::OK) {
-        ocs_loge(log_tag, "failed to read sensor serial number: code=%s",
+        ocs_loge(log_tag_.c_str(), "failed to read sensor serial number: code=%s",
                  status::code_to_str(code));
     }
 
-    ocs_logi(log_tag,
+    ocs_logi(log_tag_.c_str(),
              "serial_number=%s measure_command=%s "
              "heating_command=%s heating_delay=%lu(ms) heating_count=%u",
              serial_number_to_str(serial_number_).c_str(),
@@ -83,26 +84,26 @@ Sensor::Data Sensor::get_data() const {
 }
 
 status::StatusCode Sensor::reset() {
-    ocs_logi(log_tag, "start resetting");
+    ocs_logi(log_tag_.c_str(), "start resetting");
 
     const auto code = reset_();
     if (code != status::StatusCode::OK) {
-        ocs_loge(log_tag, "reset failed: %s", status::code_to_str(code));
+        ocs_loge(log_tag_.c_str(), "reset failed: %s", status::code_to_str(code));
     } else {
-        ocs_logi(log_tag, "reset completed");
+        ocs_logi(log_tag_.c_str(), "reset completed");
     }
 
     return code;
 }
 
 status::StatusCode Sensor::heat() {
-    ocs_logi(log_tag, "start heating");
+    ocs_logi(log_tag_.c_str(), "start heating");
 
     const auto code = heat_();
     if (code != status::StatusCode::OK) {
-        ocs_loge(log_tag, "heating failed: %s", status::code_to_str(code));
+        ocs_loge(log_tag_.c_str(), "heating failed: %s", status::code_to_str(code));
     } else {
-        ocs_logi(log_tag, "heating completed");
+        ocs_logi(log_tag_.c_str(), "heating completed");
     }
 
     return code;
@@ -192,7 +193,7 @@ status::StatusCode Sensor::heat_() {
     data.heating_count = heating_count_;
 
     if (const auto code = write_heating_count_(); code != status::StatusCode::OK) {
-        ocs_logw(log_tag, "failed to persist sensor heating count: %s",
+        ocs_logw(log_tag_.c_str(), "failed to persist sensor heating count: %s",
                  status::code_to_str(code));
     }
 
@@ -213,7 +214,7 @@ status::StatusCode Sensor::read_serial_number_() {
     const uint8_t hi_checksum_calculated = calculate_crc(buf[0], buf[1]);
     if (hi_checksum != hi_checksum_calculated) {
         ocs_logw(
-            log_tag,
+            log_tag_.c_str(),
             "failed to read serial number: invalid CRC for `hi` word: want=%u got=%u",
             hi_checksum, hi_checksum_calculated);
 
@@ -224,7 +225,7 @@ status::StatusCode Sensor::read_serial_number_() {
     const uint8_t lo_checksum_calculated = calculate_crc(buf[3], buf[4]);
     if (lo_checksum != lo_checksum_calculated) {
         ocs_logw(
-            log_tag,
+            log_tag_.c_str(),
             "failed to read serial number: invalid CRC for `lo` word: want=%u got=%u",
             lo_checksum, lo_checksum_calculated);
 
@@ -246,7 +247,8 @@ status::StatusCode Sensor::receive_data_(Sensor::Data& data) {
     const uint8_t temperature_checksum = buf[2];
     const uint8_t temperature_checksum_calculated = calculate_crc(buf[0], buf[1]);
     if (temperature_checksum != temperature_checksum_calculated) {
-        ocs_logw(log_tag, "failed to read temperature: checksum mismatch: want=%u got=%u",
+        ocs_logw(log_tag_.c_str(),
+                 "failed to read temperature: checksum mismatch: want=%u got=%u",
                  temperature_checksum, temperature_checksum_calculated);
 
         return status::StatusCode::InvalidState;
@@ -256,7 +258,8 @@ status::StatusCode Sensor::receive_data_(Sensor::Data& data) {
     const uint8_t humidity_checksum = buf[5];
     const uint8_t humidity_checksum_calculcated = calculate_crc(buf[3], buf[4]);
     if (humidity_checksum != humidity_checksum_calculcated) {
-        ocs_logw(log_tag, "failed to read humidity: checksum mismatch: want=%u got=%u",
+        ocs_logw(log_tag_.c_str(),
+                 "failed to read humidity: checksum mismatch: want=%u got=%u",
                  humidity_checksum, humidity_checksum_calculcated);
 
         return status::StatusCode::InvalidState;
@@ -302,6 +305,6 @@ status::StatusCode Sensor::write_heating_count_() {
     return status::StatusCode::OK;
 }
 
-} // namespace sht41
+} // namespace sht4x
 } // namespace sensor
 } // namespace ocs

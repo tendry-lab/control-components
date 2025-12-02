@@ -31,10 +31,10 @@ jobs:
             company_uuid: "tendry-lab-"
             config: ".env/ds_rom_code_scanner_configuration"
 
-          - project_name: "sht41-verifier"
-            product_name: "sht41"
+          - project_name: "sht4x-verifier"
+            product_name: "sht4x"
             company_uuid: "tendry-lab-"
-            config: ".env/sht41_verifier_configuration"
+            config: ".env/sht4x_verifier_configuration"
     env:
       SOURCE_PATH: project
       IDF_PATH: esp-idf

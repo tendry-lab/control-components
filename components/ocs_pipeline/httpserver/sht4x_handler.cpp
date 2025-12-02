@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "ocs_pipeline/httpserver/sht41_handler.h"
+#include "ocs_pipeline/httpserver/sht4x_handler.h"
 #include "ocs_algo/response_ops.h"
 #include "ocs_algo/uri_ops.h"
 
@@ -11,25 +11,22 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-SHT41Handler::SHT41Handler(scheduler::AsyncFuncScheduler& func_scheduler,
-                           http::IRouter& router,
-                           sensor::sht41::Sensor& sensor)
+SHT4xHandler::SHT4xHandler(scheduler::AsyncFuncScheduler& func_scheduler,
+                           sensor::sht4x::Sensor& sensor)
     : func_scheduler_(func_scheduler)
     , sensor_(sensor) {
-    router.add(http::IRouter::Method::Get, "/api/v1/sensor/sht41/reset", *this);
-    router.add(http::IRouter::Method::Get, "/api/v1/sensor/sht41/heat", *this);
 }
 
-status::StatusCode SHT41Handler::serve_http(http::IResponseWriter& w, http::IRequest& r) {
+status::StatusCode SHT4xHandler::serve_http(http::IResponseWriter& w, http::IRequest& r) {
     const auto path = algo::UriOps::parse_path(r.get_uri());
 
-    if (path == "/api/v1/sensor/sht41/reset") {
-        return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
+    if (path.find("reset") != std::string_view::npos) {
+        return handle_operation_(w, [](sensor::sht4x::Sensor& sensor) {
             return sensor.reset();
         });
     }
-    if (path == "/api/v1/sensor/sht41/heat") {
-        return handle_operation_(w, [](sensor::sht41::Sensor& sensor) {
+    if (path.find("heat") != std::string_view::npos) {
+        return handle_operation_(w, [](sensor::sht4x::Sensor& sensor) {
             return sensor.heat();
         });
     }
@@ -38,8 +35,8 @@ status::StatusCode SHT41Handler::serve_http(http::IResponseWriter& w, http::IReq
 }
 
 status::StatusCode
-SHT41Handler::handle_operation_(http::IResponseWriter& w,
-                                SHT41Handler::HandleOperationFunc func) {
+SHT4xHandler::handle_operation_(http::IResponseWriter& w,
+                                SHT4xHandler::HandleOperationFunc func) {
     auto future = func_scheduler_.add([this, func]() {
         return func(sensor_);
     });

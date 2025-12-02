@@ -8,11 +8,11 @@
 #include <cstring>
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_sensor/sht41/serial_number.h"
+#include "ocs_sensor/sht4x/serial_number.h"
 
 namespace ocs {
 namespace sensor {
-namespace sht41 {
+namespace sht4x {
 
 //! Format sensor serial number to string.
 class serial_number_to_str : private core::NonCopyable<> {
@@ -29,6 +29,6 @@ private:
     char buf_[str_length + 1];
 };
 
-} // namespace sht41
+} // namespace sht4x
 } // namespace sensor
 } // namespace ocs

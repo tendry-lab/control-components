@@ -2,7 +2,7 @@ idf_component_register(
     SRCS
     "httpserver/http_pipeline.cpp"
     "httpserver/ds18b20_handler.cpp"
-    "httpserver/sht41_handler.cpp"
+    "httpserver/sht4x_handler.cpp"
     "httpserver/data_handler.cpp"
     "httpserver/reboot_handler.cpp"
     "httpserver/system_state_handler.cpp"
@@ -22,7 +22,6 @@ idf_component_register(
     "jsonfmt/telemetry_formatter.cpp"
     "jsonfmt/registration_formatter.cpp"
     "jsonfmt/system_state_formatter.cpp"
-    "jsonfmt/sht41_sensor_formatter.cpp"
     "jsonfmt/bme280_sensor_formatter.cpp"
     "jsonfmt/ds18b20_sensor_formatter.cpp"
     "jsonfmt/ldr_analog_sensor_formatter.cpp"
