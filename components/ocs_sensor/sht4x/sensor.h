@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -12,17 +14,17 @@
 #include "ocs_core/spmc_node.h"
 #include "ocs_io/i2c/itransceiver.h"
 #include "ocs_scheduler/itask.h"
-#include "ocs_sensor/sht41/serial_number.h"
+#include "ocs_sensor/sht4x/serial_number.h"
 #include "ocs_storage/istorage.h"
 
 namespace ocs {
 namespace sensor {
-namespace sht41 {
+namespace sht4x {
 
-//! Read data from SHT41 sensor.
+//! Read data from SHT4x sensor.
 //!
 //! @reference
-//!  - https://sensirion.com/products/catalog/SEK-SHT41
+//!  https://sensirion.com/media/documents/33FD6951/6555C40E/Sensirion_Datasheet_SHT4x.pdf
 class Sensor : public scheduler::ITask, private core::NonCopyable<> {
 public:
     //! Various sensor characteristics.
@@ -65,10 +67,15 @@ public:
     //! @params
     //!  - @p transceiver to communicate with the I2C device.
     //!  - @p storage to persist number of times the heater was activated.
+    //!  - @p id - unique sensor identifier, e.g. sht40 or sht41.
+    //!  - @p params - various sensor settings.
     //!
     //! @remarks
     //!  Sensor is reset on initialization.
-    Sensor(io::i2c::ITransceiver& transceiver, storage::IStorage& storage, Params params);
+    Sensor(io::i2c::ITransceiver& transceiver,
+           storage::IStorage& storage,
+           const char* id,
+           Params params);
 
     //! Read sensor data.
     status::StatusCode run() override;
@@ -122,6 +129,7 @@ private:
     static constexpr TickType_t heating_short_pulse_delay_ = pdMS_TO_TICKS(110 + 10 + 50);
 
     const Params params_;
+    const std::string log_tag_;
 
     io::i2c::ITransceiver& transceiver_;
     storage::IStorage& storage_;
@@ -133,6 +141,6 @@ private:
     core::SpmcNode<Data> data_;
 };
 
-} // namespace sht41
+} // namespace sht4x
 } // namespace sensor
 } // namespace ocs

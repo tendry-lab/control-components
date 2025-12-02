@@ -21,9 +21,9 @@ idf_component_register(
     "ds18b20/resolution_to_str.cpp"
     "ds18b20/parse_configuration.cpp"
 
-    "sht41/sensor.cpp"
-    "sht41/sensor_pipeline.cpp"
-    "sht41/serial_number_to_str.cpp"
+    "sht4x/sensor.cpp"
+    "sht4x/sensor_pipeline.cpp"
+    "sht4x/serial_number_to_str.cpp"
 
     "bme280/sensor.cpp"
     "bme280/spi_sensor_pipeline.cpp"

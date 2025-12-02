@@ -17,8 +17,8 @@ http "bonsai-firmware.local/api/v1/telemetry"
     "sensor_ldr_lightness": 100,
     "sensor_ldr_raw": 977,
     "sensor_ldr_voltage": 3060,
-    "sensor_sht41_humidity": 0,
-    "sensor_sht41_temperature": 0,
+    "sensor_sht4x_humidity": 0,
+    "sensor_sht4x_temperature": 0,
     "sensor_soil_curr_status": "Dry",
     "sensor_soil_curr_status_dur": 78,
     "sensor_soil_moisture": 24,
@@ -283,7 +283,7 @@ OK
 **Sensors APIs**
 
 - [DS18B20](sensors/ds18b20.md#HTTP-API)
-- [SHT41](sensors/sht41.md#HTTP-API)
+- [SHT4x](sensors/sht4x.md#HTTP-API)
 - [Soil Analog](sensors/soil_analog.md#HTTP-API)
 - [LDR Analog](sensors/ldr_analog.md#HTTP-API)
 
