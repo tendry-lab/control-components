@@ -41,8 +41,6 @@ Sensor::Sensor(io::i2c::ITransceiver& transceiver,
     configASSERT(params_.send_wait_interval);
     configASSERT(params_.bus_wait_interval);
 
-    reset();
-
     heating_delay_ = estimate_heating_delay_(params.heating_command);
     configASSERT(heating_delay_);
 
@@ -51,22 +49,13 @@ Sensor::Sensor(io::i2c::ITransceiver& transceiver,
                  "failed to read sensor heating count from storage: code=%s",
                  status::code_to_str(code));
     }
-
-    if (const auto code = read_serial_number_(); code != status::StatusCode::OK) {
-        ocs_loge(log_tag_.c_str(), "failed to read sensor serial number: code=%s",
-                 status::code_to_str(code));
-    }
-
-    ocs_logi(log_tag_.c_str(),
-             "serial_number=%s measure_command=%s "
-             "heating_command=%s heating_delay=%lu(ms) heating_count=%u",
-             serial_number_to_str(serial_number_).c_str(),
-             command_to_str_(params_.measure_command),
-             command_to_str_(params.heating_command), pdTICKS_TO_MS(heating_delay_),
-             heating_count_);
 }
 
 status::StatusCode Sensor::run() {
+    if (!initialized_) {
+        OCS_STATUS_RETURN_ON_ERROR(initialize_());
+    }
+
     OCS_STATUS_RETURN_ON_ERROR(send_command_(params_.measure_command));
 
     Data data;
@@ -173,6 +162,28 @@ TickType_t Sensor::estimate_heating_delay_(Command command) {
     }
 
     return 0;
+}
+
+status::StatusCode Sensor::initialize_() {
+    const auto code = read_serial_number_();
+    if (code != status::StatusCode::OK) {
+        ocs_loge(log_tag_.c_str(), "failed to read sensor serial number: code=%s",
+                 status::code_to_str(code));
+
+        return code;
+    }
+
+    ocs_logi(log_tag_.c_str(),
+             "initialized: serial_number=%s measure_command=%s "
+             "heating_command=%s heating_delay=%lu(ms) heating_count=%u",
+             serial_number_to_str(serial_number_).c_str(),
+             command_to_str_(params_.measure_command),
+             command_to_str_(params_.heating_command), pdTICKS_TO_MS(heating_delay_),
+             heating_count_);
+
+    initialized_ = true;
+
+    return status::StatusCode::OK;
 }
 
 status::StatusCode Sensor::reset_() {

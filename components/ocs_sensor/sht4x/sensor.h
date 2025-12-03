@@ -108,6 +108,7 @@ private:
 
     static constexpr const char* heating_count_key_ = "heating_count";
 
+    status::StatusCode initialize_();
     status::StatusCode reset_();
     status::StatusCode heat_();
     status::StatusCode read_serial_number_();
@@ -136,6 +137,8 @@ private:
 
     TickType_t heating_delay_ { 0 };
     unsigned heating_count_ { 0 };
+
+    bool initialized_ { false };
     SerialNumber serial_number_ { 0 };
 
     core::SpmcNode<Data> data_;

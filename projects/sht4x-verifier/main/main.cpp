@@ -37,9 +37,9 @@ extern "C" void app_main(void) {
         io::i2c::IStore::TransferSpeed::Fast);
     configASSERT(bus_transceiver);
 
-    const auto code = bus_transceiver->send(&io::i2c::IStore::bus_reset_command,
-                                            sizeof(io::i2c::IStore::bus_reset_command),
-                                            bus_wait_interval);
+    auto code = bus_transceiver->send(&io::i2c::IStore::bus_reset_command,
+                                      sizeof(io::i2c::IStore::bus_reset_command),
+                                      bus_wait_interval);
     if (code != status::StatusCode::OK) {
         ocs_logw(log_tag, "failed to reset i2c bus: %s", status::code_to_str(code));
     }
@@ -65,6 +65,11 @@ extern "C" void app_main(void) {
                 .measure_command = sensor::sht4x::Sensor::Command::MeasureHighPrecision,
             }));
     configASSERT(sensor);
+
+    code = sensor->reset();
+    if (code != status::StatusCode::OK) {
+        ocs_logw(log_tag, "failed to reset sensor: %s", status::code_to_str(code));
+    }
 
     const unsigned total_attempts = CONFIG_OCS_TOOLS_SHT4x_VERIFIER_TOTAL_ATTEMPTS;
     unsigned failed_attempts = 0;
