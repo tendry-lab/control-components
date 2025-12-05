@@ -66,7 +66,7 @@ private:
 
     core::StaticEventGroup event_group_;
 
-    unsigned retry_count_ { 0 };
+    uint8_t retry_count_ { 0 };
 };
 
 } // namespace net

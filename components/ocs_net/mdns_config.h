@@ -15,9 +15,6 @@ namespace net {
 
 class MdnsConfig : public storage::IConfig, private core::NonCopyable<> {
 public:
-    // Maximum length of the mDNS hostname.
-    static constexpr unsigned max_hostname_len = 31;
-
     //! Initialize.
     //!
     //! @params
@@ -45,7 +42,9 @@ private:
 
     storage::IStorage& storage_;
 
-    char hostname_[max_hostname_len + 1];
+    static constexpr uint8_t max_hostname_len_ = 31;
+
+    char hostname_[max_hostname_len_ + 1];
 };
 
 } // namespace net

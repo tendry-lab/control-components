@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include "ocs_core/istream_writer.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_http/iresponse_writer.h"
@@ -31,7 +33,7 @@ public:
     status::StatusCode cancel() override;
 
     //! Write @p size bytes of @p data.
-    status::StatusCode write(const void* data, unsigned size) override;
+    status::StatusCode write(const void* data, size_t size) override;
 
 private:
     IResponseWriter& writer_;
