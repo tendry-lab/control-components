@@ -16,5 +16,20 @@ const char* Request::get_uri() const {
     return req_.uri;
 }
 
+status::StatusCode Request::read(size_t& read_size, uint8_t* buf, size_t buf_size) {
+    const auto ret = httpd_req_recv(&req_, reinterpret_cast<char*>(buf), buf_size);
+    if (ret <= 0) {
+        if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
+            return status::StatusCode::Timeout;
+        }
+
+        return status::StatusCode::Error;
+    }
+
+    read_size = ret;
+
+    return status::StatusCode::OK;
+}
+
 } // namespace http
 } // namespace ocs
