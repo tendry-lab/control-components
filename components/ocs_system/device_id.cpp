@@ -50,8 +50,6 @@ DeviceID::DeviceID(const char* uuid) {
 
     id_.reset(new (std::nothrow) security::sha_to_hex_str(sha.data(), sha.size()));
     configASSERT(id_);
-
-    ocs_logi(log_tag, "device ID generated: id=%s", id_->c_str());
 }
 
 const char* DeviceID::get_id() const {
