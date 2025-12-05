@@ -21,6 +21,9 @@ public:
     //! Return URI of the underlying request.
     const char* get_uri() const override;
 
+    //! Read request data into @p buf.
+    status::StatusCode read(size_t& read_size, uint8_t* buf, size_t buf_size) override;
+
 private:
     httpd_req_t& req_;
 };
