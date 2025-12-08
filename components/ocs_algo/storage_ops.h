@@ -13,7 +13,7 @@ namespace algo {
 struct StorageOps {
     //! Read string with @p key from @p storage to @p buf which can hold @p size bytes.
     static status::StatusCode
-    prob_read(storage::IStorage& storage, const char* key, void* buf, unsigned size);
+    prob_read(storage::IStorage& storage, const char* key, void* buf, size_t size);
 };
 
 } // namespace algo

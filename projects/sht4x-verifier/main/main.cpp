@@ -71,10 +71,10 @@ extern "C" void app_main(void) {
         ocs_logw(log_tag, "failed to reset sensor: %s", status::code_to_str(code));
     }
 
-    const unsigned total_attempts = CONFIG_OCS_TOOLS_SHT4x_VERIFIER_TOTAL_ATTEMPTS;
-    unsigned failed_attempts = 0;
+    const size_t total_attempts = CONFIG_OCS_TOOLS_SHT4x_VERIFIER_TOTAL_ATTEMPTS;
+    size_t failed_attempts = 0;
 
-    for (unsigned n = 0; n < total_attempts; ++n) {
+    for (size_t n = 0; n < total_attempts; ++n) {
         const auto code = sensor->run();
         if (code != status::StatusCode::OK) {
             ++failed_attempts;

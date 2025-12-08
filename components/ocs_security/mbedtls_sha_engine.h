@@ -17,7 +17,7 @@ public:
     explicit MbedTlsShaEngine(IShaEngine::Algorithm algorithm);
 
     //! Generate SHA by using the mbedTLS library.
-    status::StatusCode generate(uint8_t* buf, const uint8_t* src, unsigned size) override;
+    status::StatusCode generate(uint8_t* buf, const uint8_t* src, size_t size) override;
 };
 
 } // namespace security

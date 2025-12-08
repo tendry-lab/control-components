@@ -91,14 +91,14 @@ private:
     void handle_state_fsr_done_();
 
     void add_fsr_task_();
-    void add_led_task_(unsigned flip_count);
+    void add_led_task_(size_t flip_count);
     void remove_task_();
 
     bool button_was_pressed_();
 
     static constexpr system::Time task_interval_ = system::Duration::second / 2;
-    static constexpr unsigned flip_count_init_ = 6;
-    static constexpr unsigned flip_count_button_pressed_ = 2;
+    static constexpr uint8_t flip_count_init_ = 6;
+    static constexpr uint8_t flip_count_button_pressed_ = 2;
     static constexpr const char* task_id_ = "sys_fsm_led";
 
     const Params params_;

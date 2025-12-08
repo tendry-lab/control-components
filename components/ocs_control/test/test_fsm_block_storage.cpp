@@ -21,11 +21,11 @@ TestFsmBlockStorage::TestFsmBlockStorage(status::StatusCode read_status,
     , erase_status(erase_status) {
 }
 
-status::StatusCode TestFsmBlockStorage::probe(const char* key, unsigned& size) {
+status::StatusCode TestFsmBlockStorage::probe(const char* key, size_t& size) {
     return status::StatusCode::Error;
 }
 
-status::StatusCode TestFsmBlockStorage::read(const char* key, void* data, unsigned size) {
+status::StatusCode TestFsmBlockStorage::read(const char* key, void* data, size_t size) {
     if (read_status != status::StatusCode::OK) {
         return read_status;
     }
@@ -53,7 +53,7 @@ status::StatusCode TestFsmBlockStorage::read(const char* key, void* data, unsign
 }
 
 status::StatusCode
-TestFsmBlockStorage::write(const char* key, const void* data, unsigned size) {
+TestFsmBlockStorage::write(const char* key, const void* data, size_t size) {
     if (write_status != status::StatusCode::OK) {
         return write_status;
     }

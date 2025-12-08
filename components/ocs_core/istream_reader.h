@@ -13,7 +13,7 @@ namespace core {
 //! Stream reading process.
 //!
 //! @example
-//!  status::StatusCode read_data(IStreamReader& reader, void* data, unsigned size) {
+//!  status::StatusCode read_data(IStreamReader& reader, void* data, size_t size) {
 //!     if (const auto code = reader.begin(); code != status::StatusCode::OK) {
 //!         return code;
 //!     }
@@ -64,7 +64,7 @@ public:
     //!
     //! @notes
     //!  Reading is only allowed after the process was started correctly via begin() call.
-    virtual status::StatusCode read(void* data, unsigned& size) = 0;
+    virtual status::StatusCode read(void* data, size_t& size) = 0;
 };
 
 } // namespace core

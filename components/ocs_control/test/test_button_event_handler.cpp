@@ -23,7 +23,7 @@ struct TestButton : public IButton, private core::NonCopyable<> {
 
 struct TestButtonHandler : public IButtonHandler, private core::NonCopyable<> {
     system::Time pressed_duration { 0 };
-    unsigned pressed_call_count { 0 };
+    size_t pressed_call_count { 0 };
 
     status::StatusCode handle_pressed(system::Time duration) {
         pressed_duration = duration;

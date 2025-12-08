@@ -19,8 +19,8 @@ const char* log_tag = "storage_ops";
 status::StatusCode StorageOps::prob_read(storage::IStorage& storage,
                                          const char* key,
                                          void* buf,
-                                         unsigned size) {
-    unsigned recv_size = 0;
+                                         size_t size) {
+    size_t recv_size = 0;
     auto code = storage.probe(key, recv_size);
     if (code != status::StatusCode::OK) {
         if (code != status::StatusCode::NoData) {

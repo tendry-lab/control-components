@@ -14,7 +14,7 @@ namespace control {
 FlipLedTask::FlipLedTask(scheduler::IEventHandler& handler,
                          ILed& led,
                          ILed::Priority priority,
-                         unsigned flip_count)
+                         size_t flip_count)
     : priority_(priority)
     , flip_count_(flip_count)
     , handler_(handler)

@@ -28,7 +28,7 @@ public:
     AsyncTaskScheduler(IDelayEstimator& estimator, const char* id);
 
     //! Maximum number of tasks to which a scheduler can deliver asynchronous events.
-    unsigned max_count() const override;
+    size_t max_count() const override;
 
     //! Add task to be executed once per interval.
     //!

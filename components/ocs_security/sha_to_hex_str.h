@@ -18,13 +18,13 @@ public:
     //!
     //! @params
     //!  - @p sha - SHA data, @p size bytes long.
-    sha_to_hex_str(const uint8_t* sha, unsigned size);
+    sha_to_hex_str(const uint8_t* sha, size_t size);
 
     //! Return SHA formatted as a hex string.
     const char* c_str() const;
 
 private:
-    static constexpr unsigned max_hash_length_ =
+    static constexpr size_t max_hash_length_ =
         algo::ShaEngineOps::hash_lenght(IShaEngine::Algorithm::SHA512);
 
     char buf_[max_hash_length_ + 1];

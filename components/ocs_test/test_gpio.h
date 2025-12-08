@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/igpio.h"
 
@@ -23,9 +25,9 @@ public:
     status::StatusCode turn_off() override;
     status::StatusCode set_direction(IGpio::Direction direction) override;
 
-    unsigned flip_call_count { 0 };
-    unsigned turn_on_call_count { 0 };
-    unsigned turn_off_call_count { 0 };
+    size_t flip_call_count { 0 };
+    size_t turn_on_call_count { 0 };
+    size_t turn_off_call_count { 0 };
     IGpio::Direction direction { IGpio::Direction::Output };
 
 private:

@@ -31,8 +31,8 @@ public:
         return resume_code_;
     }
 
-    unsigned suspend_count { 0 };
-    unsigned resume_count { 0 };
+    size_t suspend_count { 0 };
+    size_t resume_count { 0 };
 
 private:
     status::StatusCode suspend_code_ { status::StatusCode::OK };

@@ -279,7 +279,7 @@ TEST_CASE("Periodic task scheduler: add-remove-run",
 
 TEST_CASE("Periodic task scheduler: add multiple tasks",
           "[ocs_scheduler], [periodic_task_scheduler]") {
-    const unsigned task_count = 10;
+    const size_t task_count = 10;
     const TickType_t delay = pdMS_TO_TICKS(10);
     const system::Time interval = system::Duration::second;
 
@@ -294,14 +294,14 @@ TEST_CASE("Periodic task scheduler: add multiple tasks",
     using TaskList = std::vector<TaskPtr>;
     TaskList tasks;
 
-    for (unsigned n = 0; n < task_count; ++n) {
+    for (size_t n = 0; n < task_count; ++n) {
         TaskPtr task(new (std::nothrow) test::TestTask(status::StatusCode::OK));
         TEST_ASSERT_NOT_NULL(task);
 
         tasks.push_back(task);
     }
 
-    for (unsigned n = 0; n < task_count; ++n) {
+    for (size_t n = 0; n < task_count; ++n) {
         const std::string id = "test_task_" + std::to_string(n);
         TEST_ASSERT_EQUAL(status::StatusCode::OK,
                           task_scheduler.add(*tasks[n], id.c_str(), interval));
@@ -396,7 +396,7 @@ TEST_CASE("Periodic task scheduler: max number of tasks overflow: active",
 
 TEST_CASE("Periodic task scheduler: add/remove multiple tasks",
           "[ocs_scheduler], [periodic_task_scheduler]") {
-    const unsigned task_count = 10;
+    const size_t task_count = 10;
     const TickType_t delay = pdMS_TO_TICKS(10);
     const system::Time interval = system::Duration::second;
 
@@ -411,14 +411,14 @@ TEST_CASE("Periodic task scheduler: add/remove multiple tasks",
     using TaskList = std::vector<TaskPtr>;
     TaskList tasks;
 
-    for (unsigned n = 0; n < task_count; ++n) {
+    for (size_t n = 0; n < task_count; ++n) {
         TaskPtr task(new (std::nothrow) test::TestTask(status::StatusCode::OK));
         TEST_ASSERT_NOT_NULL(task);
 
         tasks.push_back(task);
     }
 
-    for (unsigned n = 0; n < task_count; ++n) {
+    for (size_t n = 0; n < task_count; ++n) {
         const std::string id = "test_task_" + std::to_string(n);
         TEST_ASSERT_EQUAL(status::StatusCode::OK,
                           task_scheduler.add(*tasks[n], id.c_str(), interval));
@@ -433,7 +433,7 @@ TEST_CASE("Periodic task scheduler: add/remove multiple tasks",
         task->reset(status::StatusCode::OK);
     }
 
-    for (unsigned n = task_count / 2; n < task_count; ++n) {
+    for (size_t n = task_count / 2; n < task_count; ++n) {
         const std::string id = "test_task_" + std::to_string(n);
         TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.remove(id.c_str()));
     }
@@ -443,17 +443,17 @@ TEST_CASE("Periodic task scheduler: add/remove multiple tasks",
         TEST_ASSERT_EQUAL(0, task->run_call_count());
     }
 
-    for (unsigned n = task_count / 2; n < task_count; ++n) {
+    for (size_t n = task_count / 2; n < task_count; ++n) {
         const std::string id = "test_task_" + std::to_string(n);
         TEST_ASSERT_EQUAL(status::StatusCode::OK,
                           task_scheduler.add(*tasks[n], id.c_str(), interval));
     }
     TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
-    for (unsigned n = 0; n < task_count / 2; ++n) {
+    for (size_t n = 0; n < task_count / 2; ++n) {
         TEST_ASSERT_EQUAL(0, tasks[n]->run_call_count());
     }
     // The first run is always allowed.
-    for (unsigned n = task_count / 2; n < task_count; ++n) {
+    for (size_t n = task_count / 2; n < task_count; ++n) {
         TEST_ASSERT_EQUAL(1, tasks[n]->run_call_count());
     }
 

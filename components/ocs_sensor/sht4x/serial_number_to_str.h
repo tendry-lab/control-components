@@ -17,7 +17,7 @@ namespace sht4x {
 //! Format sensor serial number to string.
 class serial_number_to_str : private core::NonCopyable<> {
 public:
-    static constexpr unsigned str_length = strlen("AA:BB:CC:DD");
+    static constexpr size_t str_length = strlen("AA:BB:CC:DD");
 
     //! Initialize.
     serial_number_to_str(const SerialNumber& serial_number);

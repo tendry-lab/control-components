@@ -18,7 +18,7 @@ BasicCounter::BasicCounter(const char* id) {
     configASSERT(strlen(id));
 
     memset(buf_, 0, sizeof(buf_));
-    strncpy(buf_, id, std::min(bufsize_, strlen(id)));
+    strncpy(buf_, id, std::min(static_cast<size_t>(bufsize_), strlen(id)));
 }
 
 const char* BasicCounter::id() const {

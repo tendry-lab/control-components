@@ -20,7 +20,7 @@ MbedTlsShaEngine::MbedTlsShaEngine(IShaEngine::Algorithm algorithm)
 }
 
 status::StatusCode
-MbedTlsShaEngine::generate(uint8_t* buf, const uint8_t* src, unsigned size) {
+MbedTlsShaEngine::generate(uint8_t* buf, const uint8_t* src, size_t size) {
     int result = 0;
 
     switch (algorithm_) {

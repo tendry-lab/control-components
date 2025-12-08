@@ -245,7 +245,7 @@ void SystemFsm::add_fsr_task_() {
                  == status::StatusCode::OK);
 }
 
-void SystemFsm::add_led_task_(unsigned flip_count) {
+void SystemFsm::add_led_task_(size_t flip_count) {
     configASSERT(!task_);
 
     task_.reset(new (std::nothrow)

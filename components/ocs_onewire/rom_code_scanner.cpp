@@ -46,7 +46,7 @@ void RomCodeScanner::reset() {
     conflict_count_ = 0;
 }
 
-status::StatusCode RomCodeScanner::scan_(uint8_t* buf, unsigned size) {
+status::StatusCode RomCodeScanner::scan_(uint8_t* buf, size_t size) {
     for (int n = 0; n < size * bits_in_byte_; ++n) {
         uint8_t bit1 = 0;
         OCS_STATUS_RETURN_ON_ERROR(bus_.read_bit(bit1));
@@ -70,8 +70,8 @@ status::StatusCode RomCodeScanner::scan_(uint8_t* buf, unsigned size) {
             }
         }
 
-        const unsigned byte_pos = n / bits_in_byte_;
-        const unsigned bit_pos = n % bits_in_byte_;
+        const size_t byte_pos = n / bits_in_byte_;
+        const size_t bit_pos = n % bits_in_byte_;
 
         if (bit) {
             buf[byte_pos] |= algo::BitOps::mask(bit_pos);
@@ -123,8 +123,8 @@ uint8_t RomCodeScanner::handle_discrepancy_(const uint8_t* buf, int position) {
     // Follow to the previous path.
     configASSERT(prev_discrepancy_ >= 0);
 
-    const unsigned byte_pos = prev_discrepancy_ / bits_in_byte_;
-    const unsigned bit_pos = prev_discrepancy_ % bits_in_byte_;
+    const size_t byte_pos = prev_discrepancy_ / bits_in_byte_;
+    const size_t bit_pos = prev_discrepancy_ % bits_in_byte_;
 
     prev_discrepancy_ = position;
 

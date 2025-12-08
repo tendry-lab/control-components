@@ -13,7 +13,7 @@ namespace ocs {
 namespace fmt {
 namespace json {
 
-DynamicFormatter::DynamicFormatter(unsigned size)
+DynamicFormatter::DynamicFormatter(size_t size)
     : size_(size) {
     configASSERT(size_);
 

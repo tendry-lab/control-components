@@ -19,11 +19,11 @@ public:
 
     //! Send @p size registers from @p buf start with @p addr.
     virtual status::StatusCode
-    send(const uint8_t* buf, unsigned size, RegisterAddress addr) = 0;
+    send(const uint8_t* buf, size_t size, RegisterAddress addr) = 0;
 
     //! Receive @p size registers to @p buf start with @p addr.
     virtual status::StatusCode
-    receive(uint8_t* buf, unsigned size, RegisterAddress addr) = 0;
+    receive(uint8_t* buf, size_t size, RegisterAddress addr) = 0;
 };
 
 } // namespace bme280

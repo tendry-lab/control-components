@@ -25,7 +25,7 @@ public:
     FlipLedTask(scheduler::IEventHandler& handler,
                 ILed& led,
                 ILed::Priority priority,
-                unsigned flip_count);
+                size_t flip_count);
 
     //! Flip LED on each task run.
     //!
@@ -40,7 +40,7 @@ public:
 private:
     const ILed::Priority priority_ { ILed::Priority::None };
 
-    unsigned flip_count_ { 0 };
+    size_t flip_count_ { 0 };
 
     scheduler::IEventHandler& handler_;
     ILed& led_;

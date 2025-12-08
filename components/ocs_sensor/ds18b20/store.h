@@ -34,7 +34,7 @@ public:
     //!  - @p max_event_count - maximum number of asynchronous events that can be
     //!    scheduled per 1-Wire bus. If the value is too small and the run() is called
     //!    rarely, it's possible to miss some events.
-    Store(system::IRtDelayer& delayer, unsigned max_event_count);
+    Store(system::IRtDelayer& delayer, size_t max_event_count);
 
     //! Handle asynchronous events on the 1-wire buses.
     status::StatusCode run() override;
@@ -60,7 +60,7 @@ private:
         Node(system::IRtDelayer& delayer,
              io::gpio::Gpio gpio,
              const char* gpio_id,
-             unsigned max_event_count);
+             size_t max_event_count);
 
         //! Handle operations on the 1-Wire bus.
         status::StatusCode run() override;
@@ -86,7 +86,7 @@ private:
     NodePtr get_node_(io::gpio::Gpio gpio);
     NodePtr add_node_(io::gpio::Gpio gpio, const char* gpio_id);
 
-    const unsigned max_event_count_ { 0 };
+    const size_t max_event_count_ { 0 };
 
     system::IRtDelayer& delayer_;
 

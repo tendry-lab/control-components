@@ -28,7 +28,7 @@ class AsyncTestRunner : private core::NonCopyable<> {
 public:
     AsyncTestRunner(scheduler::ITaskScheduler& task_scheduler,
                     const char* id,
-                    unsigned stack_size)
+                    size_t stack_size)
         : id_(id)
         , stack_size_(stack_size)
         , task_scheduler_(task_scheduler) {
@@ -69,7 +69,7 @@ private:
     }
 
     const std::string id_;
-    const unsigned stack_size_ { 0 };
+    const size_t stack_size_ { 0 };
 
     scheduler::ITaskScheduler& task_scheduler_;
 
@@ -104,7 +104,7 @@ TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") 
     TEST_ASSERT_TRUE(locator.get());
 
     auto get_flip_count = [](test::TestGpio& gpio, scheduler::AsyncFuncScheduler& ash) {
-        unsigned ret = 0;
+        size_t ret = 0;
 
         auto future = ash.add([&gpio, &ret]() {
             ret = gpio.flip_call_count;
@@ -119,7 +119,7 @@ TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") 
         return ret;
     };
 
-    unsigned last_flip_count = 0;
+    size_t last_flip_count = 0;
 
     while (true) {
         if (get_flip_count(gpio, func_scheduler) > last_flip_count + 5) {
@@ -134,7 +134,7 @@ TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") 
 
     last_flip_count = get_flip_count(gpio, func_scheduler);
 
-    for (unsigned n = 0; n < 10; ++n) {
+    for (size_t n = 0; n < 10; ++n) {
         TEST_ASSERT_EQUAL(last_flip_count, get_flip_count(gpio, func_scheduler));
         vTaskDelay(pdMS_TO_TICKS(50));
     }
@@ -155,7 +155,7 @@ TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") 
 
     last_flip_count = get_flip_count(gpio, func_scheduler);
 
-    for (unsigned n = 0; n < 10; ++n) {
+    for (size_t n = 0; n < 10; ++n) {
         TEST_ASSERT_EQUAL(last_flip_count, get_flip_count(gpio, func_scheduler));
         vTaskDelay(pdMS_TO_TICKS(50));
     }
@@ -180,7 +180,7 @@ TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") 
 
     last_flip_count = get_flip_count(gpio, func_scheduler);
 
-    for (unsigned n = 0; n < 10; ++n) {
+    for (size_t n = 0; n < 10; ++n) {
         TEST_ASSERT_EQUAL(last_flip_count, get_flip_count(gpio, func_scheduler));
         vTaskDelay(pdMS_TO_TICKS(50));
     }
@@ -213,7 +213,7 @@ TEST_CASE("LED locator: disable locating when the LED is locked by another compo
     TEST_ASSERT_TRUE(locator.get());
 
     auto get_flip_count = [](test::TestGpio& gpio, scheduler::AsyncFuncScheduler& ash) {
-        unsigned ret = 0;
+        size_t ret = 0;
 
         auto future = ash.add([&gpio, &ret]() {
             ret = gpio.flip_call_count;
@@ -228,7 +228,7 @@ TEST_CASE("LED locator: disable locating when the LED is locked by another compo
         return ret;
     };
 
-    unsigned last_flip_count = 0;
+    size_t last_flip_count = 0;
 
     while (true) {
         if (get_flip_count(gpio, func_scheduler) > last_flip_count + 5) {
@@ -256,7 +256,7 @@ TEST_CASE("LED locator: disable locating when the LED is locked by another compo
 
     last_flip_count = get_flip_count(gpio, func_scheduler);
 
-    for (unsigned n = 0; n < 10; ++n) {
+    for (size_t n = 0; n < 10; ++n) {
         TEST_ASSERT_EQUAL(last_flip_count, get_flip_count(gpio, func_scheduler));
         vTaskDelay(pdMS_TO_TICKS(50));
     }

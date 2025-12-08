@@ -121,12 +121,12 @@ Sensor::Data Sensor::get_data() const {
 
 void Sensor::estimate_measurement_time_() {
     // Appendix B: measurement time and current calculation, page 51.
-    const unsigned typ_measurement_duration =
+    const size_t typ_measurement_duration =
         std::ceil(1 + (2 * oversampling_to_coef(params_.temperature_oversampling))
                   + ((2 * oversampling_to_coef(params_.pressure_oversampling)) + 0.5)
                   + ((2 * oversampling_to_coef(params_.humidity_oversampling)) + 0.5));
 
-    const unsigned max_measurement_duration = std::ceil(
+    const size_t max_measurement_duration = std::ceil(
         1.25 + (2.3 * oversampling_to_coef(params_.temperature_oversampling))
         + ((2.3 * oversampling_to_coef(params_.pressure_oversampling)) + 0.575)
         + ((2.3 * oversampling_to_coef(params_.humidity_oversampling)) + 0.575));
@@ -242,7 +242,7 @@ status::StatusCode Sensor::read_calibration1_() {
 
 status::StatusCode Sensor::read_calibration2_() {
     // 7 registers.
-    const unsigned calibration_register_count = 0xE7 - 0xE1 + 1;
+    const size_t calibration_register_count = 0xE7 - 0xE1 + 1;
 
     uint8_t recv_buf[calibration_register_count];
     memset(recv_buf, 0, sizeof(recv_buf));

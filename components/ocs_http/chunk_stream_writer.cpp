@@ -24,7 +24,7 @@ status::StatusCode ChunkStreamWriter::cancel() {
     return end();
 }
 
-status::StatusCode ChunkStreamWriter::write(const void* data, unsigned size) {
+status::StatusCode ChunkStreamWriter::write(const void* data, size_t size) {
     return writer_.write(data, size);
 }
 

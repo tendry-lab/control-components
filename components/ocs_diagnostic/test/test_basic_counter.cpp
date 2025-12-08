@@ -22,12 +22,12 @@ TEST_CASE("Basic counter: ID length overflow", "[ocs_diagnostic], [basic_counter
     const auto max_len = 15;
 
     std::string actual_id;
-    for (unsigned n = 0; n < max_len * 2; ++n) {
+    for (size_t n = 0; n < max_len * 2; ++n) {
         actual_id += std::to_string(1);
     }
 
     std::string expected_id;
-    for (unsigned n = 0; n < max_len; ++n) {
+    for (size_t n = 0; n < max_len; ++n) {
         expected_id += std::to_string(1);
     }
 

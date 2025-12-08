@@ -31,7 +31,7 @@ const char* log_tag = "ds18b20_verifier";
 
 struct VerifyParams {
     io::gpio::Gpio gpio { static_cast<io::gpio::Gpio>(-1) };
-    unsigned total_attempts { 0 };
+    size_t total_attempts { 0 };
     TickType_t delay { pdMS_TO_TICKS(0) };
 };
 
@@ -107,9 +107,9 @@ void read_device(onewire::Bus& bus,
                  const onewire::RomCode& rom_code,
                  cJSON* json,
                  VerifyParams verify_params) {
-    unsigned failed_attempts = 0;
+    size_t failed_attempts = 0;
 
-    for (unsigned n = 0; n < verify_params.total_attempts; ++n) {
+    for (size_t n = 0; n < verify_params.total_attempts; ++n) {
         const auto code = read_temperature(bus, rom_code);
         if (code != status::StatusCode::OK) {
             ++failed_attempts;

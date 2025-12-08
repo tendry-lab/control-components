@@ -23,7 +23,7 @@ public:
     explicit ResponseWriter(httpd_req_t& req);
 
     //! Write @p size bytes of @p data to the underlying request.
-    status::StatusCode write(const void* data, unsigned size) override;
+    status::StatusCode write(const void* data, size_t size) override;
 
     //! Write HTTP status code.
     status::StatusCode write_status(StatusCode) override;

@@ -25,9 +25,9 @@ TEST_CASE("Oneshot ADC store: register maximum number of ADC",
     for (const auto& unit : units) {
         OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
-        const unsigned count = SOC_ADC_CHANNEL_NUM(unit);
+        const size_t count = SOC_ADC_CHANNEL_NUM(unit);
 
-        for (unsigned n = 0; n < count; ++n) {
+        for (size_t n = 0; n < count; ++n) {
             const Channel channel = static_cast<Channel>(n);
             TEST_ASSERT_NOT_NULL(store.add(channel));
         }
@@ -59,9 +59,9 @@ TEST_CASE("Oneshot ADC store: register overflow", "[ocs_io], [adc_oneshot_store]
     for (const auto& unit : units) {
         OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
-        const unsigned count = SOC_ADC_CHANNEL_NUM(unit);
+        const size_t count = SOC_ADC_CHANNEL_NUM(unit);
 
-        for (unsigned n = 0; n < count; ++n) {
+        for (size_t n = 0; n < count; ++n) {
             const Channel channel = static_cast<Channel>(n);
             TEST_ASSERT_NOT_NULL(store.add(channel));
         }

@@ -39,7 +39,7 @@ public:
     status::StatusCode cancel() override;
 
     //! Read up to @p size bytes from file to @p data.
-    status::StatusCode read(void* data, unsigned& size) override;
+    status::StatusCode read(void* data, size_t& size) override;
 
 private:
     const std::string path_;

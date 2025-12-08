@@ -71,7 +71,7 @@ status::StatusCode FileStreamReader::cancel() {
     return ret ? status::StatusCode::Error : status::StatusCode::OK;
 }
 
-status::StatusCode FileStreamReader::read(void* data, unsigned& size) {
+status::StatusCode FileStreamReader::read(void* data, size_t& size) {
     configASSERT(file_);
 
     if (feof(file_)) {

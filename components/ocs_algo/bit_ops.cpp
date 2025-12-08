@@ -8,15 +8,15 @@
 namespace ocs {
 namespace algo {
 
-unsigned BitOps::mask(uint8_t pos) {
+uint32_t BitOps::mask(uint8_t pos) {
     return (1UL << pos);
 }
 
-unsigned BitOps::umask(uint8_t pos) {
+uint32_t BitOps::umask(uint8_t pos) {
     return ~(mask(pos));
 }
 
-uint8_t BitOps::nth(unsigned value, uint8_t pos) {
+uint8_t BitOps::nth(uint32_t value, uint8_t pos) {
     return mask(pos) & value ? 1 : 0;
 }
 

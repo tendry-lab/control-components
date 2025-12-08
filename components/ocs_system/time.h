@@ -22,7 +22,7 @@ using Time = int64_t;
 //!
 //! To convert an integer number of units to a Duration, multiply:
 //!
-//! const unsigned seconds = 10;
+//! const size_t seconds = 10;
 //! print(seconds * Duration::second) // prints 10 * 1000 * 1000
 struct Duration {
     //! One microsecond represented in microseconds.

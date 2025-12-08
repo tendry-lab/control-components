@@ -9,7 +9,7 @@
 namespace ocs {
 namespace onewire {
 
-uint8_t calculate_crc(const uint8_t* buf, unsigned size) {
+uint8_t calculate_crc(const uint8_t* buf, size_t size) {
     return algo::CrcOps::crc8(buf, size, 0x00, 0x8C, algo::CrcOps::BitOrder::LSB);
 }
 

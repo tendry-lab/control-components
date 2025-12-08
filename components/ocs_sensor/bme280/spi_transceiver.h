@@ -23,11 +23,10 @@ public:
 
     //! Send registers to SPI device.
     status::StatusCode
-    send(const uint8_t* buf, unsigned size, RegisterAddress addr) override;
+    send(const uint8_t* buf, size_t size, RegisterAddress addr) override;
 
     //! Receive registers from SPI device.
-    status::StatusCode
-    receive(uint8_t* buf, unsigned size, RegisterAddress addr) override;
+    status::StatusCode receive(uint8_t* buf, size_t size, RegisterAddress addr) override;
 
 private:
     io::spi::ITransceiver& transceiver_;

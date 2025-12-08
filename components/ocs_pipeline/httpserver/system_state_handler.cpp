@@ -14,7 +14,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-SystemStateHandler::SystemStateHandler(unsigned response_size) {
+SystemStateHandler::SystemStateHandler(size_t response_size) {
     state_json_formatter_.reset(new (std::nothrow) jsonfmt::SystemStateFormatter());
     configASSERT(state_json_formatter_);
 

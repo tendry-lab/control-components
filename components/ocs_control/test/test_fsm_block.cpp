@@ -97,7 +97,7 @@ TEST_CASE("FSM block: transit: save state", "[ocs_control], [fsm_block]") {
     const system::Time resolution = system::Duration::second;
     const char* id = "block_id";
     uint64_t write_count = 17;
-    const unsigned state_duration = 42;
+    const size_t state_duration = 42;
 
     TestFsmBlockStorage storage;
     storage.write_count = write_count;
@@ -141,7 +141,7 @@ TEST_CASE("FSM block: transit: failed to save state", "[ocs_control], [fsm_block
     const system::Time resolution = system::Duration::second;
     const char* id = "block_id";
     const uint64_t write_count = 17;
-    const unsigned state_duration = 42;
+    const size_t state_duration = 42;
 
     TestFsmBlockStorage storage;
     storage.write_count = write_count;

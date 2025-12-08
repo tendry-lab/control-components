@@ -14,7 +14,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-DataHandler::DataHandler(fmt::json::IFormatter& formatter, unsigned buffer_size) {
+DataHandler::DataHandler(fmt::json::IFormatter& formatter, size_t buffer_size) {
     fanout_formatter_.reset(new (std::nothrow) fmt::json::FanoutFormatter());
     configASSERT(fanout_formatter_);
 

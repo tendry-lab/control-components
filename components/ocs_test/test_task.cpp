@@ -32,7 +32,7 @@ bool TestTask::was_run_called() const {
     return run_called_;
 }
 
-unsigned TestTask::run_call_count() const {
+size_t TestTask::run_call_count() const {
     core::LockGuard lock(mu_);
 
     return run_call_count_;

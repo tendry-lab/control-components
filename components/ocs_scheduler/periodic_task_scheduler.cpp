@@ -19,7 +19,7 @@ namespace scheduler {
 PeriodicTaskScheduler::PeriodicTaskScheduler(system::IClock& clock,
                                              IDelayEstimator& estimator,
                                              const char* id,
-                                             unsigned max_count)
+                                             size_t max_count)
     : max_count_(max_count)
     , log_tag_(id)
     , clock_(clock)
@@ -27,7 +27,7 @@ PeriodicTaskScheduler::PeriodicTaskScheduler(system::IClock& clock,
     configASSERT(max_count_);
 }
 
-unsigned PeriodicTaskScheduler::max_count() const {
+size_t PeriodicTaskScheduler::max_count() const {
     return max_count_;
 }
 

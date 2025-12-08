@@ -40,7 +40,7 @@ status::StatusCode AnalogSampleReader::read(int& raw) {
 
     int total = 0;
 
-    for (unsigned n = 0; n < sample_count; ++n) {
+    for (size_t n = 0; n < sample_count; ++n) {
         int result = 0;
         OCS_STATUS_RETURN_ON_ERROR(reader_.read(result));
 

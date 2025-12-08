@@ -35,9 +35,9 @@ MasterTransceiver::MasterTransceiver(MasterTransceiver::DevicePtr device, const 
 }
 
 status::StatusCode MasterTransceiver::transceive(const uint8_t* send_buf,
-                                                 unsigned send_buf_size,
+                                                 size_t send_buf_size,
                                                  uint8_t* recv_buf,
-                                                 unsigned recv_buf_size) {
+                                                 size_t recv_buf_size) {
     spi_transaction_t transaction;
     memset(&transaction, 0, sizeof(transaction));
 

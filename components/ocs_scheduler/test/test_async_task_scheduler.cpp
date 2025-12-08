@@ -73,14 +73,14 @@ TEST_CASE("Async task scheduler: register maximum tasks",
     using TaskPtr = std::shared_ptr<test::TestTask>;
     std::vector<TaskPtr> tasks;
 
-    for (unsigned n = 0; n < scheduler.max_count(); ++n) {
+    for (size_t n = 0; n < scheduler.max_count(); ++n) {
         TaskPtr task(new (std::nothrow) test::TestTask(status::StatusCode::OK));
         TEST_ASSERT_NOT_NULL(task);
 
         tasks.push_back(task);
     }
 
-    for (unsigned n = 0; n < tasks.size(); ++n) {
+    for (size_t n = 0; n < tasks.size(); ++n) {
         const std::string task_id = std::string("test_task_") + std::to_string(n);
 
         TEST_ASSERT_EQUAL(status::StatusCode::OK,
@@ -111,7 +111,7 @@ TEST_CASE("Async task scheduler: register maximum tasks: some failed",
     using TaskPtr = std::shared_ptr<test::TestTask>;
     std::vector<TaskPtr> tasks;
 
-    for (unsigned n = 0; n < scheduler.max_count(); ++n) {
+    for (size_t n = 0; n < scheduler.max_count(); ++n) {
         status::StatusCode code = status::StatusCode::OK;
         if (n % 2 == 0) {
             code = status::StatusCode::Error;
@@ -123,7 +123,7 @@ TEST_CASE("Async task scheduler: register maximum tasks: some failed",
         tasks.push_back(task);
     }
 
-    for (unsigned n = 0; n < tasks.size(); ++n) {
+    for (size_t n = 0; n < tasks.size(); ++n) {
         const std::string task_id = std::string("test_task_") + std::to_string(n);
 
         TEST_ASSERT_EQUAL(status::StatusCode::OK,
@@ -154,14 +154,14 @@ TEST_CASE("Async task scheduler: register tasks overflow",
     using TaskPtr = std::shared_ptr<test::TestTask>;
     std::vector<TaskPtr> tasks;
 
-    for (unsigned n = 0; n < scheduler.max_count(); ++n) {
+    for (size_t n = 0; n < scheduler.max_count(); ++n) {
         TaskPtr task(new (std::nothrow) test::TestTask(status::StatusCode::OK));
         TEST_ASSERT_NOT_NULL(task);
 
         tasks.push_back(task);
     }
 
-    for (unsigned n = 0; n < tasks.size(); ++n) {
+    for (size_t n = 0; n < tasks.size(); ++n) {
         const std::string task_id = std::string("test_task_") + std::to_string(n);
 
         TEST_ASSERT_EQUAL(status::StatusCode::OK,

@@ -14,7 +14,7 @@ namespace algo {
 
 struct ShaEngineOps {
     //! Return the maximum number of bytes the SHA algorithm can produce on the output.
-    static constexpr unsigned hash_lenght(security::IShaEngine::Algorithm algorithm) {
+    static constexpr size_t hash_lenght(security::IShaEngine::Algorithm algorithm) {
         switch (algorithm) {
         case security::IShaEngine::Algorithm::SHA1:
             return 20;

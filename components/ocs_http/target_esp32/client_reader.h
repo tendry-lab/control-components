@@ -40,7 +40,7 @@ public:
     //!
     //! @return
     //!  Number of bytes read.
-    unsigned read(char* buf, unsigned size);
+    size_t read(char* buf, size_t size);
 
 private:
     static esp_err_t handle_event_(esp_http_client_event_t* event);

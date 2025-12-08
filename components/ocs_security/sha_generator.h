@@ -24,7 +24,7 @@ public:
     const Data& get_sha() const;
 
     //! Add @p size bytes from @p buf to be used during SHA calculation.
-    void add(const uint8_t* buf, unsigned size);
+    void add(const uint8_t* buf, size_t size);
 
     //! Generate SHA based on the underlying data.
     status::StatusCode generate();

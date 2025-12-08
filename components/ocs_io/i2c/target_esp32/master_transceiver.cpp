@@ -34,7 +34,7 @@ MasterTransceiver::MasterTransceiver(MasterTransceiver::DevicePtr device, const 
 }
 
 status::StatusCode
-MasterTransceiver::send(const uint8_t* buf, unsigned size, system::Time timeout) {
+MasterTransceiver::send(const uint8_t* buf, size_t size, system::Time timeout) {
     if (timeout > 0 && timeout < system::Duration::millisecond) {
         return status::StatusCode::InvalidArg;
     }
@@ -59,7 +59,7 @@ MasterTransceiver::send(const uint8_t* buf, unsigned size, system::Time timeout)
 }
 
 status::StatusCode
-MasterTransceiver::receive(uint8_t* buf, unsigned size, system::Time timeout) {
+MasterTransceiver::receive(uint8_t* buf, size_t size, system::Time timeout) {
     if (timeout > 0 && timeout < system::Duration::millisecond) {
         return status::StatusCode::InvalidArg;
     }

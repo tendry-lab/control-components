@@ -18,8 +18,8 @@ const ShaGenerator::Data& ShaGenerator::get_sha() const {
     return sha_;
 }
 
-void ShaGenerator::add(const uint8_t* buf, unsigned size) {
-    for (unsigned n = 0; n < size; ++n) {
+void ShaGenerator::add(const uint8_t* buf, size_t size) {
+    for (size_t n = 0; n < size; ++n) {
         src_.push_back(buf[n]);
     }
 }

@@ -13,9 +13,8 @@ namespace core {
 version_to_str::version_to_str(Version version) {
     memset(buf_, 0, sizeof(buf_));
 
-    if (snprintf(buf_, sizeof(buf_), "%u.%u.%u", static_cast<unsigned>(version.major),
-                 static_cast<unsigned>(version.minor),
-                 static_cast<unsigned>(version.patch))
+    if (snprintf(buf_, sizeof(buf_), "%u.%u.%u", static_cast<size_t>(version.major),
+                 static_cast<size_t>(version.minor), static_cast<size_t>(version.patch))
         < 0) {
         strcpy(buf_, "<none>");
     }

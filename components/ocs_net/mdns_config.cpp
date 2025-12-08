@@ -23,11 +23,11 @@ const char* log_tag = "mdns_config";
 MdnsConfig::MdnsConfig(storage::IStorage& storage, const system::DeviceInfo& device_info)
     : storage_(storage) {
     memset(hostname_, 0, sizeof(hostname_));
-    auto code =
-        algo::StorageOps::prob_read(storage_, hostname_key_, hostname_, max_hostname_len);
+
+    auto code = algo::StorageOps::prob_read(storage_, hostname_key_, hostname_,
+                                            max_hostname_len_);
     if (code != status::StatusCode::OK) {
-        memcpy(hostname_, device_info.get_fw_name(),
-               std::min(max_hostname_len, strlen(device_info.get_fw_name())));
+        strncpy(hostname_, device_info.get_fw_name(), sizeof(hostname_));
     }
 }
 
@@ -45,7 +45,7 @@ const char* MdnsConfig::get_hostname() const {
 }
 
 status::StatusCode MdnsConfig::configure(const char* hostname) {
-    if (strlen(hostname) > max_hostname_len) {
+    if (strlen(hostname) > max_hostname_len_) {
         return status::StatusCode::InvalidArg;
     }
 

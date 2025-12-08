@@ -19,7 +19,7 @@ const char* log_tag = "async_func_scheduler";
 
 } // namespace
 
-AsyncFuncScheduler::AsyncFuncScheduler(unsigned max_event_count)
+AsyncFuncScheduler::AsyncFuncScheduler(size_t max_event_count)
     : max_event_count_(max_event_count) {
     configASSERT(max_event_count_);
 
