@@ -17,7 +17,8 @@ public:
     virtual ~IPatternIterator() = default;
 
     //! Handle pattern.
-    virtual void iterate_pattern(const char* pattern, IHandler& handler) = 0;
+    virtual void
+    iterate_pattern(IRequest::Method method, const char* pattern, IHandler& handler) = 0;
 };
 
 } // namespace http

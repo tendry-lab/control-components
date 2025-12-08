@@ -57,9 +57,9 @@ WebGuiPipeline::WebGuiPipeline(http::IRouter& router,
     , fs_initializer_(fs_initializer) {
     buffer_.resize(buffer_size_);
 
-    router.add(http::IRouter::Method::Get, "/", *this);
-    router.add(http::IRouter::Method::Get, "/dashboard", *this);
-    router.add(http::IRouter::Method::Get, "/assets/*", *this);
+    router.add(http::IRequest::Method::Get, "/", *this);
+    router.add(http::IRequest::Method::Get, "/dashboard", *this);
+    router.add(http::IRequest::Method::Get, "/assets/*", *this);
 }
 
 status::StatusCode WebGuiPipeline::serve_http(http::IResponseWriter& w,
