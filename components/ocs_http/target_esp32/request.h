@@ -24,6 +24,12 @@ public:
     //! Return method of the underlying request.
     Method get_method() const override;
 
+    //! Return request content length.
+    size_t get_content_length() const override;
+
+    //! Read request data into @p buf.
+    status::StatusCode read(size_t& read_size, uint8_t* buf, size_t buf_size) override;
+
 private:
     httpd_req_t& req_;
 };

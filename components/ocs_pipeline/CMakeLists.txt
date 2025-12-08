@@ -13,6 +13,7 @@ idf_component_register(
     "httpserver/sta_network_handler.cpp"
     "httpserver/analog_config_store_handler.cpp"
     "httpserver/locate_handler.cpp"
+    "httpserver/update_handler.cpp"
 
     "jsonfmt/data_pipeline.cpp"
     "jsonfmt/ap_network_formatter.cpp"

@@ -30,5 +30,24 @@ IRequest::Method Request::get_method() const {
     return IRequest::Method::Unsupported;
 }
 
+size_t Request::get_content_length() const {
+    return req_.content_len;
+}
+
+status::StatusCode Request::read(size_t& read_size, uint8_t* buf, size_t buf_size) {
+    const auto ret = httpd_req_recv(&req_, reinterpret_cast<char*>(buf), buf_size);
+    if (ret <= 0) {
+        if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
+            return status::StatusCode::Timeout;
+        }
+
+        return status::StatusCode::Error;
+    }
+
+    read_size = ret;
+
+    return status::StatusCode::OK;
+}
+
 } // namespace http
 } // namespace ocs

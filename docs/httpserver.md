@@ -280,6 +280,23 @@ http "bonsai-firmware.local/api/v1/system/locate?value=2"
 OK
 ```
 
+**Update device firmware**
+
+Calculate total size and CRC32 of the firmware file:
+
+```bash
+cksum -a crc32b bonsai-firmware.bin
+724538821 1103584 bonsai-firmware.bin
+```
+
+Use calculated total size and CRC32 in HTTP POST request.
+
+http POST "bonsai-firmware.local/api/v1/system/update?total_size=1103584&crc32=724538821" @bonsai-firmware.bin
+
+```txt
+OK
+```
+
 **Sensors APIs**
 
 - [DS18B20](sensors/ds18b20.md#HTTP-API)

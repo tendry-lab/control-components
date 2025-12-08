@@ -17,11 +17,14 @@ idf_component_register(
     "target_esp32/platform_builder.cpp"
     "target_esp32/randomizer.cpp"
     "target_esp32/high_resolution_timer.cpp"
+    "target_esp32/le_crc32_calculator.cpp"
+    "target_esp32/updater.cpp"
 
     REQUIRES
     "esp_timer"
     "driver"
     "ocs_security"
+    "app_update"
 
     INCLUDE_DIRS
     ".."
