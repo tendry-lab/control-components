@@ -58,7 +58,8 @@ status::StatusCode Server::start() {
 }
 
 status::StatusCode Server::register_uris_() {
-    router_.for_each(IRouter::Method::Get, *this);
+    router_.for_each(IRequest::Method::Get, *this);
+    router_.for_each(IRequest::Method::Post, *this);
 
     return status::StatusCode::OK;
 }
@@ -72,9 +73,9 @@ status::StatusCode Server::stop() {
     return status::StatusCode::OK;
 }
 
-esp_err_t Server::handle_request_(httpd_req_t* req) {
+esp_err_t Server::handle_request_cb_(httpd_req_t* req) {
     Server& self = *static_cast<Server*>(req->user_ctx);
-    self.handle_request_get_(req);
+    self.handle_request_(req);
 
     return ESP_OK;
 }
@@ -89,22 +90,37 @@ bool Server::match_pattern(const char* reference_pattern,
     return strcmp(reference_pattern, pattern_to_match) == 0;
 }
 
-void Server::iterate_pattern(const char* path, IHandler&) {
+void Server::iterate_pattern(IRequest::Method method, const char* path, IHandler&) {
     httpd_uri_t uri;
     memset(&uri, 0, sizeof(uri));
 
-    uri.method = HTTP_GET;
-    uri.handler = handle_request_;
+    switch (method) {
+    case IRequest::Method::Get:
+        uri.method = HTTP_GET;
+        break;
+
+    case IRequest::Method::Post:
+        uri.method = HTTP_POST;
+        break;
+
+    default:
+        uri.method = static_cast<httpd_method_t>(-1);
+        break;
+    }
+
+    uri.handler = handle_request_cb_;
     uri.user_ctx = this;
     uri.uri = path;
 
     ESP_ERROR_CHECK(httpd_register_uri_handler(handle_, &uri));
 }
 
-void Server::handle_request_get_(httpd_req_t* req) {
+void Server::handle_request_(httpd_req_t* req) {
     const auto path = algo::UriOps::parse_path(req->uri);
 
-    auto handler = router_.match(IRouter::Method::Get, path.data(), path.size(), *this);
+    Request r(*req);
+
+    auto handler = router_.match(r.get_method(), path.data(), path.size(), *this);
     if (!handler) {
         ocs_loge(log_tag, "unknown URI: %s", req->uri);
 
@@ -119,7 +135,6 @@ void Server::handle_request_get_(httpd_req_t* req) {
         return;
     }
 
-    Request r(*req);
     ResponseWriter w(*req);
 
     const auto code = handler->serve_http(w, r);

@@ -21,6 +21,9 @@ public:
     //! Return URI of the underlying request.
     const char* get_uri() const override;
 
+    //! Return method of the underlying request.
+    Method get_method() const override;
+
 private:
     httpd_req_t& req_;
 };

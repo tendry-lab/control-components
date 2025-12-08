@@ -13,7 +13,7 @@
 namespace ocs {
 namespace http {
 
-void Router::add(IRouter::Method method, const char* pattern, IHandler& handler) {
+void Router::add(IRequest::Method method, const char* pattern, IHandler& handler) {
     auto& endpoints = method_to_endpoints_[method];
 
     const auto it = std::find_if(endpoints.begin(), endpoints.end(),
@@ -25,7 +25,7 @@ void Router::add(IRouter::Method method, const char* pattern, IHandler& handler)
     endpoints.push_back(std::make_pair(pattern, &handler));
 }
 
-IHandler* Router::match(IRouter::Method method,
+IHandler* Router::match(IRequest::Method method,
                         const char* pattern_to_match,
                         size_t match_upto,
                         IPatternMatcher& matcher) {
@@ -43,11 +43,11 @@ IHandler* Router::match(IRouter::Method method,
     return nullptr;
 }
 
-void Router::for_each(Method method, IPatternIterator& iterator) {
+void Router::for_each(IRequest::Method method, IPatternIterator& iterator) {
     auto it = method_to_endpoints_.find(method);
     if (it != method_to_endpoints_.end()) {
         for (auto& [pattern, handler] : it->second) {
-            iterator.iterate_pattern(pattern.c_str(), *handler);
+            iterator.iterate_pattern(method, pattern.c_str(), *handler);
         }
     }
 }
