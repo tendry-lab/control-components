@@ -104,8 +104,8 @@ double AnalogSensor::calculate_moisture_(int raw) const {
         return 0;
     }
 
-    const int range = config_.get_max() - config_.get_min();
-    const int offset = raw - config_.get_min();
+    const uint16_t range = config_.get_max() - config_.get_min();
+    const uint16_t offset = static_cast<uint16_t>(raw) - config_.get_min();
 
     const double loss = static_cast<double>(offset) / range;
     const double remain = 1 - loss;
@@ -119,8 +119,8 @@ SoilStatus AnalogSensor::calculate_status_(int raw) const {
         return SoilStatus::Error;
     }
 
-    const auto offset = raw - config_.get_min();
-    const auto status_index = offset / get_status_len_();
+    const uint16_t offset = static_cast<uint16_t>(raw) - config_.get_min();
+    const uint16_t status_index = offset / get_status_len_();
 
     return statuses_[status_index];
 }
@@ -130,9 +130,9 @@ double AnalogSensor::calculate_status_progress_(int raw) const {
         return 0;
     }
 
-    const int offset = raw - config_.get_min();
-    const int status_index = offset / get_status_len_();
-    const int status_pos = offset - (get_status_len_() * status_index);
+    const uint16_t offset = static_cast<uint16_t>(raw) - config_.get_min();
+    const uint16_t status_index = offset / get_status_len_();
+    const uint16_t status_pos = offset - (get_status_len_() * status_index);
 
     const double progress = 100 * (static_cast<double>(status_pos) / get_status_len_());
 
