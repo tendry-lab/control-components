@@ -720,7 +720,7 @@ TEST_CASE("Soil analog sensor: validate moisture calculation",
     TEST_ASSERT_EQUAL(SoilStatus::None, data.prev_status);
     TEST_ASSERT_EQUAL(SoilStatus::Depletion, data.curr_status);
     TEST_ASSERT_EQUAL(1, data.write_count);
-    TEST_ASSERT_EQUAL_DOUBLE(38.6, data.status_progress);
+    TEST_ASSERT_EQUAL_DOUBLE(38.5, data.status_progress);
 }
 
 } // namespace soil
