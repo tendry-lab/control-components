@@ -32,7 +32,7 @@ Samples generate_samples(const AnalogConfig& config) {
 
     Samples samples;
 
-    for (unsigned n = 0; n < config.get_sample_count(); ++n) {
+    for (size_t n = 0; n < config.get_sample_count(); ++n) {
         samples.push_back(random(static_cast<uint16_t>(0), max_value));
     }
 

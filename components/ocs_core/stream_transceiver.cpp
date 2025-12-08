@@ -50,7 +50,7 @@ status::StatusCode StreamTransceiver::transceive() {
     while (true) {
         buffer_.clear();
 
-        unsigned size = buffer_.capacity();
+        size_t size = buffer_.capacity();
 
         auto code = reader_.read(buffer_.data(), size);
         if (code == status::StatusCode::OK) {

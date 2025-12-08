@@ -81,7 +81,7 @@ TEST_CASE("Start HTTP server: WiFi invalid credentials", "[ocs_http], [server]")
 
 #ifdef CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED
 TEST_CASE("Start HTTP server: WiFi valid credentials", "[ocs_http], [server]") {
-    const unsigned server_port = 80;
+    const uint8_t server_port = 80;
 
     Router router;
     Server server(router,
@@ -152,7 +152,7 @@ TEST_CASE("Start HTTP server: WiFi valid credentials", "[ocs_http], [server]") {
 
 TEST_CASE("Start HTTP server: chunked response", "[ocs_http], [server]") {
     struct TestStreamReader : public core::IStreamReader {
-        TestStreamReader(const char* response, unsigned chunk_size)
+        TestStreamReader(const char* response, size_t chunk_size)
             : response_(response)
             , chunk_size_(chunk_size) {
         }
@@ -169,7 +169,7 @@ TEST_CASE("Start HTTP server: chunked response", "[ocs_http], [server]") {
             return status::StatusCode::OK;
         }
 
-        status::StatusCode read(void* data, unsigned& size) override {
+        status::StatusCode read(void* data, size_t& size) override {
             if (pos_ == response_.size()) {
                 return status::StatusCode::NoData;
             }
@@ -185,12 +185,12 @@ TEST_CASE("Start HTTP server: chunked response", "[ocs_http], [server]") {
 
     private:
         const std::string response_;
-        const unsigned chunk_size_ { 0 };
+        const size_t chunk_size_ { 0 };
 
-        unsigned pos_ { 0 };
+        size_t pos_ { 0 };
     };
 
-    const unsigned server_port = 80;
+    const uint8_t server_port = 80;
 
     Router router;
     Server server(router,

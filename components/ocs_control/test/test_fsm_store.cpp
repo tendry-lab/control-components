@@ -51,8 +51,8 @@ public:
         return status::StatusCode::OK;
     }
 
-    unsigned handle_state_count { 0 };
-    unsigned handle_transit_count { 0 };
+    size_t handle_state_count { 0 };
+    size_t handle_transit_count { 0 };
 
     status::StatusCode state_result { status::StatusCode::OK };
     status::StatusCode transit_result { status::StatusCode::OK };

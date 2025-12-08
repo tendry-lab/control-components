@@ -49,7 +49,7 @@ bool parse_serial_number(onewire::SerialNumber& serial_number,
         return false;
     }
 
-    for (unsigned n = 0; n < OCS_ARRAY_SIZE(serial_number); ++n) {
+    for (size_t n = 0; n < OCS_ARRAY_SIZE(serial_number); ++n) {
         const auto str = values[n];
         if (str.size() != strlen("AA")) {
             return false;

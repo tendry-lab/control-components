@@ -34,10 +34,10 @@ private:
     using HandleConfigurationFunc =
         std::function<status::StatusCode(cJSON*, sensor::ds18b20::Sensor&)>;
 
-    static constexpr unsigned scan_response_buffer_size_ { 256 };
-    static constexpr unsigned read_response_buffer_size_ { 256 };
-    static constexpr unsigned write_response_buffer_size_ { 256 };
-    static constexpr unsigned erase_response_buffer_size_ { 256 };
+    static constexpr size_t scan_response_buffer_size_ { 256 };
+    static constexpr size_t read_response_buffer_size_ { 256 };
+    static constexpr size_t write_response_buffer_size_ { 256 };
+    static constexpr size_t erase_response_buffer_size_ { 256 };
 
     static constexpr TickType_t scan_wait_interval_ { pdMS_TO_TICKS(10 * 1000) };
     static constexpr TickType_t read_wait_interval_ { pdMS_TO_TICKS(5 * 1000) };
@@ -65,8 +65,8 @@ private:
 
     status::StatusCode handle_configuration_(http::IResponseWriter& w,
                                              http::IRequest& r,
-                                             unsigned wait_interval,
-                                             unsigned response_size,
+                                             size_t wait_interval,
+                                             size_t response_size,
                                              HandleConfigurationFunc func);
 
     status::StatusCode read_configuration_(cJSON* json, sensor::ds18b20::Sensor&);
@@ -87,7 +87,7 @@ private:
     status::StatusCode erase_configuration_(cJSON* json, sensor::ds18b20::Sensor& sensor);
 
     status::StatusCode
-    send_response_(unsigned buffer_size, cJSON* json, http::IResponseWriter& w);
+    send_response_(size_t buffer_size, cJSON* json, http::IResponseWriter& w);
 
     system::ISuspender& suspender_;
     sensor::ds18b20::Store& store_;

@@ -27,7 +27,7 @@ public:
     //! @params
     //!  - @p max_event_count - maximum number of asynchronous events that can be enqueued
     //!    before run() is called.
-    explicit AsyncFuncScheduler(unsigned max_event_count);
+    explicit AsyncFuncScheduler(size_t max_event_count);
 
     //! Run scheduled events.
     status::StatusCode run() override;
@@ -39,7 +39,7 @@ public:
     FuturePtr add(Func func);
 
 private:
-    const unsigned max_event_count_ { 0 };
+    const size_t max_event_count_ { 0 };
 
     using Queue = std::vector<Func>;
     using QueuePtr = std::shared_ptr<Queue>;

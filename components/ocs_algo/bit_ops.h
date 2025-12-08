@@ -12,13 +12,13 @@ namespace algo {
 
 struct BitOps {
     //! Create a mask with the n-th bit set.
-    static unsigned mask(uint8_t pos);
+    static uint32_t mask(uint8_t pos);
 
     //! Create a mask with the n-th bit unset.
-    static unsigned umask(uint8_t pos);
+    static uint32_t umask(uint8_t pos);
 
     //! Return the n-th bit of the value.
-    static uint8_t nth(unsigned value, uint8_t pos);
+    static uint8_t nth(uint32_t value, uint8_t pos);
 
     //! Return 16-bit value from two 8-bit values.
     static uint16_t pack_u8(uint8_t hi, uint8_t lo);

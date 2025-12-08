@@ -36,7 +36,7 @@ UriOps::Path UriOps::parse_path(const char* uri) {
         return std::string_view();
     }
 
-    unsigned path_length = 0;
+    size_t path_length = 0;
 
     const char* query_start = strchr(uri, '?');
     if (query_start != nullptr) {

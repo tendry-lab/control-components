@@ -18,7 +18,7 @@ public:
     virtual ~ITaskScheduler() = default;
 
     //! Return the maximum number of tasks a scheduler can handle.
-    virtual unsigned max_count() const = 0;
+    virtual size_t max_count() const = 0;
 
     //! Add task to be executed periodically once per interval.
     //!

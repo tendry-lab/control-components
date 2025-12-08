@@ -36,7 +36,7 @@ private:
     status::StatusCode handle_root_(http::IResponseWriter& w);
     status::StatusCode handle_file_(http::IResponseWriter& w, const char* filename);
 
-    static constexpr unsigned buffer_size_ = 1024;
+    static constexpr size_t buffer_size_ = 1024;
 
     const std::string mount_point_;
 

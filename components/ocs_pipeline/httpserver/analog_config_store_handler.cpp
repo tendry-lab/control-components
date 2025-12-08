@@ -21,7 +21,7 @@ namespace httpserver {
 
 namespace {
 
-status::StatusCode send_json(http::IResponseWriter& w, cJSON* json, unsigned size) {
+status::StatusCode send_json(http::IResponseWriter& w, cJSON* json, size_t size) {
     fmt::json::DynamicFormatter json_formatter(size);
 
     const auto code = json_formatter.format(json);

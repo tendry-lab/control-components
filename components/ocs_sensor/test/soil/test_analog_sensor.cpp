@@ -158,7 +158,7 @@ TEST_CASE("Soil analog sensor: validate each status",
     const uint16_t def_max = 26;
     const char* id = "test";
 
-    const unsigned status_interval =
+    const uint16_t status_interval =
         (def_max - def_min) / AnalogSensor::get_status_count();
 
     const system::Time resolution = system::Duration::second;
@@ -341,7 +341,7 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
     const char* id = "test";
     const system::Time resolution = system::Duration::second;
 
-    const unsigned status_interval =
+    const uint16_t status_interval =
         (def_max - def_min) / AnalogSensor::get_status_count();
 
     test::MemoryStorage config_storage;
@@ -422,7 +422,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
     const uint16_t range = def_max - def_min;
     TEST_ASSERT_TRUE((range % AnalogSensor::get_status_count()) == 0);
 
-    const unsigned status_interval = range / AnalogSensor::get_status_count();
+    const uint16_t status_interval = range / AnalogSensor::get_status_count();
     const uint8_t status_threshold = 49;
     const double moisture_per_off = static_cast<double>(1) / range;
 
@@ -550,7 +550,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
     const uint16_t range = def_max - def_min;
     TEST_ASSERT_TRUE((range % AnalogSensor::get_status_count()) == 0);
 
-    const unsigned status_interval = range / AnalogSensor::get_status_count();
+    const uint16_t status_interval = range / AnalogSensor::get_status_count();
     const uint8_t status_threshold = 49;
     const double moisture_per_off = static_cast<double>(1) / range;
 

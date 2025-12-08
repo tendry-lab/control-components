@@ -31,9 +31,9 @@ public:
 
     //! Send/receive data over SPI bus.
     status::StatusCode transceive(const uint8_t* send_buf,
-                                  unsigned send_buf_size,
+                                  size_t send_buf_size,
                                   uint8_t* recv_buf,
-                                  unsigned recv_buf_size) override;
+                                  size_t recv_buf_size) override;
 
 private:
     const std::string id_;

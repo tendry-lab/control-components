@@ -21,7 +21,7 @@ ResponseWriter::ResponseWriter(httpd_req_t& req)
     , header_(req) {
 }
 
-status::StatusCode ResponseWriter::write(const void* data, unsigned size) {
+status::StatusCode ResponseWriter::write(const void* data, size_t size) {
     if (header_.chunked()) {
         const auto err =
             httpd_resp_send_chunk(&req_, static_cast<const char*>(data), size);

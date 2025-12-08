@@ -285,8 +285,8 @@ status::StatusCode DS18B20Handler::format_sensor_(cJSON* array,
 status::StatusCode
 DS18B20Handler::handle_configuration_(http::IResponseWriter& w,
                                       http::IRequest& r,
-                                      unsigned wait_interval,
-                                      unsigned response_size,
+                                      size_t wait_interval,
+                                      size_t response_size,
                                       DS18B20Handler::HandleConfigurationFunc func) {
     const auto values = algo::UriOps::parse_query(r.get_uri());
 
@@ -480,7 +480,7 @@ status::StatusCode DS18B20Handler::erase_configuration_(cJSON* json,
     return status::StatusCode::OK;
 }
 
-status::StatusCode DS18B20Handler::send_response_(unsigned buffer_size,
+status::StatusCode DS18B20Handler::send_response_(size_t buffer_size,
                                                   cJSON* json,
                                                   http::IResponseWriter& w) {
     fmt::json::DynamicFormatter json_formatter(buffer_size);

@@ -20,7 +20,7 @@ public:
     //!
     //! @params
     //!  - @p size - underlying buffer size, in bytes, allocated on the heap.
-    explicit DynamicFormatter(unsigned size);
+    explicit DynamicFormatter(size_t size);
 
     //! Format @p json into the underlying buffer.
     status::StatusCode format(cJSON* json) override;
@@ -31,7 +31,7 @@ public:
 private:
     void clear_();
 
-    const unsigned size_ { 0 };
+    const size_t size_ { 0 };
 
     std::unique_ptr<char[]> buf_;
 };

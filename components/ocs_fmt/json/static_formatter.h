@@ -15,7 +15,7 @@ namespace ocs {
 namespace fmt {
 namespace json {
 
-template <unsigned Size>
+template <size_t Size>
 class StaticFormatter : public IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.

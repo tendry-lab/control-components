@@ -22,7 +22,7 @@ AsyncTaskScheduler::AsyncTaskScheduler(IDelayEstimator& estimator, const char* i
     , estimator_(estimator) {
 }
 
-unsigned AsyncTaskScheduler::max_count() const {
+size_t AsyncTaskScheduler::max_count() const {
     //!  8 high bits are used by the FreeRTOS itself.
     return (sizeof(EventBits_t) * 8) - 8;
 }

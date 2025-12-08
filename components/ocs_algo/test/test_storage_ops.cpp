@@ -17,7 +17,7 @@ TEST_CASE("Storage Ops: prob read: empty storage", "[ocs_algo], [storage_ops]") 
 
     test::MemoryStorage storage;
 
-    unsigned recv_value = 0;
+    size_t recv_value = 0;
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::NoData,
@@ -29,17 +29,17 @@ TEST_CASE("Storage Ops: prob read: empty storage", "[ocs_algo], [storage_ops]") 
 TEST_CASE("Storage Ops: prob read: invalid key", "[ocs_algo], [storage_ops]") {
     const char* key = "foo";
     const char* invalid_key = "bar";
-    const unsigned value = 42;
+    const size_t value = 42;
 
     test::MemoryStorage storage;
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, storage.write(key, &value, sizeof(value)));
 
-    unsigned size = 0;
+    size_t size = 0;
     TEST_ASSERT_EQUAL(status::StatusCode::OK, storage.probe(key, size));
     TEST_ASSERT_EQUAL(size, sizeof(value));
 
-    unsigned recv_value = 0;
+    size_t recv_value = 0;
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::NoData,
@@ -50,13 +50,13 @@ TEST_CASE("Storage Ops: prob read: invalid key", "[ocs_algo], [storage_ops]") {
 
 TEST_CASE("Storage Ops: prob read: size mismatch", "[ocs_algo], [storage_ops]") {
     const char* key = "foo";
-    const unsigned value = 42;
+    const size_t value = 42;
 
     test::MemoryStorage storage;
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, storage.write(key, &value, sizeof(value)));
 
-    unsigned recv_value = 0;
+    size_t recv_value = 0;
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::InvalidArg,
@@ -67,7 +67,7 @@ TEST_CASE("Storage Ops: prob read: size mismatch", "[ocs_algo], [storage_ops]") 
 
 TEST_CASE("Storage Ops: prob read: prob failed", "[ocs_algo], [storage_ops]") {
     const char* key = "foo";
-    const unsigned value = 42;
+    const size_t value = 42;
 
     test::MemoryStorage memory_storage;
     test::StatusStorage storage(memory_storage);
@@ -75,7 +75,7 @@ TEST_CASE("Storage Ops: prob read: prob failed", "[ocs_algo], [storage_ops]") {
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, storage.write(key, &value, sizeof(value)));
 
-    unsigned recv_value = 0;
+    size_t recv_value = 0;
 
     TEST_ASSERT_EQUAL(
         storage.probe_status,
@@ -86,7 +86,7 @@ TEST_CASE("Storage Ops: prob read: prob failed", "[ocs_algo], [storage_ops]") {
 
 TEST_CASE("Storage Ops: prob read: read failed", "[ocs_algo], [storage_ops]") {
     const char* key = "foo";
-    const unsigned value = 42;
+    const size_t value = 42;
 
     test::MemoryStorage memory_storage;
     test::StatusStorage storage(memory_storage);
@@ -94,7 +94,7 @@ TEST_CASE("Storage Ops: prob read: read failed", "[ocs_algo], [storage_ops]") {
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, storage.write(key, &value, sizeof(value)));
 
-    unsigned recv_value = 0;
+    size_t recv_value = 0;
 
     TEST_ASSERT_EQUAL(
         storage.read_status,
@@ -105,13 +105,13 @@ TEST_CASE("Storage Ops: prob read: read failed", "[ocs_algo], [storage_ops]") {
 
 TEST_CASE("Storage Ops: prob read: properly read", "[ocs_algo], [storage_ops]") {
     const char* key = "foo";
-    const unsigned value = 42;
+    const size_t value = 42;
 
     test::MemoryStorage storage;
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, storage.write(key, &value, sizeof(value)));
 
-    unsigned recv_value = 0;
+    size_t recv_value = 0;
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,

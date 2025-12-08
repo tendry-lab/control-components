@@ -9,14 +9,14 @@ namespace ocs {
 namespace algo {
 
 uint8_t CrcOps::crc8(const uint8_t* buf,
-                     unsigned size,
+                     size_t size,
                      uint8_t initial,
                      uint8_t polynomial,
                      CrcOps::BitOrder order) {
     // Initialize shift register.
     uint8_t crc = initial;
 
-    for (unsigned n = 0; n < size; ++n) {
+    for (size_t n = 0; n < size; ++n) {
         // XOR data byte with current CRC.
         crc ^= buf[n];
 

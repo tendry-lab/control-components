@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include "ocs_core/noncopyable.h"
 #include "ocs_system/itimer.h"
 
@@ -18,8 +20,8 @@ public:
     status::StatusCode start() override;
     status::StatusCode stop() override;
 
-    unsigned start_call_count { 0 };
-    unsigned stop_call_count { 0 };
+    size_t start_call_count { 0 };
+    size_t stop_call_count { 0 };
 
 private:
     status::StatusCode code_ { status::StatusCode::OK };

@@ -10,7 +10,7 @@
 namespace ocs {
 namespace algo {
 
-double MathOps::round_floor(double value, unsigned decimal_places) {
+double MathOps::round_floor(double value, uint8_t decimal_places) {
     const auto multiplier = std::pow(10.0, decimal_places);
     const auto ret = std::floor(value * multiplier) / multiplier;
     return ret;

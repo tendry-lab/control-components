@@ -19,7 +19,7 @@ class HttpPipeline : private core::NonCopyable<> {
 public:
     struct DataParams {
         //! Buffer size to hold the formatted JSON data, in bytes.
-        unsigned buffer_size { 0 };
+        size_t buffer_size { 0 };
     };
 
     struct Params {

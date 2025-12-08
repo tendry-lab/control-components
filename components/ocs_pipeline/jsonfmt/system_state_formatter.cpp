@@ -53,7 +53,7 @@ status::StatusCode format_task_state(fmt::json::CjsonObjectFormatter& formatter,
             return status::StatusCode::NoMem;
         }
 
-        const unsigned decimal_places = 2;
+        const uint8_t decimal_places = 2;
         const auto value = static_cast<double>(state.ulRunTimeCounter) / total_time;
         const auto multiplier = std::pow(10.0, decimal_places);
         const auto relative = std::ceil(value * multiplier) / multiplier;

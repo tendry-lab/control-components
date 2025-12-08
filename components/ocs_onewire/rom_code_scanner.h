@@ -28,17 +28,17 @@ public:
     void reset();
 
 private:
-    status::StatusCode scan_(uint8_t* buf, unsigned size);
+    status::StatusCode scan_(uint8_t* buf, size_t size);
     uint8_t handle_discrepancy_(const uint8_t* buf, int position);
 
-    static constexpr unsigned bits_in_byte_ = 8;
+    static constexpr uint8_t bits_in_byte_ = 8;
 
     Bus& bus_;
 
     bool finished_ { false };
     int prev_discrepancy_ { -1 };
     int curr_discrepancy_ { -1 };
-    unsigned conflict_count_ { 0 };
+    size_t conflict_count_ { 0 };
 };
 
 } // namespace onewire

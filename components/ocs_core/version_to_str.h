@@ -22,7 +22,7 @@ public:
     const char* c_str() const;
 
 private:
-    static constexpr unsigned size_ = strlen("65535.65535.65535");
+    static constexpr size_t size_ = strlen("65535.65535.65535");
 
     char buf_[size_ + 1];
 };

@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 namespace ocs {
@@ -18,7 +19,7 @@ namespace onewire {
 //! @references
 //!  https://stackoverflow.com/questions/29214301/ios-how-to-calculate-crc-8-dallas-maxim-of-nsdata
 //!  https://stackoverflow.com/questions/74775595/maxim-dow-crc-algorithm-cannot-re-create-example-in-application-note
-uint8_t calculate_crc(const uint8_t* buf, unsigned size);
+uint8_t calculate_crc(const uint8_t* buf, size_t size);
 
 } // namespace onewire
 } // namespace ocs

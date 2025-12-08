@@ -38,9 +38,9 @@ struct StringEqual {
 //! @notes
 //!  Based on combine hash implementation in boost:
 //!  https://www.boost.org/doc/libs/1_35_0/doc/html/boost/hash_combine_id241013.html
-template <typename T, unsigned N> struct ArrayHasher {
-    unsigned operator()(const std::array<T, N>& arr) const {
-        unsigned h = 0;
+template <typename T, size_t N> struct ArrayHasher {
+    size_t operator()(const std::array<T, N>& arr) const {
+        size_t h = 0;
 
         for (const auto& e : arr) {
             h ^= std::hash<T> {}(e) + 0x9e3779b9 + (h << 6) + (h >> 2);

@@ -34,7 +34,7 @@ template <typename T> T random(T range_from, T range_to) {
 
 class TestTask : private NonCopyable<> {
 public:
-    TestTask(ILocker& locker, Cond& cond, const char* id, unsigned stack_size)
+    TestTask(ILocker& locker, Cond& cond, const char* id, size_t stack_size)
         : id_(id)
         , stack_size_(stack_size)
         , locker_(locker)
@@ -48,7 +48,7 @@ public:
         return ret == pdTRUE ? status::StatusCode::OK : status::StatusCode::Error;
     }
 
-    unsigned awake_count() const {
+    size_t awake_count() const {
         return awake_count_.load(std::memory_order_acquire);
     }
 
@@ -76,13 +76,13 @@ private:
     }
 
     const std::string id_;
-    const unsigned stack_size_ { 0 };
+    const size_t stack_size_ { 0 };
 
     ILocker& locker_;
     Cond& cond_;
 
     TaskHandle_t handle_ { nullptr };
-    std::atomic<unsigned> awake_count_ { 0 };
+    std::atomic<size_t> awake_count_ { 0 };
 };
 
 } // namespace
@@ -91,13 +91,13 @@ TEST_CASE("Condition variable: wait multiple tasks", "[ocs_core], [cond]") {
     StaticMutex mutex;
     Cond cond(mutex);
 
-    const unsigned task_count = 3;
-    const unsigned stack_size = 1024 * 2;
+    const size_t task_count = 3;
+    const size_t stack_size = 1024 * 2;
 
     using TaskPtr = std::shared_ptr<TestTask>;
     std::vector<TaskPtr> tasks;
 
-    for (unsigned n = 0; n < task_count; ++n) {
+    for (size_t n = 0; n < task_count; ++n) {
         const std::string id = "task_" + std::to_string(n);
 
         TaskPtr task(new (std::nothrow) TestTask(mutex, cond, id.c_str(), stack_size));

@@ -21,7 +21,7 @@ public:
     //!
     //! @remarks
     //!  - Respond with empty data to signal HTTP response completion: write(nullptr, 0).
-    virtual status::StatusCode write(const void* data, unsigned size) = 0;
+    virtual status::StatusCode write(const void* data, size_t size) = 0;
 
     //! Write HTTP status code.
     virtual status::StatusCode write_status(StatusCode) = 0;

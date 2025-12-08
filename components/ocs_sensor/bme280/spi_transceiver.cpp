@@ -18,16 +18,16 @@ SpiTransceiver::SpiTransceiver(io::spi::ITransceiver& transceiver)
 }
 
 status::StatusCode
-SpiTransceiver::send(const uint8_t* buf, unsigned size, RegisterAddress addr) {
+SpiTransceiver::send(const uint8_t* buf, size_t size, RegisterAddress addr) {
     //! Each register is sent as a pair of bytes: | control byte | data byte |.
     const auto send_buf_size = size * 2;
 
     uint8_t send_buf[send_buf_size];
     memset(send_buf, 0, sizeof(send_buf));
 
-    unsigned pos = 0;
+    size_t pos = 0;
 
-    for (unsigned n = 0; n < send_buf_size;) {
+    for (size_t n = 0; n < send_buf_size;) {
         //! Set the MSB bit to 0 to indicate a write command.
         const uint8_t control_byte = addr & algo::BitOps::umask(7);
         const uint8_t data_byte = buf[pos];
@@ -43,7 +43,7 @@ SpiTransceiver::send(const uint8_t* buf, unsigned size, RegisterAddress addr) {
 }
 
 status::StatusCode
-SpiTransceiver::receive(uint8_t* buf, unsigned size, RegisterAddress addr) {
+SpiTransceiver::receive(uint8_t* buf, size_t size, RegisterAddress addr) {
     //! Dummy bytes are used to clock out the data we want to receive.
     uint8_t send_buf[size + 1];
     memset(send_buf, 0, sizeof(send_buf));

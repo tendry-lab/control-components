@@ -24,7 +24,7 @@ NvsStorage::NvsStorage(const char* ns) {
     configASSERT(strlen(ns) <= max_namespace_len);
 
     memset(ns_, 0, sizeof(ns_));
-    strncpy(ns_, ns, std::min(max_namespace_len, strlen(ns)));
+    strncpy(ns_, ns, std::min(static_cast<size_t>(max_namespace_len), strlen(ns)));
 }
 
 status::StatusCode NvsStorage::probe(const char* key, size_t& size) {

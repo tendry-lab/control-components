@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 #include "ocs_status/code.h"
@@ -33,7 +34,7 @@ public:
     //!  - @p src should be at least @p size bytes long.
     //!  - @p buf should be large enough to store the result of SHA calculation.
     virtual status::StatusCode
-    generate(uint8_t* buf, const uint8_t* src, unsigned size) = 0;
+    generate(uint8_t* buf, const uint8_t* src, size_t size) = 0;
 };
 
 } // namespace security

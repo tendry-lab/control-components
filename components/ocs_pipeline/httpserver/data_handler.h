@@ -25,7 +25,7 @@ public:
     //! @params
     //!  - @p formatter to format the data.
     //!  - @p buffer_size to hold the formatted JSON data, in bytes.
-    DataHandler(fmt::json::IFormatter& formatter, unsigned buffer_size);
+    DataHandler(fmt::json::IFormatter& formatter, size_t buffer_size);
 
     // Get data over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;

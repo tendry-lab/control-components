@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 namespace ocs {
@@ -26,7 +27,7 @@ struct CrcOps {
     //! @references
     //!  https://www.boost.org/doc/libs/1_84_0/doc/html/crc/crc_optimal.html
     static uint8_t crc8(const uint8_t* buf,
-                        unsigned size,
+                        size_t size,
                         uint8_t initial,
                         uint8_t polynomial,
                         BitOrder order);

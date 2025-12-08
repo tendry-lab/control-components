@@ -13,7 +13,7 @@ namespace core {
 //! Stream writing process.
 //!
 //! @example
-//!  status::StatusCode write(IStreamWriter& writer, const void* data, unsigned size) {
+//!  status::StatusCode write(IStreamWriter& writer, const void* data, size_t size) {
 //!     if (const auto code = writer.begin(); code != status::StatusCode::OK) {
 //!         return code;
 //!     }
@@ -57,7 +57,7 @@ public:
     //!
     //! @notes
     //!  Writing is only allowed after the process was started correctly via begin() call.
-    virtual status::StatusCode write(const void* data, unsigned size) = 0;
+    virtual status::StatusCode write(const void* data, size_t size) = 0;
 };
 
 } // namespace core

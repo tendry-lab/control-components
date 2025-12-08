@@ -32,10 +32,10 @@ public:
     PeriodicTaskScheduler(system::IClock& clock,
                           IDelayEstimator& estimator,
                           const char* id,
-                          unsigned max_count);
+                          size_t max_count);
 
     //! Return the maximum configured number of tasks a scheduler can handle.
-    unsigned max_count() const override;
+    size_t max_count() const override;
 
     //! Add task to be executed periodically once per interval.
     //!
@@ -96,7 +96,7 @@ private:
 
     void run_();
 
-    const unsigned max_count_ { 0 };
+    const size_t max_count_ { 0 };
     const std::string log_tag_;
 
     system::Time total_ts_min_ { INT64_MAX };

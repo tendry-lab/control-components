@@ -72,13 +72,13 @@ public:
     //!
     //! @remarks
     //!  - @p buf should be at least @p size bytes long.
-    status::StatusCode read_bytes(uint8_t* buf, unsigned size);
+    status::StatusCode read_bytes(uint8_t* buf, size_t size);
 
     //! Write @p size bytes from @p buf to the bus.
     //!
     //! @remarks
     //!  - @p buf should be at least @p size bytes long.
-    status::StatusCode write_bytes(const uint8_t* buf, unsigned size);
+    status::StatusCode write_bytes(const uint8_t* buf, size_t size);
 
 private:
     status::StatusCode write_bit_one_();
@@ -86,7 +86,7 @@ private:
 
     const Params params_;
 
-    const unsigned bits_in_byte_ = 8;
+    const uint8_t bits_in_byte_ = 8;
 
     system::Time reset_remain_time_slot_ { 0 };
     system::Time write_remain_time_slot_ { 0 };

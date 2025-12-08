@@ -22,9 +22,9 @@ public:
     //!  - @p send_buf - sending data, should be at least @p send_buf_size bytes long.
     //!  - @p recv_buf - receiving data, should be at least @p recv_buf_size bytes long.
     virtual status::StatusCode transceive(const uint8_t* send_buf,
-                                          unsigned send_buf_size,
+                                          size_t send_buf_size,
                                           uint8_t* recv_buf,
-                                          unsigned recv_buf_size) = 0;
+                                          size_t recv_buf_size) = 0;
 };
 
 } // namespace spi

@@ -13,12 +13,12 @@
 namespace ocs {
 namespace security {
 
-sha_to_hex_str::sha_to_hex_str(const uint8_t* sha, unsigned size) {
+sha_to_hex_str::sha_to_hex_str(const uint8_t* sha, size_t size) {
     configASSERT(size <= max_hash_length_);
 
     memset(buf_, 0, sizeof(buf_));
 
-    for (unsigned n = 0; n < size; ++n) {
+    for (size_t n = 0; n < size; ++n) {
         sprintf(buf_ + n * 2, "%02X", sha[n]);
     }
 }

@@ -19,7 +19,7 @@ namespace control {
 namespace {
 
 struct TestRebooter : public system::IRebooter, private core::NonCopyable<> {
-    unsigned call_count { 0 };
+    size_t call_count { 0 };
 
     void reboot() override {
         ++call_count;
@@ -35,7 +35,7 @@ struct TestButton : public IButton, private core::NonCopyable<> {
 };
 
 struct TestFsrHandler : public IFsrHandler, private core::NonCopyable<> {
-    unsigned call_count { 0 };
+    size_t call_count { 0 };
 
     status::StatusCode handle_fsr() override {
         ++call_count;
@@ -45,7 +45,7 @@ struct TestFsrHandler : public IFsrHandler, private core::NonCopyable<> {
 };
 
 struct TestInitHandler : public scheduler::IEventHandler, private core::NonCopyable<> {
-    unsigned call_count { 0 };
+    size_t call_count { 0 };
 
     status::StatusCode handle_event() override {
         ++call_count;
@@ -91,7 +91,7 @@ TEST_CASE("System FSM: button is pressed before LED reaction on system initializ
     TEST_ASSERT_EQUAL(status::StatusCode::OK, fsm.run());
 
     // Ensure there is no LED reaction on button event.
-    for (unsigned n = 0; n < 10; ++n) {
+    for (size_t n = 0; n < 10; ++n) {
         TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
         TEST_ASSERT_EQUAL(0, gpio.flip_call_count);
     }
@@ -184,7 +184,7 @@ TEST_CASE("System FSM: button is pressed during LED reaction on system initializ
     TEST_ASSERT_EQUAL(status::StatusCode::OK, fsm.run());
 
     // Ensure there is no LED reaction on button event.
-    for (unsigned n = 0; n < 10; ++n) {
+    for (size_t n = 0; n < 10; ++n) {
         TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
         TEST_ASSERT_EQUAL(0, gpio.flip_call_count);
     }
@@ -232,7 +232,7 @@ TEST_CASE("System FSM: button isn't released within interval",
     TEST_ASSERT_EQUAL(status::StatusCode::OK, fsm.run());
 
     // Ensure there is no LED reaction on button event.
-    for (unsigned n = 0; n < 10; ++n) {
+    for (size_t n = 0; n < 10; ++n) {
         TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
         TEST_ASSERT_EQUAL(0, gpio.flip_call_count);
     }
@@ -373,7 +373,7 @@ TEST_CASE("System FSM: FSR canceled: released too quickly",
     TEST_ASSERT_EQUAL(0, fsr_handler.call_count);
 
     // Ensure there is no LED reaction on button event.
-    for (unsigned n = 0; n < 10; ++n) {
+    for (size_t n = 0; n < 10; ++n) {
         TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
         TEST_ASSERT_EQUAL(0, gpio.flip_call_count);
     }
@@ -454,7 +454,7 @@ TEST_CASE("System FSM: FSR canceled: isn't confirmed within timeout",
     TEST_ASSERT_EQUAL(0, fsr_handler.call_count);
 
     // Ensure there is no LED reaction on button event.
-    for (unsigned n = 0; n < 10; ++n) {
+    for (size_t n = 0; n < 10; ++n) {
         TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
         TEST_ASSERT_EQUAL(0, gpio.flip_call_count);
     }

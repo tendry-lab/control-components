@@ -95,7 +95,7 @@ status::StatusCode Bus::read_bit(uint8_t& bit) {
 }
 
 status::StatusCode Bus::write_byte(uint8_t byte) {
-    for (unsigned n = 0; n < bits_in_byte_; ++n) {
+    for (uint8_t n = 0; n < bits_in_byte_; ++n) {
         const uint8_t bit = byte % 2;
         OCS_STATUS_RETURN_ON_ERROR(write_bit(bit));
 
@@ -106,7 +106,7 @@ status::StatusCode Bus::write_byte(uint8_t byte) {
 }
 
 status::StatusCode Bus::read_byte(uint8_t& byte) {
-    for (unsigned n = 0; n < bits_in_byte_; ++n) {
+    for (uint8_t n = 0; n < bits_in_byte_; ++n) {
         uint8_t bit = 0;
         OCS_STATUS_RETURN_ON_ERROR(read_bit(bit));
 
@@ -120,22 +120,22 @@ status::StatusCode Bus::read_byte(uint8_t& byte) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode Bus::read_bytes(uint8_t* buf, unsigned size) {
+status::StatusCode Bus::read_bytes(uint8_t* buf, size_t size) {
     OCS_STATUS_RETURN_ON_FALSE(buf, status::StatusCode::InvalidArg);
     OCS_STATUS_RETURN_ON_FALSE(size, status::StatusCode::InvalidArg);
 
-    for (unsigned n = 0; n < size; ++n) {
+    for (size_t n = 0; n < size; ++n) {
         OCS_STATUS_RETURN_ON_ERROR(read_byte(buf[n]));
     }
 
     return status::StatusCode::OK;
 }
 
-status::StatusCode Bus::write_bytes(const uint8_t* buf, unsigned size) {
+status::StatusCode Bus::write_bytes(const uint8_t* buf, size_t size) {
     OCS_STATUS_RETURN_ON_FALSE(buf, status::StatusCode::InvalidArg);
     OCS_STATUS_RETURN_ON_FALSE(size, status::StatusCode::InvalidArg);
 
-    for (unsigned n = 0; n < size; ++n) {
+    for (size_t n = 0; n < size; ++n) {
         OCS_STATUS_RETURN_ON_ERROR(write_byte(buf[n]));
     }
 

@@ -46,10 +46,10 @@ status::StatusCode ClientReader::wait(TickType_t wait) {
     return status::StatusCode::OK;
 }
 
-unsigned ClientReader::read(char* buf, unsigned size) {
+size_t ClientReader::read(char* buf, size_t size) {
     core::LockGuard lock(mu_);
 
-    const unsigned len = std::min(size, buf_.size());
+    const size_t len = std::min(size, buf_.size());
     memcpy(buf, buf_.data(), len);
 
     return len;
@@ -104,7 +104,7 @@ void ClientReader::handle_event_on_data_(esp_http_client_event_t* event) {
 
     const char* ptr = static_cast<const char*>(event->data);
 
-    for (unsigned n = 0; n < event->data_len; ++n) {
+    for (size_t n = 0; n < event->data_len; ++n) {
         buf_.push_back(ptr[n]);
     }
 }

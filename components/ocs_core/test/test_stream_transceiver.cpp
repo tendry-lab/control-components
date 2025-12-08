@@ -41,7 +41,7 @@ struct TestStreamReader : public IStreamReader {
         return cancel_status;
     }
 
-    status::StatusCode read(void* data, unsigned& size) override {
+    status::StatusCode read(void* data, size_t& size) override {
         ++read_count;
 
         if (read_status != status::StatusCode::OK) {
@@ -65,10 +65,10 @@ struct TestStreamReader : public IStreamReader {
     status::StatusCode cancel_status { status::StatusCode::OK };
     status::StatusCode read_status { status::StatusCode::OK };
 
-    unsigned begin_count { 0 };
-    unsigned end_count { 0 };
-    unsigned cancel_count { 0 };
-    unsigned read_count { 0 };
+    size_t begin_count { 0 };
+    size_t end_count { 0 };
+    size_t cancel_count { 0 };
+    size_t read_count { 0 };
 
 private:
     Data data_;
@@ -90,7 +90,7 @@ struct TestStreamWriter : public IStreamWriter {
         return cancel_status;
     }
 
-    status::StatusCode write(const void* data, unsigned size) override {
+    status::StatusCode write(const void* data, size_t size) override {
         ++write_count;
         if (write_status != status::StatusCode::OK) {
             return write_status;
@@ -98,7 +98,7 @@ struct TestStreamWriter : public IStreamWriter {
 
         const char* ptr = static_cast<const char*>(data);
 
-        for (unsigned n = 0; n < size; ++n) {
+        for (size_t n = 0; n < size; ++n) {
             buffer_.push_back(ptr[n]);
         }
 
@@ -114,10 +114,10 @@ struct TestStreamWriter : public IStreamWriter {
     status::StatusCode cancel_status { status::StatusCode::OK };
     status::StatusCode write_status { status::StatusCode::OK };
 
-    unsigned begin_count { 0 };
-    unsigned end_count { 0 };
-    unsigned cancel_count { 0 };
-    unsigned write_count { 0 };
+    size_t begin_count { 0 };
+    size_t end_count { 0 };
+    size_t cancel_count { 0 };
+    size_t write_count { 0 };
 
 private:
     StreamTransceiver::Buffer buffer_;

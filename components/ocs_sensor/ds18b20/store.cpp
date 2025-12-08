@@ -24,7 +24,7 @@ const char* log_tag = "ds18b20_store";
 
 } // namespace
 
-Store::Store(system::IRtDelayer& delayer, unsigned max_event_count)
+Store::Store(system::IRtDelayer& delayer, size_t max_event_count)
     : max_event_count_(max_event_count)
     , delayer_(delayer) {
     configASSERT(max_event_count_);
@@ -35,7 +35,7 @@ status::StatusCode Store::run() {
         const auto code = node->run();
         if (code != status::StatusCode::OK) {
             ocs_logw(log_tag, "failed to handle events on the bus: gpio=%d code=%s",
-                     static_cast<unsigned>(gpio), status::code_to_str(code));
+                     static_cast<int>(gpio), status::code_to_str(code));
         }
     }
 
@@ -87,7 +87,7 @@ Store::NodePtr Store::add_node_(io::gpio::Gpio gpio, const char* gpio_id) {
 Store::Node::Node(system::IRtDelayer& delayer,
                   io::gpio::Gpio gpio,
                   const char* gpio_id,
-                  unsigned max_event_count)
+                  size_t max_event_count)
     : func_scheduler_(max_event_count) {
     gpio_.reset(new (std::nothrow) io::gpio::DefaultGpio(gpio_id, gpio));
     configASSERT(gpio_);

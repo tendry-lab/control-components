@@ -18,8 +18,8 @@ TEST_CASE("NVS storage: write-read-erase", "[ocs_storage], [nvs_storage]") {
     FlashInitializer initializer;
 
     const char* id = "foo";
-    const unsigned write_value = 42;
-    unsigned read_value = 0;
+    const size_t write_value = 42;
+    size_t read_value = 0;
 
     NvsStorage storage("tests");
 
@@ -44,7 +44,7 @@ TEST_CASE("NVS storage: read: no data", "[ocs_storage], [nvs_storage]") {
     FlashInitializer initializer;
 
     const char* id = "foo";
-    unsigned value = 0;
+    size_t value = 0;
 
     NvsStorage storage("tests");
     TEST_ASSERT_EQUAL(status::StatusCode::NoData,
@@ -97,9 +97,9 @@ TEST_CASE("NVS storage: overwrite key", "[ocs_storage], [nvs_storage]") {
     FlashInitializer initializer;
 
     const char* id = "overwrite";
-    const unsigned initial_value = 10;
-    const unsigned updated_value = 20;
-    unsigned read_value = 0;
+    const size_t initial_value = 10;
+    const size_t updated_value = 20;
+    size_t read_value = 0;
 
     NvsStorage storage("tests");
 

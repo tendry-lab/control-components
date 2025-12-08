@@ -10,7 +10,7 @@ namespace algo {
 
 struct MathOps {
     //! Round @p value down to @p decimal_places.
-    static double round_floor(double value, unsigned decimal_places);
+    static double round_floor(double value, uint8_t decimal_places);
 };
 
 } // namespace algo

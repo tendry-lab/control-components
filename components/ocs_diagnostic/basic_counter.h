@@ -26,7 +26,7 @@ public:
     const char* id() const;
 
 private:
-    static constexpr unsigned bufsize_ = 15;
+    static constexpr uint8_t bufsize_ = 15;
 
     char buf_[bufsize_ + 1];
 };

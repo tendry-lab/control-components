@@ -23,7 +23,7 @@ public:
     //!
     //! @params
     //!  - @p response_size - system state response size, in bytes.
-    SystemStateHandler(unsigned response_size);
+    explicit SystemStateHandler(size_t response_size);
 
     // Get system state over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
