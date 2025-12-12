@@ -25,10 +25,10 @@ public:
     //! Destroy.
     virtual ~IRequest() = default;
 
-    //! Get the request URI.
+    //! Get request URI.
     virtual const char* get_uri() const = 0;
 
-    //! Get the request method.
+    //! Get request method.
     virtual Method get_method() const = 0;
 
     //! Return request content length.
