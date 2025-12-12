@@ -2,12 +2,13 @@
 
 ## Introduction
 
-Firmware foundation for ESP32-based devices built with modern C++ (C++17/C++20). mDNS server, HTTP server, WiFi configuration, sensor drivers.
+Firmware foundation for ESP32-based devices built with modern C++ (C++17/C++20). mDNS server, HTTP server, WiFi configuration, OTA firmware update, sensor drivers.
 
 ## Features
 
 - mDNS service discovery
 - WiFi AP and STA modes
+- OTA firmware update
 - System and network monitoring
 - Builtin HTTP server
 - Analog and digital sensors
@@ -19,7 +20,7 @@ See the detailed [instructions](docs/install/esp32.md) on how to use the `contro
 
 ## Contribution
 
-- `master` - stable and ready-to-use branch. [Semver](https://semver.org/) is used for versioning.
+- [Semver](https://semver.org/) is used for versioning.
 - Try to keep PR small.
 - New code should be similar to existing code. Use the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
 - Ensure the code is properly formatted. Use [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html).
