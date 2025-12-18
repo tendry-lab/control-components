@@ -110,7 +110,9 @@ status::StatusCode PeriodicTaskScheduler::run() {
              "total_max=%lli(usec) estimated=%lu(ms)",
              total_ts, total_ts_min_, total_ts_max_, pdTICKS_TO_MS(estimated_delay));
 
-    vTaskDelay(estimated_delay);
+    if (estimated_delay) {
+        vTaskDelay(estimated_delay);
+    }
 
     return status::StatusCode::OK;
 }

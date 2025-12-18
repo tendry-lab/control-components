@@ -481,5 +481,41 @@ TEST_CASE("Periodic task scheduler: add/remove multiple tasks",
     }
 }
 
+TEST_CASE("Periodic task scheduler: zero delay",
+          "[ocs_scheduler], [periodic_task_scheduler]") {
+    const system::Time interval = system::Duration::second;
+    const char* task_id = "test_task";
+
+    test::TestClock clock;
+    clock.value = 42;
+
+    test::TestTask task(status::StatusCode::OK);
+    ConstantDelayEstimator estimator(0);
+
+    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                      task_scheduler.add(task, task_id, interval));
+
+    TEST_ASSERT_EQUAL(0, task.run_call_count());
+
+    // The first run is always allowed.
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+    TEST_ASSERT_EQUAL(1, task.run_call_count());
+    task.reset(status::StatusCode::OK);
+
+    clock.value += (interval - 1);
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+    TEST_ASSERT_EQUAL(0, task.run_call_count());
+
+    clock.value += 1;
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+    TEST_ASSERT_EQUAL(1, task.run_call_count());
+    task.reset(status::StatusCode::OK);
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+    TEST_ASSERT_EQUAL(0, task.run_call_count());
+}
+
 } // namespace scheduler
 } // namespace ocs
