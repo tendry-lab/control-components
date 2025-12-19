@@ -20,6 +20,7 @@ idf_component_register(
     "target_esp32/high_resolution_timer.cpp"
     "target_esp32/le_crc32_calculator.cpp"
     "target_esp32/native_updater.cpp"
+    "target_esp32/partition_updater.cpp"
 
     REQUIRES
     "esp_timer"
