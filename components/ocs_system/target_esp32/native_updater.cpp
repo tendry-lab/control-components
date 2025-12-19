@@ -6,22 +6,22 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_system/target_esp32/updater.h"
+#include "ocs_system/target_esp32/native_updater.h"
 
 namespace ocs {
 namespace system {
 
 namespace {
 
-const char* log_tag = "updater";
+const char* log_tag = "native_updater";
 
 } // namespace
 
-Updater::Updater(ICrc32Calculator& crc32_calculator)
+NativeUpdater::NativeUpdater(ICrc32Calculator& crc32_calculator)
     : crc32_calculator_(crc32_calculator) {
 }
 
-status::StatusCode Updater::begin(size_t total_size, uint32_t crc32) {
+status::StatusCode NativeUpdater::begin(size_t total_size, uint32_t crc32) {
     configASSERT(!handle_);
     configASSERT(!crc32_src_);
     configASSERT(!crc32_clc_);
@@ -48,7 +48,7 @@ status::StatusCode Updater::begin(size_t total_size, uint32_t crc32) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode Updater::write(const uint8_t* buf, size_t len) {
+status::StatusCode NativeUpdater::write(const uint8_t* buf, size_t len) {
     configASSERT(handle_);
 
     const auto err = esp_ota_write(handle_, buf, len);
@@ -63,7 +63,7 @@ status::StatusCode Updater::write(const uint8_t* buf, size_t len) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode Updater::commit() {
+status::StatusCode NativeUpdater::commit() {
     configASSERT(!committed_);
     configASSERT(crc32_src_);
     configASSERT(crc32_clc_);
@@ -90,7 +90,7 @@ status::StatusCode Updater::commit() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode Updater::end() {
+status::StatusCode NativeUpdater::end() {
     configASSERT(handle_);
 
     if (committed_) {
