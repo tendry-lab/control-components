@@ -17,16 +17,8 @@ const char* log_tag = "native_updater";
 
 } // namespace
 
-NativeUpdater::NativeUpdater(ICrc32Calculator& crc32_calculator)
-    : crc32_calculator_(crc32_calculator) {
-}
-
-status::StatusCode NativeUpdater::begin(size_t total_size, uint32_t crc32) {
+status::StatusCode NativeUpdater::begin(size_t total_size, uint32_t _) {
     configASSERT(!handle_);
-    configASSERT(!crc32_src_);
-    configASSERT(!crc32_clc_);
-
-    crc32_src_ = crc32;
 
     const auto partition = esp_ota_get_next_update_partition(nullptr);
     if (!partition) {
@@ -42,9 +34,6 @@ status::StatusCode NativeUpdater::begin(size_t total_size, uint32_t crc32) {
         return status::StatusCode::Error;
     }
 
-    ocs_logi(log_tag, "begin update process: total_size=%zu crc32=%lu", total_size,
-             crc32);
-
     return status::StatusCode::OK;
 }
 
@@ -58,22 +47,11 @@ status::StatusCode NativeUpdater::write(const uint8_t* buf, size_t len) {
         return status::StatusCode::Error;
     }
 
-    crc32_clc_ = crc32_calculator_.calculate(crc32_clc_, buf, len);
-
     return status::StatusCode::OK;
 }
 
 status::StatusCode NativeUpdater::commit() {
     configASSERT(!committed_);
-    configASSERT(crc32_src_);
-    configASSERT(crc32_clc_);
-
-    if (crc32_src_ != crc32_clc_) {
-        ocs_loge(log_tag, "integrity check failed: crc32 mismatch: want=%lu got=%lu",
-                 crc32_src_, crc32_clc_);
-
-        return status::StatusCode::Error;
-    }
 
     const auto partition = esp_ota_get_next_update_partition(nullptr);
     configASSERT(partition);
@@ -112,8 +90,6 @@ status::StatusCode NativeUpdater::end() {
     ocs_logi(log_tag, "end update process: committed=%d", committed_);
 
     handle_ = 0;
-    crc32_src_ = 0;
-    crc32_clc_ = 0;
     committed_ = false;
 
     return status::StatusCode::OK;
