@@ -14,13 +14,13 @@
 namespace ocs {
 namespace system {
 
-class Updater : public IUpdater, private core::NonCopyable<> {
+class NativeUpdater : public IUpdater, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
     //!  - @p crc32_calculator to calculate CRC32 checksum to check data integrity.
-    explicit Updater(ICrc32Calculator& crc32_calculator);
+    explicit NativeUpdater(ICrc32Calculator& crc32_calculator);
 
     //! Begin firmware update.
     status::StatusCode begin(size_t total_size, uint32_t crc32) override;
