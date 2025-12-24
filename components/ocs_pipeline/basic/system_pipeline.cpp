@@ -12,7 +12,7 @@
 #include "ocs_status/code_to_str.h"
 #include "ocs_system/delay_rebooter.h"
 #include "ocs_system/reboot_task.h"
-#include "ocs_system/target_esp32/default_clock.h"
+#include "ocs_system/target_esp32/clock.h"
 
 namespace ocs {
 namespace pipeline {
@@ -27,15 +27,15 @@ SystemPipeline::SystemPipeline(SystemPipeline::Params params) {
     storage_builder_.reset(new (std::nothrow) storage::StorageBuilder());
     configASSERT(storage_builder_);
 
-    default_clock_.reset(new (std::nothrow) system::DefaultClock());
-    configASSERT(default_clock_);
+    clock_.reset(new (std::nothrow) system::Clock());
+    configASSERT(clock_);
 
     delay_estimator_.reset(new (std::nothrow) scheduler::ConstantDelayEstimator(
         params.task_scheduler.delay));
     configASSERT(delay_estimator_);
 
     task_scheduler_.reset(new (std::nothrow) scheduler::PeriodicTaskScheduler(
-        *default_clock_, *delay_estimator_, "system_pipeline_scheduler", 16));
+        *clock_, *delay_estimator_, "system_pipeline_scheduler", 16));
     configASSERT(task_scheduler_);
 
     func_scheduler_.reset(new (std::nothrow) scheduler::AsyncFuncScheduler(16));
@@ -87,7 +87,7 @@ status::StatusCode SystemPipeline::start() {
 }
 
 system::IClock& SystemPipeline::get_clock() {
-    return *default_clock_;
+    return *clock_;
 }
 
 storage::StorageBuilder& SystemPipeline::get_storage_builder() {

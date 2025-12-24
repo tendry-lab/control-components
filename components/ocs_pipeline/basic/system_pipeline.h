@@ -58,7 +58,7 @@ private:
     std::unique_ptr<storage::FlashInitializer> flash_initializer_;
     std::unique_ptr<storage::StorageBuilder> storage_builder_;
 
-    std::unique_ptr<system::IClock> default_clock_;
+    std::unique_ptr<system::IClock> clock_;
 
     std::unique_ptr<scheduler::IDelayEstimator> delay_estimator_;
     std::unique_ptr<scheduler::ITaskScheduler> task_scheduler_;

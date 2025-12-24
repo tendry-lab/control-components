@@ -5,12 +5,12 @@
 
 #include "esp_timer.h"
 
-#include "ocs_system/target_esp32/default_clock.h"
+#include "ocs_system/target_esp32/clock.h"
 
 namespace ocs {
 namespace system {
 
-system::Time DefaultClock::now() {
+system::Time Clock::now() {
     return esp_timer_get_time();
 }
 
