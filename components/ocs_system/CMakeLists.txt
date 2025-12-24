@@ -11,7 +11,7 @@ idf_component_register(
     "device_info.cpp"
     "crc32_updater.cpp"
 
-    "target_esp32/default_clock.cpp"
+    "target_esp32/clock.cpp"
     "target_esp32/rebooter.cpp"
     "target_esp32/reset_reason_to_str.cpp"
     "target_esp32/rt_delayer.cpp"
