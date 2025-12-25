@@ -35,6 +35,7 @@ jobs:
             product_name: "sht4x"
             company_uuid: "tendry-lab-"
             config: ".env/sht4x_verifier_configuration"
+        target: ["esp32", "esp32s2", "esp32s3"]
     env:
       SOURCE_PATH: project
       IDF_PATH: esp-idf
@@ -98,11 +99,11 @@ jobs:
       - name: prepare firmware configuration
         uses: ./project/ci-components/.github/actions/esp32/config
         with:
-          PROJECT_NAME: ${{ matrix.project.project_name }}
+          PROJECT_NAME: ${{ matrix.project.project_name }}-${{ matrix.target }}
           PRODUCT_NAME: ${{ matrix.project.product_name }}
           COMPANY_UUID: ${{ matrix.project.company_uuid }}
           BUILD_VERSION: ${{ steps.version_formatter.outputs.build_version }}
-          BUILD_CONFIG_PATH: ${{ matrix.project.config }}
+          BUILD_CONFIG_PATH: ${{ matrix.project.config }}-${{ matrix.target }}
           PROJECT_CONFIG_PATH: ${{ env.SOURCE_PATH }}/projects/config.yml
 
       - name: build firmware
@@ -111,13 +112,13 @@ jobs:
           IDF_PATH: ${{ env.IDF_PATH }}
           PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
           CONFIGURATION_PATH_CCACHE: ${{ env.CONFIGURATION_PATH_CCACHE }}
-          CONFIGURATION_PATH_PROJECT: ${{ matrix.project.config }}
+          CONFIGURATION_PATH_PROJECT: ${{ matrix.project.config }}-${{ matrix.target }}
 
       - name: upload firmware
         uses: ./project/ci-components/.github/actions/esp32/upload
         with:
           PROJECT_PATH: ${{ env.SOURCE_PATH }}/projects/${{ matrix.project.project_name }}
-          ARTIFACT_NAME: ${{ matrix.project.project_name }}-${{ steps.version_formatter.outputs.build_version }}
+          ARTIFACT_NAME: ${{ matrix.project.project_name }}-${{ matrix.target }}-${{ steps.version_formatter.outputs.build_version }}
 
   firmware_release:
     runs-on: ubuntu-latest

@@ -1,11 +1,61 @@
 projects:
-  unittest:
-    desc: "Unit tests"
+  unittest-esp32:
+    desc: "Unit tests firmware for esp32"
     config:
       - CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED=y
-  ds18b20-verifier:
-    desc: "DS18B20 Sensor Verification"
-  sht4x-verifier:
-    desc: "SHT4x Sensor Verification"
-  ds-rom-code-scanner:
-    desc: "DS Sensor Rom Code Scanner"
+  unittest-esp32s2:
+    desc: "Unit tests firmware for esp32s2"
+    config:
+      - CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED=y
+      - CONFIG_ESP_CONSOLE_USB_CDC=y
+      - CONFIG_ESP_CONSOLE_UART_DEFAULT=n
+      - CONFIG_IDF_TARGET="esp32s2"
+  unittest-esp32s3:
+    desc: "Unit tests firmware for esp32s3"
+    config:
+      - CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED=y
+      - CONFIG_ESP_CONSOLE_USB_CDC=y
+      - CONFIG_ESP_CONSOLE_UART_DEFAULT=n
+      - CONFIG_IDF_TARGET="esp32s3"
+  ds18b20-verifier-esp32:
+    desc: "DS18B20 sensor verification firmware for esp32"
+  ds18b20-verifier-esp32s2:
+    desc: "DS18B20 sensor verification firmware for esp32s2"
+    config:
+      - CONFIG_ESP_CONSOLE_USB_CDC=y
+      - CONFIG_ESP_CONSOLE_UART_DEFAULT=n
+      - CONFIG_IDF_TARGET="esp32s2"
+  ds18b20-verifier-esp32s3:
+    desc: "DS18B20 sensor verification firmware for esp32s3"
+    config:
+      - CONFIG_ESP_CONSOLE_USB_CDC=y
+      - CONFIG_ESP_CONSOLE_UART_DEFAULT=n
+      - CONFIG_IDF_TARGET="esp32s3"
+  sht4x-verifier-esp32:
+    desc: "SHT4x sensor verification firmware for esp32"
+  sht4x-verifier-esp32s2:
+    desc: "SHT4x sensor verification firmware for esp32s2"
+    config:
+      - CONFIG_ESP_CONSOLE_USB_CDC=y
+      - CONFIG_ESP_CONSOLE_UART_DEFAULT=n
+      - CONFIG_IDF_TARGET="esp32s2"
+  sht4x-verifier-esp32s3:
+    desc: "SHT4x sensor verification firmware for esp32s3"
+    config:
+      - CONFIG_ESP_CONSOLE_USB_CDC=y
+      - CONFIG_ESP_CONSOLE_UART_DEFAULT=n
+      - CONFIG_IDF_TARGET="esp32s3"
+  ds-rom-code-scanner-esp32:
+    desc: "DS sensor rom code scanner firmware for esp32"
+  ds-rom-code-scanner-esp32s2:
+    desc: "DS sensor rom code scanner firmware for esp32s2"
+    config:
+      - CONFIG_ESP_CONSOLE_USB_CDC=y
+      - CONFIG_ESP_CONSOLE_UART_DEFAULT=n
+      - CONFIG_IDF_TARGET="esp32s2"
+  ds-rom-code-scanner-esp32s3:
+    desc: "DS sensor rom code scanner firmware for esp32s3"
+    config:
+      - CONFIG_ESP_CONSOLE_USB_CDC=y
+      - CONFIG_ESP_CONSOLE_UART_DEFAULT=n
+      - CONFIG_IDF_TARGET="esp32s3"

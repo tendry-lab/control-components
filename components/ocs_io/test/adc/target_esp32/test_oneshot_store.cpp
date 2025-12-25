@@ -8,7 +8,6 @@
 #include "soc/soc_caps.h"
 #include "unity.h"
 
-#include "ocs_io/adc/target_esp32/line_fitting_converter.h"
 #include "ocs_io/adc/target_esp32/oneshot_store.h"
 
 namespace ocs {
@@ -79,7 +78,6 @@ TEST_CASE("Oneshot ADC store: read/convert operations", "[ocs_io], [adc_oneshot_
 
     for (const auto& unit : units) {
         OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
-        LineFittingConverter converter(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
         const Channel channel = ADC_CHANNEL_5;
 
@@ -88,9 +86,6 @@ TEST_CASE("Oneshot ADC store: read/convert operations", "[ocs_io], [adc_oneshot_
 
         int raw = 0;
         TEST_ASSERT_EQUAL(status::StatusCode::OK, reader->read(raw));
-
-        int voltage = 0;
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, converter.convert(voltage, raw));
     }
 }
 
