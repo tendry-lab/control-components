@@ -24,7 +24,7 @@ public:
     //! Various pipeline settings.
     struct Params {
         //! Sensor I2C address.
-        uint8_t i2c_addr { 0x44 };
+        io::i2c::Address i2c_addr { 0x44 };
 
         //! How often to read data from the sensor.
         system::Time read_interval { 0 };
