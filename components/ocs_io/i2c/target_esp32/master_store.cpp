@@ -38,27 +38,25 @@ MasterStore::MasterStore(IStore::Params params) {
     ESP_ERROR_CHECK(i2c_new_master_bus(&config, &handle_));
 }
 
-IStore::ITransceiverPtr MasterStore::add(const char* id,
-                                         IStore::AddressLength len,
-                                         IStore::Address addr,
-                                         IStore::TransferSpeed speed) {
+IStore::ITransceiverPtr
+MasterStore::add(const char* id, AddressLength len, Address addr, TransferSpeed speed) {
     i2c_device_config_t config;
     memset(&config, 0, sizeof(config));
 
 #if SOC_I2C_SUPPORT_10BIT_ADDR
-    if (len == IStore::AddressLength::Bit_10) {
+    if (len == AddressLength::Bit_10) {
         config.dev_addr_length = I2C_ADDR_BIT_LEN_10;
     } else {
         config.dev_addr_length = I2C_ADDR_BIT_LEN_7;
     }
 #else  // !SOC_I2C_SUPPORT_10BIT_ADDR
-    configASSERT(len == IStore::AddressLength::Bit_7);
+    configASSERT(len == AddressLength::Bit_7);
     config.dev_addr_length = I2C_ADDR_BIT_LEN_7;
 #endif // SOC_I2C_SUPPORT_10BIT_ADDR
 
     config.device_address = addr;
 
-    if (speed == IStore::TransferSpeed::Fast) {
+    if (speed == TransferSpeed::Fast) {
         config.scl_speed_hz = 400000;
     } else {
         config.scl_speed_hz = 100000;
