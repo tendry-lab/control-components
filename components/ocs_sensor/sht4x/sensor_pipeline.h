@@ -26,6 +26,9 @@ public:
         //! Sensor I2C address.
         io::i2c::Address i2c_addr { 0x44 };
 
+        //! Transfer speed for I2C communication.
+        io::i2c::TransferSpeed i2c_speed { io::i2c::TransferSpeed::Fast };
+
         //! How often to read data from the sensor.
         system::Time read_interval { 0 };
 
