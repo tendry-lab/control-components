@@ -11,6 +11,9 @@ namespace ocs {
 namespace io {
 namespace i2c {
 
+//! I2C address.
+using Address = uint16_t;
+
 enum class TransferSpeed : uint8_t {
     //! 100 kbit/s.
     Default,
@@ -26,9 +29,6 @@ enum class AddressLength : uint8_t {
     //! 10-bit I2C address.
     Bit_10,
 };
-
-//! I2C address.
-using Address = uint16_t;
 
 } // namespace i2c
 } // namespace io
