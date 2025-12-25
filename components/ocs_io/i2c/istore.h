@@ -9,6 +9,7 @@
 
 #include "ocs_io/gpio/types.h"
 #include "ocs_io/i2c/itransceiver.h"
+#include "ocs_io/i2c/types.h"
 
 namespace ocs {
 namespace io {
@@ -16,25 +17,6 @@ namespace i2c {
 
 class IStore {
 public:
-    enum class TransferSpeed : uint8_t {
-        //! 100 kbit/s.
-        Default,
-
-        //! 400 kbit/s.
-        Fast,
-    };
-
-    enum class AddressLength : uint8_t {
-        //! 7-bit I2C address.
-        Bit_7,
-
-        //! 10-bit I2C address.
-        Bit_10,
-    };
-
-    //! I2C address.
-    using Address = uint16_t;
-
     //! I2C transceiver to communicate with I2C device.
     using ITransceiverPtr = std::unique_ptr<ITransceiver>;
 

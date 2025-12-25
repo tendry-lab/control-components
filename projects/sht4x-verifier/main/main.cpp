@@ -32,9 +32,9 @@ extern "C" void app_main(void) {
         }));
     configASSERT(store);
 
-    io::i2c::IStore::ITransceiverPtr bus_transceiver = store->add(
-        "bus", io::i2c::IStore::AddressLength::Bit_7, io::i2c::IStore::bus_fanout_address,
-        io::i2c::IStore::TransferSpeed::Fast);
+    io::i2c::IStore::ITransceiverPtr bus_transceiver =
+        store->add("bus", io::i2c::AddressLength::Bit_7,
+                   io::i2c::IStore::bus_fanout_address, io::i2c::TransferSpeed::Fast);
     configASSERT(bus_transceiver);
 
     auto code = bus_transceiver->send(&io::i2c::IStore::bus_reset_command,
@@ -44,9 +44,8 @@ extern "C" void app_main(void) {
         ocs_logw(log_tag, "failed to reset i2c bus: %s", status::code_to_str(code));
     }
 
-    io::i2c::IStore::ITransceiverPtr sensor_transceiver =
-        store->add("sht4x", io::i2c::IStore::AddressLength::Bit_7, 0x44,
-                   io::i2c::IStore::TransferSpeed::Fast);
+    io::i2c::IStore::ITransceiverPtr sensor_transceiver = store->add(
+        "sht4x", io::i2c::AddressLength::Bit_7, 0x44, io::i2c::TransferSpeed::Fast);
     configASSERT(sensor_transceiver);
 
     std::unique_ptr<storage::StorageBuilder> storage_builder(
