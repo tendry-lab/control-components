@@ -51,18 +51,6 @@ status::StatusCode NativeUpdater::write(const uint8_t* buf, size_t len) {
 }
 
 status::StatusCode NativeUpdater::commit() {
-    configASSERT(!committed_);
-
-    const auto partition = esp_ota_get_next_update_partition(nullptr);
-    configASSERT(partition);
-
-    const auto err = esp_ota_set_boot_partition(partition);
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "esp_ota_set_boot_partition(): %s", esp_err_to_name(err));
-
-        return status::StatusCode::Error;
-    }
-
     committed_ = true;
 
     return status::StatusCode::OK;
@@ -72,9 +60,19 @@ status::StatusCode NativeUpdater::end() {
     configASSERT(handle_);
 
     if (committed_) {
-        const auto err = esp_ota_end(handle_);
+        auto err = esp_ota_end(handle_);
         if (err != ESP_OK) {
             ocs_loge(log_tag, "esp_ota_end(): %s", esp_err_to_name(err));
+
+            return status::StatusCode::Error;
+        }
+
+        const auto partition = esp_ota_get_next_update_partition(nullptr);
+        configASSERT(partition);
+
+        err = esp_ota_set_boot_partition(partition);
+        if (err != ESP_OK) {
+            ocs_loge(log_tag, "esp_ota_set_boot_partition(): %s", esp_err_to_name(err));
 
             return status::StatusCode::Error;
         }
