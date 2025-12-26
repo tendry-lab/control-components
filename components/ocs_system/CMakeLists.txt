@@ -23,6 +23,7 @@ idf_component_register(
     "target_esp32/native_updater.cpp"
     "target_esp32/partition_updater.cpp"
     "target_esp32/cache_updater.cpp"
+    "target_esp32/spiffs_updater.cpp"
 
     REQUIRES
     "esp_timer"
