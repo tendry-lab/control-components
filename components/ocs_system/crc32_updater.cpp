@@ -28,9 +28,6 @@ status::StatusCode Crc32Updater::begin(size_t total_size, uint32_t crc32) {
 
     crc32_src_ = crc32;
 
-    ocs_logi(log_tag, "begin update process: total_size=%zu crc32=%lu", total_size,
-             crc32);
-
     const auto code = updater_.begin(total_size, crc32);
     if (code != status::StatusCode::OK) {
         return code;
