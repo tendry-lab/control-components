@@ -19,11 +19,13 @@ const char* log_tag = "spiffs_initializer";
 
 } // namespace
 
-SpiffsInitializer::SpiffsInitializer(const char* mount_point) {
+SpiffsInitializer::SpiffsInitializer(const char* mount_point,
+                                     const char* partition_label) {
     esp_vfs_spiffs_conf_t fs_configuration;
     memset(&fs_configuration, 0, sizeof(fs_configuration));
 
     fs_configuration.base_path = mount_point;
+    fs_configuration.partition_label = partition_label;
     fs_configuration.max_files = 5;
 
     auto ret = esp_vfs_spiffs_register(&fs_configuration);
@@ -45,7 +47,7 @@ SpiffsInitializer::SpiffsInitializer(const char* mount_point) {
     size_t total = 0;
     size_t used = 0;
 
-    ret = esp_spiffs_info(nullptr, &total, &used);
+    ret = esp_spiffs_info(partition_label, &total, &used);
     if (ret != ESP_OK) {
         ocs_loge(log_tag, "esp_spiffs_info(): %s", esp_err_to_name(ret));
 

@@ -17,7 +17,8 @@ public:
     //!
     //! @params
     //!  - @p mount_point - SPIFFS mount point.
-    explicit SpiffsInitializer(const char* mount_point);
+    //!  - @p partition_lable - SPIFFS partition label.
+    SpiffsInitializer(const char* mount_point, const char* partition_label);
 
     //! Return true if SPIFFS has been properly initialized and mounted to the VFS.
     bool valid() const override;
