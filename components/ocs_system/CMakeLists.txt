@@ -10,6 +10,7 @@ idf_component_register(
     "device_id.cpp"
     "device_info.cpp"
     "crc32_updater.cpp"
+    "log_updater.cpp"
 
     "target_esp32/clock.cpp"
     "target_esp32/rebooter.cpp"
