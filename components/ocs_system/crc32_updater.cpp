@@ -58,6 +58,11 @@ status::StatusCode Crc32Updater::commit() {
         return status::StatusCode::Error;
     }
 
+    const auto code = updater_.commit();
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
+
     return status::StatusCode::OK;
 }
 
