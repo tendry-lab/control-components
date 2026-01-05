@@ -78,18 +78,13 @@ void enable_power(io::gpio::Gpio gpio) {
     ocs_logi(log_tag, "power stabilization: completed");
 }
 
-} // namespace
+void disable_power(io::gpio::Gpio gpio) {
+    io::gpio::DefaultGpio power_gpio("power", gpio);
 
-extern "C" void app_main(void) {
-    VerificationConfig verification_config;
+    configASSERT(power_gpio.turn_off() == status::StatusCode::OK);
+}
 
-    const io::gpio::Gpio power_gpio =
-        static_cast<io::gpio::Gpio>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_POWER_GPIO);
-    if (power_gpio >= 0) {
-        configure_power_gpio(power_gpio);
-        enable_power(power_gpio);
-    }
-
+void perform_verification(const VerificationConfig& verification_config) {
     std::unique_ptr<io::i2c::IStore> store(new (
         std::nothrow) io::i2c::MasterStore(io::i2c::MasterStore::Params {
         .sda =
@@ -162,6 +157,24 @@ extern "C" void app_main(void) {
 
     ocs_logi(log_tag, "verification finished: total=%u failed=%u",
              verification_config.total_attempts, failed_attempts);
+}
+
+} // namespace
+
+extern "C" void app_main(void) {
+    const io::gpio::Gpio power_gpio =
+        static_cast<io::gpio::Gpio>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_POWER_GPIO);
+    if (power_gpio >= 0) {
+        configure_power_gpio(power_gpio);
+        enable_power(power_gpio);
+    }
+
+    VerificationConfig verification_config;
+    perform_verification(verification_config);
+
+    if (power_gpio >= 0) {
+        disable_power(power_gpio);
+    }
 
     while (true) {
         vTaskDelay(pdMS_TO_TICKS(1000));
