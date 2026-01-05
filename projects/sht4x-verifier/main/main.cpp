@@ -3,9 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#include <cstring>
+
 #include "freertos/FreeRTOSConfig.h"
 
+#include "ocs_algo/bit_ops.h"
 #include "ocs_core/log.h"
+#include "ocs_io/gpio/default_gpio.h"
 #include "ocs_io/i2c/target_esp32/master_store.h"
 #include "ocs_sensor/sht4x/sensor.h"
 #include "ocs_status/code_to_str.h"
@@ -44,10 +48,47 @@ struct VerificationConfig {
 
 const char* log_tag = "sht4x_verifier";
 
+void configure_power_gpio(io::gpio::Gpio gpio) {
+    gpio_config_t config;
+    memset(&config, 0, sizeof(config));
+
+    config.intr_type = GPIO_INTR_DISABLE;
+    config.mode = GPIO_MODE_OUTPUT;
+
+    config.pin_bit_mask = algo::BitOps::mask(gpio);
+
+    config.pull_down_en = GPIO_PULLDOWN_ENABLE;
+    config.pull_up_en = GPIO_PULLUP_DISABLE;
+
+    ESP_ERROR_CHECK(gpio_config(&config));
+}
+
+void enable_power(io::gpio::Gpio gpio) {
+    io::gpio::DefaultGpio power_gpio("power", gpio);
+
+    configASSERT(power_gpio.turn_on() == status::StatusCode::OK);
+
+    static constexpr TickType_t stabilization_interval = pdMS_TO_TICKS(200);
+
+    ocs_logi(log_tag, "power stabilization: wait for %lu(ms)",
+             pdTICKS_TO_MS(stabilization_interval));
+
+    vTaskDelay(stabilization_interval);
+
+    ocs_logi(log_tag, "power stabilization: completed");
+}
+
 } // namespace
 
 extern "C" void app_main(void) {
     VerificationConfig verification_config;
+
+    const io::gpio::Gpio power_gpio =
+        static_cast<io::gpio::Gpio>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_POWER_GPIO);
+    if (power_gpio >= 0) {
+        configure_power_gpio(power_gpio);
+        enable_power(power_gpio);
+    }
 
     std::unique_ptr<io::i2c::IStore> store(new (
         std::nothrow) io::i2c::MasterStore(io::i2c::MasterStore::Params {
