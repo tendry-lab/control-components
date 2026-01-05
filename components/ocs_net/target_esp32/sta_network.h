@@ -67,6 +67,9 @@ private:
     core::StaticEventGroup event_group_;
 
     uint8_t retry_count_ { 0 };
+
+    esp_event_handler_instance_t instance_any_id_ { nullptr };
+    esp_event_handler_instance_t instance_got_ip_ { nullptr };
 };
 
 } // namespace net

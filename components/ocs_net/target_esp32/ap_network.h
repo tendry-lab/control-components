@@ -63,6 +63,8 @@ private:
 
     NetifSharedPtr netif_;
 
+    esp_event_handler_instance_t instance_any_id_ { nullptr };
+
     core::StaticMutex mu_;
     core::Cond cond_;
     status::StatusCode code_ { status::StatusCode::Last };
