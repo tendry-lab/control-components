@@ -7,7 +7,6 @@
 
 #include <memory>
 
-#include "ocs_io/gpio/types.h"
 #include "ocs_io/i2c/itransceiver.h"
 #include "ocs_io/i2c/types.h"
 
@@ -19,14 +18,6 @@ class IStore {
 public:
     //! I2C transceiver to communicate with I2C device.
     using ITransceiverPtr = std::unique_ptr<ITransceiver>;
-
-    struct Params {
-        //! Data line.
-        gpio::Gpio sda { static_cast<gpio::Gpio>(-1) };
-
-        //! Clock line.
-        gpio::Gpio scl { static_cast<gpio::Gpio>(-1) };
-    };
 
     //! I2C general call address.
     static constexpr uint8_t bus_fanout_address = 0x00;

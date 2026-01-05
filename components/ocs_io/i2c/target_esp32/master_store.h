@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "driver/gpio.h"
 #include "driver/i2c_master.h"
 
 #include "ocs_core/noncopyable.h"
@@ -17,8 +18,16 @@ namespace i2c {
 
 class MasterStore : public IStore, private core::NonCopyable<> {
 public:
+    struct Params {
+        //! Data line.
+        gpio_num_t sda { GPIO_NUM_NC };
+
+        //! Clock line.
+        gpio_num_t scl { GPIO_NUM_NC };
+    };
+
     //! Initialize I2C master bus.
-    explicit MasterStore(IStore::Params params);
+    explicit MasterStore(Params params);
 
     //! De-initialize I2C master bus.
     ~MasterStore();

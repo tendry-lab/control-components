@@ -23,13 +23,13 @@ const char* log_tag = "sht4x_verifier";
 extern "C" void app_main(void) {
     const system::Time bus_wait_interval = system::Duration::second * 5;
 
-    std::unique_ptr<io::i2c::IStore> store(
-        new (std::nothrow) io::i2c::MasterStore(io::i2c::IStore::Params {
-            .sda = static_cast<io::gpio::Gpio>(
-                CONFIG_OCS_TOOL_SHT4x_VERIFIER_I2C_MASTER_SDA_GPIO),
-            .scl = static_cast<io::gpio::Gpio>(
-                CONFIG_OCS_TOOL_SHT4x_VERIFIER_I2C_MASTER_SCL_GPIO),
-        }));
+    std::unique_ptr<io::i2c::IStore> store(new (
+        std::nothrow) io::i2c::MasterStore(io::i2c::MasterStore::Params {
+        .sda =
+            static_cast<gpio_num_t>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_I2C_MASTER_SDA_GPIO),
+        .scl =
+            static_cast<gpio_num_t>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_I2C_MASTER_SCL_GPIO),
+    }));
     configASSERT(store);
 
     io::i2c::IStore::ITransceiverPtr bus_transceiver =
