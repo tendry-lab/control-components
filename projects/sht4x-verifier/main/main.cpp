@@ -10,6 +10,7 @@
 #include "ocs_sensor/sht4x/sensor.h"
 #include "ocs_status/code_to_str.h"
 #include "ocs_storage/storage_builder.h"
+#include "ocs_storage/target_esp32/flash_initializer.h"
 #include "ocs_system/time.h"
 
 using namespace ocs;
@@ -47,6 +48,8 @@ extern "C" void app_main(void) {
     io::i2c::IStore::ITransceiverPtr sensor_transceiver = store->add(
         "sht4x", io::i2c::AddressLength::Bit_7, 0x44, io::i2c::TransferSpeed::Fast);
     configASSERT(sensor_transceiver);
+
+    storage::FlashInitializer flash_initializer;
 
     std::unique_ptr<storage::StorageBuilder> storage_builder(
         new (std::nothrow) storage::StorageBuilder());
