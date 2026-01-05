@@ -38,8 +38,8 @@ Sensor::Sensor(io::i2c::ITransceiver& transceiver,
     , log_tag_(id)
     , transceiver_(transceiver)
     , storage_(storage) {
-    configASSERT(params_.send_wait_interval);
-    configASSERT(params_.bus_wait_interval);
+    configASSERT(params_.i2c_delay_interval);
+    configASSERT(params_.i2c_wait_timeout);
 
     heating_delay_ = estimate_heating_delay_(params.heating_command);
     configASSERT(heating_delay_);
@@ -219,7 +219,7 @@ status::StatusCode Sensor::read_serial_number_() {
     uint8_t buf[6];
     memset(buf, 0, sizeof(buf));
     OCS_STATUS_RETURN_ON_ERROR(
-        transceiver_.receive(buf, sizeof(buf), params_.bus_wait_interval));
+        transceiver_.receive(buf, sizeof(buf), params_.i2c_wait_timeout));
 
     const uint8_t hi_checksum = buf[2];
     const uint8_t hi_checksum_calculated = calculate_crc(buf[0], buf[1]);
@@ -252,7 +252,7 @@ status::StatusCode Sensor::receive_data_(Sensor::Data& data) {
     uint8_t buf[6];
     memset(buf, 0, sizeof(buf));
     OCS_STATUS_RETURN_ON_ERROR(
-        transceiver_.receive(buf, sizeof(buf), params_.bus_wait_interval));
+        transceiver_.receive(buf, sizeof(buf), params_.i2c_wait_timeout));
 
     const uint16_t temperature_ticks = algo::BitOps::pack_u8(buf[0], buf[1]);
     const uint8_t temperature_checksum = buf[2];
@@ -289,9 +289,9 @@ status::StatusCode Sensor::receive_data_(Sensor::Data& data) {
 status::StatusCode Sensor::send_command_(Sensor::Command command) {
     OCS_STATUS_RETURN_ON_ERROR(
         transceiver_.send(reinterpret_cast<const uint8_t*>(&command), sizeof(command),
-                          params_.bus_wait_interval));
+                          params_.i2c_wait_timeout));
 
-    vTaskDelay(params_.send_wait_interval);
+    vTaskDelay(params_.i2c_delay_interval);
 
     return status::StatusCode::OK;
 }
