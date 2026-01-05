@@ -31,7 +31,7 @@ public:
     struct Data {
         double humidity { 0.0 };
         double temperature { 0.0 };
-        size_t heating_count { 0 };
+        uint32_t heating_count { 0 };
     };
 
     enum class Command {
@@ -136,7 +136,7 @@ private:
     storage::IStorage& storage_;
 
     TickType_t heating_delay_ { 0 };
-    size_t heating_count_ { 0 };
+    uint32_t heating_count_ { 0 };
 
     bool initialized_ { false };
     SerialNumber serial_number_ { 0 };
