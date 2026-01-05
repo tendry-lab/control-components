@@ -23,27 +23,25 @@ namespace {
 
 struct VerificationConfig {
     //! How long to wait for the I2C operation to complete.
-    static constexpr system::Time i2c_wait_timeout { system::Duration::second * 5 };
+    system::Time i2c_wait_timeout { system::Duration::second * 5 };
 
     //! Sensor I2C address.
-    static constexpr io::i2c::Address i2c_addr { 0x44 };
+    io::i2c::Address i2c_addr { 0x44 };
 
     //! I2C transfer speed.
-    static constexpr io::i2c::TransferSpeed i2c_transfer_speed {
-        io::i2c::TransferSpeed::Fast
-    };
+    io::i2c::TransferSpeed i2c_transfer_speed { io::i2c::TransferSpeed::Fast };
 
     //! How long to wait before receiving the operation result from the I2C device.
-    static constexpr TickType_t i2c_delay_interval { pdMS_TO_TICKS(10) };
+    TickType_t i2c_delay_interval { pdMS_TO_TICKS(10) };
 
     //! How long to wait after each sensor reading.
-    static constexpr TickType_t read_wait_interval { pdMS_TO_TICKS(1000) };
+    TickType_t read_wait_interval { pdMS_TO_TICKS(1000) };
 
     //! How long to wait after I2C and sensor reset operations.
-    static constexpr TickType_t reset_delay_interval { pdMS_TO_TICKS(50) };
+    TickType_t reset_delay_interval { pdMS_TO_TICKS(50) };
 
     //! Number of times to read data from the sensor.
-    static constexpr size_t total_attempts { 15 };
+    size_t total_attempts { 15 };
 };
 
 const char* log_tag = "sht4x_verifier";
