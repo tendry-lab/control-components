@@ -175,7 +175,7 @@ status::StatusCode Sensor::initialize_() {
 
     ocs_logi(log_tag_.c_str(),
              "initialized: serial_number=%s measure_command=%s "
-             "heating_command=%s heating_delay=%lu(ms) heating_count=%u",
+             "heating_command=%s heating_delay=%lu(ms) heating_count=%lu",
              serial_number_to_str(serial_number_).c_str(),
              command_to_str_(params_.measure_command),
              command_to_str_(params_.heating_command), pdTICKS_TO_MS(heating_delay_),
