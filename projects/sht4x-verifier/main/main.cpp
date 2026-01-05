@@ -35,6 +35,9 @@ struct VerificationConfig {
     //! How long to wait after each sensor reading.
     static constexpr TickType_t read_wait_interval { pdMS_TO_TICKS(1000) };
 
+    //! How long to wait after I2C and sensor reset operations.
+    static constexpr TickType_t reset_delay_interval { pdMS_TO_TICKS(50) };
+
     //! Number of times to read data from the sensor.
     static constexpr size_t total_attempts { 15 };
 };
@@ -63,7 +66,9 @@ extern "C" void app_main(void) {
     auto code = bus_transceiver->send(&io::i2c::IStore::bus_reset_command,
                                       sizeof(io::i2c::IStore::bus_reset_command),
                                       verification_config.i2c_wait_timeout);
-    if (code != status::StatusCode::OK) {
+    if (code == status::StatusCode::OK) {
+        vTaskDelay(verification_config.reset_delay_interval);
+    } else {
         ocs_logw(log_tag, "failed to reset i2c bus: %s", status::code_to_str(code));
     }
 
@@ -91,7 +96,9 @@ extern "C" void app_main(void) {
     configASSERT(sensor);
 
     code = sensor->reset();
-    if (code != status::StatusCode::OK) {
+    if (code == status::StatusCode::OK) {
+        vTaskDelay(verification_config.reset_delay_interval);
+    } else {
         ocs_logw(log_tag, "failed to reset sensor: %s", status::code_to_str(code));
     }
 
