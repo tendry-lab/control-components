@@ -61,9 +61,9 @@ extern "C" void app_main(void) {
         new (std::nothrow) sensor::sht4x::Sensor(
             *sensor_transceiver, *storage, "sht4x",
             sensor::sht4x::Sensor::Params {
-                .send_wait_interval =
+                .i2c_delay_interval =
                     pdMS_TO_TICKS(CONFIG_OCS_TOOLS_SHT4x_VERIFIER_I2C_SEND_WAIT_INTERVAL),
-                .bus_wait_interval = system::Duration::second * 5,
+                .i2c_wait_timeout = system::Duration::second * 5,
                 .measure_command = sensor::sht4x::Sensor::Command::MeasureHighPrecision,
             }));
     configASSERT(sensor);

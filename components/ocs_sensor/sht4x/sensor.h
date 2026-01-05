@@ -50,10 +50,10 @@ public:
 
     struct Params {
         //! How long to wait before receiving the operation result from the I2C device.
-        TickType_t send_wait_interval { pdMS_TO_TICKS(10) };
+        TickType_t i2c_delay_interval { pdMS_TO_TICKS(10) };
 
         //! How long to wait for I2C operation to complete.
-        system::Time bus_wait_interval { system::Duration::second * 5 };
+        system::Time i2c_wait_timeout { system::Duration::second * 5 };
 
         //! How precise data should be measured.
         Command measure_command { Command::MeasureLowPrecision };
