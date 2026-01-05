@@ -11,4 +11,9 @@ menu "Senserion SHT4x Sensor Verification"
         help
             I2C master SCL GPIO.
 
+    config OCS_TOOL_SHT4x_VERIFIER_POWER_GPIO
+        int "Power GPIO"
+        default -1
+        help
+            GPIO pin to enable power for the sensor.
 endmenu
