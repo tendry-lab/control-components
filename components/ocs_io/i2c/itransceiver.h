@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include "ocs_status/code.h"
 #include "ocs_system/time.h"
 
