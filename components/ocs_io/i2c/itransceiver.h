@@ -24,7 +24,7 @@ public:
     //! @params
     //!  - @p buf - sending data, should be at least @p size bytes long.
     //!  - @p timeout - interval to wait for the operation to complete,
-    //!       -1 means wait forever.
+    //!  - @p timeout to wait for the operation to complete, -1 means wait forever.
     virtual status::StatusCode
     send(const uint8_t* buf, size_t size, system::Time timeout) = 0;
 
@@ -32,8 +32,7 @@ public:
     //!
     //! @params
     //!  - @p buf - buffer to store received data, should be at least @p size bytes long.
-    //!  - @p timeout - interval to wait for the operation to complete,
-    //!       -1 means wait forever.
+    //!  - @p timeout to wait for the operation to complete, -1 means wait forever.
     virtual status::StatusCode
     receive(uint8_t* buf, size_t size, system::Time timeout) = 0;
 
