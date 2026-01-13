@@ -83,6 +83,34 @@ MasterTransceiver::receive(uint8_t* buf, size_t size, system::Time timeout) {
     return status::StatusCode::OK;
 }
 
+status::StatusCode MasterTransceiver::send_receive(const uint8_t* wbuf,
+                                                   size_t wsize,
+                                                   uint8_t* rbuf,
+                                                   size_t rsize,
+                                                   system::Time timeout) {
+    if (timeout > 0 && timeout < system::Duration::millisecond) {
+        return status::StatusCode::InvalidArg;
+    }
+
+    const auto err = i2c_master_transmit_receive(device_.get(), wbuf, wsize, rbuf, rsize,
+                                                 timeout / system::Duration::millisecond);
+    if (err != ESP_OK) {
+        ocs_loge(log_tag, "i2c_master_transmit_receive() failed: id=%s err=%s",
+                 id_.c_str(), esp_err_to_name(err));
+
+        if (err == ESP_ERR_INVALID_ARG) {
+            return status::StatusCode::InvalidArg;
+        }
+        if (err == ESP_ERR_TIMEOUT) {
+            return status::StatusCode::Timeout;
+        }
+
+        return status::StatusCode::Error;
+    }
+
+    return status::StatusCode::OK;
+}
+
 } // namespace i2c
 } // namespace io
 } // namespace ocs
