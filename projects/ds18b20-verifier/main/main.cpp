@@ -30,7 +30,7 @@ namespace {
 const char* log_tag = "ds18b20_verifier";
 
 struct VerifyParams {
-    io::gpio::Gpio gpio { static_cast<io::gpio::Gpio>(-1) };
+    io::gpio::GpioNum gpio_num { static_cast<io::gpio::GpioNum>(-1) };
     size_t total_attempts { 0 };
     TickType_t delay { pdMS_TO_TICKS(0) };
 };
@@ -140,7 +140,7 @@ void verify_bus_operations(VerifyParams verify_params, onewire::Bus::Params bus_
 
     format_bus_params(formatter, bus_params);
 
-    io::gpio::DefaultGpio gpio("test_GPIO_onewire_bus", verify_params.gpio);
+    io::gpio::DefaultGpio gpio("test_GPIO_onewire_bus", verify_params.gpio_num);
 
     auto delayer = system::PlatformBuilder::make_rt_delayer();
     configASSERT(delayer);
@@ -183,7 +183,8 @@ void verify_bus_operations(VerifyParams verify_params, onewire::Bus::Params bus_
 extern "C" void app_main(void) {
     verify_bus_operations(
         VerifyParams {
-            .gpio = static_cast<io::gpio::Gpio>(CONFIG_OCS_TOOLS_DS18B20_VERIFIER_GPIO),
+            .gpio_num =
+                static_cast<io::gpio::GpioNum>(CONFIG_OCS_TOOLS_DS18B20_VERIFIER_GPIO),
             .total_attempts = CONFIG_OCS_TOOLS_DS18B20_VERIFIER_TOTAL_ATTEMPTS,
             .delay = pdMS_TO_TICKS(1000 * CONFIG_OCS_TOOLS_DS18B20_VERIFIER_DELAY),
         },

@@ -40,8 +40,9 @@ status::StatusCode IsrEventService::stop() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode IsrEventService::add(Gpio gpio, scheduler::IEventHandler& handler) {
-    const auto err = gpio_isr_handler_add(gpio, handle_isr_, &handler);
+status::StatusCode IsrEventService::add(GpioNum gpio_num,
+                                        scheduler::IEventHandler& handler) {
+    const auto err = gpio_isr_handler_add(gpio_num, handle_isr_, &handler);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "gpio_isr_handler_add(): %s", esp_err_to_name(err));
 

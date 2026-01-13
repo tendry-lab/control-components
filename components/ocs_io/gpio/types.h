@@ -12,7 +12,7 @@ namespace io {
 namespace gpio {
 
 //! GPIO number.
-using Gpio = gpio_num_t;
+using GpioNum = gpio_num_t;
 
 } // namespace gpio
 } // namespace io

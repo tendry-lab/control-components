@@ -28,7 +28,7 @@ namespace {
 const char* log_tag = "ds_rom_code_scanner";
 
 struct ScanParams {
-    io::gpio::Gpio gpio { static_cast<io::gpio::Gpio>(-1) };
+    io::gpio::GpioNum gpio_num { static_cast<io::gpio::GpioNum>(-1) };
 };
 
 void format_bus_params(fmt::json::CjsonObjectFormatter& formatter,
@@ -89,7 +89,7 @@ void scan_rom_codes(ScanParams scan_params, onewire::Bus::Params bus_params) {
     fmt::json::CjsonObjectFormatter formatter(json.get());
     format_bus_params(formatter, bus_params);
 
-    io::gpio::DefaultGpio gpio("test_gpio_onewire_bus", scan_params.gpio);
+    io::gpio::DefaultGpio gpio("test_gpio_onewire_bus", scan_params.gpio_num);
 
     auto delayer = system::PlatformBuilder::make_rt_delayer();
     configASSERT(delayer);
@@ -126,7 +126,8 @@ void scan_rom_codes(ScanParams scan_params, onewire::Bus::Params bus_params) {
 extern "C" void app_main(void) {
     scan_rom_codes(
         ScanParams {
-            .gpio = static_cast<io::gpio::Gpio>(CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_GPIO),
+            .gpio_num =
+                static_cast<io::gpio::GpioNum>(CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_GPIO),
         },
         onewire::Bus::Params {
             .reset_pulse_interval = system::Duration::microsecond

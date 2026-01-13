@@ -21,9 +21,9 @@ public:
     //!
     //! @params
     //!  - @p id to distinguish one GPIO from another.
-    //!  - @p gpio - actual GPIO to operate with.
+    //!  - @p gpio_num - GPIO number.
     //!  - @p enable_value - which value should be used to activate the GPIO.
-    BasicGpio(const char* id, Gpio gpio, bool enable_value);
+    BasicGpio(const char* id, GpioNum gpio_num, bool enable_value);
 
     //! Destroy.
     virtual ~BasicGpio() = default;
@@ -45,7 +45,7 @@ public:
 
 private:
     const std::string id_;
-    const Gpio gpio_ { static_cast<io::gpio::Gpio>(-1) };
+    const GpioNum gpio_num_ { static_cast<io::gpio::GpioNum>(-1) };
     const bool enable_value_ { false };
 };
 

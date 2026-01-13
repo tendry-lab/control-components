@@ -27,7 +27,7 @@ public:
     status::StatusCode stop() override;
 
     //! Add ISR handler for the GPIO events.
-    status::StatusCode add(Gpio gpio, scheduler::IEventHandler& handler) override;
+    status::StatusCode add(GpioNum gpio_num, scheduler::IEventHandler& handler) override;
 
 private:
     static void handle_isr_(void* arg);

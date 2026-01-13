@@ -9,8 +9,8 @@ namespace ocs {
 namespace io {
 namespace gpio {
 
-DefaultGpio::DefaultGpio(const char* id, Gpio gpio)
-    : BasicGpio(id, gpio, true) {
+DefaultGpio::DefaultGpio(const char* id, GpioNum gpio_num)
+    : BasicGpio(id, gpio_num, true) {
 }
 
 } // namespace gpio

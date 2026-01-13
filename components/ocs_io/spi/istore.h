@@ -30,7 +30,7 @@ public:
     //!  - @p cs - chip-select line for the device.
     //!  - @p speed - SPI transmission speed, in hertz.
     virtual ITransceiverPtr
-    add(const char* id, gpio::Gpio cs, Mode mode, TransferSpeed speed) = 0;
+    add(const char* id, gpio::GpioNum cs, Mode mode, TransferSpeed speed) = 0;
 };
 
 } // namespace spi

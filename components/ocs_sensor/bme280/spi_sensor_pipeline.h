@@ -21,7 +21,7 @@ class SpiSensorPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         system::Time read_interval { 0 };
-        io::gpio::Gpio cs_gpio { static_cast<io::gpio::Gpio>(-1) };
+        io::gpio::GpioNum cs_gpio { static_cast<io::gpio::GpioNum>(-1) };
         Sensor::Params sensor;
     };
 

@@ -28,12 +28,12 @@ public:
     //! Add handler for GPIO state changes.
     //!
     //! @params
-    //!  - @p gpio - GPIO number for which to register the handler.
+    //!  - @p gpio_num - GPIO number for which to register the handler.
     //!  - @p handler - handler to be called when the GPIO state is changed.
     //!
     //! @remarks
     //!  Handler should be ISR safe.
-    virtual status::StatusCode add(Gpio gpio, scheduler::IEventHandler& handler) = 0;
+    virtual status::StatusCode add(GpioNum gpio, scheduler::IEventHandler& handler) = 0;
 };
 
 } // namespace gpio
