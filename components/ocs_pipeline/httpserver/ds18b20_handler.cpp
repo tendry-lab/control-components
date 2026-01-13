@@ -163,10 +163,10 @@ status::StatusCode DS18B20Handler::handle_scan_(http::IResponseWriter& w,
         return status::StatusCode::InvalidArg;
     }
 
-    int gpio = 0;
+    int gpio_num = 0;
 
-    const auto [_, ec] =
-        std::from_chars(it->second.data(), it->second.data() + it->second.size(), gpio);
+    const auto [_, ec] = std::from_chars(it->second.data(),
+                                         it->second.data() + it->second.size(), gpio_num);
     if (ec != std::errc()) {
         return status::StatusCode::InvalidArg;
     }
@@ -179,7 +179,7 @@ status::StatusCode DS18B20Handler::handle_scan_(http::IResponseWriter& w,
     }
 
     auto future = store_.schedule(
-        static_cast<io::gpio::Gpio>(gpio),
+        static_cast<io::gpio::GpioNum>(gpio_num),
         [this, &json, &builder](onewire::Bus& bus,
                                 sensor::ds18b20::Store::SensorList& sensors) {
             return scan_(json.get(), builder, bus, sensors);
@@ -295,10 +295,11 @@ DS18B20Handler::handle_configuration_(http::IResponseWriter& w,
         return status::StatusCode::InvalidArg;
     }
 
-    int gpio = 0;
+    int gpio_num = 0;
 
-    const auto [_, ec] = std::from_chars(
-        gpio_it->second.data(), gpio_it->second.data() + gpio_it->second.size(), gpio);
+    const auto [_, ec] =
+        std::from_chars(gpio_it->second.data(),
+                        gpio_it->second.data() + gpio_it->second.size(), gpio_num);
     if (ec != std::errc()) {
         return status::StatusCode::InvalidArg;
     }
@@ -316,7 +317,7 @@ DS18B20Handler::handle_configuration_(http::IResponseWriter& w,
     }
 
     auto future = store_.schedule(
-        static_cast<io::gpio::Gpio>(gpio),
+        static_cast<io::gpio::GpioNum>(gpio_num),
         [this, &json, &sensor_id, func](onewire::Bus& bus,
                                         sensor::ds18b20::Store::SensorList& sensors) {
             auto sensor = get_sensor(sensor_id->second, sensors);
@@ -364,10 +365,11 @@ status::StatusCode DS18B20Handler::handle_write_configuration_(http::IResponseWr
         return status::StatusCode::InvalidArg;
     }
 
-    int gpio = 0;
+    int gpio_num = 0;
 
-    const auto [_, ec] = std::from_chars(
-        gpio_it->second.data(), gpio_it->second.data() + gpio_it->second.size(), gpio);
+    const auto [_, ec] =
+        std::from_chars(gpio_it->second.data(),
+                        gpio_it->second.data() + gpio_it->second.size(), gpio_num);
     if (ec != std::errc()) {
         return status::StatusCode::InvalidArg;
     }
@@ -395,7 +397,7 @@ status::StatusCode DS18B20Handler::handle_write_configuration_(http::IResponseWr
     }
 
     auto future = store_.schedule(
-        static_cast<io::gpio::Gpio>(gpio),
+        static_cast<io::gpio::GpioNum>(gpio_num),
         [this, &json, &sensor_id, &serial_number,
          &resolution](onewire::Bus& bus, sensor::ds18b20::Store::SensorList& sensors) {
             return write_configuration_(json.get(), bus,

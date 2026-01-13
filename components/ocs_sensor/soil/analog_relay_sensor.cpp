@@ -13,10 +13,11 @@ namespace sensor {
 namespace soil {
 
 AnalogRelaySensor::AnalogRelaySensor(scheduler::ITask& task,
-                                     io::gpio::Gpio gpio,
+                                     io::gpio::GpioNum gpio_num,
                                      TickType_t turn_on_delay_interval)
     : task_(task) {
-    default_gpio_.reset(new (std::nothrow) io::gpio::DefaultGpio("relay_sensor", gpio));
+    default_gpio_.reset(new (std::nothrow)
+                            io::gpio::DefaultGpio("relay_sensor", gpio_num));
     configASSERT(default_gpio_);
 
     delay_gpio_.reset(new (std::nothrow) io::gpio::DelayGpio(

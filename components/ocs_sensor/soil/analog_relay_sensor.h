@@ -26,10 +26,10 @@ public:
     //!
     //! @params
     //!  - @p task to perform actual sensor reading.
-    //!  - @p gpio - relay GPIO.
+    //!  - @p gpio_num - relay GPIO number.
     //!  - @p turn_on_delay_interval - how long to wait after the relay is activated.
     AnalogRelaySensor(scheduler::ITask& task,
-                      io::gpio::Gpio gpio,
+                      io::gpio::GpioNum gpio_num,
                       TickType_t turn_on_delay_interval);
 
     //! Energize the relay, run the underlying task, de-energized the relay.

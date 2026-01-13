@@ -20,7 +20,7 @@ class SensorPipeline : private core::NonCopyable<> {
 public:
     struct Params {
         //! 1-Wire Data pin.
-        io::gpio::Gpio data_pin { static_cast<io::gpio::Gpio>(-1) };
+        io::gpio::GpioNum data_pin { static_cast<io::gpio::GpioNum>(-1) };
 
         //! How often to read data from the sensor.
         //!

@@ -17,13 +17,13 @@ class MasterStore : public IStore, private core::NonCopyable<> {
 public:
     struct Params {
         //! MOSI line.
-        gpio::Gpio mosi { static_cast<io::gpio::Gpio>(-1) };
+        gpio::GpioNum mosi { static_cast<io::gpio::GpioNum>(-1) };
 
         //! MISO line.
-        gpio::Gpio miso { static_cast<io::gpio::Gpio>(-1) };
+        gpio::GpioNum miso { static_cast<io::gpio::GpioNum>(-1) };
 
         //! SCLK line.
-        gpio::Gpio sclk { static_cast<io::gpio::Gpio>(-1) };
+        gpio::GpioNum sclk { static_cast<io::gpio::GpioNum>(-1) };
 
         //! Maximum number of bytes transferred over the SPI line in a single transaction.
         int max_transfer_size { 0 };
@@ -40,7 +40,7 @@ public:
 
     //! Add SPI slave device to the store.
     IStore::ITransceiverPtr
-    add(const char* id, gpio::Gpio cs, Mode mode, TransferSpeed speed) override;
+    add(const char* id, gpio::GpioNum cs, Mode mode, TransferSpeed speed) override;
 
 private:
     const Params params_;

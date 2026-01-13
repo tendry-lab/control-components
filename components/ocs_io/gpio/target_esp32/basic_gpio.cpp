@@ -18,14 +18,14 @@ const char* log_tag = "basic_gpio";
 
 } // namespace
 
-BasicGpio::BasicGpio(const char* id, Gpio gpio, bool enable_value)
+BasicGpio::BasicGpio(const char* id, GpioNum gpio_num, bool enable_value)
     : id_(id)
-    , gpio_(gpio)
+    , gpio_num_(gpio_num)
     , enable_value_(enable_value) {
 }
 
 int BasicGpio::get() {
-    return gpio_get_level(gpio_);
+    return gpio_get_level(gpio_num_);
 }
 
 status::StatusCode BasicGpio::flip() {
@@ -33,7 +33,7 @@ status::StatusCode BasicGpio::flip() {
 }
 
 status::StatusCode BasicGpio::turn_on() {
-    const auto err = gpio_set_level(gpio_, enable_value_);
+    const auto err = gpio_set_level(gpio_num_, enable_value_);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "turn on failed: id=%s err=%s", id_.c_str(),
                  esp_err_to_name(err));
@@ -45,7 +45,7 @@ status::StatusCode BasicGpio::turn_on() {
 }
 
 status::StatusCode BasicGpio::turn_off() {
-    const auto err = gpio_set_level(gpio_, !enable_value_);
+    const auto err = gpio_set_level(gpio_num_, !enable_value_);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "turn off failed: id=%s err=%s", id_.c_str(),
                  esp_err_to_name(err));
@@ -74,7 +74,7 @@ status::StatusCode BasicGpio::set_direction(IGpio::Direction direction) {
 
     configASSERT(mode != GPIO_MODE_DISABLE);
 
-    const auto err = gpio_set_direction(gpio_, mode);
+    const auto err = gpio_set_direction(gpio_num_, mode);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "gpio_set_direction(): %s", esp_err_to_name(err));
 

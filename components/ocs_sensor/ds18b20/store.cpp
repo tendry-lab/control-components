@@ -31,30 +31,31 @@ Store::Store(system::IRtDelayer& delayer, size_t max_event_count)
 }
 
 status::StatusCode Store::run() {
-    for (auto& [gpio, node] : nodes_) {
+    for (auto& [gpio_num, node] : nodes_) {
         const auto code = node->run();
         if (code != status::StatusCode::OK) {
-            ocs_logw(log_tag, "failed to handle events on the bus: gpio=%d code=%s",
-                     static_cast<int>(gpio), status::code_to_str(code));
+            ocs_logw(log_tag, "failed to handle events on the bus: gpio_num=%d code=%s",
+                     static_cast<int>(gpio_num), status::code_to_str(code));
         }
     }
 
     return status::StatusCode::OK;
 }
 
-status::StatusCode Store::add(Sensor& sensor, io::gpio::Gpio gpio, const char* gpio_id) {
-    NodePtr node = get_node_(gpio);
+status::StatusCode
+Store::add(Sensor& sensor, io::gpio::GpioNum gpio_num, const char* gpio_id) {
+    NodePtr node = get_node_(gpio_num);
     if (!node) {
-        node = add_node_(gpio, gpio_id);
+        node = add_node_(gpio_num, gpio_id);
     }
     configASSERT(node);
 
     return node->add(sensor);
 }
 
-scheduler::AsyncFuncScheduler::FuturePtr Store::schedule(io::gpio::Gpio gpio,
+scheduler::AsyncFuncScheduler::FuturePtr Store::schedule(io::gpio::GpioNum gpio_num,
                                                          Store::Func func) {
-    NodePtr node = get_node_(gpio);
+    NodePtr node = get_node_(gpio_num);
     if (!node) {
         return nullptr;
     }
@@ -62,9 +63,9 @@ scheduler::AsyncFuncScheduler::FuturePtr Store::schedule(io::gpio::Gpio gpio,
     return node->schedule(func);
 }
 
-Store::NodePtr Store::get_node_(io::gpio::Gpio gpio) {
+Store::NodePtr Store::get_node_(io::gpio::GpioNum gpio_num) {
     for (const auto& item : nodes_) {
-        if (item.first == gpio) {
+        if (item.first == gpio_num) {
             return item.second;
         }
     }
@@ -72,24 +73,24 @@ Store::NodePtr Store::get_node_(io::gpio::Gpio gpio) {
     return nullptr;
 }
 
-Store::NodePtr Store::add_node_(io::gpio::Gpio gpio, const char* gpio_id) {
+Store::NodePtr Store::add_node_(io::gpio::GpioNum gpio_num, const char* gpio_id) {
     auto node =
-        NodePtr(new (std::nothrow) Node(delayer_, gpio, gpio_id, max_event_count_));
+        NodePtr(new (std::nothrow) Node(delayer_, gpio_num, gpio_id, max_event_count_));
     if (!node) {
         return nullptr;
     }
 
-    nodes_.push_back(std::make_pair(gpio, node));
+    nodes_.push_back(std::make_pair(gpio_num, node));
 
     return node;
 }
 
 Store::Node::Node(system::IRtDelayer& delayer,
-                  io::gpio::Gpio gpio,
+                  io::gpio::GpioNum gpio_num,
                   const char* gpio_id,
                   size_t max_event_count)
     : func_scheduler_(max_event_count) {
-    gpio_.reset(new (std::nothrow) io::gpio::DefaultGpio(gpio_id, gpio));
+    gpio_.reset(new (std::nothrow) io::gpio::DefaultGpio(gpio_id, gpio_num));
     configASSERT(gpio_);
 
     // For timing selection, see reference:

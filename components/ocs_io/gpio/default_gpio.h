@@ -16,7 +16,7 @@ namespace gpio {
 class DefaultGpio : public BasicGpio, private core::NonCopyable<> {
 public:
     //! Initialize.
-    DefaultGpio(const char* id, Gpio gpio);
+    DefaultGpio(const char* id, GpioNum gpio_num);
 };
 
 } // namespace gpio
