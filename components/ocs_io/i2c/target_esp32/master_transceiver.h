@@ -37,6 +37,13 @@ public:
     status::StatusCode
     receive(uint8_t* buf, size_t size, system::Time timeout = -1) override;
 
+    //! Perform a write-read transaction on the I2C bus.
+    status::StatusCode send_receive(const uint8_t* wbuf,
+                                    size_t wsize,
+                                    uint8_t* rbuf,
+                                    size_t rsize,
+                                    system::Time timeout) override;
+
 private:
     const std::string id_;
 
