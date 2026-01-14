@@ -83,10 +83,10 @@ private:
 
     void handle_init_done_();
 
-    void handle_state_init_();
+    status::StatusCode handle_state_init_();
     void handle_state_wait_reset_(bool pressed);
 
-    void handle_state_fsr_wait_begin_();
+    status::StatusCode handle_state_fsr_wait_begin_();
     void handle_state_fsr_wait_confirm_(bool pressed);
     void handle_state_fsr_done_();
 

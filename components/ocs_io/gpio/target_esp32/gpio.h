@@ -26,7 +26,7 @@ public:
     virtual ~Gpio() = default;
 
     //! Get the GPIO level.
-    int get() override;
+    status::StatusCode get_level(Level& level) override;
 
     //! Change GPIO state to opposite.
     status::StatusCode flip() override;

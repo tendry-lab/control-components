@@ -23,12 +23,26 @@ Gpio::Gpio(GpioNum gpio_num, bool enable_value)
     , enable_value_(enable_value) {
 }
 
-int Gpio::get() {
-    return gpio_get_level(gpio_num_);
+status::StatusCode Gpio::get_level(Level& level) {
+    const int value = gpio_get_level(gpio_num_);
+    if (value < 0) {
+        return status::StatusCode::Error;
+    }
+
+    level = static_cast<Level>(value);
+
+    return status::StatusCode::OK;
 }
 
 status::StatusCode Gpio::flip() {
-    return get() == enable_value_ ? turn_off() : turn_on();
+    Level level = 0;
+
+    const auto code = get_level(level);
+    if (code != ocs::status::StatusCode::OK) {
+        return code;
+    }
+
+    return level == enable_value_ ? turn_off() : turn_on();
 }
 
 status::StatusCode Gpio::turn_on() {

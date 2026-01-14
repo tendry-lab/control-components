@@ -19,7 +19,7 @@ public:
              status::StatusCode turn_on_code,
              status::StatusCode turn_off_code);
 
-    int get() override;
+    status::StatusCode get_level(io::gpio::Level& level) override;
     status::StatusCode flip() override;
     status::StatusCode turn_on() override;
     status::StatusCode turn_off() override;
@@ -31,7 +31,7 @@ public:
     io::gpio::Direction direction { io::gpio::Direction::Output };
 
 private:
-    int level_ { 0 };
+    io::gpio::Level level_ { 0 };
 
     status::StatusCode flip_code_ { status::StatusCode::OK };
     status::StatusCode turn_on_code_ { status::StatusCode::OK };

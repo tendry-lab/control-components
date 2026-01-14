@@ -29,8 +29,10 @@ struct TestRebooter : public system::IRebooter, private core::NonCopyable<> {
 struct TestButton : public IButton, private core::NonCopyable<> {
     bool pressed { false };
 
-    bool get() override {
-        return pressed;
+    status::StatusCode get_pressed(bool& value) override {
+        value = pressed;
+
+        return status::StatusCode::OK;
     }
 };
 
