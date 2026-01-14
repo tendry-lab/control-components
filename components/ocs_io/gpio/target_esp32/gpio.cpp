@@ -18,9 +18,9 @@ const char* log_tag = "gpio";
 
 } // namespace
 
-Gpio::Gpio(GpioNum gpio_num, bool enable_value)
+Gpio::Gpio(GpioNum gpio_num, Level enable_level)
     : gpio_num_(gpio_num)
-    , enable_value_(enable_value) {
+    , enable_level_(enable_level) {
 }
 
 status::StatusCode Gpio::get_level(Level& level) {
@@ -42,13 +42,13 @@ status::StatusCode Gpio::flip() {
         return code;
     }
 
-    return level == enable_value_ ? turn_off() : turn_on();
+    return level == enable_level_ ? turn_off() : turn_on();
 }
 
 status::StatusCode Gpio::turn_on() {
-    const auto err = gpio_set_level(gpio_num_, enable_value_);
+    const auto err = gpio_set_level(gpio_num_, enable_level_);
     if (err != ESP_OK) {
-        ocs_loge(log_tag, "gpio_set_level(%d,%d): %s", gpio_num_, enable_value_,
+        ocs_loge(log_tag, "gpio_set_level(%d,%u): %s", gpio_num_, enable_level_,
                  esp_err_to_name(err));
 
         return status::StatusCode::Error;
@@ -58,9 +58,9 @@ status::StatusCode Gpio::turn_on() {
 }
 
 status::StatusCode Gpio::turn_off() {
-    const auto err = gpio_set_level(gpio_num_, !enable_value_);
+    const auto err = gpio_set_level(gpio_num_, !enable_level_);
     if (err != ESP_OK) {
-        ocs_loge(log_tag, "gpio_set_level(%d, %d): %s", gpio_num_, enable_value_,
+        ocs_loge(log_tag, "gpio_set_level(%d,%u): %s", gpio_num_, enable_level_,
                  esp_err_to_name(err));
 
         return status::StatusCode::Error;
