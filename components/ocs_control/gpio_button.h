@@ -19,13 +19,13 @@ public:
     //! @params
     //!  - @p gpio to read the GPIO level.
     //!  - @p level - GPIO level when the button is pressed (0 - pull-up, 1 - pull-down).
-    GpioButton(io::gpio::IGpio& gpio, int level = 0);
+    GpioButton(io::gpio::IGpio& gpio, io::gpio::Level level);
 
     //! Return true when the button is pressed.
-    bool get() override;
+    status::StatusCode get_pressed(bool& pressed) override;
 
 private:
-    const int level_ { -1 };
+    const io::gpio::Level level_ { 0 };
 
     io::gpio::IGpio& gpio_;
 };

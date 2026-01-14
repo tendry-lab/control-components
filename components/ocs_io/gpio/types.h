@@ -22,6 +22,9 @@ enum class Direction : uint8_t {
     Input,
 };
 
+//! GPIO level.
+using Level = uint8_t;
+
 } // namespace gpio
 } // namespace io
 } // namespace ocs

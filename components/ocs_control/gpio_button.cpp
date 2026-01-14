@@ -9,13 +9,22 @@
 namespace ocs {
 namespace control {
 
-GpioButton::GpioButton(io::gpio::IGpio& gpio, int level)
+GpioButton::GpioButton(io::gpio::IGpio& gpio, io::gpio::Level level)
     : level_(level)
     , gpio_(gpio) {
 }
 
-bool GpioButton::get() {
-    return gpio_.get() == level_;
+status::StatusCode GpioButton::get_pressed(bool& pressed) {
+    io::gpio::Level level = 0;
+
+    const auto code = gpio_.get_level(level);
+    if (code != ocs::status::StatusCode::OK) {
+        return code;
+    }
+
+    pressed = (level == level_);
+
+    return status::StatusCode::OK;
 }
 
 } // namespace control

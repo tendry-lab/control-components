@@ -55,7 +55,8 @@ status::StatusCode Bus::reset() {
     // Start receiving.
     OCS_STATUS_RETURN_ON_ERROR(gpio_.set_direction(io::gpio::Direction::Input));
 
-    const auto level = gpio_.get();
+    io::gpio::Level level = 0;
+    OCS_STATUS_RETURN_ON_ERROR(gpio_.get_level(level));
 
     // Wait for the end of the time slot.
     OCS_STATUS_RETURN_ON_ERROR(delayer_.delay(reset_remain_time_slot_));
@@ -83,7 +84,7 @@ status::StatusCode Bus::read_bit(uint8_t& bit) {
     // Start receiving.
     OCS_STATUS_RETURN_ON_ERROR(gpio_.set_direction(io::gpio::Direction::Input));
 
-    bit = gpio_.get();
+    OCS_STATUS_RETURN_ON_ERROR(gpio_.get_level(bit));
 
     // Wait for the end of the time slot.
     OCS_STATUS_RETURN_ON_ERROR(delayer_.delay(read_remain_time_slot_));

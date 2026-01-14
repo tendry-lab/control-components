@@ -69,9 +69,11 @@ SystemFsm::SystemFsm(system::IRebooter& rebooter,
 status::StatusCode SystemFsm::run() {
     const auto button_was_pressed = button_was_pressed_();
 
+    status::StatusCode code = status::StatusCode::OK;
+
     switch (state_) {
     case State::Init:
-        handle_state_init_();
+        code = handle_state_init_();
         break;
 
     case State::WaitReset:
@@ -79,7 +81,7 @@ status::StatusCode SystemFsm::run() {
         break;
 
     case State::FsrWaitBegin:
-        handle_state_fsr_wait_begin_();
+        code = handle_state_fsr_wait_begin_();
         break;
 
     case State::FsrWaitConfirm:
@@ -95,7 +97,7 @@ status::StatusCode SystemFsm::run() {
         break;
     }
 
-    return status::StatusCode::OK;
+    return code;
 }
 
 status::StatusCode SystemFsm::handle_pressed(system::Time duration) {
@@ -143,20 +145,27 @@ void SystemFsm::handle_init_done_() {
     state_ = State::WaitReset;
 }
 
-void SystemFsm::handle_state_init_() {
-    if (!button_.get()) {
-        add_led_task_(flip_count_init_);
-        state_ = State::WaitInitDone;
+status::StatusCode SystemFsm::handle_state_init_() {
+    bool pressed = false;
 
-        return;
+    const auto code = button_.get_pressed(pressed);
+    if (code != status::StatusCode::OK) {
+        return code;
     }
 
-    configASSERT(!fsr_update_ts_);
+    if (!pressed) {
+        add_led_task_(flip_count_init_);
+        state_ = State::WaitInitDone;
+    } else {
+        configASSERT(!fsr_update_ts_);
 
-    fsr_update_ts_ = clock_.now();
-    state_ = State::FsrWaitBegin;
+        fsr_update_ts_ = clock_.now();
+        state_ = State::FsrWaitBegin;
 
-    ocs_logi(log_tag, "FSR requested: wait begin");
+        ocs_logi(log_tag, "FSR requested: wait begin");
+    }
+
+    return status::StatusCode::OK;
 }
 
 void SystemFsm::handle_state_wait_reset_(bool was_pressed) {
@@ -166,23 +175,30 @@ void SystemFsm::handle_state_wait_reset_(bool was_pressed) {
     }
 }
 
-void SystemFsm::handle_state_fsr_wait_begin_() {
+status::StatusCode SystemFsm::handle_state_fsr_wait_begin_() {
     configASSERT(fsr_update_ts_);
 
-    if (!button_.get()) {
+    bool pressed = false;
+
+    const auto code = button_.get_pressed(pressed);
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
+
+    if (!pressed) {
         ocs_logw(log_tag, "FSR canceled: button released too quickly");
 
         fsr_update_ts_ = 0;
 
         handle_init_done_();
 
-        return;
+        return status::StatusCode::OK;
     }
 
     const auto now = clock_.now();
 
     if (!algo::TimeOps::after(fsr_update_ts_, now, params_.fsr_wait_begin_interval)) {
-        return;
+        return status::StatusCode::OK;
     }
 
     add_fsr_task_();
@@ -191,6 +207,8 @@ void SystemFsm::handle_state_fsr_wait_begin_() {
     state_ = State::FsrWaitConfirm;
 
     ocs_logi(log_tag, "FSR started: wait confirmation");
+
+    return status::StatusCode::OK;
 }
 
 void SystemFsm::handle_state_fsr_wait_confirm_(bool was_pressed) {

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "ocs_status/code.h"
+
 namespace ocs {
 namespace control {
 
@@ -13,8 +15,8 @@ public:
     //! Destroy.
     virtual ~IButton() = default;
 
-    //! Return true if the button is pressed.
-    virtual bool get() = 0;
+    //! Set @p pressed to true if the button is pressed.
+    virtual status::StatusCode get_pressed(bool& pressed) = 0;
 };
 
 } // namespace control

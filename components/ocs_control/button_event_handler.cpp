@@ -17,7 +17,14 @@ ButtonEventHandler::ButtonEventHandler(system::IClock& clock,
 }
 
 status::StatusCode ButtonEventHandler::handle_event() {
-    const auto changed = (was_pressed_ != button_.get());
+    bool pressed = false;
+
+    const auto code = button_.get_pressed(pressed);
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
+
+    const auto changed = (was_pressed_ != pressed);
     if (!changed) {
         return status::StatusCode::OK;
     }

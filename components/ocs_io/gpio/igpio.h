@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include "ocs_io/gpio/types.h"
 #include "ocs_status/code.h"
 
@@ -18,7 +20,7 @@ public:
     virtual ~IGpio() = default;
 
     //! Get the GPIO level.
-    virtual int get() = 0;
+    virtual status::StatusCode get_level(Level& level) = 0;
 
     //! Change the GPIO state to the opposite.
     virtual status::StatusCode flip() = 0;

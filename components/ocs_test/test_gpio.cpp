@@ -16,8 +16,10 @@ TestGpio::TestGpio(status::StatusCode flip_code,
     , turn_off_code_(turn_off_code) {
 }
 
-int TestGpio::get() {
-    return level_;
+status::StatusCode TestGpio::get_level(io::gpio::Level& level) {
+    level = level_;
+
+    return status::StatusCode::OK;
 }
 
 status::StatusCode TestGpio::flip() {
