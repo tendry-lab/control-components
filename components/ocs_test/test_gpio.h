@@ -23,12 +23,12 @@ public:
     status::StatusCode flip() override;
     status::StatusCode turn_on() override;
     status::StatusCode turn_off() override;
-    status::StatusCode set_direction(IGpio::Direction direction) override;
+    status::StatusCode set_direction(io::gpio::Direction direction) override;
 
     size_t flip_call_count { 0 };
     size_t turn_on_call_count { 0 };
     size_t turn_off_call_count { 0 };
-    IGpio::Direction direction { IGpio::Direction::Output };
+    io::gpio::Direction direction { io::gpio::Direction::Output };
 
 private:
     int level_ { 0 };

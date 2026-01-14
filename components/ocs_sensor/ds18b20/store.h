@@ -48,8 +48,7 @@ public:
     //! @remarks
     //!  - @p sensor should be used in the same context as a run() method, in other words,
     //!    the sensor and the store should be scheduled on the same task scheduler.
-    status::StatusCode
-    add(Sensor& sensor, io::gpio::GpioNum gpio_num, const char* gpio_id);
+    status::StatusCode add(Sensor& sensor, io::gpio::GpioNum gpio_num);
 
     //! Schedule an asynchronous event to the bus.
     scheduler::AsyncFuncScheduler::FuturePtr schedule(io::gpio::GpioNum gpio_num,
@@ -61,7 +60,6 @@ private:
         //! Initialize.
         Node(system::IRtDelayer& delayer,
              io::gpio::GpioNum gpio_num,
-             const char* gpio_id,
              size_t max_event_count);
 
         //! Handle operations on the 1-Wire bus.
@@ -86,7 +84,7 @@ private:
     using NodeList = std::vector<NodeListItem>;
 
     NodePtr get_node_(io::gpio::GpioNum gpio_num);
-    NodePtr add_node_(io::gpio::GpioNum gpio_num, const char* gpio_id);
+    NodePtr add_node_(io::gpio::GpioNum gpio_num);
 
     const size_t max_event_count_ { 0 };
 

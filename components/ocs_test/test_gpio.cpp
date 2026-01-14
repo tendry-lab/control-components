@@ -44,7 +44,7 @@ status::StatusCode TestGpio::turn_off() {
     return turn_off_code_;
 }
 
-status::StatusCode TestGpio::set_direction(IGpio::Direction direction) {
+status::StatusCode TestGpio::set_direction(io::gpio::Direction direction) {
     this->direction = direction;
     return status::StatusCode::OK;
 }

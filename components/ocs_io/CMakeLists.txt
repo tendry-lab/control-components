@@ -1,9 +1,5 @@
 set(COMPONENT_SRCS
-    "gpio/default_gpio.cpp"
-    "gpio/delay_gpio.cpp"
-    "gpio/gpio_guard.cpp"
-
-    "gpio/target_esp32/basic_gpio.cpp"
+    "gpio/target_esp32/gpio.cpp"
     "gpio/target_esp32/isr_event_service.cpp"
     "adc/target_esp32/oneshot_reader.cpp"
     "adc/target_esp32/oneshot_store.cpp"

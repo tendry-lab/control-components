@@ -38,10 +38,7 @@ public:
 private:
     scheduler::ITask& task_;
 
-    std::unique_ptr<io::gpio::IGpio> default_gpio_;
-    std::unique_ptr<io::gpio::IGpio> delay_gpio_;
-
-    io::gpio::IGpio* gpio_ { nullptr };
+    std::unique_ptr<io::gpio::IGpio> gpio_;
 };
 
 } // namespace soil

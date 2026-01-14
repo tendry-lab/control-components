@@ -13,7 +13,7 @@
 #include "ocs_fmt/json/cjson_builder.h"
 #include "ocs_fmt/json/cjson_object_formatter.h"
 #include "ocs_fmt/json/dynamic_formatter.h"
-#include "ocs_io/gpio/default_gpio.h"
+#include "ocs_io/gpio/target_esp32/gpio.h"
 #include "ocs_onewire/bus.h"
 #include "ocs_onewire/rom_code.h"
 #include "ocs_onewire/rom_code_scanner.h"
@@ -89,7 +89,7 @@ void scan_rom_codes(ScanParams scan_params, onewire::Bus::Params bus_params) {
     fmt::json::CjsonObjectFormatter formatter(json.get());
     format_bus_params(formatter, bus_params);
 
-    io::gpio::DefaultGpio gpio("test_gpio_onewire_bus", scan_params.gpio_num);
+    io::gpio::Gpio gpio(scan_params.gpio_num, true);
 
     auto delayer = system::PlatformBuilder::make_rt_delayer();
     configASSERT(delayer);

@@ -4,39 +4,40 @@
  */
 
 #include "ocs_sensor/soil/analog_relay_sensor.h"
-#include "ocs_io/gpio/default_gpio.h"
-#include "ocs_io/gpio/delay_gpio.h"
-#include "ocs_io/gpio/gpio_guard.h"
+#include "ocs_core/log.h"
+#include "ocs_io/gpio/target_esp32/gpio.h"
+#include "ocs_status/code_to_str.h"
 
 namespace ocs {
 namespace sensor {
 namespace soil {
 
+namespace {
+
+const char* log_tag = "analog_relay_sensor";
+
+} // namespace
+
 AnalogRelaySensor::AnalogRelaySensor(scheduler::ITask& task,
                                      io::gpio::GpioNum gpio_num,
                                      TickType_t turn_on_delay_interval)
     : task_(task) {
-    default_gpio_.reset(new (std::nothrow)
-                            io::gpio::DefaultGpio("relay_sensor", gpio_num));
-    configASSERT(default_gpio_);
-
-    delay_gpio_.reset(new (std::nothrow) io::gpio::DelayGpio(
-        *default_gpio_,
-        io::gpio::DelayGpio::Params {
-            .flip_delay_interval = pdMS_TO_TICKS(0),
-            .turn_on_delay_interval = turn_on_delay_interval,
-            .turn_off_delay_interval = pdMS_TO_TICKS(0),
-        }));
-    configASSERT(delay_gpio_);
-
-    gpio_ = delay_gpio_.get();
+    gpio_.reset(new (std::nothrow) io::gpio::Gpio(gpio_num, true));
     configASSERT(gpio_);
 }
 
 status::StatusCode AnalogRelaySensor::run() {
-    io::gpio::GpioGuard gpio(*gpio_);
+    if (const auto c = gpio_->turn_on(); c != ocs::status::StatusCode::OK) {
+        ocs_logw(log_tag, "failed to turn on GPIO: %s", status::code_to_str(c));
+    }
 
-    return task_.run();
+    const auto code = task_.run();
+
+    if (const auto c = gpio_->turn_off(); c != ocs::status::StatusCode::OK) {
+        ocs_logw(log_tag, "failed to turn off GPIO: %s", status::code_to_str(c));
+    }
+
+    return code;
 }
 
 } // namespace soil
