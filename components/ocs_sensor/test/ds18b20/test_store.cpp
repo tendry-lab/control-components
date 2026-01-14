@@ -45,7 +45,6 @@ TEST_CASE("DS18B20 store: schedule: empty store", "[ocs_sensor], [ds18b20_store]
 
 TEST_CASE("DS18B20 store: schedule: invalid GPIO", "[ocs_sensor], [ds18b20_store]") {
     const char* sensor_id = "test_sensor";
-    const char* gpio_id = "test_gpio_id";
     const io::gpio::GpioNum gpio_num = GPIO_NUM_26;
     const io::gpio::GpioNum invalid_gpio_num = GPIO_NUM_27;
 
@@ -56,7 +55,7 @@ TEST_CASE("DS18B20 store: schedule: invalid GPIO", "[ocs_sensor], [ds18b20_store
     test::MemoryStorage storage;
     Sensor sensor(storage, sensor_id);
 
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, store.add(sensor, gpio_num, gpio_id));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, store.add(sensor, gpio_num));
 
     auto future = store.schedule(invalid_gpio_num,
                                  [](onewire::Bus& bus, Store::SensorList& sensors) {
@@ -68,14 +67,13 @@ TEST_CASE("DS18B20 store: schedule: invalid GPIO", "[ocs_sensor], [ds18b20_store
 TEST_CASE("DS18B20 store: add sensor", "[ocs_sensor], [ds18b20_store]") {
     const char* sensor_id = "test_sensor";
     const io::gpio::GpioNum gpio_num = GPIO_NUM_26;
-    const char* gpio_id = "test_gpio_id";
 
     TestDelayer delayer;
     Store store(delayer, 16);
     test::MemoryStorage storage;
     Sensor sensor(storage, sensor_id);
 
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, store.add(sensor, gpio_num, gpio_id));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, store.add(sensor, gpio_num));
 
     auto future = store.schedule(
         gpio_num, [&sensor](onewire::Bus& bus, Store::SensorList& sensors) {
@@ -93,7 +91,6 @@ TEST_CASE("DS18B20 store: read sensor configuration: non-configured",
           "[ocs_sensor], [ds18b20_store]") {
     const char* sensor_id = "test_sensor";
     const io::gpio::GpioNum gpio_num = GPIO_NUM_26;
-    const char* gpio_id = "test_gpio_id";
 
     TestDelayer delayer;
     Store store(delayer, 16);
@@ -101,7 +98,7 @@ TEST_CASE("DS18B20 store: read sensor configuration: non-configured",
     Sensor sensor(storage, sensor_id);
 
     TEST_ASSERT_FALSE(sensor.configured());
-    TEST_ASSERT_EQUAL(status::StatusCode::OK, store.add(sensor, gpio_num, gpio_id));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, store.add(sensor, gpio_num));
     TEST_ASSERT_FALSE(sensor.configured());
 
     auto future =

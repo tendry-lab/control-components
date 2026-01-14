@@ -10,12 +10,13 @@ idf_component_register(
 
     REQUIRES
     "unity"
+
+    "ocs_io"
     "ocs_core"
     "ocs_status"
     "ocs_storage"
     "ocs_diagnostic"
     "ocs_scheduler"
-    "ocs_io"
 
     INCLUDE_DIRS
     ".."

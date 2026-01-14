@@ -6,7 +6,7 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_io/gpio/basic_gpio.h"
+#include "ocs_io/gpio/target_esp32/gpio.h"
 
 namespace ocs {
 namespace io {
@@ -14,28 +14,27 @@ namespace gpio {
 
 namespace {
 
-const char* log_tag = "basic_gpio";
+const char* log_tag = "gpio";
 
 } // namespace
 
-BasicGpio::BasicGpio(const char* id, GpioNum gpio_num, bool enable_value)
-    : id_(id)
-    , gpio_num_(gpio_num)
+Gpio::Gpio(GpioNum gpio_num, bool enable_value)
+    : gpio_num_(gpio_num)
     , enable_value_(enable_value) {
 }
 
-int BasicGpio::get() {
+int Gpio::get() {
     return gpio_get_level(gpio_num_);
 }
 
-status::StatusCode BasicGpio::flip() {
+status::StatusCode Gpio::flip() {
     return get() == enable_value_ ? turn_off() : turn_on();
 }
 
-status::StatusCode BasicGpio::turn_on() {
+status::StatusCode Gpio::turn_on() {
     const auto err = gpio_set_level(gpio_num_, enable_value_);
     if (err != ESP_OK) {
-        ocs_loge(log_tag, "turn on failed: id=%s err=%s", id_.c_str(),
+        ocs_loge(log_tag, "gpio_set_level(%d,%d): %s", gpio_num_, enable_value_,
                  esp_err_to_name(err));
 
         return status::StatusCode::Error;
@@ -44,10 +43,10 @@ status::StatusCode BasicGpio::turn_on() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode BasicGpio::turn_off() {
+status::StatusCode Gpio::turn_off() {
     const auto err = gpio_set_level(gpio_num_, !enable_value_);
     if (err != ESP_OK) {
-        ocs_loge(log_tag, "turn off failed: id=%s err=%s", id_.c_str(),
+        ocs_loge(log_tag, "gpio_set_level(%d, %d): %s", gpio_num_, enable_value_,
                  esp_err_to_name(err));
 
         return status::StatusCode::Error;
@@ -56,15 +55,15 @@ status::StatusCode BasicGpio::turn_off() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode BasicGpio::set_direction(IGpio::Direction direction) {
+status::StatusCode Gpio::set_direction(Direction direction) {
     gpio_mode_t mode = GPIO_MODE_DISABLE;
 
     switch (direction) {
-    case IGpio::Direction::Output:
+    case Direction::Output:
         mode = GPIO_MODE_OUTPUT;
         break;
 
-    case IGpio::Direction::Input:
+    case Direction::Input:
         mode = GPIO_MODE_INPUT;
         break;
 

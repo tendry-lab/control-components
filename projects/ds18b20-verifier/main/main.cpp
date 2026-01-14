@@ -14,7 +14,7 @@
 #include "ocs_fmt/json/cjson_builder.h"
 #include "ocs_fmt/json/cjson_object_formatter.h"
 #include "ocs_fmt/json/dynamic_formatter.h"
-#include "ocs_io/gpio/default_gpio.h"
+#include "ocs_io/gpio/target_esp32/gpio.h"
 #include "ocs_onewire/bus.h"
 #include "ocs_onewire/rom_code.h"
 #include "ocs_onewire/rom_code_scanner.h"
@@ -140,7 +140,7 @@ void verify_bus_operations(VerifyParams verify_params, onewire::Bus::Params bus_
 
     format_bus_params(formatter, bus_params);
 
-    io::gpio::DefaultGpio gpio("test_GPIO_onewire_bus", verify_params.gpio_num);
+    io::gpio::Gpio gpio(verify_params.gpio_num, true);
 
     auto delayer = system::PlatformBuilder::make_rt_delayer();
     configASSERT(delayer);

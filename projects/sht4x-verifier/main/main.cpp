@@ -9,7 +9,7 @@
 
 #include "ocs_algo/bit_ops.h"
 #include "ocs_core/log.h"
-#include "ocs_io/gpio/default_gpio.h"
+#include "ocs_io/gpio/target_esp32/gpio.h"
 #include "ocs_io/i2c/target_esp32/master_store.h"
 #include "ocs_sensor/sht4x/sensor.h"
 #include "ocs_status/code_to_str.h"
@@ -59,7 +59,7 @@ void configure_power_gpio(io::gpio::GpioNum gpio_num) {
 }
 
 void enable_power(io::gpio::GpioNum gpio_num) {
-    io::gpio::DefaultGpio power_gpio("power", gpio_num);
+    io::gpio::Gpio power_gpio(gpio_num, true);
 
     configASSERT(power_gpio.turn_on() == status::StatusCode::OK);
 
@@ -74,7 +74,7 @@ void enable_power(io::gpio::GpioNum gpio_num) {
 }
 
 void disable_power(io::gpio::GpioNum gpio_num) {
-    io::gpio::DefaultGpio power_gpio("power", gpio_num);
+    io::gpio::Gpio power_gpio(gpio_num, true);
 
     configASSERT(power_gpio.turn_off() == status::StatusCode::OK);
 }

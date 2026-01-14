@@ -14,6 +14,8 @@ idf_component_register(
 
     REQUIRES
     "freertos"
+
+    "ocs_io"
     "ocs_core"
     "ocs_scheduler"
     "ocs_storage"

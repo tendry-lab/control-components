@@ -27,9 +27,9 @@ idf_component_register(
 
     REQUIRES
     "esp_timer"
-    "driver"
-    "ocs_security"
     "app_update"
+
+    "ocs_security"
 
     INCLUDE_DIRS
     ".."

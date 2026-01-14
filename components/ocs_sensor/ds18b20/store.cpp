@@ -8,7 +8,7 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_io/gpio/default_gpio.h"
+#include "ocs_io/gpio/target_esp32/gpio.h"
 #include "ocs_sensor/ds18b20/resolution_to_str.h"
 #include "ocs_sensor/ds18b20/store.h"
 #include "ocs_status/code_to_str.h"
@@ -42,11 +42,10 @@ status::StatusCode Store::run() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode
-Store::add(Sensor& sensor, io::gpio::GpioNum gpio_num, const char* gpio_id) {
+status::StatusCode Store::add(Sensor& sensor, io::gpio::GpioNum gpio_num) {
     NodePtr node = get_node_(gpio_num);
     if (!node) {
-        node = add_node_(gpio_num, gpio_id);
+        node = add_node_(gpio_num);
     }
     configASSERT(node);
 
@@ -73,9 +72,8 @@ Store::NodePtr Store::get_node_(io::gpio::GpioNum gpio_num) {
     return nullptr;
 }
 
-Store::NodePtr Store::add_node_(io::gpio::GpioNum gpio_num, const char* gpio_id) {
-    auto node =
-        NodePtr(new (std::nothrow) Node(delayer_, gpio_num, gpio_id, max_event_count_));
+Store::NodePtr Store::add_node_(io::gpio::GpioNum gpio_num) {
+    auto node = NodePtr(new (std::nothrow) Node(delayer_, gpio_num, max_event_count_));
     if (!node) {
         return nullptr;
     }
@@ -87,10 +85,9 @@ Store::NodePtr Store::add_node_(io::gpio::GpioNum gpio_num, const char* gpio_id)
 
 Store::Node::Node(system::IRtDelayer& delayer,
                   io::gpio::GpioNum gpio_num,
-                  const char* gpio_id,
                   size_t max_event_count)
     : func_scheduler_(max_event_count) {
-    gpio_.reset(new (std::nothrow) io::gpio::DefaultGpio(gpio_id, gpio_num));
+    gpio_.reset(new (std::nothrow) io::gpio::Gpio(gpio_num, true));
     configASSERT(gpio_);
 
     // For timing selection, see reference:

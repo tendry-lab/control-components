@@ -31,8 +31,7 @@ SensorPipeline::SensorPipeline(scheduler::ITaskScheduler& task_scheduler,
 
     configASSERT(sensor_task_);
 
-    configASSERT(sensor_store.add(*sensor_, params.data_pin, "gpio_ds18b20_onewire")
-                 == status::StatusCode::OK);
+    configASSERT(sensor_store.add(*sensor_, params.data_pin) == status::StatusCode::OK);
 
     configASSERT(task_scheduler.add(*sensor_task_, task_id_.c_str(), params.read_interval)
                  == status::StatusCode::OK);

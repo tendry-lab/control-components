@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "ocs_io/gpio/types.h"
 #include "ocs_status/code.h"
 
 namespace ocs {
@@ -13,12 +14,6 @@ namespace gpio {
 
 class IGpio {
 public:
-    //! Possible GPIO directions.
-    enum class Direction : uint8_t {
-        Output,
-        Input,
-    };
-
     //! Destroy.
     virtual ~IGpio() = default;
 
