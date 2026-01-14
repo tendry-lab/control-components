@@ -19,8 +19,8 @@ public:
     //!
     //! @params
     //!  - @p gpio_num - GPIO number.
-    //!  - @p enable_value - which value should be used to activate the GPIO.
-    Gpio(GpioNum gpio_num, bool enable_value);
+    //!  - @p enable_level - which level should be used to activate the GPIO.
+    Gpio(GpioNum gpio_num, Level enable_level);
 
     //! Destroy.
     virtual ~Gpio() = default;
@@ -42,7 +42,7 @@ public:
 
 private:
     const GpioNum gpio_num_ { static_cast<io::gpio::GpioNum>(-1) };
-    const bool enable_value_ { false };
+    const Level enable_level_ { 0 };
 };
 
 } // namespace gpio
