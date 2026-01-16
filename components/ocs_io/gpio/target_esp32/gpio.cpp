@@ -18,7 +18,7 @@ const char* log_tag = "gpio";
 
 } // namespace
 
-Gpio::Gpio(GpioNum gpio_num, Level enable_level)
+Gpio::Gpio(gpio_num_t gpio_num, Level enable_level)
     : gpio_num_(gpio_num)
     , enable_level_(enable_level) {
 }

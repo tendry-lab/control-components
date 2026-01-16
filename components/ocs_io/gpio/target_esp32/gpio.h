@@ -5,9 +5,10 @@
 
 #pragma once
 
+#include "driver/gpio.h"
+
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/igpio.h"
-#include "ocs_io/gpio/types.h"
 
 namespace ocs {
 namespace io {
@@ -20,7 +21,7 @@ public:
     //! @params
     //!  - @p gpio_num - GPIO number.
     //!  - @p enable_level - which level should be used to activate the GPIO.
-    Gpio(GpioNum gpio_num, Level enable_level);
+    Gpio(gpio_num_t gpio_num, Level enable_level);
 
     //! Destroy.
     virtual ~Gpio() = default;
@@ -41,7 +42,7 @@ public:
     status::StatusCode set_direction(Direction direction) override;
 
 private:
-    const GpioNum gpio_num_ { static_cast<io::gpio::GpioNum>(-1) };
+    const gpio_num_t gpio_num_ { GPIO_NUM_NC };
     const Level enable_level_ { 0 };
 };
 
