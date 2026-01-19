@@ -112,11 +112,6 @@ void perform_verification(const VerificationConfig& verification_config) {
             }));
     configASSERT(sensor);
 
-    const auto code = sensor->reset();
-    if (code != status::StatusCode::OK) {
-        ocs_logw(log_tag, "failed to reset sensor: %s", status::code_to_str(code));
-    }
-
     size_t failed_attempts = 0;
 
     for (size_t n = 0; n < verification_config.total_attempts; ++n) {
