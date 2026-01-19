@@ -10,13 +10,13 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/types.h"
-#include "ocs_io/i2c/istore.h"
+#include "ocs_io/i2c/ibus.h"
 
 namespace ocs {
 namespace io {
 namespace i2c {
 
-class MasterStore : public IStore, private core::NonCopyable<> {
+class MasterBus : public IBus, private core::NonCopyable<> {
 public:
     struct Params {
         //! Data line.
@@ -26,14 +26,17 @@ public:
         gpio_num_t scl { GPIO_NUM_NC };
     };
 
-    //! Initialize I2C master bus.
-    explicit MasterStore(Params params);
+    //! Initialize.
+    //!
+    //! @params
+    //!  - @p params - various bus settings.
+    explicit MasterBus(Params params);
 
-    //! De-initialize I2C master bus.
-    ~MasterStore();
+    //! De-initialize the bus.
+    ~MasterBus();
 
-    //! Add I2C slave device to the store.
-    IStore::ITransceiverPtr
+    //! Add I2C device to the bus.
+    ITransceiverPtr
     add(const char* id, AddressLength len, Address addr, TransferSpeed speed) override;
 
 private:

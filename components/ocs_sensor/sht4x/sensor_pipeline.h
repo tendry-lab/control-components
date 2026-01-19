@@ -9,7 +9,7 @@
 #include <string>
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_io/i2c/istore.h"
+#include "ocs_io/i2c/ibus.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_sensor/sht4x/sensor.h"
 #include "ocs_storage/storage_builder.h"
@@ -39,12 +39,12 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p store to register an I2C device.
+    //!  - @p bus to register an I2C device.
     //!  - @p task_scheduler to register a task for periodic sensor reading.
     //!  - @p storage_builder to register storage for the sensor.
     //!  - @p id - unique sensor identifier, e.g. sht40 or sht41.
     //!  - @p params - various sensor settings.
-    SensorPipeline(io::i2c::IStore& store,
+    SensorPipeline(io::i2c::IBus& bus,
                    scheduler::ITaskScheduler& task_scheduler,
                    storage::StorageBuilder& storage_builder,
                    const char* id,
@@ -59,7 +59,7 @@ private:
     const std::string task_id_;
 
     storage::StorageBuilder::IStoragePtr storage_;
-    io::i2c::IStore::ITransceiverPtr transceiver_;
+    io::i2c::IBus::ITransceiverPtr transceiver_;
     std::unique_ptr<Sensor> sensor_;
 };
 
