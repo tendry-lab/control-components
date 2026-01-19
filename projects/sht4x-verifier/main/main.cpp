@@ -89,18 +89,6 @@ void perform_verification(const VerificationConfig& verification_config) {
     }));
     configASSERT(bus);
 
-    io::i2c::IBus::ITransceiverPtr bus_transceiver =
-        bus->add("bus", io::i2c::AddressLength::Bit_7, io::i2c::IBus::bus_fanout_address,
-                 verification_config.i2c_transfer_speed);
-    configASSERT(bus_transceiver);
-
-    auto code = bus_transceiver->send(&io::i2c::IBus::bus_reset_command,
-                                      sizeof(io::i2c::IBus::bus_reset_command),
-                                      verification_config.i2c_wait_timeout);
-    if (code != status::StatusCode::OK) {
-        ocs_logw(log_tag, "failed to reset i2c bus: %s", status::code_to_str(code));
-    }
-
     io::i2c::IBus::ITransceiverPtr sensor_transceiver =
         bus->add("sht4x", io::i2c::AddressLength::Bit_7, verification_config.i2c_addr,
                  verification_config.i2c_transfer_speed);
@@ -124,7 +112,7 @@ void perform_verification(const VerificationConfig& verification_config) {
             }));
     configASSERT(sensor);
 
-    code = sensor->reset();
+    const auto code = sensor->reset();
     if (code != status::StatusCode::OK) {
         ocs_logw(log_tag, "failed to reset sensor: %s", status::code_to_str(code));
     }
