@@ -14,7 +14,7 @@ namespace ocs {
 namespace io {
 namespace i2c {
 
-class IStore {
+class IBus {
 public:
     //! I2C transceiver to communicate with I2C device.
     using ITransceiverPtr = std::unique_ptr<ITransceiver>;
@@ -26,9 +26,9 @@ public:
     static constexpr uint8_t bus_reset_command = 0x06;
 
     //! Destroy.
-    virtual ~IStore() = default;
+    virtual ~IBus() = default;
 
-    //! Register a new I2C device.
+    //! Add device to the bus.
     //!
     //! @params
     //!  - @p id - to distinguish one I2C device from another.

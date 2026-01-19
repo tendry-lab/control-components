@@ -10,7 +10,7 @@
 #include "ocs_algo/bit_ops.h"
 #include "ocs_core/log.h"
 #include "ocs_io/gpio/target_esp32/gpio.h"
-#include "ocs_io/i2c/target_esp32/master_store.h"
+#include "ocs_io/i2c/target_esp32/master_bus.h"
 #include "ocs_sensor/sht4x/sensor.h"
 #include "ocs_status/code_to_str.h"
 #include "ocs_storage/storage_builder.h"
@@ -80,30 +80,30 @@ void disable_power(io::gpio::GpioNum gpio_num) {
 }
 
 void perform_verification(const VerificationConfig& verification_config) {
-    std::unique_ptr<io::i2c::IStore> store(new (
-        std::nothrow) io::i2c::MasterStore(io::i2c::MasterStore::Params {
+    std::unique_ptr<io::i2c::IBus> bus(new (
+        std::nothrow) io::i2c::MasterBus(io::i2c::MasterBus::Params {
         .sda =
             static_cast<gpio_num_t>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_I2C_MASTER_SDA_GPIO),
         .scl =
             static_cast<gpio_num_t>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_I2C_MASTER_SCL_GPIO),
     }));
-    configASSERT(store);
+    configASSERT(bus);
 
-    io::i2c::IStore::ITransceiverPtr bus_transceiver = store->add(
-        "bus", io::i2c::AddressLength::Bit_7, io::i2c::IStore::bus_fanout_address,
-        verification_config.i2c_transfer_speed);
+    io::i2c::IBus::ITransceiverPtr bus_transceiver =
+        bus->add("bus", io::i2c::AddressLength::Bit_7, io::i2c::IBus::bus_fanout_address,
+                 verification_config.i2c_transfer_speed);
     configASSERT(bus_transceiver);
 
-    auto code = bus_transceiver->send(&io::i2c::IStore::bus_reset_command,
-                                      sizeof(io::i2c::IStore::bus_reset_command),
+    auto code = bus_transceiver->send(&io::i2c::IBus::bus_reset_command,
+                                      sizeof(io::i2c::IBus::bus_reset_command),
                                       verification_config.i2c_wait_timeout);
     if (code != status::StatusCode::OK) {
         ocs_logw(log_tag, "failed to reset i2c bus: %s", status::code_to_str(code));
     }
 
-    io::i2c::IStore::ITransceiverPtr sensor_transceiver =
-        store->add("sht4x", io::i2c::AddressLength::Bit_7, verification_config.i2c_addr,
-                   verification_config.i2c_transfer_speed);
+    io::i2c::IBus::ITransceiverPtr sensor_transceiver =
+        bus->add("sht4x", io::i2c::AddressLength::Bit_7, verification_config.i2c_addr,
+                 verification_config.i2c_transfer_speed);
     configASSERT(sensor_transceiver);
 
     storage::FlashInitializer flash_initializer;

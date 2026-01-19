@@ -11,7 +11,7 @@ namespace ocs {
 namespace sensor {
 namespace sht4x {
 
-SensorPipeline::SensorPipeline(io::i2c::IStore& store,
+SensorPipeline::SensorPipeline(io::i2c::IBus& bus,
                                scheduler::ITaskScheduler& task_scheduler,
                                storage::StorageBuilder& storage_builder,
                                const char* id,
@@ -22,8 +22,8 @@ SensorPipeline::SensorPipeline(io::i2c::IStore& store,
     storage_ = storage_builder.make(storage_id_.c_str());
     configASSERT(storage_);
 
-    transceiver_ = store.add(transceiver_id_.c_str(), io::i2c::AddressLength::Bit_7,
-                             params.i2c_addr, params.i2c_speed);
+    transceiver_ = bus.add(transceiver_id_.c_str(), io::i2c::AddressLength::Bit_7,
+                           params.i2c_addr, params.i2c_speed);
     configASSERT(transceiver_);
 
     sensor_.reset(new (std::nothrow) Sensor(*transceiver_, *storage_, id, params.sensor));

@@ -11,7 +11,7 @@
 #include "driver/i2c_types.h"
 
 #include "ocs_core/log.h"
-#include "ocs_io/i2c/target_esp32/master_store.h"
+#include "ocs_io/i2c/target_esp32/master_bus.h"
 #include "ocs_io/i2c/target_esp32/master_transceiver.h"
 
 namespace ocs {
@@ -20,11 +20,11 @@ namespace i2c {
 
 namespace {
 
-const char* log_tag = "i2c_master_store";
+const char* log_tag = "i2c_master_bus";
 
 } // namespace
 
-MasterStore::MasterStore(MasterStore::Params params) {
+MasterBus::MasterBus(MasterBus::Params params) {
     i2c_master_bus_config_t config;
     memset(&config, 0, sizeof(config));
 
@@ -38,8 +38,8 @@ MasterStore::MasterStore(MasterStore::Params params) {
     ESP_ERROR_CHECK(i2c_new_master_bus(&config, &handle_));
 }
 
-IStore::ITransceiverPtr
-MasterStore::add(const char* id, AddressLength len, Address addr, TransferSpeed speed) {
+IBus::ITransceiverPtr
+MasterBus::add(const char* id, AddressLength len, Address addr, TransferSpeed speed) {
     i2c_device_config_t config;
     memset(&config, 0, sizeof(config));
 
@@ -75,10 +75,10 @@ MasterStore::add(const char* id, AddressLength len, Address addr, TransferSpeed 
     auto device_ptr = MasterTransceiver::make_device_shared(device);
     configASSERT(device_ptr);
 
-    return IStore::ITransceiverPtr(new (std::nothrow) MasterTransceiver(device_ptr, id));
+    return IBus::ITransceiverPtr(new (std::nothrow) MasterTransceiver(device_ptr, id));
 }
 
-MasterStore::~MasterStore() {
+MasterBus::~MasterBus() {
     ESP_ERROR_CHECK(i2c_del_master_bus(handle_));
 }
 
