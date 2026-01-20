@@ -24,6 +24,9 @@ public:
 
         //! Clock line.
         gpio_num_t scl { GPIO_NUM_NC };
+
+        //! I2C port.
+        i2c_port_t port { I2C_NUM_0 };
     };
 
     //! Initialize.
