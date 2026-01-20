@@ -29,7 +29,7 @@ MasterBus::MasterBus(MasterBus::Params params) {
     memset(&config, 0, sizeof(config));
 
     config.clk_source = I2C_CLK_SRC_DEFAULT;
-    config.i2c_port = I2C_NUM_0;
+    config.i2c_port = params.port;
     config.sda_io_num = params.sda;
     config.scl_io_num = params.scl;
     config.glitch_ignore_cnt = 7;
