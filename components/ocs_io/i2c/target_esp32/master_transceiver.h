@@ -44,6 +44,9 @@ public:
                                     size_t rsize,
                                     system::Time timeout) override;
 
+    //! Check if the I2C device is reachable within @p timeout.
+    status::StatusCode probe(system::Time timeout) override;
+
 private:
     const Address address_ { 0 };
 
