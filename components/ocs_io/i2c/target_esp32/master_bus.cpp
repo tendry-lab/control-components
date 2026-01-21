@@ -33,7 +33,6 @@ MasterBus::MasterBus(MasterBus::Params params) {
     config.sda_io_num = params.sda;
     config.scl_io_num = params.scl;
     config.glitch_ignore_cnt = 7;
-    config.flags.enable_internal_pullup = true;
 
     ESP_ERROR_CHECK(i2c_new_master_bus(&config, &handle_));
 }
