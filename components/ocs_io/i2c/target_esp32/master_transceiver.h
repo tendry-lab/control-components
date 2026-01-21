@@ -32,11 +32,10 @@ public:
 
     //! Send data to the I2C device.
     status::StatusCode
-    send(const uint8_t* buf, size_t size, system::Time timeout = -1) override;
+    send(const uint8_t* buf, size_t size, system::Time timeout) override;
 
     //! Receive data from the I2C device.
-    status::StatusCode
-    receive(uint8_t* buf, size_t size, system::Time timeout = -1) override;
+    status::StatusCode receive(uint8_t* buf, size_t size, system::Time timeout) override;
 
     //! Perform a write-read transaction on the I2C bus.
     status::StatusCode send_receive(const uint8_t* wbuf,
