@@ -17,13 +17,12 @@ SensorPipeline::SensorPipeline(io::i2c::IBus& bus,
                                const char* id,
                                SensorPipeline::Params params)
     : storage_id_(std::string(id) + "_stg")
-    , transceiver_id_(std::string(id) + "_trx")
     , task_id_(std::string(id) + "_tsk") {
     storage_ = storage_builder.make(storage_id_.c_str());
     configASSERT(storage_);
 
-    transceiver_ = bus.add(transceiver_id_.c_str(), io::i2c::AddressLength::Bit_7,
-                           params.i2c_addr, params.i2c_speed);
+    transceiver_ =
+        bus.add(io::i2c::AddressLength::Bit_7, params.i2c_addr, params.i2c_speed);
     configASSERT(transceiver_);
 
     sensor_.reset(new (std::nothrow) Sensor(*transceiver_, *storage_, id, params.sensor));

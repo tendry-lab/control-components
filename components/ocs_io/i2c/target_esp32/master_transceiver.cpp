@@ -17,8 +17,8 @@ const char* log_tag = "i2c_master_transceiver";
 } // namespace
 
 MasterTransceiver::DevicePtr
-MasterTransceiver::make_device_shared(i2c_master_dev_t* device) {
-    return MasterTransceiver::DevicePtr(device, [](i2c_master_dev_t* device) {
+MasterTransceiver::make_device_shared(i2c_master_dev_handle_t device) {
+    return MasterTransceiver::DevicePtr(device, [](i2c_master_dev_handle_t device) {
         if (device) {
             const auto err = i2c_master_bus_rm_device(device);
             if (err != ESP_OK) {
@@ -28,8 +28,11 @@ MasterTransceiver::make_device_shared(i2c_master_dev_t* device) {
     });
 }
 
-MasterTransceiver::MasterTransceiver(MasterTransceiver::DevicePtr device, const char* id)
-    : id_(id)
+MasterTransceiver::MasterTransceiver(i2c_master_bus_handle_t bus,
+                                     DevicePtr device,
+                                     Address address)
+    : address_(address)
+    , bus_(bus)
     , device_(device) {
 }
 
@@ -42,8 +45,8 @@ MasterTransceiver::send(const uint8_t* buf, size_t size, system::Time timeout) {
     const auto err = i2c_master_transmit(device_.get(), buf, size,
                                          timeout / system::Duration::millisecond);
     if (err != ESP_OK) {
-        ocs_loge(log_tag, "i2c_master_transmit() failed: id=%s err=%s", id_.c_str(),
-                 esp_err_to_name(err));
+        ocs_loge(log_tag, "i2c_master_transmit() failed: addr=0x%" PRIx16 " err=%s",
+                 address_, esp_err_to_name(err));
 
         if (err == ESP_ERR_INVALID_ARG) {
             return status::StatusCode::InvalidArg;
@@ -67,8 +70,8 @@ MasterTransceiver::receive(uint8_t* buf, size_t size, system::Time timeout) {
     const auto err = i2c_master_receive(device_.get(), buf, size,
                                         timeout / system::Duration::millisecond);
     if (err != ESP_OK) {
-        ocs_loge(log_tag, "i2c_master_receive() failed: id=%s err=%s", id_.c_str(),
-                 esp_err_to_name(err));
+        ocs_loge(log_tag, "i2c_master_receive() failed: addr=0x%" PRIx16 " err=%s",
+                 address_, esp_err_to_name(err));
 
         if (err == ESP_ERR_INVALID_ARG) {
             return status::StatusCode::InvalidArg;
@@ -95,8 +98,9 @@ status::StatusCode MasterTransceiver::send_receive(const uint8_t* wbuf,
     const auto err = i2c_master_transmit_receive(device_.get(), wbuf, wsize, rbuf, rsize,
                                                  timeout / system::Duration::millisecond);
     if (err != ESP_OK) {
-        ocs_loge(log_tag, "i2c_master_transmit_receive() failed: id=%s err=%s",
-                 id_.c_str(), esp_err_to_name(err));
+        ocs_loge(log_tag,
+                 "i2c_master_transmit_receive() failed: addr=0x%" PRIx16 " err=%s",
+                 address_, esp_err_to_name(err));
 
         if (err == ESP_ERR_INVALID_ARG) {
             return status::StatusCode::InvalidArg;
