@@ -115,6 +115,23 @@ status::StatusCode MasterTransceiver::send_receive(const uint8_t* wbuf,
     return status::StatusCode::OK;
 }
 
+status::StatusCode MasterTransceiver::probe(system::Time timeout) {
+    const auto err =
+        i2c_master_probe(bus_, address_, timeout / system::Duration::millisecond);
+    if (err != ESP_OK) {
+        if (err == ESP_ERR_TIMEOUT) {
+            return status::StatusCode::Timeout;
+        }
+
+        ocs_loge(log_tag, "i2c_master_probe(): addr=0x%" PRIx16 " err=%s", address_,
+                 esp_err_to_name(err));
+
+        return status::StatusCode::Error;
+    }
+
+    return status::StatusCode::OK;
+}
+
 } // namespace i2c
 } // namespace io
 } // namespace ocs

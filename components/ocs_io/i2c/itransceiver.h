@@ -47,6 +47,9 @@ public:
                                             uint8_t* rbuf,
                                             size_t rsize,
                                             system::Time timeout) = 0;
+
+    //! Check if the I2C device is reachable within @p timeout.
+    virtual status::StatusCode probe(system::Time timeout) = 0;
 };
 
 } // namespace i2c
