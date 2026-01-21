@@ -6,12 +6,12 @@
 #pragma once
 
 #include <memory>
-#include <string>
 
 #include "driver/i2c_master.h"
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/i2c/itransceiver.h"
+#include "ocs_io/i2c/types.h"
 
 namespace ocs {
 namespace io {
@@ -25,9 +25,10 @@ public:
     //! Initialize
     //!
     //! @params
+    //!  - @p bus - I2C bus.
     //!  - @p device - I2C device.
-    //!  - @p id to distinguish one transceiver from another.
-    MasterTransceiver(DevicePtr device, const char* id);
+    //!  - @p address - I2C device address.
+    MasterTransceiver(i2c_master_bus_handle_t bus, DevicePtr device, Address address);
 
     //! Send data to the I2C device.
     status::StatusCode
@@ -45,8 +46,9 @@ public:
                                     system::Time timeout) override;
 
 private:
-    const std::string id_;
+    const Address address_ { 0 };
 
+    i2c_master_bus_handle_t bus_ { nullptr };
     DevicePtr device_;
 };
 

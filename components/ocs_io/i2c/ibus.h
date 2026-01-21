@@ -31,12 +31,10 @@ public:
     //! Add device to the bus.
     //!
     //! @params
-    //!  - @p id - to distinguish one I2C device from another.
     //!  - @p len - I2C device address length.
     //!  - @p addr - actual I2C device address.
     //!  - @p speed - how fast data will be transmitted over I2C bus.
-    virtual ITransceiverPtr
-    add(const char* id, AddressLength len, Address addr, TransferSpeed speed) = 0;
+    virtual ITransceiverPtr add(AddressLength len, Address addr, TransferSpeed speed) = 0;
 };
 
 } // namespace i2c

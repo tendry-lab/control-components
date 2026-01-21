@@ -55,7 +55,6 @@ public:
 
 private:
     const std::string storage_id_;
-    const std::string transceiver_id_;
     const std::string task_id_;
 
     storage::StorageBuilder::IStoragePtr storage_;

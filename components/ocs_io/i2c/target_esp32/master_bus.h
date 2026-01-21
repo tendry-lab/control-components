@@ -39,8 +39,7 @@ public:
     ~MasterBus();
 
     //! Add I2C device to the bus.
-    ITransceiverPtr
-    add(const char* id, AddressLength len, Address addr, TransferSpeed speed) override;
+    ITransceiverPtr add(AddressLength len, Address addr, TransferSpeed speed) override;
 
 private:
     i2c_master_bus_handle_t handle_ { nullptr };

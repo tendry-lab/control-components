@@ -90,7 +90,7 @@ void perform_verification(const VerificationConfig& verification_config) {
     configASSERT(bus);
 
     io::i2c::IBus::ITransceiverPtr sensor_transceiver =
-        bus->add("sht4x", io::i2c::AddressLength::Bit_7, verification_config.i2c_addr,
+        bus->add(io::i2c::AddressLength::Bit_7, verification_config.i2c_addr,
                  verification_config.i2c_transfer_speed);
     configASSERT(sensor_transceiver);
 

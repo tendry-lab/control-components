@@ -38,7 +38,7 @@ MasterBus::MasterBus(MasterBus::Params params) {
 }
 
 IBus::ITransceiverPtr
-MasterBus::add(const char* id, AddressLength len, Address addr, TransferSpeed speed) {
+MasterBus::add(AddressLength len, Address addr, TransferSpeed speed) {
     i2c_device_config_t config;
     memset(&config, 0, sizeof(config));
 
@@ -65,8 +65,8 @@ MasterBus::add(const char* id, AddressLength len, Address addr, TransferSpeed sp
 
     auto err = i2c_master_bus_add_device(handle_, &config, &device);
     if (err != ESP_OK) {
-        ocs_loge(log_tag, "i2c_master_bus_add_device() failed: id=%s err=%s", id,
-                 esp_err_to_name(err));
+        ocs_loge(log_tag, "i2c_master_bus_add_device() failed: addr=0x%" PRIx16 " err=%s",
+                 addr, esp_err_to_name(err));
 
         return nullptr;
     }
@@ -74,7 +74,8 @@ MasterBus::add(const char* id, AddressLength len, Address addr, TransferSpeed sp
     auto device_ptr = MasterTransceiver::make_device_shared(device);
     configASSERT(device_ptr);
 
-    return IBus::ITransceiverPtr(new (std::nothrow) MasterTransceiver(device_ptr, id));
+    return IBus::ITransceiverPtr(new (std::nothrow)
+                                     MasterTransceiver(handle_, device_ptr, addr));
 }
 
 MasterBus::~MasterBus() {
