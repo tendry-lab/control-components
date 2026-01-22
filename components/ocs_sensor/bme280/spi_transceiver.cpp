@@ -29,7 +29,7 @@ SpiTransceiver::send(const uint8_t* buf, size_t size, RegisterAddress addr) {
 
     for (size_t n = 0; n < send_buf_size;) {
         //! Set the MSB bit to 0 to indicate a write command.
-        const uint8_t control_byte = addr & algo::BitOps::umask_u32(7);
+        const uint8_t control_byte = addr & algo::BitOps::umask_u8(7);
         const uint8_t data_byte = buf[pos];
 
         send_buf[n++] = control_byte;
@@ -49,7 +49,7 @@ SpiTransceiver::receive(uint8_t* buf, size_t size, RegisterAddress addr) {
     memset(send_buf, 0, sizeof(send_buf));
 
     //! Set the MSB bit to 1 to indicate a read command.
-    send_buf[0] = addr | algo::BitOps::mask_u32(7);
+    send_buf[0] = addr | algo::BitOps::mask_u8(7);
 
     uint8_t recv_buf[size + 1];
     memset(recv_buf, 0, sizeof(recv_buf));

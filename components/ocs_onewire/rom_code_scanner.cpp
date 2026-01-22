@@ -74,9 +74,9 @@ status::StatusCode RomCodeScanner::scan_(uint8_t* buf, size_t size) {
         const size_t bit_pos = n % bits_in_byte_;
 
         if (bit) {
-            buf[byte_pos] |= algo::BitOps::mask_u32(bit_pos);
+            buf[byte_pos] |= algo::BitOps::mask_u8(bit_pos);
         } else {
-            buf[byte_pos] &= algo::BitOps::umask_u32(bit_pos);
+            buf[byte_pos] &= algo::BitOps::umask_u8(bit_pos);
         }
 
         OCS_STATUS_RETURN_ON_ERROR(bus_.write_bit(bit));
