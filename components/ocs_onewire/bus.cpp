@@ -112,9 +112,9 @@ status::StatusCode Bus::read_byte(uint8_t& byte) {
         OCS_STATUS_RETURN_ON_ERROR(read_bit(bit));
 
         if (bit) {
-            byte |= algo::BitOps::mask(n);
+            byte |= algo::BitOps::mask_u32(n);
         } else {
-            byte &= algo::BitOps::umask(n);
+            byte &= algo::BitOps::umask_u32(n);
         }
     }
 
