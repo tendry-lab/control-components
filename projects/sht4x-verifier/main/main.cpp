@@ -50,7 +50,7 @@ void configure_power_gpio(io::gpio::GpioNum gpio_num) {
     config.intr_type = GPIO_INTR_DISABLE;
     config.mode = GPIO_MODE_OUTPUT;
 
-    config.pin_bit_mask = algo::BitOps::mask(gpio_num);
+    config.pin_bit_mask = algo::BitOps::mask_u32(gpio_num);
 
     config.pull_down_en = GPIO_PULLDOWN_ENABLE;
     config.pull_up_en = GPIO_PULLUP_DISABLE;

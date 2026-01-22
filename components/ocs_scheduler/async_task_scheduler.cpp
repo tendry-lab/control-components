@@ -43,7 +43,7 @@ AsyncTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
         }
     }
 
-    const EventBits_t event = algo::BitOps::mask(nodes_.size());
+    const EventBits_t event = algo::BitOps::mask_u32(nodes_.size());
 
     NodePtr node(new (std::nothrow) Node(task, event_group_.get(), event, interval, id));
     configASSERT(node);
