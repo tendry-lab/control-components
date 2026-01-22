@@ -8,6 +8,14 @@
 namespace ocs {
 namespace algo {
 
+uint64_t BitOps::mask_u64(uint8_t pos) {
+    return (1ULL << pos);
+}
+
+uint64_t BitOps::umask_u64(uint8_t pos) {
+    return ~(mask_u64(pos));
+}
+
 uint32_t BitOps::mask_u32(uint8_t pos) {
     return (1UL << pos);
 }
@@ -22,6 +30,10 @@ uint8_t BitOps::mask_u8(uint8_t pos) {
 
 uint8_t BitOps::umask_u8(uint8_t pos) {
     return ~(mask_u8(pos));
+}
+
+uint8_t BitOps::nth_u64(uint64_t value, uint8_t pos) {
+    return mask_u64(pos) & value ? 1 : 0;
 }
 
 uint8_t BitOps::nth_u32(uint32_t value, uint8_t pos) {
