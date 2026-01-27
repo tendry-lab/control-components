@@ -15,6 +15,7 @@ idf_component_register(
     "operation_guard.cpp"
     "file_stream_reader.cpp"
     "stream_transceiver.cpp"
+    "byte_writer.cpp"
 
     REQUIRES
     "json"
