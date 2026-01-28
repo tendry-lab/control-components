@@ -67,5 +67,28 @@ TEST_CASE("Byte writer: write array: by parts", "[ocs_core], [byte_writer]") {
     TEST_ASSERT_TRUE(memcmp(want_buf, writer.get_data(), sizeof(want_buf)) == 0);
 }
 
+TEST_CASE("Byte writer: reserve space: in range", "[ocs_core], [byte_writer]") {
+    uint8_t write_buf[2];
+    memset(write_buf, 7, sizeof(write_buf));
+
+    ByteWriter writer(write_buf, sizeof(write_buf));
+
+    TEST_ASSERT_EQUAL(1, writer.reserve(1));
+    TEST_ASSERT_TRUE(writer.write(static_cast<uint8_t>(2)));
+    TEST_ASSERT_FALSE(writer.write(static_cast<uint8_t>(2)));
+    TEST_ASSERT_EQUAL(7, write_buf[0]);
+    TEST_ASSERT_EQUAL(2, write_buf[1]);
+}
+
+TEST_CASE("Byte writer: reserve space: no space left", "[ocs_core], [byte_writer]") {
+    uint8_t write_buf[2];
+    memset(write_buf, 7, sizeof(write_buf));
+
+    ByteWriter writer(write_buf, sizeof(write_buf));
+
+    TEST_ASSERT_EQUAL(writer.get_cap(), writer.reserve(writer.get_cap() + 1));
+    TEST_ASSERT_EQUAL(0, writer.reserve(1));
+}
+
 } // namespace core
 } // namespace ocs
