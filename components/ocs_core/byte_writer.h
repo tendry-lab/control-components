@@ -33,6 +33,12 @@ public:
     //! Write @p size bytes of @p data.
     size_t write(const uint8_t* data, size_t size);
 
+    //! Reserve space for @p size bytes.
+    //!
+    //! @return
+    //!  Number of reserved bytes.
+    size_t reserve(size_t size);
+
     //! Write any integer value.
     template <typename T> bool write(const T& t) {
         static_assert(std::is_integral<T>::value, "require integral type");
