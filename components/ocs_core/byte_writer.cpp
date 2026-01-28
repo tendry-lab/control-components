@@ -39,6 +39,14 @@ size_t ByteWriter::write(const uint8_t* data, size_t size) {
     return ret;
 }
 
+bool ByteWriter::write_byte(uint8_t data) {
+    return write(data);
+}
+
+bool ByteWriter::write_word(uint16_t data) {
+    return write(data);
+}
+
 size_t ByteWriter::reserve(size_t size) {
     const size_t ret = std::min(size, left_());
     offset_ += ret;

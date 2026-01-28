@@ -33,6 +33,12 @@ public:
     //! Write @p size bytes of @p data.
     size_t write(const uint8_t* data, size_t size);
 
+    //! Write single byte.
+    bool write_byte(uint8_t data);
+
+    //! Write single word.
+    bool write_word(uint16_t data);
+
     //! Reserve space for @p size bytes.
     //!
     //! @return
