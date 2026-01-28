@@ -7,6 +7,7 @@ idf_component_register(
     "test_rate_limiter.cpp"
     "test_stream_transceiver.cpp"
     "test_byte_writer.cpp"
+    "test_byte_reader.cpp"
 
     REQUIRES
     "unity"
