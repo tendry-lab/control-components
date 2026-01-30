@@ -90,5 +90,43 @@ TEST_CASE("Byte writer: reserve space: no space left", "[ocs_core], [byte_writer
     TEST_ASSERT_EQUAL(0, writer.reserve(1));
 }
 
+TEST_CASE("Byte writer: find byte: in range", "[ocs_core], [byte_writer]") {
+    uint8_t write_buf[6];
+    memset(write_buf, 0, sizeof(write_buf));
+
+    ByteWriter writer(write_buf, sizeof(write_buf));
+
+    TEST_ASSERT_TRUE(writer.write_byte(0xAA));
+    TEST_ASSERT_TRUE(writer.write_byte(0x55));
+    TEST_ASSERT_TRUE(writer.write_byte(0xAD));
+    TEST_ASSERT_TRUE(writer.write_byte(0xFE));
+    TEST_ASSERT_TRUE(writer.write_byte(0x5A));
+    TEST_ASSERT_TRUE(writer.write_byte(0xA5));
+
+    TEST_ASSERT_EQUAL(4, writer.find(0x5A));
+    TEST_ASSERT_EQUAL(-1, writer.find(0x0A));
+}
+
+TEST_CASE("Byte writer: find byte: out of range", "[ocs_core], [byte_writer]") {
+    uint8_t write_buf[6];
+    memset(write_buf, 0, sizeof(write_buf));
+
+    write_buf[sizeof(write_buf) - 1] = 0xAA;
+
+    ByteWriter writer(write_buf, sizeof(write_buf));
+
+    TEST_ASSERT_TRUE(writer.write_byte(0x55));
+    TEST_ASSERT_TRUE(writer.write_byte(0xAD));
+    TEST_ASSERT_TRUE(writer.write_byte(0xFE));
+    TEST_ASSERT_TRUE(writer.write_byte(0x5A));
+    TEST_ASSERT_TRUE(writer.write_byte(0xA5));
+
+    TEST_ASSERT_EQUAL(4, writer.find(0xA5));
+    TEST_ASSERT_EQUAL(-1, writer.find(0xAA));
+
+    TEST_ASSERT_TRUE(writer.write_byte(0xAA));
+    TEST_ASSERT_EQUAL(5, writer.find(0xAA));
+}
+
 } // namespace core
 } // namespace ocs
