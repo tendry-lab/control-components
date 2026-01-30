@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <sys/types.h>
 #include <type_traits>
 
 #include "ocs_core/noncopyable.h"
@@ -44,6 +45,9 @@ public:
     //! @return
     //!  Number of reserved bytes.
     size_t reserve(size_t size);
+
+    //! Find the position of the byte.
+    ssize_t find(uint8_t data);
 
     //! Write any integer value.
     template <typename T> bool write(const T& t) {

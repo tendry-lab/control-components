@@ -54,6 +54,16 @@ size_t ByteWriter::reserve(size_t size) {
     return ret;
 }
 
+ssize_t ByteWriter::find(uint8_t data) {
+    for (size_t n = 0; n < get_len(); ++n) {
+        if (data_[n] == data) {
+            return n;
+        }
+    }
+
+    return -1;
+}
+
 size_t ByteWriter::left_() const {
     return size_ - offset_;
 }
