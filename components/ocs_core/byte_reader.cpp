@@ -25,7 +25,7 @@ size_t ByteReader::get_cap() const {
 }
 
 const uint8_t* ByteReader::get_data() const {
-    return data_ + offset_;
+    return get_len() ? data_ + offset_ : nullptr;
 }
 
 size_t ByteReader::read(uint8_t* data, size_t size) {
