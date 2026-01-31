@@ -24,6 +24,16 @@ size_t ByteWriter::get_cap() const {
     return size_;
 }
 
+ssize_t ByteWriter::find(uint8_t data) const {
+    for (size_t n = 0; n < get_len(); ++n) {
+        if (data_[n] == data) {
+            return n;
+        }
+    }
+
+    return -1;
+}
+
 uint8_t* ByteWriter::get_data() {
     return data_;
 }
@@ -49,16 +59,6 @@ bool ByteWriter::write_word(uint16_t data) {
 
 void ByteWriter::resize(size_t size) {
     offset_ = std::min(size_, size);
-}
-
-ssize_t ByteWriter::find(uint8_t data) {
-    for (size_t n = 0; n < get_len(); ++n) {
-        if (data_[n] == data) {
-            return n;
-        }
-    }
-
-    return -1;
 }
 
 size_t ByteWriter::left_() const {

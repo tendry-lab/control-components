@@ -28,6 +28,9 @@ public:
     //! Return the size of the underlying array of bytes.
     size_t get_cap() const;
 
+    //! Find the position of the byte.
+    ssize_t find(uint8_t data) const;
+
     //! Return the underlying data.
     uint8_t* get_data();
 
@@ -42,9 +45,6 @@ public:
 
     //! Change number of written bytes.
     void resize(size_t size);
-
-    //! Find the position of the byte.
-    ssize_t find(uint8_t data);
 
     //! Write any integer value.
     template <typename T> bool write(const T& t) {
