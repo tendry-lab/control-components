@@ -47,11 +47,8 @@ bool ByteWriter::write_word(uint16_t data) {
     return write(data);
 }
 
-size_t ByteWriter::reserve(size_t size) {
-    const size_t ret = std::min(size, left_());
-    offset_ += ret;
-
-    return ret;
+void ByteWriter::resize(size_t size) {
+    offset_ = std::min(size_, size);
 }
 
 ssize_t ByteWriter::find(uint8_t data) {

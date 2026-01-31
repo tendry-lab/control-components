@@ -40,11 +40,8 @@ public:
     //! Write single word.
     bool write_word(uint16_t data);
 
-    //! Reserve space for @p size bytes.
-    //!
-    //! @return
-    //!  Number of reserved bytes.
-    size_t reserve(size_t size);
+    //! Change number of written bytes.
+    void resize(size_t size);
 
     //! Find the position of the byte.
     ssize_t find(uint8_t data);
