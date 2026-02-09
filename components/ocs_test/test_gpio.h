@@ -19,6 +19,7 @@ public:
              status::StatusCode turn_on_code,
              status::StatusCode turn_off_code);
 
+    io::gpio::GpioNum get_num() const override;
     status::StatusCode get_level(io::gpio::Level& level) override;
     status::StatusCode flip() override;
     status::StatusCode turn_on() override;

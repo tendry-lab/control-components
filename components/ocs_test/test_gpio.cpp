@@ -16,6 +16,10 @@ TestGpio::TestGpio(status::StatusCode flip_code,
     , turn_off_code_(turn_off_code) {
 }
 
+io::gpio::GpioNum TestGpio::get_num() const {
+    return static_cast<io::gpio::GpioNum>(-1);
+}
+
 status::StatusCode TestGpio::get_level(io::gpio::Level& level) {
     level = level_;
 
