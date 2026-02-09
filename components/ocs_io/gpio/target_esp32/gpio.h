@@ -26,6 +26,9 @@ public:
     //! Destroy.
     virtual ~Gpio() = default;
 
+    //! Return GPIO number.
+    GpioNum get_num() const override;
+
     //! Get the GPIO level.
     status::StatusCode get_level(Level& level) override;
 

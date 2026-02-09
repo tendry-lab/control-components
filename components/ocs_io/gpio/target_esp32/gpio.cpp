@@ -23,6 +23,10 @@ Gpio::Gpio(gpio_num_t gpio_num, Level enable_level)
     , enable_level_(enable_level) {
 }
 
+GpioNum Gpio::get_num() const {
+    return gpio_num_;
+}
+
 status::StatusCode Gpio::get_level(Level& level) {
     const int value = gpio_get_level(gpio_num_);
     if (value < 0) {

@@ -19,6 +19,9 @@ public:
     //! Destroy.
     virtual ~IGpio() = default;
 
+    //! Return GPIO number.
+    virtual GpioNum get_num() const = 0;
+
     //! Get the GPIO level.
     virtual status::StatusCode get_level(Level& level) = 0;
 
