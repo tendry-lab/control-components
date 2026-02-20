@@ -5,11 +5,9 @@
 
 #pragma once
 
-#include "driver/gpio.h"
 #include "driver/i2c_master.h"
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_io/gpio/types.h"
 #include "ocs_io/i2c/ibus.h"
 
 namespace ocs {
@@ -18,25 +16,11 @@ namespace i2c {
 
 class MasterBus : public IBus, private core::NonCopyable<> {
 public:
-    struct Params {
-        //! Data line.
-        gpio_num_t sda { GPIO_NUM_NC };
-
-        //! Clock line.
-        gpio_num_t scl { GPIO_NUM_NC };
-
-        //! I2C port.
-        i2c_port_t port { I2C_NUM_0 };
-    };
-
     //! Initialize.
     //!
     //! @params
-    //!  - @p params - various bus settings.
-    explicit MasterBus(Params params);
-
-    //! De-initialize the bus.
-    ~MasterBus();
+    //!  - @p handle - I2C bus handle.
+    explicit MasterBus(i2c_master_bus_handle_t handle);
 
     //! Add I2C device to the bus.
     ITransceiverPtr add(AddressLength len, Address addr, TransferSpeed speed) override;

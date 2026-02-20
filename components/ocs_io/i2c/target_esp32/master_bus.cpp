@@ -24,17 +24,8 @@ const char* log_tag = "i2c_master_bus";
 
 } // namespace
 
-MasterBus::MasterBus(MasterBus::Params params) {
-    i2c_master_bus_config_t config;
-    memset(&config, 0, sizeof(config));
-
-    config.clk_source = I2C_CLK_SRC_DEFAULT;
-    config.i2c_port = params.port;
-    config.sda_io_num = params.sda;
-    config.scl_io_num = params.scl;
-    config.glitch_ignore_cnt = 7;
-
-    ESP_ERROR_CHECK(i2c_new_master_bus(&config, &handle_));
+MasterBus::MasterBus(i2c_master_bus_handle_t handle)
+    : handle_(handle) {
 }
 
 IBus::ITransceiverPtr
@@ -76,10 +67,6 @@ MasterBus::add(AddressLength len, Address addr, TransferSpeed speed) {
 
     return IBus::ITransceiverPtr(new (std::nothrow)
                                      MasterTransceiver(handle_, device_ptr, addr));
-}
-
-MasterBus::~MasterBus() {
-    ESP_ERROR_CHECK(i2c_del_master_bus(handle_));
 }
 
 } // namespace i2c

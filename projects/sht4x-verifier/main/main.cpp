@@ -9,6 +9,7 @@
 
 #include "ocs_algo/bit_ops.h"
 #include "ocs_core/log.h"
+#include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/target_esp32/gpio.h"
 #include "ocs_io/i2c/target_esp32/master_bus.h"
 #include "ocs_sensor/sht4x/sensor.h"
@@ -20,6 +21,20 @@
 using namespace ocs;
 
 namespace {
+
+class I2cHandleDeleter : private core::NonCopyable<> {
+public:
+    explicit I2cHandleDeleter(i2c_master_bus_handle_t handle)
+        : handle_(handle) {
+    }
+
+    ~I2cHandleDeleter() {
+        ESP_ERROR_CHECK(i2c_del_master_bus(handle_));
+    }
+
+private:
+    i2c_master_bus_handle_t handle_ { nullptr };
+};
 
 struct VerificationConfig {
     //! How long to wait for the I2C operation to complete.
@@ -80,14 +95,23 @@ void disable_power(io::gpio::GpioNum gpio_num) {
 }
 
 void perform_verification(const VerificationConfig& verification_config) {
-    std::unique_ptr<io::i2c::IBus> bus(new (
-        std::nothrow) io::i2c::MasterBus(io::i2c::MasterBus::Params {
-        .sda =
-            static_cast<gpio_num_t>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_I2C_MASTER_SDA_GPIO),
-        .scl =
-            static_cast<gpio_num_t>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_I2C_MASTER_SCL_GPIO),
-    }));
-    configASSERT(bus);
+    i2c_master_bus_config_t config;
+    memset(&config, 0, sizeof(config));
+
+    config.clk_source = I2C_CLK_SRC_DEFAULT;
+    config.i2c_port = I2C_NUM_0;
+    config.sda_io_num =
+        static_cast<gpio_num_t>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_I2C_MASTER_SDA_GPIO);
+    config.scl_io_num =
+        static_cast<gpio_num_t>(CONFIG_OCS_TOOL_SHT4x_VERIFIER_I2C_MASTER_SCL_GPIO);
+    config.glitch_ignore_cnt = 7;
+
+    i2c_master_bus_handle_t i2c_handle = nullptr;
+    ESP_ERROR_CHECK(i2c_new_master_bus(&config, &i2c_handle));
+
+    I2cHandleDeleter i2c_handle_deleter(i2c_handle);
+
+    auto bus = std::make_unique<io::i2c::MasterBus>(i2c_handle);
 
     io::i2c::IBus::ITransceiverPtr sensor_transceiver =
         bus->add(io::i2c::AddressLength::Bit_7, verification_config.i2c_addr,
