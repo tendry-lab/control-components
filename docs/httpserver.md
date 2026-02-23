@@ -46,7 +46,7 @@ http "bonsai-firmware.local/api/v1/registration"
 {
     "device_id": "4729289878299275A131A71065E3865F39587987",
     "toolchain_name": "ESP-IDF",
-    "toolchain_version": "v5.2.6",
+    "toolchain_version": "v5.2.1",
     "fw_description": "firmware",
     "fw_name": "firmware",
     "fw_version": "0.0.0",
@@ -65,7 +65,7 @@ http "bonsai-firmware.local/api/v1/registration"
 {
     "device_id": "4729289878299275A131A71065E3865F39587987",
     "toolchain_name": "ESP-IDF",
-    "toolchain_version": "v5.2.6",
+    "toolchain_version": "v5.2.1",
     "fw_description": "firmware",
     "fw_name": "firmware",
     "fw_version": "0.0.0",
