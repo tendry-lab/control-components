@@ -26,6 +26,12 @@ status::StatusCode TestGpio::get_level(io::gpio::Level& level) {
     return status::StatusCode::OK;
 }
 
+status::StatusCode TestGpio::set_level(io::gpio::Level level) {
+    level_ = level;
+
+    return status::StatusCode::OK;
+}
+
 status::StatusCode TestGpio::flip() {
     level_ = !level_;
 

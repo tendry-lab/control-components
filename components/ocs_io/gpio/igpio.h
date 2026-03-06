@@ -25,6 +25,9 @@ public:
     //! Get the GPIO level.
     virtual status::StatusCode get_level(Level& level) = 0;
 
+    //! Set the GPIO level.
+    virtual status::StatusCode set_level(Level level) = 0;
+
     //! Change the GPIO state to the opposite.
     virtual status::StatusCode flip() = 0;
 

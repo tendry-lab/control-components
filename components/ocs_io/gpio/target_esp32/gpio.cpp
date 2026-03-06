@@ -38,6 +38,18 @@ status::StatusCode Gpio::get_level(Level& level) {
     return status::StatusCode::OK;
 }
 
+status::StatusCode Gpio::set_level(Level level) {
+    const auto err = gpio_set_level(gpio_num_, level);
+    if (err != ESP_OK) {
+        ocs_loge(log_tag, "gpio_set_level(%d,%u): %s", gpio_num_, level,
+                 esp_err_to_name(err));
+
+        return status::StatusCode::Error;
+    }
+
+    return status::StatusCode::OK;
+}
+
 status::StatusCode Gpio::flip() {
     Level level = 0;
 
@@ -50,27 +62,11 @@ status::StatusCode Gpio::flip() {
 }
 
 status::StatusCode Gpio::turn_on() {
-    const auto err = gpio_set_level(gpio_num_, enable_level_);
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "gpio_set_level(%d,%u): %s", gpio_num_, enable_level_,
-                 esp_err_to_name(err));
-
-        return status::StatusCode::Error;
-    }
-
-    return status::StatusCode::OK;
+    return set_level(enable_level_);
 }
 
 status::StatusCode Gpio::turn_off() {
-    const auto err = gpio_set_level(gpio_num_, !enable_level_);
-    if (err != ESP_OK) {
-        ocs_loge(log_tag, "gpio_set_level(%d,%u): %s", gpio_num_, enable_level_,
-                 esp_err_to_name(err));
-
-        return status::StatusCode::Error;
-    }
-
-    return status::StatusCode::OK;
+    return set_level(!enable_level_);
 }
 
 status::StatusCode Gpio::set_direction(Direction direction) {
