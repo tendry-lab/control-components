@@ -32,6 +32,9 @@ public:
     //! Get the GPIO level.
     status::StatusCode get_level(Level& level) override;
 
+    //! Set the GPIO level.
+    status::StatusCode set_level(Level level) override;
+
     //! Change GPIO state to opposite.
     status::StatusCode flip() override;
 
