@@ -91,6 +91,7 @@ jobs:
         uses: ./project/ci-components/.github/actions/system/ccache
         with:
           CONFIGURATION_PATH_CCACHE: ${{ env.CONFIGURATION_PATH_CCACHE }}
+          CCACHE_KEY: ccache-${{ runner.os }}-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ matrix.project.project_name }}-${{ matrix.target }}
 
       - name: format firmware build version
         id: version_formatter
