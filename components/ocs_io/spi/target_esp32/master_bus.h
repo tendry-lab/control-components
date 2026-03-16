@@ -30,6 +30,9 @@ public:
 
         //! SPI peripheral ID.
         HostID host_id { 0 };
+
+        //! SPI DMA settings.
+        spi_common_dma_t dma { SPI_DMA_DISABLED };
     };
 
     //! Initialize SPI master bus.
