@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "driver/gpio.h"
+
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/types.h"
 #include "ocs_io/spi/ibus.h"
@@ -17,13 +19,13 @@ class MasterBus : public IBus, private core::NonCopyable<> {
 public:
     struct Params {
         //! MOSI line.
-        gpio::GpioNum mosi { static_cast<io::gpio::GpioNum>(-1) };
+        gpio_num_t mosi { GPIO_NUM_NC };
 
         //! MISO line.
-        gpio::GpioNum miso { static_cast<io::gpio::GpioNum>(-1) };
+        gpio_num_t miso { GPIO_NUM_NC };
 
         //! SCLK line.
-        gpio::GpioNum sclk { static_cast<io::gpio::GpioNum>(-1) };
+        gpio_num_t sclk { GPIO_NUM_NC };
 
         //! Maximum number of bytes transferred over the SPI line in a single transaction.
         int max_transfer_size { 0 };
