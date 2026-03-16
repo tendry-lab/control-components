@@ -39,8 +39,7 @@ public:
     ~MasterBus();
 
     //! Add SPI slave device to the store.
-    IBus::ITransceiverPtr
-    add(const char* id, gpio::GpioNum cs, Mode mode, TransferSpeed speed) override;
+    IBus::ITransceiverPtr add(gpio::GpioNum cs, Mode mode, TransferSpeed speed) override;
 
 private:
     const Params params_;

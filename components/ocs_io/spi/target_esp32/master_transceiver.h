@@ -6,7 +6,6 @@
 #pragma once
 
 #include <memory>
-#include <string>
 
 #include "driver/spi_master.h"
 
@@ -26,8 +25,7 @@ public:
     //!
     //! @params
     //!  - @p device - SPI device.
-    //!  - @p id to distinguish one transceiver from another.
-    MasterTransceiver(DevicePtr device, const char* id);
+    explicit MasterTransceiver(DevicePtr device);
 
     //! Send/receive data over SPI bus.
     status::StatusCode transceive(const uint8_t* send_buf,
@@ -36,8 +34,6 @@ public:
                                   size_t recv_buf_size) override;
 
 private:
-    const std::string id_;
-
     DevicePtr device_;
 };
 
