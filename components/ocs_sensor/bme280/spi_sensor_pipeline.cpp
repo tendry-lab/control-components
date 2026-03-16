@@ -17,7 +17,7 @@ SpiSensorPipeline::SpiSensorPipeline(scheduler::ITaskScheduler& task_scheduler,
                                      SpiSensorPipeline::Params params) {
     configASSERT(params.read_interval);
 
-    spi_transceiver_ = bus.add("bme280", params.cs_gpio, 0, 10 * 1000 * 1000);
+    spi_transceiver_ = bus.add(params.cs_gpio, 0, 10 * 1000 * 1000);
     configASSERT(spi_transceiver_);
 
     register_transceiver_.reset(new (std::nothrow) SpiTransceiver(*spi_transceiver_));

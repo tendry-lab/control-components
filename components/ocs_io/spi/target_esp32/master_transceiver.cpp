@@ -29,9 +29,8 @@ MasterTransceiver::DevicePtr MasterTransceiver::make_device_shared(spi_device_t*
     });
 }
 
-MasterTransceiver::MasterTransceiver(MasterTransceiver::DevicePtr device, const char* id)
-    : id_(id)
-    , device_(device) {
+MasterTransceiver::MasterTransceiver(MasterTransceiver::DevicePtr device)
+    : device_(device) {
 }
 
 status::StatusCode MasterTransceiver::transceive(const uint8_t* send_buf,
@@ -48,8 +47,7 @@ status::StatusCode MasterTransceiver::transceive(const uint8_t* send_buf,
 
     const auto err = spi_device_transmit(device_.get(), &transaction);
     if (err != ESP_OK) {
-        ocs_loge(log_tag, "spi_device_transmit() failed: id=%s err=%s", id_.c_str(),
-                 esp_err_to_name(err));
+        ocs_loge(log_tag, "spi_device_transmit() failed: err=%s", esp_err_to_name(err));
 
         return status::StatusCode::Error;
     }

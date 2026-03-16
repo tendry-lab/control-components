@@ -39,9 +39,7 @@ MasterBus::MasterBus(MasterBus::Params params)
                                        &config, SPI_DMA_DISABLED));
 }
 
-IBus::ITransceiverPtr
-MasterBus::add(const char* id, gpio::GpioNum cs, Mode mode, TransferSpeed speed) {
-    configASSERT(id);
+IBus::ITransceiverPtr MasterBus::add(gpio::GpioNum cs, Mode mode, TransferSpeed speed) {
     configASSERT(cs != static_cast<io::gpio::GpioNum>(-1));
     configASSERT(speed > 0);
 
@@ -58,7 +56,7 @@ MasterBus::add(const char* id, gpio::GpioNum cs, Mode mode, TransferSpeed speed)
     auto err = spi_bus_add_device(static_cast<spi_host_device_t>(params_.host_id),
                                   &config, &device);
     if (err != ESP_OK) {
-        ocs_loge(log_tag, "spi_bus_add_device() failed: id=%s err=%s", id,
+        ocs_loge(log_tag, "spi_bus_add_device() failed: cs=%d err=%s", cs,
                  esp_err_to_name(err));
 
         return nullptr;
@@ -67,7 +65,7 @@ MasterBus::add(const char* id, gpio::GpioNum cs, Mode mode, TransferSpeed speed)
     auto device_ptr = MasterTransceiver::make_device_shared(device);
     configASSERT(device_ptr);
 
-    return IBus::ITransceiverPtr(new (std::nothrow) MasterTransceiver(device_ptr, id));
+    return IBus::ITransceiverPtr(new (std::nothrow) MasterTransceiver(device_ptr));
 }
 
 MasterBus::~MasterBus() {
