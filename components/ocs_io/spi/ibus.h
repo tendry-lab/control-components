@@ -15,13 +15,13 @@ namespace ocs {
 namespace io {
 namespace spi {
 
-class IStore {
+class IBus {
 public:
     //! SPI transceiver to communicate with SPI device.
     using ITransceiverPtr = std::unique_ptr<ITransceiver>;
 
     //! Destroy.
-    virtual ~IStore() = default;
+    virtual ~IBus() = default;
 
     //! Register a new SPI device.
     //!

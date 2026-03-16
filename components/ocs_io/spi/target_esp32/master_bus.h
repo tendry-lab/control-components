@@ -7,13 +7,13 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/types.h"
-#include "ocs_io/spi/istore.h"
+#include "ocs_io/spi/ibus.h"
 
 namespace ocs {
 namespace io {
 namespace spi {
 
-class MasterStore : public IStore, private core::NonCopyable<> {
+class MasterBus : public IBus, private core::NonCopyable<> {
 public:
     struct Params {
         //! MOSI line.
@@ -33,13 +33,13 @@ public:
     };
 
     //! Initialize SPI master bus.
-    explicit MasterStore(Params params);
+    explicit MasterBus(Params params);
 
     //! De-initialize SPI master bus.
-    ~MasterStore();
+    ~MasterBus();
 
     //! Add SPI slave device to the store.
-    IStore::ITransceiverPtr
+    IBus::ITransceiverPtr
     add(const char* id, gpio::GpioNum cs, Mode mode, TransferSpeed speed) override;
 
 private:
