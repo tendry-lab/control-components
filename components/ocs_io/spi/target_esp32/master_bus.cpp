@@ -36,7 +36,7 @@ MasterBus::MasterBus(MasterBus::Params params)
     config.max_transfer_sz = params_.max_transfer_size;
 
     ESP_ERROR_CHECK(spi_bus_initialize(static_cast<spi_host_device_t>(params_.host_id),
-                                       &config, SPI_DMA_DISABLED));
+                                       &config, params.dma));
 }
 
 IBus::ITransceiverPtr MasterBus::add(gpio::GpioNum cs, Mode mode, TransferSpeed speed) {
