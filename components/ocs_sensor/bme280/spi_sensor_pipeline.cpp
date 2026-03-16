@@ -13,11 +13,11 @@ namespace sensor {
 namespace bme280 {
 
 SpiSensorPipeline::SpiSensorPipeline(scheduler::ITaskScheduler& task_scheduler,
-                                     io::spi::IStore& store,
+                                     io::spi::IBus& bus,
                                      SpiSensorPipeline::Params params) {
     configASSERT(params.read_interval);
 
-    spi_transceiver_ = store.add("bme280", params.cs_gpio, 0, 10 * 1000 * 1000);
+    spi_transceiver_ = bus.add("bme280", params.cs_gpio, 0, 10 * 1000 * 1000);
     configASSERT(spi_transceiver_);
 
     register_transceiver_.reset(new (std::nothrow) SpiTransceiver(*spi_transceiver_));

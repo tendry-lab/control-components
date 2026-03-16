@@ -7,7 +7,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/types.h"
-#include "ocs_io/spi/istore.h"
+#include "ocs_io/spi/ibus.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_sensor/bme280/itransceiver.h"
 #include "ocs_sensor/bme280/sensor.h"
@@ -29,16 +29,16 @@ public:
     //!
     //! @params
     //!  - @p task_scheduler to register a task for periodic sensor reading.
-    //!  - @p store to register a new SPI device.
+    //!  - @p bus to register a new SPI device.
     SpiSensorPipeline(scheduler::ITaskScheduler& task_scheduler,
-                      io::spi::IStore& store,
+                      io::spi::IBus& bus,
                       Params params);
 
     //! Return the underlying sensor.
     Sensor& get_sensor();
 
 private:
-    io::spi::IStore::ITransceiverPtr spi_transceiver_;
+    io::spi::IBus::ITransceiverPtr spi_transceiver_;
     std::unique_ptr<ITransceiver> register_transceiver_;
     std::unique_ptr<Sensor> sensor_;
 };

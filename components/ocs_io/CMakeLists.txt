@@ -4,7 +4,7 @@ set(COMPONENT_SRCS
     "adc/target_esp32/oneshot_reader.cpp"
     "adc/target_esp32/oneshot_store.cpp"
     "adc/target_esp32/basic_converter.cpp"
-    "spi/target_esp32/master_store.cpp"
+    "spi/target_esp32/master_bus.cpp"
     "spi/target_esp32/master_transceiver.cpp"
     "i2c/target_esp32/master_bus.cpp"
     "i2c/target_esp32/master_transceiver.cpp"

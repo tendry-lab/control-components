@@ -8,7 +8,7 @@
 #include "freertos/FreeRTOSConfig.h"
 
 #include "ocs_core/log.h"
-#include "ocs_io/spi/target_esp32/master_store.h"
+#include "ocs_io/spi/target_esp32/master_bus.h"
 #include "ocs_io/spi/target_esp32/master_transceiver.h"
 
 namespace ocs {
@@ -17,11 +17,11 @@ namespace spi {
 
 namespace {
 
-const char* log_tag = "spi_master_store";
+const char* log_tag = "spi_master_bus";
 
 } // namespace
 
-MasterStore::MasterStore(MasterStore::Params params)
+MasterBus::MasterBus(MasterBus::Params params)
     : params_(params) {
     configASSERT(params.max_transfer_size);
 
@@ -39,8 +39,8 @@ MasterStore::MasterStore(MasterStore::Params params)
                                        &config, SPI_DMA_DISABLED));
 }
 
-IStore::ITransceiverPtr
-MasterStore::add(const char* id, gpio::GpioNum cs, Mode mode, TransferSpeed speed) {
+IBus::ITransceiverPtr
+MasterBus::add(const char* id, gpio::GpioNum cs, Mode mode, TransferSpeed speed) {
     configASSERT(id);
     configASSERT(cs != static_cast<io::gpio::GpioNum>(-1));
     configASSERT(speed > 0);
@@ -67,10 +67,10 @@ MasterStore::add(const char* id, gpio::GpioNum cs, Mode mode, TransferSpeed spee
     auto device_ptr = MasterTransceiver::make_device_shared(device);
     configASSERT(device_ptr);
 
-    return IStore::ITransceiverPtr(new (std::nothrow) MasterTransceiver(device_ptr, id));
+    return IBus::ITransceiverPtr(new (std::nothrow) MasterTransceiver(device_ptr, id));
 }
 
-MasterStore::~MasterStore() {
+MasterBus::~MasterBus() {
     ESP_ERROR_CHECK(spi_bus_free(static_cast<spi_host_device_t>(params_.host_id)));
 }
 
