@@ -5,6 +5,8 @@
 
 #include <cstring>
 
+#include "freertos/FreeRTOSConfig.h"
+
 #include "ocs_core/log.h"
 #include "ocs_io/spi/target_esp32/master_transceiver.h"
 
@@ -44,6 +46,11 @@ status::StatusCode MasterTransceiver::transceive(const uint8_t* send_buf,
     transaction.length = send_buf_size * 8;
     transaction.rx_buffer = recv_buf;
     transaction.rxlength = recv_buf_size * 8;
+
+    if (!transaction.length) {
+        configASSERT(!transaction.tx_buffer);
+        transaction.length = transaction.rxlength;
+    }
 
     const auto err = spi_device_transmit(device_.get(), &transaction);
     if (err != ESP_OK) {

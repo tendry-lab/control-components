@@ -21,6 +21,9 @@ public:
     //! @params
     //!  - @p send_buf - sending data, should be at least @p send_buf_size bytes long.
     //!  - @p recv_buf - receiving data, should be at least @p recv_buf_size bytes long.
+    //!
+    //! @remarks
+    //!  - @p send_buf can be nullptr when there is no MOSI phase.
     virtual status::StatusCode transceive(const uint8_t* send_buf,
                                           size_t send_buf_size,
                                           uint8_t* recv_buf,
