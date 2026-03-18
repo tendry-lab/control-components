@@ -34,6 +34,7 @@ MasterBus::MasterBus(MasterBus::Params params)
     config.quadwp_io_num = -1;
     config.quadhd_io_num = -1;
     config.max_transfer_sz = params_.max_transfer_size;
+    config.isr_cpu_id = params.isr_cpu_id;
 
     ESP_ERROR_CHECK(spi_bus_initialize(static_cast<spi_host_device_t>(params_.host_id),
                                        &config, params.dma));

@@ -35,6 +35,9 @@ public:
 
         //! SPI DMA settings.
         spi_common_dma_t dma { SPI_DMA_DISABLED };
+
+        //! Select the CPU core to register SPI ISR.
+        esp_intr_cpu_affinity_t isr_cpu_id { ESP_INTR_CPU_AFFINITY_0 };
     };
 
     //! Initialize SPI master bus.
