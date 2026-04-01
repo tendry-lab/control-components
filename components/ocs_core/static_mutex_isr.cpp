@@ -4,7 +4,6 @@
  */
 
 #include "ocs_core/static_mutex_isr.h"
-#include "ocs_status/macros.h"
 
 namespace ocs {
 namespace core {
@@ -12,23 +11,23 @@ namespace core {
 status::StatusCode StaticMutexIsr::lock(TickType_t) {
     BaseType_t high_task_woken = pdFALSE;
 
-    OCS_STATUS_RETURN_ON_FALSE(xSemaphoreTakeFromISR(sem_, &high_task_woken) == pdTRUE,
-                               status::StatusCode::Error);
+    if (xSemaphoreTakeFromISR(sem_, &high_task_woken) == pdFALSE) {
+        return status::StatusCode::Error;
+    }
 
-    OCS_STATUS_RETURN_ON_FALSE(high_task_woken == pdTRUE, status::StatusCode::OK);
-
-    return status::StatusCode::IsrYield;
+    return high_task_woken == pdTRUE ? ocs::status::StatusCode::IsrYield
+                                     : ocs::status::StatusCode::OK;
 }
 
 status::StatusCode StaticMutexIsr::unlock() {
     BaseType_t high_task_woken = pdFALSE;
 
-    OCS_STATUS_RETURN_ON_FALSE(xSemaphoreGiveFromISR(sem_, &high_task_woken) == pdTRUE,
-                               status::StatusCode::Error);
+    if (xSemaphoreGiveFromISR(sem_, &high_task_woken) == errQUEUE_FULL) {
+        return status::StatusCode::Error;
+    }
 
-    OCS_STATUS_RETURN_ON_FALSE(high_task_woken == pdTRUE, status::StatusCode::OK);
-
-    return status::StatusCode::IsrYield;
+    return high_task_woken == pdTRUE ? ocs::status::StatusCode::IsrYield
+                                     : ocs::status::StatusCode::OK;
 }
 
 } // namespace core
