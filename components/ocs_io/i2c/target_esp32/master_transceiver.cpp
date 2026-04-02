@@ -38,12 +38,15 @@ MasterTransceiver::MasterTransceiver(i2c_master_bus_handle_t bus,
 
 status::StatusCode
 MasterTransceiver::send(const uint8_t* buf, size_t size, system::Time timeout) {
-    if (timeout > 0 && timeout < system::Duration::millisecond) {
-        return status::StatusCode::InvalidArg;
+    if (timeout > 0) {
+        if (timeout < system::Duration::millisecond) {
+            return status::StatusCode::InvalidArg;
+        }
+
+        timeout /= system::Duration::millisecond;
     }
 
-    const auto err = i2c_master_transmit(device_.get(), buf, size,
-                                         timeout / system::Duration::millisecond);
+    const auto err = i2c_master_transmit(device_.get(), buf, size, timeout);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "i2c_master_transmit() failed: addr=0x%" PRIx16 " err=%s",
                  address_, esp_err_to_name(err));
@@ -63,12 +66,15 @@ MasterTransceiver::send(const uint8_t* buf, size_t size, system::Time timeout) {
 
 status::StatusCode
 MasterTransceiver::receive(uint8_t* buf, size_t size, system::Time timeout) {
-    if (timeout > 0 && timeout < system::Duration::millisecond) {
-        return status::StatusCode::InvalidArg;
+    if (timeout > 0) {
+        if (timeout < system::Duration::millisecond) {
+            return status::StatusCode::InvalidArg;
+        }
+
+        timeout /= system::Duration::millisecond;
     }
 
-    const auto err = i2c_master_receive(device_.get(), buf, size,
-                                        timeout / system::Duration::millisecond);
+    const auto err = i2c_master_receive(device_.get(), buf, size, timeout);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "i2c_master_receive() failed: addr=0x%" PRIx16 " err=%s",
                  address_, esp_err_to_name(err));
@@ -91,12 +97,16 @@ status::StatusCode MasterTransceiver::send_receive(const uint8_t* wbuf,
                                                    uint8_t* rbuf,
                                                    size_t rsize,
                                                    system::Time timeout) {
-    if (timeout > 0 && timeout < system::Duration::millisecond) {
-        return status::StatusCode::InvalidArg;
+    if (timeout > 0) {
+        if (timeout < system::Duration::millisecond) {
+            return status::StatusCode::InvalidArg;
+        }
+
+        timeout /= system::Duration::millisecond;
     }
 
-    const auto err = i2c_master_transmit_receive(device_.get(), wbuf, wsize, rbuf, rsize,
-                                                 timeout / system::Duration::millisecond);
+    const auto err =
+        i2c_master_transmit_receive(device_.get(), wbuf, wsize, rbuf, rsize, timeout);
     if (err != ESP_OK) {
         ocs_loge(log_tag,
                  "i2c_master_transmit_receive() failed: addr=0x%" PRIx16 " err=%s",
@@ -116,8 +126,15 @@ status::StatusCode MasterTransceiver::send_receive(const uint8_t* wbuf,
 }
 
 status::StatusCode MasterTransceiver::probe(system::Time timeout) {
-    const auto err =
-        i2c_master_probe(bus_, address_, timeout / system::Duration::millisecond);
+    if (timeout > 0) {
+        if (timeout < system::Duration::millisecond) {
+            return status::StatusCode::InvalidArg;
+        }
+
+        timeout /= system::Duration::millisecond;
+    }
+
+    const auto err = i2c_master_probe(bus_, address_, timeout);
     if (err != ESP_OK) {
         if (err == ESP_ERR_TIMEOUT) {
             return status::StatusCode::Timeout;
