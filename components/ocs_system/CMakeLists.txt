@@ -25,6 +25,7 @@ idf_component_register(
     "target_esp32/cache_updater.cpp"
     "target_esp32/spiffs_updater.cpp"
     "target_esp32/update_committer.cpp"
+    "target_esp32/heap_caps_arena.cpp"
 
     REQUIRES
     "esp_timer"
