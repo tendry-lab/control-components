@@ -3,8 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "ocs_io/i2c/target_esp32/master_transceiver.h"
+#include "freertos/FreeRTOSConfig.h"
+
 #include "ocs_core/log.h"
+#include "ocs_io/i2c/target_esp32/master_transceiver.h"
 
 namespace ocs {
 namespace io {
@@ -18,12 +20,12 @@ const char* log_tag = "i2c_master_transceiver";
 
 MasterTransceiver::Ptr
 MasterTransceiver::make_device_ptr(i2c_master_dev_handle_t handle) {
+    configASSERT(handle);
+
     return Ptr(handle, [](i2c_master_dev_handle_t h) {
-        if (h) {
-            const auto err = i2c_master_bus_rm_device(h);
-            if (err != ESP_OK) {
-                ocs_loge(log_tag, "i2c_master_bus_rm_device() %s", esp_err_to_name(err));
-            }
+        const auto err = i2c_master_bus_rm_device(h);
+        if (err != ESP_OK) {
+            ocs_loge(log_tag, "i2c_master_bus_rm_device() %s", esp_err_to_name(err));
         }
     });
 }
