@@ -62,7 +62,7 @@ MasterBus::add(AddressLength len, Address addr, TransferSpeed speed) {
         return nullptr;
     }
 
-    auto device_ptr = MasterTransceiver::make_device_shared(device);
+    auto device_ptr = MasterTransceiver::make_device_ptr(device);
     configASSERT(device_ptr);
 
     return IBus::ITransceiverPtr(new (std::nothrow)

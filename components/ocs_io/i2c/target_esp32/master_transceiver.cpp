@@ -16,9 +16,9 @@ const char* log_tag = "i2c_master_transceiver";
 
 } // namespace
 
-MasterTransceiver::DevicePtr
-MasterTransceiver::make_device_shared(i2c_master_dev_handle_t device) {
-    return MasterTransceiver::DevicePtr(device, [](i2c_master_dev_handle_t device) {
+MasterTransceiver::Ptr
+MasterTransceiver::make_device_ptr(i2c_master_dev_handle_t device) {
+    return MasterTransceiver::Ptr(device, [](i2c_master_dev_handle_t device) {
         if (device) {
             const auto err = i2c_master_bus_rm_device(device);
             if (err != ESP_OK) {
@@ -29,11 +29,11 @@ MasterTransceiver::make_device_shared(i2c_master_dev_handle_t device) {
 }
 
 MasterTransceiver::MasterTransceiver(i2c_master_bus_handle_t bus,
-                                     DevicePtr device,
+                                     Ptr device,
                                      Address address)
     : address_(address)
     , bus_(bus)
-    , device_(device) {
+    , ptr_(device) {
 }
 
 status::StatusCode
@@ -46,7 +46,7 @@ MasterTransceiver::send(const uint8_t* buf, size_t size, system::Time timeout) {
         timeout /= system::Duration::millisecond;
     }
 
-    const auto err = i2c_master_transmit(device_.get(), buf, size, timeout);
+    const auto err = i2c_master_transmit(ptr_.get(), buf, size, timeout);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "i2c_master_transmit() failed: addr=0x%" PRIx16 " err=%s",
                  address_, esp_err_to_name(err));
@@ -74,7 +74,7 @@ MasterTransceiver::receive(uint8_t* buf, size_t size, system::Time timeout) {
         timeout /= system::Duration::millisecond;
     }
 
-    const auto err = i2c_master_receive(device_.get(), buf, size, timeout);
+    const auto err = i2c_master_receive(ptr_.get(), buf, size, timeout);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "i2c_master_receive() failed: addr=0x%" PRIx16 " err=%s",
                  address_, esp_err_to_name(err));
@@ -106,7 +106,7 @@ status::StatusCode MasterTransceiver::send_receive(const uint8_t* wbuf,
     }
 
     const auto err =
-        i2c_master_transmit_receive(device_.get(), wbuf, wsize, rbuf, rsize, timeout);
+        i2c_master_transmit_receive(ptr_.get(), wbuf, wsize, rbuf, rsize, timeout);
     if (err != ESP_OK) {
         ocs_loge(log_tag,
                  "i2c_master_transmit_receive() failed: addr=0x%" PRIx16 " err=%s",
