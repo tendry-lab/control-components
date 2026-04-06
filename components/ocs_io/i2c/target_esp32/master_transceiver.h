@@ -20,15 +20,15 @@ namespace i2c {
 class MasterTransceiver : public ITransceiver, private core::NonCopyable<> {
 public:
     using Ptr = std::shared_ptr<std::remove_pointer<i2c_master_dev_handle_t>::type>;
-    static Ptr make_device_ptr(i2c_master_dev_handle_t device);
+    static Ptr make_device_ptr(i2c_master_dev_handle_t handle);
 
     //! Initialize
     //!
     //! @params
     //!  - @p bus - I2C bus.
-    //!  - @p device - I2C device.
+    //!  - @p ptr - RAII for the I2C device handle.
     //!  - @p address - I2C device address.
-    MasterTransceiver(i2c_master_bus_handle_t bus, Ptr device, Address address);
+    MasterTransceiver(i2c_master_bus_handle_t bus, Ptr ptr, Address address);
 
     //! Send data to the I2C device.
     status::StatusCode

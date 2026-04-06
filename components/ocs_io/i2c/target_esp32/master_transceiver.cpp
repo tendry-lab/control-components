@@ -17,10 +17,10 @@ const char* log_tag = "i2c_master_transceiver";
 } // namespace
 
 MasterTransceiver::Ptr
-MasterTransceiver::make_device_ptr(i2c_master_dev_handle_t device) {
-    return MasterTransceiver::Ptr(device, [](i2c_master_dev_handle_t device) {
-        if (device) {
-            const auto err = i2c_master_bus_rm_device(device);
+MasterTransceiver::make_device_ptr(i2c_master_dev_handle_t handle) {
+    return Ptr(handle, [](i2c_master_dev_handle_t h) {
+        if (h) {
+            const auto err = i2c_master_bus_rm_device(h);
             if (err != ESP_OK) {
                 ocs_loge(log_tag, "i2c_master_bus_rm_device() %s", esp_err_to_name(err));
             }
@@ -29,11 +29,11 @@ MasterTransceiver::make_device_ptr(i2c_master_dev_handle_t device) {
 }
 
 MasterTransceiver::MasterTransceiver(i2c_master_bus_handle_t bus,
-                                     Ptr device,
+                                     Ptr ptr,
                                      Address address)
     : address_(address)
     , bus_(bus)
-    , ptr_(device) {
+    , ptr_(ptr) {
 }
 
 status::StatusCode
