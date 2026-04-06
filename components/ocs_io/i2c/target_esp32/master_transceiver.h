@@ -19,8 +19,8 @@ namespace i2c {
 
 class MasterTransceiver : public ITransceiver, private core::NonCopyable<> {
 public:
-    using Ptr = std::shared_ptr<i2c_master_dev_t>;
-    static Ptr make_device_ptr(i2c_master_dev_t* device);
+    using Ptr = std::shared_ptr<std::remove_pointer<i2c_master_dev_handle_t>::type>;
+    static Ptr make_device_ptr(i2c_master_dev_handle_t device);
 
     //! Initialize
     //!
