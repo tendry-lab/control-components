@@ -167,7 +167,7 @@ void AnalogSensor::override_status_progress_(AnalogSensor::Data& data) {
     double progress = 0;
 
     if (current_status != SoilStatus::Error) {
-        static constexpr double moisture_per_status =
+        constexpr double moisture_per_status =
             static_cast<double>(100) / get_status_count();
 
         const double moisture_used =
