@@ -78,7 +78,7 @@ void enable_power(io::gpio::GpioNum gpio_num) {
 
     configASSERT(power_gpio.turn_on() == status::StatusCode::OK);
 
-    static constexpr TickType_t stabilization_interval = pdMS_TO_TICKS(200);
+    constexpr TickType_t stabilization_interval = pdMS_TO_TICKS(200);
 
     ocs_logi(log_tag, "power stabilization: wait for %lu(ms)",
              pdTICKS_TO_MS(stabilization_interval));
