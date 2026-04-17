@@ -32,9 +32,6 @@ public:
         //! performance degradation. If the frequent sensor readings are needed it's
         //! better to disable the sensor reading protection.
         system::Time read_interval { 0 };
-
-        //! Disable sensor reading protection.
-        bool disable_operation_guard { false };
     };
 
     //! Initialize.
@@ -57,8 +54,6 @@ private:
     const std::string task_id_;
 
     std::unique_ptr<Sensor> sensor_;
-    std::unique_ptr<scheduler::ITask> guard_task_;
-    scheduler::ITask* sensor_task_ { nullptr };
 };
 
 } // namespace ds18b20
