@@ -47,7 +47,7 @@
 
 ## Release 0.1.0
 
-**New Features**
+### New Features
 
 - Add analog soil sensor
 - Add analog relay soil sensor
@@ -66,6 +66,6 @@
 - Add mDNS server
 - Add GitHub CI actions
 
-**Toolchain**
+### Toolchain
 
 - ESP-IDF version: [v5.3.1](https://github.com/espressif/esp-idf/releases/tag/v5.3.1)
