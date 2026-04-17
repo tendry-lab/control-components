@@ -10,7 +10,6 @@ idf_component_register(
     "version_to_str.cpp"
     "future.cpp"
     "rate_limiter.cpp"
-    "operation_guard.cpp"
     "file_stream_reader.cpp"
     "stream_transceiver.cpp"
     "byte_writer.cpp"

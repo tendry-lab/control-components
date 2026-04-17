@@ -8,7 +8,6 @@
 
 #include "ocs_algo/response_ops.h"
 #include "ocs_algo/uri_ops.h"
-#include "ocs_core/operation_guard.h"
 #include "ocs_fmt/json/cjson_array_formatter.h"
 #include "ocs_fmt/json/cjson_object_formatter.h"
 #include "ocs_fmt/json/dynamic_formatter.h"
@@ -224,7 +223,6 @@ status::StatusCode DS18B20Handler::scan_rom_code_(cJSON* json, onewire::Bus& bus
     fmt::json::CjsonArrayFormatter formatter(array);
 
     system::SuspenderGuard suspender_guard(suspender_);
-    core::OperationGuard operation_guard;
 
     return scan_rom_codes(formatter, bus);
 }
@@ -457,8 +455,6 @@ status::StatusCode
 DS18B20Handler::find_rom_code_(onewire::Bus& bus,
                                sensor::ds18b20::Sensor::Configuration& configuration) {
     system::SuspenderGuard suspender_guard(suspender_);
-
-    core::OperationGuard operation_guard;
 
     return find_rom_code(bus, configuration);
 }
