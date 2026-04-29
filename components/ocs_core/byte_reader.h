@@ -40,6 +40,12 @@ public:
     //!  Number of read bytes or 0 if no bytes left.
     size_t read(uint8_t* data, size_t size);
 
+    //! Discard @p size bytes.
+    //!
+    //! @return
+    //!  Number of discarded bytes.
+    size_t discard(size_t size);
+
     //! Read any integral value.
     template <typename T> bool read(T& t) {
         static_assert(std::is_integral<T>::value, "require integer type");
