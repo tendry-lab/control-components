@@ -36,7 +36,7 @@ public:
 
     //! Read @p size bytes to @p data buffer.
     //!
-    //! @returns
+    //! @return
     //!  Number of read bytes or 0 if no bytes left.
     size_t read(uint8_t* data, size_t size);
 
