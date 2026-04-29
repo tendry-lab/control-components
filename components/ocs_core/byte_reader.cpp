@@ -39,5 +39,14 @@ size_t ByteReader::read(uint8_t* data, size_t size) {
     return ret;
 }
 
+size_t ByteReader::discard(size_t size) {
+    const auto ret = std::min(size, get_len());
+    if (ret) {
+        offset_ += ret;
+    }
+
+    return ret;
+}
+
 } // namespace core
 } // namespace ocs
