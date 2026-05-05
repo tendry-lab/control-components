@@ -16,6 +16,9 @@ namespace core {
 
 class ByteReader : private core::NonCopyable<> {
 public:
+    //! Empty byte reader.
+    ByteReader() = default;
+
     //! Initialize.
     //!
     //! @remarks
