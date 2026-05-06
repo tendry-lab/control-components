@@ -29,8 +29,8 @@ class Sensor : public scheduler::ITask, private core::NonCopyable<> {
 public:
     //! Various sensor characteristics.
     struct Data {
-        double humidity { 0.0 };
-        double temperature { 0.0 };
+        float humidity { 0.0 };
+        float temperature { 0.0 };
         uint32_t heating_count { 0 };
     };
 
