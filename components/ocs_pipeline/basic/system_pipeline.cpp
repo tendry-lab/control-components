@@ -71,9 +71,6 @@ SystemPipeline::SystemPipeline(SystemPipeline::Params params) {
         CONFIG_OCS_CORE_FW_DESCRIPTION, CONFIG_OCS_CORE_PRODUCT_NAME,
         CONFIG_OCS_CORE_COMPANY_UUID));
     configASSERT(device_info_);
-
-    fsr_handler_.reset(new (std::nothrow) control::ConfigFsrHandler());
-    configASSERT(fsr_handler_);
 }
 
 status::StatusCode SystemPipeline::start() {
@@ -116,10 +113,6 @@ system::FanoutRebootHandler& SystemPipeline::get_reboot_handler() {
 
 const system::DeviceInfo& SystemPipeline::get_device_info() const {
     return *device_info_;
-}
-
-control::ConfigFsrHandler& SystemPipeline::get_fsr_handler() {
-    return *fsr_handler_;
 }
 
 } // namespace basic
