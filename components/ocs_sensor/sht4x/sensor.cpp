@@ -281,7 +281,7 @@ status::StatusCode Sensor::receive_data_(Sensor::Data& data) {
 
     data.humidity = -6 + (125.0 * humidity_ticks / UINT16_MAX);
     data.humidity = algo::MathOps::round_floor(data.humidity, 2);
-    data.humidity = std::clamp(data.humidity, 0.0, 100.0);
+    data.humidity = std::clamp(data.humidity, 0.0f, 100.0f);
 
     return status::StatusCode::OK;
 }
