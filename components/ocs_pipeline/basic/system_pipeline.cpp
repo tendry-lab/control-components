@@ -73,16 +73,6 @@ SystemPipeline::SystemPipeline(SystemPipeline::Params params) {
     configASSERT(device_info_);
 }
 
-status::StatusCode SystemPipeline::start() {
-    configASSERT(task_scheduler_->start() == status::StatusCode::OK);
-
-    while (true) {
-        configASSERT(task_scheduler_->run() == status::StatusCode::OK);
-    }
-
-    return status::StatusCode::OK;
-}
-
 system::IClock& SystemPipeline::get_clock() {
     return *clock_;
 }

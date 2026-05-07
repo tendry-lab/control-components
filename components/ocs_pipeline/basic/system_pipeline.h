@@ -36,12 +36,6 @@ public:
     //! Initialize.
     explicit SystemPipeline(Params params);
 
-    //! Start the pipeline.
-    //!
-    //! @remarks
-    //!  Blocking call.
-    status::StatusCode start();
-
     const system::DeviceInfo& get_device_info() const;
 
     system::IClock& get_clock();
