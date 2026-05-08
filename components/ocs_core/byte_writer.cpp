@@ -34,6 +34,10 @@ ssize_t ByteWriter::find(uint8_t data) const {
     return -1;
 }
 
+const uint8_t* ByteWriter::get_data() const {
+    return data_;
+}
+
 uint8_t* ByteWriter::get_data() {
     return data_;
 }

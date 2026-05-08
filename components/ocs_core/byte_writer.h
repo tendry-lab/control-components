@@ -31,6 +31,9 @@ public:
     //! Find the position of the byte.
     ssize_t find(uint8_t data) const;
 
+    //! Return the const underlying data.
+    const uint8_t* get_data() const;
+
     //! Return the underlying data.
     uint8_t* get_data();
 
