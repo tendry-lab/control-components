@@ -8,7 +8,7 @@
 namespace ocs {
 namespace system {
 
-DelayRebooter::DelayRebooter(TickType_t delay, IRebooter& rebooter)
+DelayRebooter::DelayRebooter(IRebooter& rebooter, TickType_t delay)
     : delay_(delay)
     , rebooter_(rebooter) {
 }

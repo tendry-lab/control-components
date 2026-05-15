@@ -19,9 +19,9 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p delay to wait before the actual reboot is happened.
     //!  - @p rebooter to perform the actual reboot.
-    DelayRebooter(TickType_t delay, IRebooter& rebooter);
+    //!  - @p delay to wait before the actual reboot is happened.
+    DelayRebooter(IRebooter& rebooter, TickType_t delay);
 
     //! Wait extra delay and then reboot.
     void reboot() override;
