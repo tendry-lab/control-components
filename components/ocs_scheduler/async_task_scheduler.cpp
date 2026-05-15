@@ -12,7 +12,6 @@
 #include "ocs_scheduler/async_task.h"
 #include "ocs_scheduler/async_task_scheduler.h"
 #include "ocs_status/code_to_str.h"
-#include "ocs_system/platform_builder.h"
 
 namespace ocs {
 namespace scheduler {
@@ -45,10 +44,8 @@ AsyncTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
 
     const EventBits_t event = algo::BitOps::mask_u32(nodes_.size());
 
-    NodePtr node(new (std::nothrow) Node(task, event_group_.get(), event, interval, id));
-    configASSERT(node);
-
-    nodes_.emplace_back(node);
+    nodes_.emplace_back(
+        std::make_shared<Node>(task, event_group_.get(), event, interval, id));
 
     bits_all_ |= event;
 
@@ -131,7 +128,7 @@ AsyncTaskScheduler::Node::Node(ITask& task,
     : id_(id)
     , event_(event)
     , task_(task) {
-    async_task_.reset(new (std::nothrow) AsyncTask(even_group, event));
+    async_task_ = std::make_unique<AsyncTask>(even_group, event);
     configASSERT(async_task_);
 
     timer_ =

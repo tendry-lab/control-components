@@ -14,6 +14,7 @@
 #include "ocs_scheduler/idelay_estimator.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_system/itimer.h"
+#include "ocs_system/platform_builder.h"
 
 namespace ocs {
 namespace scheduler {
@@ -79,10 +80,8 @@ private:
         ITask& task_;
 
         std::unique_ptr<ITask> async_task_;
-        std::unique_ptr<system::ITimer> timer_;
+        system::PlatformBuilder::ITimerPtr timer_;
     };
-
-    using NodePtr = std::shared_ptr<Node>;
 
     void run_(EventBits_t bits);
 
@@ -90,7 +89,7 @@ private:
 
     IDelayEstimator& estimator_;
 
-    std::vector<NodePtr> nodes_;
+    std::vector<std::shared_ptr<Node>> nodes_;
 
     core::StaticEventGroup event_group_;
     EventBits_t bits_all_ { 0 };
