@@ -25,7 +25,7 @@ SystemPipeline::SystemPipeline() {
     rebooter_ = default_rebooter_.get();
 
     delay_rebooter_ =
-        std::make_unique<system::DelayRebooter>(pdMS_TO_TICKS(500), *rebooter_);
+        std::make_unique<system::DelayRebooter>(*rebooter_, pdMS_TO_TICKS(500));
 
     rebooter_ = delay_rebooter_.get();
 
