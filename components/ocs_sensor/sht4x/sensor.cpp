@@ -12,6 +12,7 @@
 #include "ocs_algo/crc_ops.h"
 #include "ocs_algo/math_ops.h"
 #include "ocs_core/log.h"
+#include "ocs_sensor/sht4x/command_to_str.h"
 #include "ocs_sensor/sht4x/sensor.h"
 #include "ocs_sensor/sht4x/serial_number_to_str.h"
 #include "ocs_status/code_to_str.h"
@@ -38,12 +39,6 @@ Sensor::Sensor(io::i2c::ITransceiver& transceiver,
     , log_tag_(id)
     , transceiver_(transceiver)
     , storage_(storage) {
-    configASSERT(params_.i2c_delay_interval);
-    configASSERT(params_.i2c_wait_timeout);
-
-    heating_delay_ = estimate_heating_delay_(params.heating_command);
-    configASSERT(heating_delay_);
-
     if (const auto code = read_heating_count_(); code != status::StatusCode::OK) {
         ocs_loge(log_tag_.c_str(),
                  "failed to read sensor heating count from storage: code=%s",
@@ -51,90 +46,34 @@ Sensor::Sensor(io::i2c::ITransceiver& transceiver,
     }
 }
 
-status::StatusCode Sensor::run() {
-    if (!initialized_) {
-        OCS_STATUS_RETURN_ON_ERROR(initialize_());
-    }
-
-    OCS_STATUS_RETURN_ON_ERROR(send_command_(params_.measure_command));
-
-    Data data;
-    data.heating_count = heating_count_;
-
-    OCS_STATUS_RETURN_ON_ERROR(receive_data_(data));
-
-    data_.set(data);
-
-    return status::StatusCode::OK;
+ISensor::MeasureData Sensor::get_measure_data() const {
+    return measure_data_.get();
 }
 
-Sensor::Data Sensor::get_data() const {
-    return data_.get();
+ISensor::HeaterData Sensor::get_heater_data() const {
+    return heater_data_.get();
 }
 
-status::StatusCode Sensor::reset() {
-    ocs_logi(log_tag_.c_str(), "start resetting");
-
-    const auto code = reset_();
-    if (code != status::StatusCode::OK) {
-        ocs_loge(log_tag_.c_str(), "reset failed: %s", status::code_to_str(code));
-    } else {
-        ocs_logi(log_tag_.c_str(), "reset completed");
-    }
-
-    return code;
-}
-
-status::StatusCode Sensor::heat() {
-    ocs_logi(log_tag_.c_str(), "start heating");
-
-    const auto code = heat_();
-    if (code != status::StatusCode::OK) {
-        ocs_loge(log_tag_.c_str(), "heating failed: %s", status::code_to_str(code));
-    } else {
-        ocs_logi(log_tag_.c_str(), "heating completed");
-    }
-
-    return code;
-}
-
-const char* Sensor::command_to_str_(Sensor::Command command) {
+status::StatusCode Sensor::perform(ISensor::Command command) {
     switch (command) {
     case Command::MeasureHighPrecision:
-        return "measure_high_precision";
-
     case Command::MeasureMediumPrecision:
-        return "measure_medium_precision";
-
     case Command::MeasureLowPrecision:
-        return "measure_low_precision";
-
-    case Command::ReadSerialNumber:
-        return "read_serial_number";
+        return perform_measure_(command);
 
     case Command::SoftReset:
-        return "soft_reset";
+        return perform_reset_();
 
     case Command::ActivateHeater_200mW_1000ms:
-        return "activate_heater_200mW_1000ms";
-
     case Command::ActivateHeater_200mW_100ms:
-        return "activate_heater_200mW_100ms";
-
     case Command::ActivateHeater_110mW_1000ms:
-        return "activate_heater_110mW_1000ms";
-
     case Command::ActivateHeater_110mW_100ms:
-        return "activate_heater_110mW_100ms";
-
     case Command::ActivateHeater_20mW_1000ms:
-        return "activate_heater_20mW_1000ms";
-
     case Command::ActivateHeater_20mW_100ms:
-        return "activate_heater_20mW_100ms";
+        return perform_heat_(command);
     }
 
-    return "<none>";
+    configASSERT(false);
 }
 
 TickType_t Sensor::estimate_heating_delay_(Command command) {
@@ -164,91 +103,68 @@ TickType_t Sensor::estimate_heating_delay_(Command command) {
     return 0;
 }
 
-status::StatusCode Sensor::initialize_() {
-    const auto code = read_serial_number_();
+status::StatusCode Sensor::perform_measure_(ISensor::Command command) {
+    OCS_STATUS_RETURN_ON_ERROR(send_command_(command));
+
+    MeasureData data;
+    OCS_STATUS_RETURN_ON_ERROR(receive_data_(data));
+
+    measure_data_.set(data);
+
+    return status::StatusCode::OK;
+}
+
+status::StatusCode Sensor::perform_reset_() {
+    ocs_logi(log_tag_.c_str(), "start resetting");
+
+    const auto code = send_command_(Command::SoftReset);
     if (code != status::StatusCode::OK) {
-        ocs_loge(log_tag_.c_str(), "failed to read sensor serial number: code=%s",
-                 status::code_to_str(code));
+        ocs_loge(log_tag_.c_str(), "reset failed: %s", status::code_to_str(code));
+    } else {
+        ocs_logi(log_tag_.c_str(), "reset completed");
+    }
+
+    return code;
+}
+
+status::StatusCode Sensor::perform_heat_(ISensor::Command command) {
+    ocs_logi(log_tag_.c_str(), "start heating");
+
+    if (const auto code = send_command_(command); code != ocs::status::StatusCode::OK) {
+        ocs_loge(log_tag_.c_str(), "heating failed: unable to send command: %s",
+                 command_to_str(command));
 
         return code;
     }
 
-    ocs_logi(log_tag_.c_str(),
-             "initialized: serial_number=%s measure_command=%s "
-             "heating_command=%s heating_delay=%lu(ms) heating_count=%lu",
-             serial_number_to_str(serial_number_).c_str(),
-             command_to_str_(params_.measure_command),
-             command_to_str_(params_.heating_command), pdTICKS_TO_MS(heating_delay_),
-             heating_count_);
+    const auto heating_delay = estimate_heating_delay_(command);
+    configASSERT(heating_delay);
 
-    initialized_ = true;
+    vTaskDelay(heating_delay);
 
-    return status::StatusCode::OK;
-}
-
-status::StatusCode Sensor::reset_() {
-    OCS_STATUS_RETURN_ON_ERROR(send_command_(Command::SoftReset));
-
-    return status::StatusCode::OK;
-}
-
-status::StatusCode Sensor::heat_() {
-    OCS_STATUS_RETURN_ON_ERROR(send_command_(params_.heating_command));
-
-    vTaskDelay(heating_delay_);
-
-    Data data;
+    MeasureData data;
     OCS_STATUS_RETURN_ON_ERROR(receive_data_(data));
 
+    measure_data_.set(data);
+
     ++heating_count_;
-    data.heating_count = heating_count_;
 
     if (const auto code = write_heating_count_(); code != status::StatusCode::OK) {
         ocs_logw(log_tag_.c_str(), "failed to persist sensor heating count: %s",
                  status::code_to_str(code));
     }
 
-    data_.set(data);
+    HeaterData heater_data;
+    heater_data.heating_count = heating_count_;
+
+    heater_data_.set(heater_data);
+
+    ocs_logi(log_tag_.c_str(), "heating completed");
 
     return status::StatusCode::OK;
 }
 
-status::StatusCode Sensor::read_serial_number_() {
-    OCS_STATUS_RETURN_ON_ERROR(send_command_(Command::ReadSerialNumber));
-
-    uint8_t buf[6];
-    memset(buf, 0, sizeof(buf));
-    OCS_STATUS_RETURN_ON_ERROR(
-        transceiver_.receive(buf, sizeof(buf), params_.i2c_wait_timeout));
-
-    const uint8_t hi_checksum = buf[2];
-    const uint8_t hi_checksum_calculated = calculate_crc(buf[0], buf[1]);
-    if (hi_checksum != hi_checksum_calculated) {
-        ocs_logw(
-            log_tag_.c_str(),
-            "failed to read serial number: invalid CRC for `hi` word: want=%u got=%u",
-            hi_checksum, hi_checksum_calculated);
-
-        return status::StatusCode::InvalidState;
-    }
-
-    const uint8_t lo_checksum = buf[5];
-    const uint8_t lo_checksum_calculated = calculate_crc(buf[3], buf[4]);
-    if (lo_checksum != lo_checksum_calculated) {
-        ocs_logw(
-            log_tag_.c_str(),
-            "failed to read serial number: invalid CRC for `lo` word: want=%u got=%u",
-            lo_checksum, lo_checksum_calculated);
-
-        return status::StatusCode::InvalidState;
-    }
-
-    memcpy(serial_number_, buf, sizeof(serial_number_));
-
-    return status::StatusCode::OK;
-}
-
-status::StatusCode Sensor::receive_data_(Sensor::Data& data) {
+status::StatusCode Sensor::receive_data_(Sensor::MeasureData& data) {
     uint8_t buf[6];
     memset(buf, 0, sizeof(buf));
     OCS_STATUS_RETURN_ON_ERROR(

@@ -12,8 +12,10 @@ namespace pipeline {
 namespace httpserver {
 
 SHT4xHandler::SHT4xHandler(scheduler::AsyncFuncScheduler& func_scheduler,
-                           sensor::sht4x::Sensor& sensor)
-    : func_scheduler_(func_scheduler)
+                           sensor::sht4x::ISensor& sensor,
+                           sensor::sht4x::ISensor::Command heater_command)
+    : heater_command_(heater_command)
+    , func_scheduler_(func_scheduler)
     , sensor_(sensor) {
 }
 
@@ -21,13 +23,13 @@ status::StatusCode SHT4xHandler::serve_http(http::IResponseWriter& w, http::IReq
     const auto path = algo::UriOps::parse_path(r.get_uri());
 
     if (path.find("reset") != std::string_view::npos) {
-        return handle_operation_(w, [](sensor::sht4x::Sensor& sensor) {
-            return sensor.reset();
+        return handle_operation_(w, [](sensor::sht4x::ISensor& sensor) {
+            return sensor.perform(sensor::sht4x::ISensor::Command::SoftReset);
         });
     }
     if (path.find("heat") != std::string_view::npos) {
-        return handle_operation_(w, [](sensor::sht4x::Sensor& sensor) {
-            return sensor.heat();
+        return handle_operation_(w, [this](sensor::sht4x::ISensor& sensor) {
+            return sensor.perform(heater_command_);
         });
     }
 

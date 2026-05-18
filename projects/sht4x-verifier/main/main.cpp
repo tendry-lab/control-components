@@ -126,26 +126,25 @@ void perform_verification(const VerificationConfig& verification_config) {
 
     auto storage = storage_builder->make("sensor_sht4x");
 
-    std::unique_ptr<sensor::sht4x::Sensor> sensor(
-        new (std::nothrow) sensor::sht4x::Sensor(
+    std::unique_ptr<sensor::sht4x::Sensor> sensor =
+        std::make_unique<sensor::sht4x::Sensor>(
             *sensor_transceiver, *storage, "sht4x",
             sensor::sht4x::Sensor::Params {
                 .i2c_delay_interval = verification_config.i2c_delay_interval,
                 .i2c_wait_timeout = verification_config.i2c_wait_timeout,
-                .measure_command = sensor::sht4x::Sensor::Command::MeasureHighPrecision,
-            }));
-    configASSERT(sensor);
+            });
 
     size_t failed_attempts = 0;
 
     for (size_t n = 0; n < verification_config.total_attempts; ++n) {
-        const auto code = sensor->run();
+        const auto code =
+            sensor->perform(sensor::sht4x::ISensor::Command::MeasureHighPrecision);
         if (code != status::StatusCode::OK) {
             ++failed_attempts;
             continue;
         }
 
-        const auto data = sensor->get_data();
+        const auto data = sensor->get_measure_data();
 
         ocs_logi(log_tag, "temperature=%.2f humidity=%.2f", data.temperature,
                  data.humidity);
