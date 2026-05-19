@@ -26,8 +26,11 @@ public:
     //! Stop per-pin GPIO events handling.
     status::StatusCode stop() override;
 
-    //! Add ISR handler for the GPIO events.
-    status::StatusCode add(GpioNum gpio_num, scheduler::IEventHandler& handler) override;
+    //! Add task for the GPIO events.
+    //!
+    //! @remarks
+    //!  @p task should be ISR safe.
+    status::StatusCode add(scheduler::ITask& task, GpioNum gpio_num) override;
 
 private:
     static void handle_isr_(void* arg);

@@ -40,9 +40,8 @@ status::StatusCode IsrEventService::stop() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode IsrEventService::add(GpioNum gpio_num,
-                                        scheduler::IEventHandler& handler) {
-    const auto err = gpio_isr_handler_add(gpio_num, handle_isr_, &handler);
+status::StatusCode IsrEventService::add(scheduler::ITask& task, GpioNum gpio_num) {
+    const auto err = gpio_isr_handler_add(gpio_num, handle_isr_, &task);
     if (err != ESP_OK) {
         ocs_loge(log_tag, "gpio_isr_handler_add(): %s", esp_err_to_name(err));
 
@@ -53,8 +52,8 @@ status::StatusCode IsrEventService::add(GpioNum gpio_num,
 }
 
 void IsrEventService::handle_isr_(void* arg) {
-    scheduler::IEventHandler& handler = *static_cast<scheduler::IEventHandler*>(arg);
-    handler.handle_event();
+    scheduler::ITask& task = *static_cast<scheduler::ITask*>(arg);
+    task.run();
 }
 
 } // namespace gpio
