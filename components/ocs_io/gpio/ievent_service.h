@@ -7,7 +7,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/types.h"
-#include "ocs_scheduler/ievent_handler.h"
+#include "ocs_scheduler/itask.h"
 #include "ocs_status/code.h"
 
 namespace ocs {
@@ -25,15 +25,12 @@ public:
     //! Stop handling per-pin GPIO events.
     virtual status::StatusCode stop() = 0;
 
-    //! Add handler for GPIO state changes.
+    //! Add task to be run when the GPIO state changes.
     //!
     //! @params
+    //!  - @p task - task to be called when the GPIO state changes.
     //!  - @p gpio_num - GPIO number for which to register the handler.
-    //!  - @p handler - handler to be called when the GPIO state is changed.
-    //!
-    //! @remarks
-    //!  Handler should be ISR safe.
-    virtual status::StatusCode add(GpioNum gpio, scheduler::IEventHandler& handler) = 0;
+    virtual status::StatusCode add(scheduler::ITask& task, GpioNum gpio_num) = 0;
 };
 
 } // namespace gpio
