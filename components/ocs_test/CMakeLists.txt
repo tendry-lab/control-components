@@ -7,6 +7,7 @@ idf_component_register(
     "test_gpio.cpp"
     "memory_storage.cpp"
     "status_storage.cpp"
+    "task_scheduler_runner.cpp"
 
     REQUIRES
     "unity"
