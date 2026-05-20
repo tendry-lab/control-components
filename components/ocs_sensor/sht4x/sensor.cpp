@@ -178,7 +178,7 @@ status::StatusCode Sensor::receive_data_(Sensor::MeasureData& data) {
                  "failed to read temperature: checksum mismatch: want=%u got=%u",
                  temperature_checksum, temperature_checksum_calculated);
 
-        return status::StatusCode::InvalidState;
+        return status::StatusCode::Error;
     }
 
     const uint16_t humidity_ticks = algo::BitOps::pack_u8(buf[3], buf[4]);
@@ -189,7 +189,7 @@ status::StatusCode Sensor::receive_data_(Sensor::MeasureData& data) {
                  "failed to read humidity: checksum mismatch: want=%u got=%u",
                  humidity_checksum, humidity_checksum_calculcated);
 
-        return status::StatusCode::InvalidState;
+        return status::StatusCode::Error;
     }
 
     data.temperature = -45 + (175.0 * temperature_ticks / UINT16_MAX);
