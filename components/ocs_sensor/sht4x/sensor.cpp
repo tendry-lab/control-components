@@ -174,7 +174,7 @@ status::StatusCode Sensor::receive_data_(Sensor::MeasureData& data) {
     const uint8_t temperature_checksum = buf[2];
     const uint8_t temperature_checksum_calculated = calculate_crc(buf[0], buf[1]);
     if (temperature_checksum != temperature_checksum_calculated) {
-        ocs_logw(log_tag_.c_str(),
+        ocs_loge(log_tag_.c_str(),
                  "failed to read temperature: checksum mismatch: want=%u got=%u",
                  temperature_checksum, temperature_checksum_calculated);
 
@@ -185,7 +185,7 @@ status::StatusCode Sensor::receive_data_(Sensor::MeasureData& data) {
     const uint8_t humidity_checksum = buf[5];
     const uint8_t humidity_checksum_calculcated = calculate_crc(buf[3], buf[4]);
     if (humidity_checksum != humidity_checksum_calculcated) {
-        ocs_logw(log_tag_.c_str(),
+        ocs_loge(log_tag_.c_str(),
                  "failed to read humidity: checksum mismatch: want=%u got=%u",
                  humidity_checksum, humidity_checksum_calculcated);
 
