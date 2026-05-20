@@ -14,68 +14,68 @@ namespace ocs {
 namespace net {
 
 #ifdef CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED
-TEST_CASE("WiFi STA: connect to AP: invalid credentials",
-          "[ocs_net], [sta_network| update]") {
-    { // Invalid SSID
-        storage::FlashInitializer flash_initializer;
-        FanoutNetworkHandler handler;
-        test::MemoryStorage storage;
+TEST_CASE("WiFi STA: connect to AP: invalid credentials: invalid SSID",
+          "[ocs_net], [sta_network]") {
+    storage::FlashInitializer flash_initializer;
+    FanoutNetworkHandler handler;
+    test::MemoryStorage storage;
 
-        { // Configure the network first.
-            StaNetworkConfig config(storage);
-            TEST_ASSERT_EQUAL(
-                status::StatusCode::OK,
-                config.configure(1, "foo", CONFIG_OCS_TEST_UNIT_WIFI_STA_PASSWORD));
-        }
-
+    { // Configure the network first.
         StaNetworkConfig config(storage);
-        StaNetwork network(handler, config);
-
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
-        TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, network.stop());
+        TEST_ASSERT_EQUAL(
+            status::StatusCode::OK,
+            config.configure(1, "foo", CONFIG_OCS_TEST_UNIT_WIFI_STA_PASSWORD));
     }
-    { // Invalid password
-        storage::FlashInitializer flash_initializer;
-        FanoutNetworkHandler handler;
-        test::MemoryStorage storage;
 
-        { // Configure the network first.
-            StaNetworkConfig config(storage);
-            TEST_ASSERT_EQUAL(
-                status::StatusCode::OK,
-                config.configure(1, CONFIG_OCS_TEST_UNIT_WIFI_STA_SSID, "12345678"));
-        }
+    StaNetworkConfig config(storage);
+    StaNetwork network(handler, config);
 
-        StaNetworkConfig config(storage);
-        StaNetwork network(handler, config);
-
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
-        TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, network.stop());
-    }
-    { // Invalid SSID and password
-        storage::FlashInitializer flash_initializer;
-        FanoutNetworkHandler handler;
-        test::MemoryStorage storage;
-
-        { // Configure the network first.
-            StaNetworkConfig config(storage);
-            TEST_ASSERT_EQUAL(status::StatusCode::OK,
-                              config.configure(1, "foo", "12345678"));
-        }
-
-        StaNetworkConfig config(storage);
-        StaNetwork network(handler, config);
-
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
-        TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, network.stop());
-    }
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
+    TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, network.stop());
 }
 
-TEST_CASE("WiFi STA: connect to AP: valid credentials",
-          "[ocs_net], [sta_network| update]") {
+TEST_CASE("WiFi STA: connect to AP: invalid credentials: invalid password",
+          "[ocs_net], [sta_network]") {
+    storage::FlashInitializer flash_initializer;
+    FanoutNetworkHandler handler;
+    test::MemoryStorage storage;
+
+    { // Configure the network first.
+        StaNetworkConfig config(storage);
+        TEST_ASSERT_EQUAL(
+            status::StatusCode::OK,
+            config.configure(1, CONFIG_OCS_TEST_UNIT_WIFI_STA_SSID, "12345678"));
+    }
+
+    StaNetworkConfig config(storage);
+    StaNetwork network(handler, config);
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
+    TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, network.stop());
+}
+
+TEST_CASE("WiFi STA: connect to AP: invalid credentials: invalid SSID and password",
+          "[ocs_net], [sta_network]") {
+    storage::FlashInitializer flash_initializer;
+    FanoutNetworkHandler handler;
+    test::MemoryStorage storage;
+
+    { // Configure the network first.
+        StaNetworkConfig config(storage);
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, config.configure(1, "foo", "12345678"));
+    }
+
+    StaNetworkConfig config(storage);
+    StaNetwork network(handler, config);
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, network.start());
+    TEST_ASSERT_EQUAL(status::StatusCode::Error, network.wait());
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, network.stop());
+}
+
+TEST_CASE("WiFi STA: connect to AP: valid credentials", "[ocs_net], [sta_network]") {
     storage::FlashInitializer flash_initializer;
     FanoutNetworkHandler handler;
     test::MemoryStorage storage;
