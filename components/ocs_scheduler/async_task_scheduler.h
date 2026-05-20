@@ -56,9 +56,38 @@ public:
     //! Wait for the asynchronous tasks.
     status::StatusCode run() override;
 
+    //! Return an event group to schedule external asynchronous events.
+    //!
+    //! @remarks
+    //!  Use only for the events allocated by the attach() API.
+    EventGroupHandle_t get_event_group();
+
+    //! Attach an externally clocked task.
+    //!
+    //! @params
+    //!  - @p event to dispatch asynchronous events to the @p task.
+    //!  - @p task - to be called when an asynchronous event happens.
+    //!  - @p id - unique task identifier, to distinguish one task from another.
+    //!
+    //! @remarks
+    //!  The add() API uses an external high-resolution clock to periodically trigger
+    //!  an asynchronous event, while the attach() API is used when an asynchronous
+    //!  event is triggered by an external source.
+    status::StatusCode attach(EventBits_t& event, ITask& task, const char* id);
+
 private:
     class Node : public ITask, private core::NonCopyable<> {
     public:
+        enum class ClockType : uint8_t {
+            //! Node based on the high-resolution timer.
+            Internal,
+
+            //! Externally clocked node.
+            External,
+        };
+
+        Node(ITask& task, EventBits_t event, const char* id, ClockType clock_type);
+
         Node(ITask& task,
              EventGroupHandle_t event_group,
              EventBits_t event,
@@ -69,6 +98,7 @@ private:
 
         const char* id() const;
         EventBits_t event() const;
+        ClockType get_clock_type() const;
 
         status::StatusCode start();
         status::StatusCode stop();
@@ -76,12 +106,15 @@ private:
     private:
         const std::string id_;
         const EventBits_t event_ { 0 };
+        const ClockType clock_type_ { ClockType::Internal };
 
         ITask& task_;
 
         std::unique_ptr<ITask> async_task_;
         system::PlatformBuilder::ITimerPtr timer_;
     };
+
+    status::StatusCode allocate_event_(EventBits_t& event, const char* id);
 
     void run_(EventBits_t bits);
 
