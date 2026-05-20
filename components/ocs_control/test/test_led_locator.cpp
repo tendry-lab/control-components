@@ -16,67 +16,12 @@
 #include "ocs_scheduler/constant_delay_estimator.h"
 #include "ocs_scheduler/periodic_task_scheduler.h"
 #include "ocs_system/time.h"
+#include "ocs_test/task_scheduler_runner.h"
 #include "ocs_test/test_clock.h"
 #include "ocs_test/test_gpio.h"
 
 namespace ocs {
 namespace control {
-
-namespace {
-
-class AsyncTestRunner : private core::NonCopyable<> {
-public:
-    AsyncTestRunner(scheduler::ITaskScheduler& task_scheduler,
-                    const char* id,
-                    size_t stack_size)
-        : id_(id)
-        , stack_size_(stack_size)
-        , task_scheduler_(task_scheduler) {
-    }
-
-    status::StatusCode start() {
-        const auto code = task_scheduler_.start();
-        if (code != status::StatusCode::OK) {
-            return code;
-        }
-
-        const auto ret = xTaskCreate(start_, id_.c_str(), stack_size_, this,
-                                     tskIDLE_PRIORITY + 1, &handle_);
-
-        return ret == pdTRUE ? status::StatusCode::OK : status::StatusCode::Error;
-    }
-
-    ~AsyncTestRunner() {
-        TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler_.stop());
-
-        if (handle_) {
-            vTaskDelete(handle_);
-        }
-    }
-
-private:
-    static void start_(void* arg) {
-        TEST_ASSERT_NOT_NULL(arg);
-
-        AsyncTestRunner& self = *static_cast<AsyncTestRunner*>(arg);
-        self.run_();
-    }
-
-    void run_() {
-        while (true) {
-            task_scheduler_.run();
-        }
-    }
-
-    const std::string id_;
-    const size_t stack_size_ { 0 };
-
-    scheduler::ITaskScheduler& task_scheduler_;
-
-    TaskHandle_t handle_ { nullptr };
-};
-
-} // namespace
 
 TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") {
     test::TestClock clock;
@@ -95,7 +40,8 @@ TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") 
 
     LedLocator locator(task_scheduler, func_scheduler, led);
 
-    AsyncTestRunner runner(task_scheduler, "test", 1024 * 3);
+    test::TaskSchedulerRunner runner(task_scheduler, "test", 1024 * 3,
+                                     tskIDLE_PRIORITY + 1);
     TEST_ASSERT_EQUAL(status::StatusCode::OK, runner.start());
 
     TEST_ASSERT_FALSE(locator.get());
@@ -204,7 +150,8 @@ TEST_CASE("LED locator: disable locating when the LED is locked by another compo
 
     LedLocator locator(task_scheduler, func_scheduler, led);
 
-    AsyncTestRunner runner(task_scheduler, "test", 1024 * 3);
+    test::TaskSchedulerRunner runner(task_scheduler, "test", 1024 * 3,
+                                     tskIDLE_PRIORITY + 1);
     TEST_ASSERT_EQUAL(status::StatusCode::OK, runner.start());
 
     TEST_ASSERT_FALSE(locator.get());
