@@ -8,8 +8,10 @@
 
 #include "unity.h"
 
+#include "ocs_scheduler/async_task.h"
 #include "ocs_scheduler/async_task_scheduler.h"
 #include "ocs_scheduler/constant_delay_estimator.h"
+#include "ocs_test/task_scheduler_runner.h"
 #include "ocs_test/test_task.h"
 
 namespace ocs {
@@ -21,6 +23,14 @@ void wait_task(ITaskScheduler& scheduler, test::TestTask& task) {
     while (true) {
         TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.run());
 
+        if (task.wait(pdMS_TO_TICKS(30)) == status::StatusCode::OK) {
+            break;
+        }
+    }
+}
+
+void wait_task(test::TestTask& task) {
+    while (true) {
         if (task.wait(pdMS_TO_TICKS(30)) == status::StatusCode::OK) {
             break;
         }
@@ -174,6 +184,55 @@ TEST_CASE("Async task scheduler: register tasks overflow",
     TEST_ASSERT_EQUAL(
         status::StatusCode::Error,
         scheduler.add(task, "test_task", system::Duration::millisecond * 10));
+}
+
+TEST_CASE("Async task scheduler: attach task",
+          "[ocs_scheduler], [async_task_scheduler]") {
+    const char* scheduler_id = "test";
+    ConstantDelayEstimator estimator(portMAX_DELAY);
+    AsyncTaskScheduler scheduler(estimator, scheduler_id);
+
+    test::TestTask task(status::StatusCode::OK);
+
+    EventBits_t event = 0;
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.attach(event, task, "test_task"));
+
+    test::TaskSchedulerRunner runner(scheduler, "test", 1024 * 3, tskIDLE_PRIORITY + 1);
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, runner.start());
+
+    TEST_ASSERT_EQUAL(0, task.run_call_count());
+
+    AsyncTask async_task(scheduler.get_event_group(), event);
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, async_task.run());
+
+    wait_task(task);
+}
+
+TEST_CASE("Async task scheduler: add and attach task",
+          "[ocs_scheduler], [async_task_scheduler]") {
+    const char* scheduler_id = "test";
+    ConstantDelayEstimator estimator(portMAX_DELAY);
+    AsyncTaskScheduler scheduler(estimator, scheduler_id);
+
+    test::TestTask add_task(status::StatusCode::OK);
+    test::TestTask attach_task(status::StatusCode::OK);
+
+    TEST_ASSERT_EQUAL(
+        status::StatusCode::OK,
+        scheduler.add(add_task, "add_task", system::Duration::millisecond * 100));
+
+    EventBits_t event = 0;
+    TEST_ASSERT_EQUAL(status::StatusCode::OK,
+                      scheduler.attach(event, attach_task, "attach_task"));
+
+    test::TaskSchedulerRunner runner(scheduler, "test", 1024 * 3, tskIDLE_PRIORITY + 1);
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, runner.start());
+
+    AsyncTask async_task(scheduler.get_event_group(), event);
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, async_task.run());
+
+    wait_task(add_task);
+    wait_task(attach_task);
 }
 
 } // namespace scheduler

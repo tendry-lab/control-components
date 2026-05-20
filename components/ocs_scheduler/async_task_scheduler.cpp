@@ -32,22 +32,15 @@ AsyncTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
     configASSERT(interval > 0);
     configASSERT(interval >= system::Duration::microsecond);
 
-    if (nodes_.size() == max_count()) {
-        return status::StatusCode::Error;
-    }
+    EventBits_t event = 0;
 
-    for (auto& node : nodes_) {
-        if (strcmp(node->id(), id) == 0) {
-            return status::StatusCode::InvalidArg;
-        }
+    const auto code = allocate_event_(event, id);
+    if (code != status::StatusCode::OK) {
+        return code;
     }
-
-    const EventBits_t event = algo::BitOps::mask_u32(nodes_.size());
 
     nodes_.emplace_back(
         std::make_shared<Node>(task, event_group_.get(), event, interval, id));
-
-    bits_all_ |= event;
 
     return status::StatusCode::OK;
 }
@@ -61,6 +54,10 @@ status::StatusCode AsyncTaskScheduler::start() {
              max_count());
 
     for (auto& node : nodes_) {
+        if (node->get_clock_type() == Node::ClockType::External) {
+            continue;
+        }
+
         const auto code = node->run();
         if (code != status::StatusCode::OK) {
             ocs_logw(log_tag_.c_str(),
@@ -70,6 +67,10 @@ status::StatusCode AsyncTaskScheduler::start() {
     }
 
     for (auto& node : nodes_) {
+        if (node->get_clock_type() == Node::ClockType::External) {
+            continue;
+        }
+
         const auto code = node->start();
         if (code != status::StatusCode::OK) {
             ocs_logw(log_tag_.c_str(),
@@ -86,6 +87,10 @@ status::StatusCode AsyncTaskScheduler::stop() {
              max_count());
 
     for (auto& node : nodes_) {
+        if (node->get_clock_type() == Node::ClockType::External) {
+            continue;
+        }
+
         const auto code = node->stop();
         if (code != status::StatusCode::OK) {
             ocs_loge(log_tag_.c_str(), "failed to stop node: id=%s code=%s", node->id(),
@@ -108,6 +113,42 @@ status::StatusCode AsyncTaskScheduler::run() {
     return status::StatusCode::OK;
 }
 
+EventGroupHandle_t AsyncTaskScheduler::get_event_group() {
+    return event_group_.get();
+}
+
+status::StatusCode
+AsyncTaskScheduler::attach(EventBits_t& event, ITask& task, const char* id) {
+    const auto code = allocate_event_(event, id);
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
+
+    nodes_.emplace_back(
+        std::make_shared<Node>(task, event, id, Node::ClockType::External));
+
+    return status::StatusCode::OK;
+}
+
+status::StatusCode AsyncTaskScheduler::allocate_event_(EventBits_t& event,
+                                                       const char* id) {
+    if (nodes_.size() == max_count()) {
+        return status::StatusCode::Error;
+    }
+
+    for (auto& node : nodes_) {
+        if (strcmp(node->id(), id) == 0) {
+            return status::StatusCode::InvalidArg;
+        }
+    }
+
+    event = algo::BitOps::mask_u32(nodes_.size());
+
+    bits_all_ |= event;
+
+    return status::StatusCode::OK;
+}
+
 void AsyncTaskScheduler::run_(EventBits_t bits) {
     for (auto& node : nodes_) {
         if (bits & node->event()) {
@@ -121,13 +162,21 @@ void AsyncTaskScheduler::run_(EventBits_t bits) {
 }
 
 AsyncTaskScheduler::Node::Node(ITask& task,
+                               EventBits_t event,
+                               const char* id,
+                               AsyncTaskScheduler::Node::ClockType clock_type)
+    : id_(id)
+    , event_(event)
+    , clock_type_(clock_type)
+    , task_(task) {
+}
+
+AsyncTaskScheduler::Node::Node(ITask& task,
                                EventGroupHandle_t even_group,
                                EventBits_t event,
                                system::Time interval,
                                const char* id)
-    : id_(id)
-    , event_(event)
-    , task_(task) {
+    : Node(task, event, id, ClockType::Internal) {
     async_task_ = std::make_unique<AsyncTask>(even_group, event);
     configASSERT(async_task_);
 
@@ -146,6 +195,10 @@ const char* AsyncTaskScheduler::Node::id() const {
 
 EventBits_t AsyncTaskScheduler::Node::event() const {
     return event_;
+}
+
+AsyncTaskScheduler::Node::ClockType AsyncTaskScheduler::Node::get_clock_type() const {
+    return clock_type_;
 }
 
 status::StatusCode AsyncTaskScheduler::Node::start() {
