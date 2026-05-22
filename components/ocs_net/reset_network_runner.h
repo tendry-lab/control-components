@@ -32,7 +32,7 @@ public:
     status::StatusCode stop() override;
 
 private:
-    void reset_();
+    status::StatusCode reset_();
 
     INetworkRunner& runner_;
     storage::IConfig& config_;
