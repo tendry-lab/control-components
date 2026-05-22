@@ -6,6 +6,7 @@
 #include "ocs_net/reset_network_runner.h"
 #include "ocs_core/log.h"
 #include "ocs_status/code_to_str.h"
+#include "ocs_status/macros.h"
 
 namespace ocs {
 namespace net {
@@ -25,19 +26,20 @@ ResetNetworkRunner::ResetNetworkRunner(INetworkRunner& runner,
 }
 
 status::StatusCode ResetNetworkRunner::start() {
-    const auto code = runner_.start();
-    if (code != status::StatusCode::OK) {
-        reset_();
-    }
+    const auto start_code = runner_.start();
+    const auto reset_code = reset_();
 
-    return code;
+    OCS_STATUS_RETURN_ON_ERROR(start_code);
+    OCS_STATUS_RETURN_ON_ERROR(reset_code);
+
+    return status::StatusCode::OK;
 }
 
 status::StatusCode ResetNetworkRunner::stop() {
     return runner_.stop();
 }
 
-void ResetNetworkRunner::reset_() {
+status::StatusCode ResetNetworkRunner::reset_() {
     ocs_logi(log_tag, "resetting network configuration");
 
     auto code = config_.reset();
@@ -46,11 +48,21 @@ void ResetNetworkRunner::reset_() {
     }
 
     if (code != status::StatusCode::OK) {
-        ocs_logw(log_tag, "failed to reset network configuration: %s",
+        ocs_loge(log_tag, "failed to reset network config: %s",
                  status::code_to_str(code));
+
+        return code;
     }
 
-    rebooter_.reboot();
+    code = rebooter_.reboot();
+    if (code != status::StatusCode::OK) {
+        ocs_loge(log_tag, "failed to reboot on config reset: %s",
+                 status::code_to_str(code));
+
+        return code;
+    }
+
+    return status::StatusCode::OK;
 }
 
 } // namespace net
