@@ -13,9 +13,9 @@ DelayRebooter::DelayRebooter(IRebooter& rebooter, TickType_t delay)
     , rebooter_(rebooter) {
 }
 
-void DelayRebooter::reboot() {
+status::StatusCode DelayRebooter::reboot() {
     vTaskDelay(delay_);
-    rebooter_.reboot();
+    return rebooter_.reboot();
 }
 
 } // namespace system
