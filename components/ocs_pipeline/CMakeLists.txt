@@ -15,7 +15,6 @@ idf_component_register(
     "httpserver/locate_handler.cpp"
     "httpserver/update_handler.cpp"
 
-    "jsonfmt/data_pipeline.cpp"
     "jsonfmt/ap_network_formatter.cpp"
     "jsonfmt/sta_network_formatter.cpp"
     "jsonfmt/system_formatter.cpp"
