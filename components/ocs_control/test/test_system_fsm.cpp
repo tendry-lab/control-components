@@ -21,8 +21,10 @@ namespace {
 struct TestRebooter : public system::IRebooter, private core::NonCopyable<> {
     size_t call_count { 0 };
 
-    void reboot() override {
+    status::StatusCode reboot() override {
         ++call_count;
+
+        return status::StatusCode::OK;
     }
 };
 

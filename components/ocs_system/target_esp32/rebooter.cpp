@@ -21,12 +21,14 @@ Rebooter::Rebooter(IRebootHandler& handler)
     : handler_(handler) {
 }
 
-void Rebooter::reboot() {
+status::StatusCode Rebooter::reboot() {
     ocs_logi(log_tag, "Prepare for rebooting...");
     handler_.handle_reboot();
     ocs_logi(log_tag, "Ready for rebooting...");
 
-    return esp_restart();
+    esp_restart();
+
+    return status::StatusCode::OK;
 }
 
 } // namespace system

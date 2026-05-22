@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "ocs_status/code.h"
+
 namespace ocs {
 namespace system {
 
@@ -14,7 +16,7 @@ public:
     virtual ~IRebooter() = default;
 
     //! Restart the system.
-    virtual void reboot() = 0;
+    virtual status::StatusCode reboot() = 0;
 };
 
 } // namespace system

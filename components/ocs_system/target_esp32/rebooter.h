@@ -21,7 +21,7 @@ public:
     explicit Rebooter(IRebootHandler& handler);
 
     //! Restart the board.
-    void reboot() override;
+    status::StatusCode reboot() override;
 
 private:
     IRebootHandler& handler_;

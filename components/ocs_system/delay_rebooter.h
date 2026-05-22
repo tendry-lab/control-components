@@ -24,7 +24,7 @@ public:
     DelayRebooter(IRebooter& rebooter, TickType_t delay);
 
     //! Wait extra delay and then reboot.
-    void reboot() override;
+    status::StatusCode reboot() override;
 
 private:
     const TickType_t delay_ { 0 };
