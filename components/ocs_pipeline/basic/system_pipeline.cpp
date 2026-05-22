@@ -8,7 +8,6 @@
 #include "ocs_pipeline/basic/system_pipeline.h"
 #include "ocs_status/code_to_str.h"
 #include "ocs_system/delay_rebooter.h"
-#include "ocs_system/reboot_task.h"
 #include "ocs_system/target_esp32/clock.h"
 
 namespace ocs {

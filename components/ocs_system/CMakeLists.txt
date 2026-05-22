@@ -2,7 +2,6 @@ idf_component_register(
     SRCS
     "fanout_reboot_handler.cpp"
     "delay_rebooter.cpp"
-    "reboot_task.cpp"
     "task_state_to_str.cpp"
     "system_state_builder.cpp"
     "fanout_suspender.cpp"
