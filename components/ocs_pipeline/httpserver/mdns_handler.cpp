@@ -16,9 +16,9 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-MdnsHandler::MdnsHandler(net::MdnsConfig& config, scheduler::ITask& reboot_task)
+MdnsHandler::MdnsHandler(net::MdnsConfig& config, system::IRebooter& rebooter)
     : config_(config)
-    , reboot_task_(reboot_task) {
+    , rebooter_(rebooter) {
 }
 
 status::StatusCode MdnsHandler::serve_http(http::IResponseWriter& w, http::IRequest& r) {
@@ -95,7 +95,7 @@ status::StatusCode MdnsHandler::handle_update_(http::IResponseWriter& w,
         return status::StatusCode::OK;
     }
 
-    return reboot_task_.run();
+    return rebooter_.reboot();
 }
 
 } // namespace httpserver

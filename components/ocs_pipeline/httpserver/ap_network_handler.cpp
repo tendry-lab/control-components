@@ -19,9 +19,9 @@ namespace pipeline {
 namespace httpserver {
 
 ApNetworkHandler::ApNetworkHandler(net::ApNetworkConfig& config,
-                                   scheduler::ITask& reboot_task)
+                                   system::IRebooter& rebooter)
     : config_(config)
-    , reboot_task_(reboot_task) {
+    , rebooter_(rebooter) {
 }
 
 status::StatusCode ApNetworkHandler::serve_http(http::IResponseWriter& w,
@@ -102,7 +102,7 @@ status::StatusCode ApNetworkHandler::handle_update_(http::IResponseWriter& w,
         return status::StatusCode::OK;
     }
 
-    return reboot_task_.run();
+    return rebooter_.reboot();
 }
 
 status::StatusCode ApNetworkHandler::handle_get_(http::IResponseWriter& w) {

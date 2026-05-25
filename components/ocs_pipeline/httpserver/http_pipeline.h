@@ -10,6 +10,7 @@
 #include "ocs_http/irouter.h"
 #include "ocs_net/mdns_config.h"
 #include "ocs_scheduler/itask.h"
+#include "ocs_system/irebooter.h"
 
 namespace ocs {
 namespace pipeline {
@@ -28,7 +29,7 @@ public:
     };
 
     //! Initialize.
-    HttpPipeline(scheduler::ITask& reboot_task,
+    HttpPipeline(system::IRebooter& rebooter,
                  net::MdnsConfig& mdns_config,
                  http::IRouter& router,
                  fmt::json::IFormatter& telemetry_formatter,

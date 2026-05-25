@@ -17,7 +17,7 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
+HttpPipeline::HttpPipeline(system::IRebooter& rebooter,
                            net::MdnsConfig& mdns_config,
                            http::IRouter& router,
                            fmt::json::IFormatter& telemetry_formatter,
@@ -31,10 +31,10 @@ HttpPipeline::HttpPipeline(scheduler::ITask& reboot_task,
         registration_formatter, params.registration.buffer_size));
     configASSERT(registration_handler_);
 
-    reboot_handler_.reset(new (std::nothrow) RebootHandler(reboot_task));
+    reboot_handler_.reset(new (std::nothrow) RebootHandler(rebooter));
     configASSERT(reboot_handler_);
 
-    mdns_handler_.reset(new (std::nothrow) MdnsHandler(mdns_config, reboot_task));
+    mdns_handler_.reset(new (std::nothrow) MdnsHandler(mdns_config, rebooter));
     configASSERT(mdns_handler_);
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY

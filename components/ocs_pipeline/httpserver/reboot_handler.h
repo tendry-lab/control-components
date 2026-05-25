@@ -9,7 +9,7 @@
 #include "ocs_http/ihandler.h"
 #include "ocs_http/irequest.h"
 #include "ocs_http/iresponse_writer.h"
-#include "ocs_scheduler/itask.h"
+#include "ocs_system/irebooter.h"
 
 namespace ocs {
 namespace pipeline {
@@ -20,14 +20,14 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p reboot_task to initiate the reboot process.
-    explicit RebootHandler(scheduler::ITask& reboot_task);
+    //!  - @p rebooter to initiate the reboot process.
+    explicit RebootHandler(system::IRebooter& rebooter);
 
     // Reboot system over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest& r) override;
 
 private:
-    scheduler::ITask& reboot_task_;
+    system::IRebooter& rebooter_;
 };
 
 } // namespace httpserver

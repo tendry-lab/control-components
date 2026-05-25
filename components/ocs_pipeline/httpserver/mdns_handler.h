@@ -12,7 +12,7 @@
 #include "ocs_http/irequest.h"
 #include "ocs_http/iresponse_writer.h"
 #include "ocs_net/mdns_config.h"
-#include "ocs_scheduler/itask.h"
+#include "ocs_system/irebooter.h"
 
 namespace ocs {
 namespace pipeline {
@@ -24,8 +24,8 @@ public:
     //!
     //! @params
     //!  - @p config to perform the mDNS configuration.
-    //!  - @p reboot_task to schedule a reboot when the mDNS configuration is changed.
-    MdnsHandler(net::MdnsConfig& config, scheduler::ITask& reboot_task);
+    //!  - @p rebooter to reboot the system when the mDNS configuration is changed.
+    MdnsHandler(net::MdnsConfig& config, system::IRebooter& rebooter);
 
     // Update mDNS configuration over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
@@ -38,7 +38,7 @@ private:
 
     core::StaticMutex mu_;
     net::MdnsConfig& config_;
-    scheduler::ITask& reboot_task_;
+    system::IRebooter& rebooter_;
 };
 
 } // namespace httpserver
