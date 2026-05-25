@@ -18,7 +18,6 @@
 #include "ocs_scheduler/itask.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_sensor/soil/analog_sensor.h"
-#include "ocs_storage/storage_builder.h"
 #include "ocs_system/fanout_reboot_handler.h"
 #include "ocs_system/iclock.h"
 #include "ocs_system/irt_delayer.h"
@@ -43,7 +42,7 @@ public:
     AnalogRelaySensorPipeline(system::IClock& clock,
                               io::adc::IStore& adc_store,
                               io::adc::IConverter& adc_converter,
-                              storage::StorageBuilder& storage_builder,
+                              storage::IStorage& storage,
                               system::IRtDelayer& delayer,
                               system::FanoutRebootHandler& reboot_handler,
                               scheduler::ITaskScheduler& task_scheduler,

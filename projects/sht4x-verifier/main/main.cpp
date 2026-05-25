@@ -14,8 +14,8 @@
 #include "ocs_io/i2c/target_esp32/master_bus.h"
 #include "ocs_sensor/sht4x/sensor.h"
 #include "ocs_status/code_to_str.h"
-#include "ocs_storage/storage_builder.h"
 #include "ocs_storage/target_esp32/flash_initializer.h"
+#include "ocs_storage/target_esp32/nvs_storage.h"
 #include "ocs_system/time.h"
 
 using namespace ocs;
@@ -119,16 +119,11 @@ void perform_verification(const VerificationConfig& verification_config) {
     configASSERT(sensor_transceiver);
 
     storage::FlashInitializer flash_initializer;
-
-    std::unique_ptr<storage::StorageBuilder> storage_builder(
-        new (std::nothrow) storage::StorageBuilder());
-    configASSERT(storage_builder);
-
-    auto storage = storage_builder->make("sensor_sht4x");
+    storage::NvsStorage storage("sensor_sht4x");
 
     std::unique_ptr<sensor::sht4x::Sensor> sensor =
         std::make_unique<sensor::sht4x::Sensor>(
-            *sensor_transceiver, *storage, "sht4x",
+            *sensor_transceiver, storage, "sht4x",
             sensor::sht4x::Sensor::Params {
                 .i2c_delay_interval = verification_config.i2c_delay_interval,
                 .i2c_wait_timeout = verification_config.i2c_wait_timeout,

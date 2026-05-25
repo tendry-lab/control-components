@@ -35,7 +35,7 @@ public:
     AnalogSensorPipeline(system::IClock& clock,
                          io::adc::IStore& adc_store,
                          io::adc::IConverter& adc_converter,
-                         storage::StorageBuilder& storage_builder,
+                         storage::IStorage& storage,
                          system::IRtDelayer& delayer,
                          system::FanoutRebootHandler& reboot_handler,
                          scheduler::ITaskScheduler& task_scheduler,

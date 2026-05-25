@@ -16,7 +16,6 @@ namespace basic {
 
 SystemPipeline::SystemPipeline() {
     flash_initializer_ = std::make_unique<storage::FlashInitializer>();
-    storage_builder_ = std::make_unique<storage::StorageBuilder>();
     clock_ = std::make_unique<system::Clock>();
     fanout_reboot_handler_ = std::make_unique<system::FanoutRebootHandler>();
 
@@ -38,10 +37,6 @@ SystemPipeline::SystemPipeline() {
 
 system::IClock& SystemPipeline::get_clock() {
     return *clock_;
-}
-
-storage::StorageBuilder& SystemPipeline::get_storage_builder() {
-    return *storage_builder_;
 }
 
 system::IRebooter& SystemPipeline::get_rebooter() {

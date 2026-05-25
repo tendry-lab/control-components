@@ -13,15 +13,13 @@ namespace ocs {
 namespace pipeline {
 namespace basic {
 
-SelectNetworkPipeline::SelectNetworkPipeline(storage::StorageBuilder& storage_builder,
+SelectNetworkPipeline::SelectNetworkPipeline(storage::IStorage& sta_config_storage,
+                                             storage::IStorage& ap_config_storage,
                                              net::INetworkHandler& network_handler,
                                              control::ConfigFsrHandler& fsr_handler,
                                              system::IRebooter& rebooter,
                                              const system::DeviceInfo& device_info) {
-    sta_config_storage_ = storage_builder.make(sta_config_storage_id_);
-    configASSERT(sta_config_storage_);
-
-    sta_config_.reset(new (std::nothrow) net::StaNetworkConfig(*sta_config_storage_));
+    sta_config_.reset(new (std::nothrow) net::StaNetworkConfig(sta_config_storage));
     configASSERT(sta_config_);
 
     net::INetwork* network = nullptr;
@@ -34,11 +32,8 @@ SelectNetworkPipeline::SelectNetworkPipeline(storage::StorageBuilder& storage_bu
         network = sta_.get();
         network_config = sta_config_.get();
     } else {
-        ap_config_storage_ = storage_builder.make(ap_config_storage_id_);
-        configASSERT(ap_config_storage_);
-
         ap_config_.reset(new (std::nothrow)
-                             net::ApNetworkConfig(*ap_config_storage_, device_info));
+                             net::ApNetworkConfig(ap_config_storage, device_info));
         configASSERT(ap_config_);
 
         ap_.reset(new (std::nothrow) net::ApNetwork(network_handler, *ap_config_));

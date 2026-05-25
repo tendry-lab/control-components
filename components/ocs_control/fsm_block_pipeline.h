@@ -10,7 +10,6 @@
 
 #include "ocs_control/fsm_block.h"
 #include "ocs_scheduler/itask_scheduler.h"
-#include "ocs_storage/storage_builder.h"
 #include "ocs_system/fanout_reboot_handler.h"
 
 namespace ocs {
@@ -32,12 +31,12 @@ public:
     //!  - @p clock to count time spent in FSM states.
     //!  - @p reboot_handler to register reboot handlers.
     //!  - @p task_scheduler to register FSM tasks.
-    //!  - @p storage_builder to build storage for FSM block.
+    //!  - @p storage for the FSM block.
     //!  - @p id to distinguish one FSM from another.
     FsmBlockPipeline(system::IClock& clock,
                      system::FanoutRebootHandler& reboot_handler,
                      scheduler::ITaskScheduler& task_scheduler,
-                     storage::StorageBuilder& storage_builder,
+                     storage::IStorage& storage,
                      const char* id,
                      Params params);
 
@@ -47,9 +46,6 @@ public:
 private:
     const std::string log_tag_;
     const std::string block_id_;
-    const std::string storage_id_;
-
-    storage::StorageBuilder::IStoragePtr storage_;
 
     std::unique_ptr<FsmBlock> block_;
 };

@@ -16,7 +16,7 @@ AnalogRelaySensorPipeline::AnalogRelaySensorPipeline(
     system::IClock& clock,
     io::adc::IStore& adc_store,
     io::adc::IConverter& adc_converter,
-    storage::StorageBuilder& storage_builder,
+    storage::IStorage& storage,
     system::IRtDelayer& delayer,
     system::FanoutRebootHandler& reboot_handler,
     scheduler::ITaskScheduler& task_scheduler,
@@ -36,7 +36,7 @@ AnalogRelaySensorPipeline::AnalogRelaySensorPipeline(
     reader_ = sample_reader_.get();
 
     fsm_block_pipeline_.reset(new (std::nothrow) control::FsmBlockPipeline(
-        clock, reboot_handler, task_scheduler, storage_builder, id, params.fsm_block));
+        clock, reboot_handler, task_scheduler, storage, id, params.fsm_block));
     configASSERT(fsm_block_pipeline_);
 
     sensor_.reset(new (std::nothrow) AnalogSensor(*reader_, adc_converter,
