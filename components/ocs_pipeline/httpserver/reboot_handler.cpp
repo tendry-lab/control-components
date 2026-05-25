@@ -17,8 +17,8 @@ const char* log_tag = "http_reboot_handler";
 
 } // namespace
 
-RebootHandler::RebootHandler(scheduler::ITask& reboot_task)
-    : reboot_task_(reboot_task) {
+RebootHandler::RebootHandler(system::IRebooter& rebooter)
+    : rebooter_(rebooter) {
 }
 
 status::StatusCode RebootHandler::serve_http(http::IResponseWriter& w, http::IRequest&) {
@@ -29,7 +29,7 @@ status::StatusCode RebootHandler::serve_http(http::IResponseWriter& w, http::IRe
 
     ocs_logi(log_tag, "Rebooting...");
 
-    return reboot_task_.run();
+    return rebooter_.reboot();
 }
 
 } // namespace httpserver

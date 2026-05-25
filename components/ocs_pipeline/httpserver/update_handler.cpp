@@ -47,11 +47,11 @@ const char* log_tag = "update_hanlder";
 } // namespace
 
 UpdateHandler::UpdateHandler(system::IUpdater& updater,
-                             scheduler::ITask& reboot_task,
+                             system::IRebooter& rebooter,
                              size_t buffer_size)
     : buffer_size_(buffer_size)
     , updater_(updater)
-    , reboot_task_(reboot_task) {
+    , rebooter_(rebooter) {
 }
 
 status::StatusCode UpdateHandler::serve_http(http::IResponseWriter& w,
@@ -100,7 +100,7 @@ status::StatusCode UpdateHandler::serve_http(http::IResponseWriter& w,
         return code;
     }
 
-    return reboot_task_.run();
+    return rebooter_.reboot();
 }
 
 status::StatusCode UpdateHandler::begin_(http::IRequest& r) {

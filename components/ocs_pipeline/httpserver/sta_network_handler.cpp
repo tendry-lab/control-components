@@ -19,9 +19,9 @@ namespace pipeline {
 namespace httpserver {
 
 StaNetworkHandler::StaNetworkHandler(net::StaNetworkConfig& config,
-                                     scheduler::ITask& reboot_task)
+                                     system::IRebooter& rebooter)
     : config_(config)
-    , reboot_task_(reboot_task) {
+    , rebooter_(rebooter) {
 }
 
 status::StatusCode StaNetworkHandler::serve_http(http::IResponseWriter& w,
@@ -97,7 +97,7 @@ status::StatusCode StaNetworkHandler::handle_update_(http::IResponseWriter& w,
         return status::StatusCode::OK;
     }
 
-    return reboot_task_.run();
+    return rebooter_.reboot();
 }
 
 status::StatusCode StaNetworkHandler::handle_get_(http::IResponseWriter& w) {

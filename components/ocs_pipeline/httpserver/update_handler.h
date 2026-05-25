@@ -13,7 +13,7 @@
 #include "ocs_http/ihandler.h"
 #include "ocs_http/irequest.h"
 #include "ocs_http/iresponse_writer.h"
-#include "ocs_scheduler/itask.h"
+#include "ocs_system/irebooter.h"
 #include "ocs_system/iupdater.h"
 
 namespace ocs {
@@ -26,11 +26,10 @@ public:
     //!
     //! @params
     //!  - @p updater to perform the firmware update process.
-    //!  - @p reboot_task to reboot the system once the firmware update process is
-    //!    finished.
+    //!  - @p rebooter to reboot the system once the firmware update process is finished.
     //!  - @p buffer_size - buffer size to read chunks of firmware from HTTP connection.
     UpdateHandler(system::IUpdater& updater,
-                  scheduler::ITask& reboot_task,
+                  system::IRebooter& rebooter,
                   size_t buffer_size);
 
     // Update device over HTTP.
@@ -44,7 +43,7 @@ private:
 
     core::StaticMutex mu_;
     system::IUpdater& updater_;
-    scheduler::ITask& reboot_task_;
+    system::IRebooter& rebooter_;
 
     std::unique_ptr<uint8_t[]> buffer_;
 };
