@@ -15,20 +15,16 @@ namespace control {
 FsmBlockPipeline::FsmBlockPipeline(system::IClock& clock,
                                    system::FanoutRebootHandler& reboot_handler,
                                    scheduler::ITaskScheduler& task_scheduler,
-                                   storage::StorageBuilder& storage_builder,
+                                   storage::IStorage& storage,
                                    const char* id,
                                    FsmBlockPipeline::Params params)
     : log_tag_(std::string(id) + "_block_pipeline")
-    , block_id_(std::string(id) + "_block")
-    , storage_id_(std::string(id) + "_nvs") {
+    , block_id_(std::string(id) + "_block") {
     configASSERT(params.state_save_interval);
     configASSERT(params.state_interval_resolution);
 
-    storage_ = storage_builder.make(storage_id_.c_str());
-    configASSERT(storage_);
-
     block_.reset(new (std::nothrow) FsmBlock(
-        clock, *storage_, params.state_interval_resolution, block_id_.c_str()));
+        clock, storage, params.state_interval_resolution, block_id_.c_str()));
     configASSERT(block_);
 
     reboot_handler.add(*block_);

@@ -15,7 +15,6 @@
 #include "ocs_net/sta_network_config.h"
 #include "ocs_net/target_esp32/ap_network.h"
 #include "ocs_net/target_esp32/sta_network.h"
-#include "ocs_storage/storage_builder.h"
 #include "ocs_system/device_info.h"
 #include "ocs_system/irebooter.h"
 
@@ -26,8 +25,12 @@ namespace basic {
 // Select between WiFi AP and STA networks.
 class SelectNetworkPipeline : private core::NonCopyable<> {
 public:
+    static constexpr const char* ap_config_storage_id = "wifi_ap_cfg";
+    static constexpr const char* sta_config_storage_id = "wifi_sta_cfg";
+
     //! Initialize.
-    SelectNetworkPipeline(storage::StorageBuilder& storage_builder,
+    SelectNetworkPipeline(storage::IStorage& sta_config_storage,
+                          storage::IStorage& ap_config_storage,
                           net::INetworkHandler& network_handler,
                           control::ConfigFsrHandler& fsr_handler,
                           system::IRebooter& rebooter,
@@ -40,16 +43,11 @@ public:
     net::StaNetworkConfig& get_sta_config();
 
 private:
-    static constexpr const char* ap_config_storage_id_ = "wifi_ap_cfg";
-    static constexpr const char* sta_config_storage_id_ = "wifi_sta_cfg";
-
     static constexpr TickType_t wait_start_interval_ = pdMS_TO_TICKS(1000 * 60 * 10);
 
-    storage::StorageBuilder::IStoragePtr sta_config_storage_;
     std::unique_ptr<net::StaNetworkConfig> sta_config_;
     std::unique_ptr<net::StaNetwork> sta_;
 
-    storage::StorageBuilder::IStoragePtr ap_config_storage_;
     std::unique_ptr<net::ApNetworkConfig> ap_config_;
     std::unique_ptr<net::ApNetwork> ap_;
 
