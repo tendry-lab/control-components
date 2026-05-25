@@ -26,13 +26,12 @@ ResetNetworkRunner::ResetNetworkRunner(INetworkRunner& runner,
 }
 
 status::StatusCode ResetNetworkRunner::start() {
-    const auto start_code = runner_.start();
-    const auto reset_code = reset_();
+    const auto code = runner_.start();
+    if (code != status::StatusCode::OK) {
+        reset_();
+    }
 
-    OCS_STATUS_RETURN_ON_ERROR(start_code);
-    OCS_STATUS_RETURN_ON_ERROR(reset_code);
-
-    return status::StatusCode::OK;
+    return code;
 }
 
 status::StatusCode ResetNetworkRunner::stop() {
