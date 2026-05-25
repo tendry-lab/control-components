@@ -35,11 +35,11 @@ public:
     const char* get_product_name() const;
 
 private:
-    std::string fw_name_;
-    std::string fw_version_;
-    std::string fw_description_;
-    std::string product_name_;
-    DeviceID device_id_;
+    const std::string fw_name_;
+    const std::string fw_version_;
+    const std::string fw_description_;
+    const std::string product_name_;
+    const DeviceID device_id_;
 };
 
 } // namespace system
