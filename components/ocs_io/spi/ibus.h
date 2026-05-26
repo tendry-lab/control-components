@@ -10,6 +10,7 @@
 #include "ocs_io/gpio/types.h"
 #include "ocs_io/spi/itransceiver.h"
 #include "ocs_io/spi/types.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace io {
@@ -18,7 +19,7 @@ namespace spi {
 class IBus {
 public:
     //! SPI transceiver to communicate with SPI device.
-    using ITransceiverPtr = std::unique_ptr<ITransceiver>;
+    using ITransceiverPtr = system::UniquePtr<ITransceiver>;
 
     //! Destroy.
     virtual ~IBus() = default;

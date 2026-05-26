@@ -19,6 +19,7 @@
 #include "ocs_onewire/rom_code_scanner.h"
 #include "ocs_onewire/serial_number_to_str.h"
 #include "ocs_status/code_to_str.h"
+#include "ocs_system/heap_arena.h"
 #include "ocs_system/platform_builder.h"
 
 using namespace ocs;
@@ -77,7 +78,10 @@ void format_rom_code(cJSON* array,
     json.release();
 }
 
-void scan_rom_codes(ScanParams scan_params, onewire::Bus::Params bus_params) {
+void scan_rom_codes(system::IArena& arena,
+                    system::PlatformBuilder& platform_builder,
+                    ScanParams scan_params,
+                    onewire::Bus::Params bus_params) {
     fmt::json::CjsonUniqueBuilder builder;
 
     auto json = builder.make_object();
@@ -91,7 +95,7 @@ void scan_rom_codes(ScanParams scan_params, onewire::Bus::Params bus_params) {
 
     io::gpio::Gpio gpio(scan_params.gpio_num, true);
 
-    auto delayer = system::PlatformBuilder::make_rt_delayer();
+    auto delayer = platform_builder.make_rt_delayer();
     configASSERT(delayer);
 
     onewire::Bus bus(*delayer, gpio, bus_params);
@@ -114,7 +118,7 @@ void scan_rom_codes(ScanParams scan_params, onewire::Bus::Params bus_params) {
     }
 
     fmt::json::DynamicFormatter json_formatter(
-        CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_RESULT_BUFFER_SIZE);
+        arena, CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_RESULT_BUFFER_SIZE);
 
     configASSERT(json_formatter.format(json.get()) == status::StatusCode::OK);
 
@@ -124,31 +128,34 @@ void scan_rom_codes(ScanParams scan_params, onewire::Bus::Params bus_params) {
 } // namespace
 
 extern "C" void app_main(void) {
-    scan_rom_codes(
-        ScanParams {
-            .gpio_num =
-                static_cast<io::gpio::GpioNum>(CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_GPIO),
-        },
-        onewire::Bus::Params {
-            .reset_pulse_interval = system::Duration::microsecond
-                * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_RESET_PULSE_INTERVAL,
-            .presence_pulse_interval = system::Duration::microsecond
-                * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_PRESENCE_PULSE_INTERVAL,
-            .write_slot_interval = system::Duration::microsecond
-                * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_WRITE_SLOT_INTERVAL,
-            .write_bit_interval = system::Duration::microsecond
-                * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_WRITE_BIT_INTERVAL,
-            .write_recovery_interval = system::Duration::microsecond
-                * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_WRITE_RECOVERY_INTERVAL,
-            .read_slot_interval = system::Duration::microsecond
-                * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_READ_SLOT_INTERVAL,
-            .read_bit_init_interval = system::Duration::microsecond
-                * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_READ_BIT_INIT_INTERVAL,
-            .read_bit_rc_interval = system::Duration::microsecond
-                * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_READ_BIT_RC_INTERVAL,
-            .read_recovery_interval = system::Duration::microsecond
-                * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_READ_RECOVERY_INTERVAL,
-        });
+    system::HeapArena heap_arena;
+    system::PlatformBuilder platform_builder(heap_arena);
+
+    scan_rom_codes(heap_arena, platform_builder,
+                   ScanParams {
+                       .gpio_num = static_cast<io::gpio::GpioNum>(
+                           CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_GPIO),
+                   },
+                   onewire::Bus::Params {
+                       .reset_pulse_interval = system::Duration::microsecond
+                           * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_RESET_PULSE_INTERVAL,
+                       .presence_pulse_interval = system::Duration::microsecond
+                           * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_PRESENCE_PULSE_INTERVAL,
+                       .write_slot_interval = system::Duration::microsecond
+                           * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_WRITE_SLOT_INTERVAL,
+                       .write_bit_interval = system::Duration::microsecond
+                           * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_WRITE_BIT_INTERVAL,
+                       .write_recovery_interval = system::Duration::microsecond
+                           * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_WRITE_RECOVERY_INTERVAL,
+                       .read_slot_interval = system::Duration::microsecond
+                           * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_READ_SLOT_INTERVAL,
+                       .read_bit_init_interval = system::Duration::microsecond
+                           * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_READ_BIT_INIT_INTERVAL,
+                       .read_bit_rc_interval = system::Duration::microsecond
+                           * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_READ_BIT_RC_INTERVAL,
+                       .read_recovery_interval = system::Duration::microsecond
+                           * CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_READ_RECOVERY_INTERVAL,
+                   });
 
     while (true) {
         vTaskDelay(pdMS_TO_TICKS(1000));

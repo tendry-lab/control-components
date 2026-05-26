@@ -20,7 +20,11 @@ const char* log_tag = "adc_oneshot_store";
 
 } // namespace
 
-OneshotStore::OneshotStore(adc_unit_t unit, adc_atten_t atten, adc_bitwidth_t bitwidth) {
+OneshotStore::OneshotStore(system::IArena& arena,
+                           adc_unit_t unit,
+                           adc_atten_t atten,
+                           adc_bitwidth_t bitwidth)
+    : arena_(arena) {
     // Unit configuration.
     memset(&unit_config_, 0, sizeof(unit_config_));
     unit_config_.unit_id = unit;
@@ -52,7 +56,7 @@ IStore::IReaderPtr OneshotStore::add(Channel channel) {
         return nullptr;
     }
 
-    IStore::IReaderPtr adc(new (std::nothrow) OneshotReader(channel, unit_handle_));
+    auto adc = ocs::system::make_shared_ptr<OneshotReader>(arena_, channel, unit_handle_);
     configASSERT(adc);
 
     adcs_.emplace_back(std::pair<Channel, IStore::IReaderPtr>(channel, adc));

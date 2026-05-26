@@ -39,7 +39,8 @@ public:
     };
 
     //! Initialize.
-    AnalogRelaySensorPipeline(system::IClock& clock,
+    AnalogRelaySensorPipeline(system::IArena& arena,
+                              system::IClock& clock,
                               io::adc::IStore& adc_store,
                               io::adc::IConverter& adc_converter,
                               storage::IStorage& storage,
@@ -57,11 +58,11 @@ private:
     const std::string task_id_;
 
     io::adc::IStore::IReaderPtr adc_reader_;
-    std::unique_ptr<io::adc::IReader> sample_reader_;
+    system::UniquePtr<io::adc::IReader> sample_reader_;
     io::adc::IReader* reader_ { nullptr };
-    std::unique_ptr<control::FsmBlockPipeline> fsm_block_pipeline_;
-    std::unique_ptr<AnalogSensor> sensor_;
-    std::unique_ptr<scheduler::ITask> relay_sensor_;
+    system::UniquePtr<control::FsmBlockPipeline> fsm_block_pipeline_;
+    system::UniquePtr<AnalogSensor> sensor_;
+    system::UniquePtr<scheduler::ITask> relay_sensor_;
 };
 
 } // namespace soil

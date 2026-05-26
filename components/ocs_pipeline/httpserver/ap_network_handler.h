@@ -12,6 +12,7 @@
 #include "ocs_http/irequest.h"
 #include "ocs_http/iresponse_writer.h"
 #include "ocs_net/ap_network_config.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/irebooter.h"
 
 namespace ocs {
@@ -23,9 +24,12 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p config to perform the WiFi AP configuration.
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p rebooter to reboot the system when the configuration is changed.
-    ApNetworkHandler(net::ApNetworkConfig& config, system::IRebooter& rebooter);
+    //!  - @p config to perform the WiFi AP configuration.
+    ApNetworkHandler(system::IArena& arena,
+                     system::IRebooter& rebooter,
+                     net::ApNetworkConfig& config);
 
     // Update WiFi AP network configuration over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
@@ -37,8 +41,9 @@ private:
     status::StatusCode handle_get_(http::IResponseWriter& w);
 
     core::StaticMutex mu_;
-    net::ApNetworkConfig& config_;
+    system::IArena& arena_;
     system::IRebooter& rebooter_;
+    net::ApNetworkConfig& config_;
 };
 
 } // namespace httpserver

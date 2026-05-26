@@ -33,6 +33,7 @@ public:
                           storage::IStorage& ap_config_storage,
                           net::INetworkHandler& network_handler,
                           control::ConfigFsrHandler& fsr_handler,
+                          system::IArena& arena,
                           system::IRebooter& rebooter,
                           const system::DeviceInfo& device_info);
 
@@ -45,14 +46,14 @@ public:
 private:
     static constexpr TickType_t wait_start_interval_ = pdMS_TO_TICKS(1000 * 60 * 10);
 
-    std::unique_ptr<net::StaNetworkConfig> sta_config_;
-    std::unique_ptr<net::StaNetwork> sta_;
+    system::UniquePtr<net::StaNetworkConfig> sta_config_;
+    system::UniquePtr<net::StaNetwork> sta_;
 
-    std::unique_ptr<net::ApNetworkConfig> ap_config_;
-    std::unique_ptr<net::ApNetwork> ap_;
+    system::UniquePtr<net::ApNetworkConfig> ap_config_;
+    system::UniquePtr<net::ApNetwork> ap_;
 
-    std::unique_ptr<net::INetworkRunner> wait_runner_;
-    std::unique_ptr<net::INetworkRunner> reset_runner_;
+    system::UniquePtr<net::INetworkRunner> wait_runner_;
+    system::UniquePtr<net::INetworkRunner> reset_runner_;
     net::INetworkRunner* runner_ { nullptr };
 };
 

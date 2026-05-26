@@ -12,7 +12,8 @@ namespace ocs {
 namespace sensor {
 namespace bme280 {
 
-SpiSensorPipeline::SpiSensorPipeline(scheduler::ITaskScheduler& task_scheduler,
+SpiSensorPipeline::SpiSensorPipeline(system::IArena& arena,
+                                     scheduler::ITaskScheduler& task_scheduler,
                                      io::spi::IBus& bus,
                                      SpiSensorPipeline::Params params) {
     configASSERT(params.read_interval);
@@ -20,10 +21,12 @@ SpiSensorPipeline::SpiSensorPipeline(scheduler::ITaskScheduler& task_scheduler,
     spi_transceiver_ = bus.add(params.cs_gpio, 0, 10 * 1000 * 1000);
     configASSERT(spi_transceiver_);
 
-    register_transceiver_.reset(new (std::nothrow) SpiTransceiver(*spi_transceiver_));
+    register_transceiver_ =
+        ocs::system::make_unique_ptr<SpiTransceiver>(arena, *spi_transceiver_);
     configASSERT(register_transceiver_);
 
-    sensor_.reset(new (std::nothrow) Sensor(*register_transceiver_, params.sensor));
+    sensor_ = ocs::system::make_unique_ptr<Sensor>(arena, *register_transceiver_,
+                                                   params.sensor);
     configASSERT(sensor_);
 
     configASSERT(task_scheduler.add(*sensor_, "bme280_task", params.read_interval)

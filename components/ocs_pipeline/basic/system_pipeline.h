@@ -14,6 +14,7 @@
 #include "ocs_storage/target_esp32/flash_initializer.h"
 #include "ocs_system/device_info.h"
 #include "ocs_system/fanout_reboot_handler.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/iclock.h"
 #include "ocs_system/irebooter.h"
 #include "ocs_system/platform_builder.h"
@@ -25,7 +26,7 @@ namespace basic {
 class SystemPipeline : private core::NonCopyable<> {
 public:
     //! Initialize.
-    SystemPipeline();
+    SystemPipeline(system::IArena& arena, system::PlatformBuilder& platform_builder);
 
     const system::DeviceInfo& get_device_info() const;
 
@@ -34,15 +35,15 @@ public:
     system::FanoutRebootHandler& get_reboot_handler();
 
 private:
-    std::unique_ptr<storage::FlashInitializer> flash_initializer_;
-    std::unique_ptr<system::IClock> clock_;
+    system::UniquePtr<storage::FlashInitializer> flash_initializer_;
+    system::UniquePtr<system::IClock> clock_;
 
-    std::unique_ptr<system::FanoutRebootHandler> fanout_reboot_handler_;
+    system::UniquePtr<system::FanoutRebootHandler> fanout_reboot_handler_;
     system::PlatformBuilder::IRebooterPtr default_rebooter_;
-    std::unique_ptr<system::IRebooter> delay_rebooter_;
+    system::UniquePtr<system::IRebooter> delay_rebooter_;
     system::IRebooter* rebooter_ { nullptr };
 
-    std::unique_ptr<system::DeviceInfo> device_info_;
+    system::UniquePtr<system::DeviceInfo> device_info_;
 };
 
 } // namespace basic

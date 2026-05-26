@@ -7,6 +7,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_system/device_id.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace system {
@@ -17,12 +18,14 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p fw_name - unique FW name to distinguish one FW from another.
     //!  - @p fw_version - FW version in semver format.
     //!  - @p fw_description - a short user-friendly name that identifies the FW.
     //!  - @p product_name - unique product name to group related FWs.
     //!  - @p company_uuid - unique company string identifier.
-    DeviceInfo(const char* fw_name,
+    DeviceInfo(IArena& arena,
+               const char* fw_name,
                const char* fw_version,
                const char* fw_description,
                const char* product_name,

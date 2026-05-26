@@ -14,28 +14,31 @@ namespace ocs {
 namespace pipeline {
 namespace basic {
 
-SystemCounterPipeline::SystemCounterPipeline(system::IClock& clock,
+SystemCounterPipeline::SystemCounterPipeline(system::IArena& arena,
+                                             system::IClock& clock,
                                              storage::IStorage& storage,
                                              system::FanoutRebootHandler& reboot_handler,
                                              scheduler::ITaskScheduler& task_scheduler,
                                              diagnostic::CounterStore& counter_store) {
-    uptime_counter_.reset(new (std::nothrow) diagnostic::TimeCounter(
-        clock, "c_sys_uptime", system::Duration::second));
+    uptime_counter_ = ocs::system::make_unique_ptr<diagnostic::TimeCounter>(
+        arena, clock, "c_sys_uptime", system::Duration::second);
     configASSERT(uptime_counter_);
 
-    uptime_persistent_counter_.reset(
-        new (std::nothrow) diagnostic::MemPersistentCounter(storage, *uptime_counter_));
+    uptime_persistent_counter_ =
+        ocs::system::make_unique_ptr<diagnostic::MemPersistentCounter>(arena, storage,
+                                                                       *uptime_counter_);
     configASSERT(uptime_persistent_counter_);
 
     reboot_handler.add(*uptime_persistent_counter_);
     counter_store.add(*uptime_persistent_counter_);
 
-    lifetime_counter_.reset(new (std::nothrow) diagnostic::TimeCounter(
-        clock, "c_sys_lifetime", system::Duration::second));
+    lifetime_counter_ = ocs::system::make_unique_ptr<diagnostic::TimeCounter>(
+        arena, clock, "c_sys_lifetime", system::Duration::second);
     configASSERT(lifetime_counter_);
 
-    lifetime_persistent_counter_.reset(
-        new (std::nothrow) diagnostic::AccPersistentCounter(storage, *lifetime_counter_));
+    lifetime_persistent_counter_ =
+        ocs::system::make_unique_ptr<diagnostic::AccPersistentCounter>(
+            arena, storage, *lifetime_counter_);
     configASSERT(lifetime_persistent_counter_);
 
     configASSERT(task_scheduler.add(*lifetime_persistent_counter_,

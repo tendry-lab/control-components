@@ -9,10 +9,17 @@
 #include "unity.h"
 
 #include "ocs_io/adc/target_esp32/oneshot_store.h"
+#include "ocs_system/heap_arena.h"
 
 namespace ocs {
 namespace io {
 namespace adc {
+
+namespace {
+
+system::HeapArena heap_arena;
+
+} // namespace
 
 TEST_CASE("Oneshot ADC store: register maximum number of ADC",
           "[ocs_io], [adc_oneshot_store]") {
@@ -22,7 +29,7 @@ TEST_CASE("Oneshot ADC store: register maximum number of ADC",
     };
 
     for (const auto& unit : units) {
-        OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
+        OneshotStore store(heap_arena, unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
         const size_t count = SOC_ADC_CHANNEL_NUM(unit);
 
@@ -41,7 +48,7 @@ TEST_CASE("Oneshot ADC store: register the same ADC twice",
     };
 
     for (const auto& unit : units) {
-        OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
+        OneshotStore store(heap_arena, unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
         const Channel channel = ADC_CHANNEL_5;
         TEST_ASSERT_NOT_NULL(store.add(channel));
@@ -56,7 +63,7 @@ TEST_CASE("Oneshot ADC store: register overflow", "[ocs_io], [adc_oneshot_store]
     };
 
     for (const auto& unit : units) {
-        OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
+        OneshotStore store(heap_arena, unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
         const size_t count = SOC_ADC_CHANNEL_NUM(unit);
 
@@ -77,7 +84,7 @@ TEST_CASE("Oneshot ADC store: read/convert operations", "[ocs_io], [adc_oneshot_
     };
 
     for (const auto& unit : units) {
-        OneshotStore store(unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
+        OneshotStore store(heap_arena, unit, ADC_ATTEN_DB_12, ADC_BITWIDTH_10);
 
         const Channel channel = ADC_CHANNEL_5;
 

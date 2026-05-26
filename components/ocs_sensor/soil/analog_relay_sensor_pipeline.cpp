@@ -13,6 +13,7 @@ namespace sensor {
 namespace soil {
 
 AnalogRelaySensorPipeline::AnalogRelaySensorPipeline(
+    system::IArena& arena,
     system::IClock& clock,
     io::adc::IStore& adc_store,
     io::adc::IConverter& adc_converter,
@@ -29,23 +30,24 @@ AnalogRelaySensorPipeline::AnalogRelaySensorPipeline(
 
     reader_ = adc_reader_.get();
 
-    sample_reader_.reset(new (std::nothrow)
-                             AnalogSampleReader(delayer, *reader_, config));
+    sample_reader_ = ocs::system::make_unique_ptr<AnalogSampleReader>(arena, delayer,
+                                                                      *reader_, config);
     configASSERT(sample_reader_);
 
     reader_ = sample_reader_.get();
 
-    fsm_block_pipeline_.reset(new (std::nothrow) control::FsmBlockPipeline(
-        clock, reboot_handler, task_scheduler, storage, id, params.fsm_block));
+    fsm_block_pipeline_ = ocs::system::make_unique_ptr<control::FsmBlockPipeline>(
+        arena, arena, clock, reboot_handler, task_scheduler, storage, id,
+        params.fsm_block);
     configASSERT(fsm_block_pipeline_);
 
-    sensor_.reset(new (std::nothrow) AnalogSensor(*reader_, adc_converter,
-                                                  fsm_block_pipeline_->get_block(),
-                                                  config, params.sensor));
+    sensor_ = ocs::system::make_unique_ptr<AnalogSensor>(arena, *reader_, adc_converter,
+                                                         fsm_block_pipeline_->get_block(),
+                                                         config, params.sensor);
     configASSERT(sensor_);
 
-    relay_sensor_.reset(new (std::nothrow) AnalogRelaySensor(
-        *sensor_, params.relay_gpio, params.power_on_delay_interval));
+    relay_sensor_ = ocs::system::make_unique_ptr<AnalogRelaySensor>(
+        arena, arena, *sensor_, params.relay_gpio, params.power_on_delay_interval);
     configASSERT(relay_sensor_);
 
     configASSERT(

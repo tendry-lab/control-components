@@ -14,25 +14,35 @@ namespace ocs {
 namespace pipeline {
 namespace basic {
 
-SystemPipeline::SystemPipeline() {
-    flash_initializer_ = std::make_unique<storage::FlashInitializer>();
-    clock_ = std::make_unique<system::Clock>();
-    fanout_reboot_handler_ = std::make_unique<system::FanoutRebootHandler>();
+SystemPipeline::SystemPipeline(system::IArena& arena,
+                               system::PlatformBuilder& platform_builder) {
+    flash_initializer_ = ocs::system::make_unique_ptr<storage::FlashInitializer>(arena);
+    configASSERT(flash_initializer_);
 
-    default_rebooter_ = system::PlatformBuilder::make_rebooter(*fanout_reboot_handler_);
+    clock_ = ocs::system::make_unique_ptr<system::Clock>(arena);
+    configASSERT(clock_);
+
+    fanout_reboot_handler_ =
+        ocs::system::make_unique_ptr<system::FanoutRebootHandler>(arena);
+    configASSERT(fanout_reboot_handler_);
+
+    default_rebooter_ = platform_builder.make_rebooter(*fanout_reboot_handler_);
+    configASSERT(default_rebooter_);
+
     rebooter_ = default_rebooter_.get();
 
-    delay_rebooter_ =
-        std::make_unique<system::DelayRebooter>(*rebooter_, pdMS_TO_TICKS(500));
+    delay_rebooter_ = ocs::system::make_unique_ptr<system::DelayRebooter>(
+        arena, *rebooter_, pdMS_TO_TICKS(500));
 
     rebooter_ = delay_rebooter_.get();
 
     configASSERT(rebooter_);
 
-    device_info_ = std::make_unique<system::DeviceInfo>(
-        CONFIG_OCS_CORE_FW_NAME, CONFIG_OCS_CORE_FW_VERSION,
+    device_info_ = ocs::system::make_unique_ptr<system::DeviceInfo>(
+        arena, arena, CONFIG_OCS_CORE_FW_NAME, CONFIG_OCS_CORE_FW_VERSION,
         CONFIG_OCS_CORE_FW_DESCRIPTION, CONFIG_OCS_CORE_PRODUCT_NAME,
         CONFIG_OCS_CORE_COMPANY_UUID);
+    configASSERT(device_info_);
 }
 
 system::IClock& SystemPipeline::get_clock() {

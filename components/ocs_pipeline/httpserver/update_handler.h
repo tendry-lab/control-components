@@ -13,6 +13,7 @@
 #include "ocs_http/ihandler.h"
 #include "ocs_http/irequest.h"
 #include "ocs_http/iresponse_writer.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/irebooter.h"
 #include "ocs_system/iupdater.h"
 
@@ -25,10 +26,12 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p updater to perform the firmware update process.
     //!  - @p rebooter to reboot the system once the firmware update process is finished.
     //!  - @p buffer_size - buffer size to read chunks of firmware from HTTP connection.
-    UpdateHandler(system::IUpdater& updater,
+    UpdateHandler(system::IArena& arena,
+                  system::IUpdater& updater,
                   system::IRebooter& rebooter,
                   size_t buffer_size);
 
@@ -42,10 +45,11 @@ private:
     const size_t buffer_size_ { 0 };
 
     core::StaticMutex mu_;
+    system::IArena& arena_;
     system::IUpdater& updater_;
     system::IRebooter& rebooter_;
 
-    std::unique_ptr<uint8_t[]> buffer_;
+    system::UniquePtr<uint8_t[]> buffer_;
 };
 
 } // namespace httpserver

@@ -9,6 +9,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_fmt/json/iformatter.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace fmt {
@@ -19,8 +20,9 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p size - underlying buffer size, in bytes, allocated on the heap.
-    explicit DynamicFormatter(size_t size);
+    DynamicFormatter(system::IArena& arena, size_t size);
 
     //! Format @p json into the underlying buffer.
     status::StatusCode format(cJSON* json) override;
@@ -33,7 +35,7 @@ private:
 
     const size_t size_ { 0 };
 
-    std::unique_ptr<char[]> buf_;
+    system::UniquePtr<char[]> buf_;
 };
 
 } // namespace json

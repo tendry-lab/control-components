@@ -21,6 +21,7 @@
 #include "ocs_onewire/serial_number_to_str.h"
 #include "ocs_sensor/ds18b20/scratchpad.h"
 #include "ocs_status/code_to_str.h"
+#include "ocs_system/heap_arena.h"
 #include "ocs_system/platform_builder.h"
 
 using namespace ocs;
@@ -127,7 +128,10 @@ void read_device(onewire::Bus& bus,
     configASSERT(formatter.add_number_cs("failed_attempts", failed_attempts));
 }
 
-void verify_bus_operations(VerifyParams verify_params, onewire::Bus::Params bus_params) {
+void verify_bus_operations(system::IArena& arena,
+                           system::PlatformBuilder& platform_builder,
+                           VerifyParams verify_params,
+                           onewire::Bus::Params bus_params) {
     fmt::json::CjsonUniqueBuilder builder;
 
     auto json = builder.make_object();
@@ -142,7 +146,7 @@ void verify_bus_operations(VerifyParams verify_params, onewire::Bus::Params bus_
 
     io::gpio::Gpio gpio(verify_params.gpio_num, true);
 
-    auto delayer = system::PlatformBuilder::make_rt_delayer();
+    auto delayer = platform_builder.make_rt_delayer();
     configASSERT(delayer);
 
     onewire::Bus bus(*delayer, gpio, bus_params);
@@ -171,7 +175,7 @@ void verify_bus_operations(VerifyParams verify_params, onewire::Bus::Params bus_
     }
 
     fmt::json::DynamicFormatter json_formatter(
-        CONFIG_OCS_TOOLS_DS18B20_VERIFIER_RESULT_BUFFER_SIZE);
+        arena, CONFIG_OCS_TOOLS_DS18B20_VERIFIER_RESULT_BUFFER_SIZE);
 
     configASSERT(json_formatter.format(json.get()) == status::StatusCode::OK);
 
@@ -181,7 +185,11 @@ void verify_bus_operations(VerifyParams verify_params, onewire::Bus::Params bus_
 } // namespace
 
 extern "C" void app_main(void) {
+    system::HeapArena heap_arena;
+    system::PlatformBuilder platform_builder(heap_arena);
+
     verify_bus_operations(
+        heap_arena, platform_builder,
         VerifyParams {
             .gpio_num =
                 static_cast<io::gpio::GpioNum>(CONFIG_OCS_TOOLS_DS18B20_VERIFIER_GPIO),

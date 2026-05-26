@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "ocs_scheduler/itask.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/irandomizer.h"
 #include "ocs_system/ireboot_handler.h"
 #include "ocs_system/irebooter.h"
@@ -18,29 +19,39 @@
 namespace ocs {
 namespace system {
 
-struct PlatformBuilder {
-    using IRtDelayerPtr = std::unique_ptr<IRtDelayer>;
-    using IRebooterPtr = std::unique_ptr<IRebooter>;
-    using IRandomizerPtr = std::unique_ptr<IRandomizer>;
-    using ITimerPtr = std::unique_ptr<ITimer>;
+class PlatformBuilder {
+public:
+    using IRtDelayerPtr = UniquePtr<IRtDelayer>;
+    using IRebooterPtr = UniquePtr<IRebooter>;
+    using IRandomizerPtr = UniquePtr<IRandomizer>;
+    using ITimerPtr = UniquePtr<ITimer>;
+
+    //! Initialize.
+    //!
+    //! @params
+    //!  - @p arena to perform dynamic allocations.
+    explicit PlatformBuilder(IArena& arena);
 
     //! Create real-time delayer for highly-accurate delays.
-    static IRtDelayerPtr make_rt_delayer();
+    IRtDelayerPtr make_rt_delayer();
 
     //! Create a basic system rebooter.
-    static IRebooterPtr make_rebooter(IRebootHandler& handler);
+    IRebooterPtr make_rebooter(IRebootHandler& handler);
 
     //! Create a basic system randomizer.
-    static IRandomizerPtr make_randomizer();
+    IRandomizerPtr make_randomizer();
 
     //! Create a high resolution timer.
     //!
     //!  - @p task to be invoked periodically at the configured interval.
     //!  - @p name to distinguish one timer from another.
     //!  - @p interval - timer interval.
-    static ITimerPtr make_high_resolution_timer(scheduler::ITask& task,
-                                                const char* name,
-                                                system::Time interval);
+    ITimerPtr make_high_resolution_timer(scheduler::ITask& task,
+                                         const char* name,
+                                         system::Time interval);
+
+private:
+    IArena& arena_;
 };
 
 } // namespace system

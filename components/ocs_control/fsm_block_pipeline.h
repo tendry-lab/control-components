@@ -11,6 +11,7 @@
 #include "ocs_control/fsm_block.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_system/fanout_reboot_handler.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace control {
@@ -28,12 +29,14 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p clock to count time spent in FSM states.
     //!  - @p reboot_handler to register reboot handlers.
     //!  - @p task_scheduler to register FSM tasks.
     //!  - @p storage for the FSM block.
     //!  - @p id to distinguish one FSM from another.
-    FsmBlockPipeline(system::IClock& clock,
+    FsmBlockPipeline(system::IArena& arena,
+                     system::IClock& clock,
                      system::FanoutRebootHandler& reboot_handler,
                      scheduler::ITaskScheduler& task_scheduler,
                      storage::IStorage& storage,
@@ -47,7 +50,7 @@ private:
     const std::string log_tag_;
     const std::string block_id_;
 
-    std::unique_ptr<FsmBlock> block_;
+    system::UniquePtr<FsmBlock> block_;
 };
 
 } // namespace control

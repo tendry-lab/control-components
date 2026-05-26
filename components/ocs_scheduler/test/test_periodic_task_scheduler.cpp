@@ -12,11 +12,18 @@
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_scheduler/constant_delay_estimator.h"
 #include "ocs_scheduler/periodic_task_scheduler.h"
+#include "ocs_system/heap_arena.h"
 #include "ocs_test/test_clock.h"
 #include "ocs_test/test_task.h"
 
 namespace ocs {
 namespace scheduler {
+
+namespace {
+
+system::HeapArena heap_arena;
+
+} // namespace
 
 TEST_CASE("Periodic task scheduler: add", "[ocs_scheduler], [periodic_task_scheduler]") {
     const system::Time interval = system::Duration::second;
@@ -29,7 +36,7 @@ TEST_CASE("Periodic task scheduler: add", "[ocs_scheduler], [periodic_task_sched
     test::TestTask task(status::StatusCode::OK);
     ConstantDelayEstimator estimator(delay);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 16);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
                       task_scheduler.add(task, task_id, interval));
@@ -62,7 +69,7 @@ TEST_CASE("Periodic task scheduler: add-duplicate: pending",
     test::TestTask task(status::StatusCode::OK);
     ConstantDelayEstimator estimator(delay);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 16);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
                       task_scheduler.add(task, "test_task", system::Duration::second));
@@ -78,7 +85,7 @@ TEST_CASE("Periodic task scheduler: add-duplicate: active",
     test::TestTask task(status::StatusCode::OK);
     ConstantDelayEstimator estimator(delay);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 16);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
                       task_scheduler.add(task, "test_task", system::Duration::second));
@@ -96,7 +103,7 @@ TEST_CASE("Periodic task scheduler: add-remove",
     test::TestClock clock;
     ConstantDelayEstimator estimator(delay);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 2);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 2);
 
     test::TestTask task1(status::StatusCode::OK);
     test::TestTask task2(status::StatusCode::OK);
@@ -129,7 +136,7 @@ TEST_CASE("Periodic task scheduler: add-remove-add",
     test::TestClock clock;
     ConstantDelayEstimator estimator(delay);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 2);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 2);
 
     test::TestTask task1(status::StatusCode::OK);
     test::TestTask task2(status::StatusCode::OK);
@@ -173,7 +180,7 @@ TEST_CASE("Periodic task scheduler: add-remove-remove",
     test::TestClock clock;
     ConstantDelayEstimator estimator(delay);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 2);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 2);
 
     test::TestTask task1(status::StatusCode::OK);
     test::TestTask task2(status::StatusCode::OK);
@@ -208,7 +215,7 @@ TEST_CASE("Periodic task scheduler: add-remove-collapse",
     test::TestClock clock;
     ConstantDelayEstimator estimator(delay);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 2);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 2);
 
     test::TestTask task1(status::StatusCode::OK);
     test::TestTask task2(status::StatusCode::OK);
@@ -250,8 +257,8 @@ TEST_CASE("Periodic task scheduler: add-remove-run",
     test::TestClock clock;
     ConstantDelayEstimator estimator(delay);
 
-    AsyncFuncScheduler func_scheduler(10);
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 2);
+    AsyncFuncScheduler func_scheduler(heap_arena, 10);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 2);
 
     test::TestTask task(status::StatusCode::OK);
 
@@ -288,7 +295,7 @@ TEST_CASE("Periodic task scheduler: add multiple tasks",
 
     ConstantDelayEstimator estimator(delay);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 16);
 
     using TaskPtr = std::shared_ptr<test::TestTask>;
     using TaskList = std::vector<TaskPtr>;
@@ -346,7 +353,7 @@ TEST_CASE("Periodic task scheduler: max number of tasks overflow: pending",
     clock.value = 42;
 
     ConstantDelayEstimator estimator(delay);
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 1);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 1);
 
     test::TestTask task1(status::StatusCode::OK);
     test::TestTask task2(status::StatusCode::OK);
@@ -376,7 +383,7 @@ TEST_CASE("Periodic task scheduler: max number of tasks overflow: active",
     test::TestClock clock;
     ConstantDelayEstimator estimator(delay);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 2);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 2);
 
     test::TestTask task1(status::StatusCode::OK);
     test::TestTask task2(status::StatusCode::OK);
@@ -405,7 +412,7 @@ TEST_CASE("Periodic task scheduler: add/remove multiple tasks",
 
     ConstantDelayEstimator estimator(delay);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 16);
 
     using TaskPtr = std::shared_ptr<test::TestTask>;
     using TaskList = std::vector<TaskPtr>;
@@ -492,7 +499,7 @@ TEST_CASE("Periodic task scheduler: zero delay",
     test::TestTask task(status::StatusCode::OK);
     ConstantDelayEstimator estimator(0);
 
-    PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+    PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "scheduler", 16);
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
                       task_scheduler.add(task, task_id, interval));

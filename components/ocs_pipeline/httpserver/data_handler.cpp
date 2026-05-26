@@ -14,13 +14,16 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-DataHandler::DataHandler(fmt::json::IFormatter& formatter, size_t buffer_size) {
-    fanout_formatter_.reset(new (std::nothrow) fmt::json::FanoutFormatter());
+DataHandler::DataHandler(system::IArena& arena,
+                         fmt::json::IFormatter& formatter,
+                         size_t buffer_size) {
+    fanout_formatter_ = ocs::system::make_unique_ptr<fmt::json::FanoutFormatter>(arena);
     configASSERT(fanout_formatter_);
 
     fanout_formatter_->add(formatter);
 
-    json_formatter_.reset(new (std::nothrow) fmt::json::DynamicFormatter(buffer_size));
+    json_formatter_ = ocs::system::make_unique_ptr<fmt::json::DynamicFormatter>(
+        arena, arena, buffer_size);
     configASSERT(json_formatter_);
 
     fanout_formatter_->add(*json_formatter_);

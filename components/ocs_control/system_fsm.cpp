@@ -48,7 +48,8 @@ const char* log_tag = "system_fsm";
 
 } // namespace
 
-SystemFsm::SystemFsm(system::IRebooter& rebooter,
+SystemFsm::SystemFsm(system::IArena& arena,
+                     system::IRebooter& rebooter,
                      system::IClock& clock,
                      scheduler::ITaskScheduler& task_scheduler,
                      scheduler::IEventHandler& init_handler,
@@ -57,6 +58,7 @@ SystemFsm::SystemFsm(system::IRebooter& rebooter,
                      IButton& button,
                      Params params)
     : params_(params)
+    , arena_(arena)
     , rebooter_(rebooter)
     , clock_(clock)
     , task_scheduler_(task_scheduler)
@@ -253,7 +255,8 @@ void SystemFsm::handle_state_fsr_done_() {
 void SystemFsm::add_fsr_task_() {
     configASSERT(!task_);
 
-    task_.reset(new (std::nothrow) FsrLedTask(led_, ILed::Priority::System));
+    task_ =
+        ocs::system::make_unique_ptr<FsrLedTask>(arena_, led_, ILed::Priority::System);
     configASSERT(task_);
 
     configASSERT(led_.try_lock(ILed::Priority::System) == status::StatusCode::OK);
@@ -266,8 +269,8 @@ void SystemFsm::add_fsr_task_() {
 void SystemFsm::add_led_task_(size_t flip_count) {
     configASSERT(!task_);
 
-    task_.reset(new (std::nothrow)
-                    FlipLedTask(*this, led_, ILed::Priority::System, flip_count));
+    task_ = ocs::system::make_unique_ptr<FlipLedTask>(arena_, *this, led_,
+                                                      ILed::Priority::System, flip_count);
     configASSERT(task_);
 
     configASSERT(led_.try_lock(ILed::Priority::System) == status::StatusCode::OK);

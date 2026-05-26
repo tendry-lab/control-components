@@ -12,7 +12,8 @@
 namespace ocs {
 namespace control {
 
-FsmBlockPipeline::FsmBlockPipeline(system::IClock& clock,
+FsmBlockPipeline::FsmBlockPipeline(system::IArena& arena,
+                                   system::IClock& clock,
                                    system::FanoutRebootHandler& reboot_handler,
                                    scheduler::ITaskScheduler& task_scheduler,
                                    storage::IStorage& storage,
@@ -23,8 +24,8 @@ FsmBlockPipeline::FsmBlockPipeline(system::IClock& clock,
     configASSERT(params.state_save_interval);
     configASSERT(params.state_interval_resolution);
 
-    block_.reset(new (std::nothrow) FsmBlock(
-        clock, storage, params.state_interval_resolution, block_id_.c_str()));
+    block_ = ocs::system::make_unique_ptr<FsmBlock>(
+        arena, clock, storage, params.state_interval_resolution, block_id_.c_str());
     configASSERT(block_);
 
     reboot_handler.add(*block_);

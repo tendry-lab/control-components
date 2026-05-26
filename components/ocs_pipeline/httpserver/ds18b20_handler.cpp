@@ -106,10 +106,12 @@ status::StatusCode find_rom_code(onewire::Bus& bus,
 
 } // namespace
 
-DS18B20Handler::DS18B20Handler(http::IRouter& router,
+DS18B20Handler::DS18B20Handler(system::IArena& arena,
                                system::ISuspender& suspender,
+                               http::IRouter& router,
                                sensor::ds18b20::Store& store)
-    : suspender_(suspender)
+    : arena_(arena)
+    , suspender_(suspender)
     , store_(store) {
     router.add(http::IRequest::Method::Get, "/api/v1/sensor/ds18b20/scan", *this);
 
@@ -481,7 +483,7 @@ status::StatusCode DS18B20Handler::erase_configuration_(cJSON* json,
 status::StatusCode DS18B20Handler::send_response_(size_t buffer_size,
                                                   cJSON* json,
                                                   http::IResponseWriter& w) {
-    fmt::json::DynamicFormatter json_formatter(buffer_size);
+    fmt::json::DynamicFormatter json_formatter(arena_, buffer_size);
 
     const auto code = json_formatter.format(json);
     if (code != status::StatusCode::OK) {

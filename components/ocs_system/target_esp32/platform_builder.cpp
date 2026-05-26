@@ -12,21 +12,26 @@
 namespace ocs {
 namespace system {
 
+PlatformBuilder::PlatformBuilder(IArena& arena)
+    : arena_(arena) {
+}
+
 PlatformBuilder::IRtDelayerPtr PlatformBuilder::make_rt_delayer() {
-    return IRtDelayerPtr(new (std::nothrow) RtDelayer());
+    return ocs::system::make_unique_ptr<RtDelayer>(arena_);
 }
 
 PlatformBuilder::IRebooterPtr PlatformBuilder::make_rebooter(IRebootHandler& handler) {
-    return IRebooterPtr(new (std::nothrow) Rebooter(handler));
+    return ocs::system::make_unique_ptr<Rebooter>(arena_, handler);
 }
 
 PlatformBuilder::IRandomizerPtr PlatformBuilder::make_randomizer() {
-    return IRandomizerPtr(new (std::nothrow) Randomizer());
+    return ocs::system::make_unique_ptr<Randomizer>(arena_);
 }
 
 PlatformBuilder::ITimerPtr PlatformBuilder::make_high_resolution_timer(
     scheduler::ITask& task, const char* name, system::Time interval) {
-    return ITimerPtr(new (std::nothrow) HighResolutionTimer(task, name, interval));
+    return ocs::system::make_unique_ptr<HighResolutionTimer>(arena_, task, name,
+                                                             interval);
 }
 
 } // namespace system

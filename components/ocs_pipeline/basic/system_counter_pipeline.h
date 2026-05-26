@@ -13,6 +13,7 @@
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_storage/istorage.h"
 #include "ocs_system/fanout_reboot_handler.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/iclock.h"
 
 namespace ocs {
@@ -23,18 +24,19 @@ namespace basic {
 class SystemCounterPipeline : private core::NonCopyable<> {
 public:
     //! Initilize counters.
-    SystemCounterPipeline(system::IClock& clock,
+    SystemCounterPipeline(system::IArena& arena,
+                          system::IClock& clock,
                           storage::IStorage& storage,
                           system::FanoutRebootHandler& reboot_handler,
                           scheduler::ITaskScheduler& task_scheduler,
                           diagnostic::CounterStore& counter_store);
 
 private:
-    std::unique_ptr<diagnostic::ICounter> uptime_counter_;
-    std::unique_ptr<diagnostic::BasicPersistentCounter> uptime_persistent_counter_;
+    system::UniquePtr<diagnostic::ICounter> uptime_counter_;
+    system::UniquePtr<diagnostic::BasicPersistentCounter> uptime_persistent_counter_;
 
-    std::unique_ptr<diagnostic::ICounter> lifetime_counter_;
-    std::unique_ptr<diagnostic::BasicPersistentCounter> lifetime_persistent_counter_;
+    system::UniquePtr<diagnostic::ICounter> lifetime_counter_;
+    system::UniquePtr<diagnostic::BasicPersistentCounter> lifetime_persistent_counter_;
 };
 
 } // namespace basic

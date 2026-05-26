@@ -13,6 +13,7 @@
 #include "ocs_http/ihandler.h"
 #include "ocs_http/irequest.h"
 #include "ocs_http/iresponse_writer.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace pipeline {
@@ -23,16 +24,19 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p formatter to format the data.
     //!  - @p buffer_size to hold the formatted JSON data, in bytes.
-    DataHandler(fmt::json::IFormatter& formatter, size_t buffer_size);
+    DataHandler(system::IArena& arena,
+                fmt::json::IFormatter& formatter,
+                size_t buffer_size);
 
     // Get data over HTTP.
     status::StatusCode serve_http(http::IResponseWriter& w, http::IRequest&) override;
 
 private:
-    std::unique_ptr<fmt::json::FanoutFormatter> fanout_formatter_;
-    std::unique_ptr<fmt::json::DynamicFormatter> json_formatter_;
+    system::UniquePtr<fmt::json::FanoutFormatter> fanout_formatter_;
+    system::UniquePtr<fmt::json::DynamicFormatter> json_formatter_;
 };
 
 } // namespace httpserver

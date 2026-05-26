@@ -8,6 +8,7 @@
 #include "ocs_io/gpio/types.h"
 #include "ocs_sensor/ds18b20/sensor.h"
 #include "ocs_sensor/ds18b20/store.h"
+#include "ocs_system/heap_arena.h"
 #include "ocs_test/memory_storage.h"
 
 namespace ocs {
@@ -28,13 +29,15 @@ struct TestDelayer : public system::IRtDelayer, private core::NonCopyable<> {
     }
 };
 
+system::HeapArena heap_arena;
+
 } // namespace
 
 TEST_CASE("DS18B20 store: schedule: empty store", "[ocs_sensor], [ds18b20_store]") {
     const io::gpio::GpioNum gpio_num = GPIO_NUM_26;
 
     TestDelayer delayer;
-    Store store(delayer, 16);
+    Store store(heap_arena, delayer, 16);
 
     auto future =
         store.schedule(gpio_num, [](onewire::Bus& bus, Store::SensorList& sensors) {
@@ -51,7 +54,7 @@ TEST_CASE("DS18B20 store: schedule: invalid GPIO", "[ocs_sensor], [ds18b20_store
     TEST_ASSERT_NOT_EQUAL(gpio_num, invalid_gpio_num);
 
     TestDelayer delayer;
-    Store store(delayer, 16);
+    Store store(heap_arena, delayer, 16);
     test::MemoryStorage storage;
     Sensor sensor(storage, sensor_id);
 
@@ -69,7 +72,7 @@ TEST_CASE("DS18B20 store: add sensor", "[ocs_sensor], [ds18b20_store]") {
     const io::gpio::GpioNum gpio_num = GPIO_NUM_26;
 
     TestDelayer delayer;
-    Store store(delayer, 16);
+    Store store(heap_arena, delayer, 16);
     test::MemoryStorage storage;
     Sensor sensor(storage, sensor_id);
 
@@ -93,7 +96,7 @@ TEST_CASE("DS18B20 store: read sensor configuration: non-configured",
     const io::gpio::GpioNum gpio_num = GPIO_NUM_26;
 
     TestDelayer delayer;
-    Store store(delayer, 16);
+    Store store(heap_arena, delayer, 16);
     test::MemoryStorage storage;
     Sensor sensor(storage, sensor_id);
 

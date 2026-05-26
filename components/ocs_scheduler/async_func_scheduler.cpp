@@ -19,14 +19,15 @@ const char* log_tag = "async_func_scheduler";
 
 } // namespace
 
-AsyncFuncScheduler::AsyncFuncScheduler(size_t max_event_count)
-    : max_event_count_(max_event_count) {
+AsyncFuncScheduler::AsyncFuncScheduler(system::IArena& arena, size_t max_event_count)
+    : max_event_count_(max_event_count)
+    , arena_(arena) {
     configASSERT(max_event_count_);
 
-    read_queue_.reset(new (std::nothrow) Queue());
+    read_queue_ = ocs::system::make_shared_ptr<Queue>(arena);
     configASSERT(read_queue_);
 
-    write_queue_.reset(new (std::nothrow) Queue());
+    write_queue_ = ocs::system::make_shared_ptr<Queue>(arena);
     configASSERT(write_queue_);
 }
 
@@ -61,7 +62,7 @@ AsyncFuncScheduler::FuturePtr AsyncFuncScheduler::add(AsyncFuncScheduler::Func f
         return nullptr;
     }
 
-    FuturePtr future(new (std::nothrow) core::Future());
+    auto future = ocs::system::make_shared_ptr<core::Future>(arena_);
     if (!future) {
         return nullptr;
     }

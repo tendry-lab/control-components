@@ -24,8 +24,9 @@ const char* log_tag = "i2c_master_bus";
 
 } // namespace
 
-MasterBus::MasterBus(i2c_master_bus_handle_t handle)
-    : handle_(handle) {
+MasterBus::MasterBus(system::IArena& arena, i2c_master_bus_handle_t handle)
+    : arena_(arena)
+    , handle_(handle) {
 }
 
 IBus::ITransceiverPtr
@@ -65,8 +66,8 @@ MasterBus::add(AddressLength len, Address addr, TransferSpeed speed) {
     auto device_ptr = MasterTransceiver::make_device_ptr(device);
     configASSERT(device_ptr);
 
-    return IBus::ITransceiverPtr(new (std::nothrow)
-                                     MasterTransceiver(handle_, device_ptr, addr));
+    return ocs::system::make_unique_ptr<MasterTransceiver>(arena_, handle_, device_ptr,
+                                                           addr);
 }
 
 } // namespace i2c
