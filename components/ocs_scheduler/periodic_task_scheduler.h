@@ -15,6 +15,7 @@
 #include "ocs_scheduler/idelay_estimator.h"
 #include "ocs_scheduler/itask.h"
 #include "ocs_scheduler/itask_scheduler.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/iclock.h"
 
 namespace ocs {
@@ -25,11 +26,13 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p clock to measure the time taken for a single round of execution.
     //!  - @p estimator to estimate the required delay after each round of execution.
     //!  - @p id to distinguish one scheduler from another.
     //!  - @p max_count - maximum number of tasks the scheduler can handle.
-    PeriodicTaskScheduler(system::IClock& clock,
+    PeriodicTaskScheduler(system::IArena& arena,
+                          system::IClock& clock,
                           IDelayEstimator& estimator,
                           const char* id,
                           size_t max_count);
@@ -102,6 +105,7 @@ private:
     system::Time total_ts_min_ { INT64_MAX };
     system::Time total_ts_max_ { INT64_MIN };
 
+    system::IArena& arena_;
     system::IClock& clock_;
     IDelayEstimator& estimator_;
 

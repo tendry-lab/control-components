@@ -20,15 +20,16 @@ const char* log_tag = "registration_json_formatter";
 
 } // namespace
 
-RegistrationFormatter::RegistrationFormatter(const system::DeviceInfo& device_info) {
-    fanout_formatter_.reset(new (std::nothrow) fmt::json::FanoutFormatter());
+RegistrationFormatter::RegistrationFormatter(system::IArena& arena,
+                                             const system::DeviceInfo& device_info) {
+    fanout_formatter_ = ocs::system::make_unique_ptr<fmt::json::FanoutFormatter>(arena);
     configASSERT(fanout_formatter_);
 
-    toolchain_formatter_.reset(new (std::nothrow) ToolchainFormatter());
+    toolchain_formatter_ = ocs::system::make_unique_ptr<ToolchainFormatter>(arena);
     configASSERT(toolchain_formatter_);
     fanout_formatter_->add(*toolchain_formatter_);
 
-    string_formatter_.reset(new (std::nothrow) fmt::json::StringFormatter());
+    string_formatter_ = ocs::system::make_unique_ptr<fmt::json::StringFormatter>(arena);
     configASSERT(string_formatter_);
     fanout_formatter_->add(*string_formatter_);
 

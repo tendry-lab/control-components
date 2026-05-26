@@ -18,10 +18,12 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-ApNetworkHandler::ApNetworkHandler(net::ApNetworkConfig& config,
-                                   system::IRebooter& rebooter)
-    : config_(config)
-    , rebooter_(rebooter) {
+ApNetworkHandler::ApNetworkHandler(system::IArena& arena,
+                                   system::IRebooter& rebooter,
+                                   net::ApNetworkConfig& config)
+    : arena_(arena)
+    , rebooter_(rebooter)
+    , config_(config) {
 }
 
 status::StatusCode ApNetworkHandler::serve_http(http::IResponseWriter& w,
@@ -125,7 +127,7 @@ status::StatusCode ApNetworkHandler::handle_get_(http::IResponseWriter& w) {
         return status::StatusCode::NoMem;
     }
 
-    fmt::json::DynamicFormatter json_formatter(64);
+    fmt::json::DynamicFormatter json_formatter(arena_, 64);
 
     auto code = json_formatter.format(json.get());
     if (code != status::StatusCode::OK) {

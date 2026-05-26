@@ -17,28 +17,31 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-HttpPipeline::HttpPipeline(system::IRebooter& rebooter,
+HttpPipeline::HttpPipeline(system::IArena& arena,
+                           system::IRebooter& rebooter,
                            net::MdnsConfig& mdns_config,
                            http::IRouter& router,
                            fmt::json::IFormatter& telemetry_formatter,
                            fmt::json::FanoutFormatter& registration_formatter,
                            Params params) {
-    telemetry_handler_.reset(new (std::nothrow) DataHandler(
-        telemetry_formatter, params.telemetry.buffer_size));
+    telemetry_handler_ = ocs::system::make_unique_ptr<DataHandler>(
+        arena, arena, telemetry_formatter, params.telemetry.buffer_size);
     configASSERT(telemetry_handler_);
 
-    registration_handler_.reset(new (std::nothrow) DataHandler(
-        registration_formatter, params.registration.buffer_size));
+    registration_handler_ = ocs::system::make_unique_ptr<DataHandler>(
+        arena, arena, registration_formatter, params.registration.buffer_size);
     configASSERT(registration_handler_);
 
-    reboot_handler_.reset(new (std::nothrow) RebootHandler(rebooter));
+    reboot_handler_ = ocs::system::make_unique_ptr<RebootHandler>(arena, rebooter);
     configASSERT(reboot_handler_);
 
-    mdns_handler_.reset(new (std::nothrow) MdnsHandler(mdns_config, rebooter));
+    mdns_handler_ =
+        ocs::system::make_unique_ptr<MdnsHandler>(arena, arena, rebooter, mdns_config);
     configASSERT(mdns_handler_);
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
-    system_state_handler_.reset(new (std::nothrow) SystemStateHandler(1024 * 2));
+    system_state_handler_ =
+        ocs::system::make_unique_ptr<SystemStateHandler>(arena, arena, 1024 * 2);
     configASSERT(system_state_handler_);
 
     router.add(http::IRequest::Method::Get, "/api/v1/system/report",

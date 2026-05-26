@@ -21,17 +21,6 @@ namespace httpserver {
 
 namespace {
 
-status::StatusCode send_json(http::IResponseWriter& w, cJSON* json, size_t size) {
-    fmt::json::DynamicFormatter json_formatter(size);
-
-    const auto code = json_formatter.format(json);
-    if (code != status::StatusCode::OK) {
-        return code;
-    }
-
-    return algo::ResponseOps::write_json(w, json_formatter.c_str());
-}
-
 bool format_config(fmt::json::CjsonObjectFormatter& formatter,
                    const sensor::AnalogConfig& config) {
     if (!formatter.add_number_cs("min", config.get_min())) {
@@ -55,8 +44,11 @@ const char* log_tag = "analog_config_store_handler";
 } // namespace
 
 AnalogConfigStoreHandler::AnalogConfigStoreHandler(
-    scheduler::AsyncFuncScheduler& func_scheduler, sensor::AnalogConfigStore& store)
-    : func_scheduler_(func_scheduler)
+    system::IArena& arena,
+    scheduler::AsyncFuncScheduler& func_scheduler,
+    sensor::AnalogConfigStore& store)
+    : arena_(arena)
+    , func_scheduler_(func_scheduler)
     , store_(store) {
 }
 
@@ -112,7 +104,7 @@ status::StatusCode AnalogConfigStoreHandler::handle_all_(http::IResponseWriter& 
         json.release();
     }
 
-    return send_json(w, array.get(), 256);
+    return send_json_(w, array.get(), 256);
 }
 
 status::StatusCode
@@ -223,7 +215,19 @@ AnalogConfigStoreHandler::handle_single_get_(http::IResponseWriter& w,
         return status::StatusCode::NoMem;
     }
 
-    return send_json(w, json.get(), 64);
+    return send_json_(w, json.get(), 64);
+}
+
+status::StatusCode
+AnalogConfigStoreHandler::send_json_(http::IResponseWriter& w, cJSON* json, size_t size) {
+    fmt::json::DynamicFormatter json_formatter(arena_, size);
+
+    const auto code = json_formatter.format(json);
+    if (code != status::StatusCode::OK) {
+        return code;
+    }
+
+    return algo::ResponseOps::write_json(w, json_formatter.c_str());
 }
 
 } // namespace httpserver

@@ -16,12 +16,14 @@
 namespace ocs {
 namespace scheduler {
 
-PeriodicTaskScheduler::PeriodicTaskScheduler(system::IClock& clock,
+PeriodicTaskScheduler::PeriodicTaskScheduler(system::IArena& arena,
+                                             system::IClock& clock,
                                              IDelayEstimator& estimator,
                                              const char* id,
                                              size_t max_count)
     : max_count_(max_count)
     , log_tag_(id)
+    , arena_(arena)
     , clock_(clock)
     , estimator_(estimator) {
     configASSERT(max_count_);
@@ -48,7 +50,7 @@ PeriodicTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
         return status::StatusCode::Error;
     }
 
-    NodePtr node(new (std::nothrow) Node(clock_, task, id, interval));
+    auto node = ocs::system::make_shared_ptr<Node>(arena_, clock_, task, id, interval);
     configASSERT(node);
 
     nodes_to_add_.push_back(node);

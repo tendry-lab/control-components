@@ -24,8 +24,9 @@ const char* log_tag = "ds18b20_store";
 
 } // namespace
 
-Store::Store(system::IRtDelayer& delayer, size_t max_event_count)
+Store::Store(system::IArena& arena, system::IRtDelayer& delayer, size_t max_event_count)
     : max_event_count_(max_event_count)
+    , arena_(arena)
     , delayer_(delayer) {
     configASSERT(max_event_count_);
 }
@@ -73,7 +74,8 @@ Store::NodePtr Store::get_node_(io::gpio::GpioNum gpio_num) {
 }
 
 Store::NodePtr Store::add_node_(io::gpio::GpioNum gpio_num) {
-    auto node = NodePtr(new (std::nothrow) Node(delayer_, gpio_num, max_event_count_));
+    auto node = ocs::system::make_shared_ptr<Node>(arena_, arena_, delayer_, gpio_num,
+                                                   max_event_count_);
     if (!node) {
         return nullptr;
     }
@@ -83,17 +85,18 @@ Store::NodePtr Store::add_node_(io::gpio::GpioNum gpio_num) {
     return node;
 }
 
-Store::Node::Node(system::IRtDelayer& delayer,
+Store::Node::Node(system::IArena& arena,
+                  system::IRtDelayer& delayer,
                   io::gpio::GpioNum gpio_num,
                   size_t max_event_count)
-    : func_scheduler_(max_event_count) {
-    gpio_.reset(new (std::nothrow) io::gpio::Gpio(gpio_num, true));
+    : func_scheduler_(arena, max_event_count) {
+    gpio_ = ocs::system::make_unique_ptr<io::gpio::Gpio>(arena, gpio_num, true);
     configASSERT(gpio_);
 
     // For timing selection, see reference:
     // https://www.analog.com/en/resources/technical-articles/1wire-communication-through-software.html
-    bus_.reset(new (std::nothrow) onewire::Bus(
-        delayer, *gpio_,
+    bus_ = ocs::system::make_unique_ptr<onewire::Bus>(
+        arena, delayer, *gpio_,
         onewire::Bus::Params {
             .reset_pulse_interval = system::Duration::microsecond * 480,
             .presence_pulse_interval = system::Duration::microsecond * 60,
@@ -104,7 +107,7 @@ Store::Node::Node(system::IRtDelayer& delayer,
             .read_bit_init_interval = system::Duration::microsecond * 5,
             .read_bit_rc_interval = system::Duration::microsecond * 5,
             .read_recovery_interval = system::Duration::microsecond * 1,
-        }));
+        });
     configASSERT(bus_);
 }
 

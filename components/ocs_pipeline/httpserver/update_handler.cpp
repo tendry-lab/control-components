@@ -46,10 +46,12 @@ const char* log_tag = "update_hanlder";
 
 } // namespace
 
-UpdateHandler::UpdateHandler(system::IUpdater& updater,
+UpdateHandler::UpdateHandler(system::IArena& arena,
+                             system::IUpdater& updater,
                              system::IRebooter& rebooter,
                              size_t buffer_size)
     : buffer_size_(buffer_size)
+    , arena_(arena)
     , updater_(updater)
     , rebooter_(rebooter) {
 }
@@ -129,7 +131,7 @@ status::StatusCode UpdateHandler::begin_(http::IRequest& r) {
 status::StatusCode UpdateHandler::write_(http::IRequest& r) {
     configASSERT(!buffer_);
 
-    buffer_.reset(new (std::nothrow) uint8_t[buffer_size_]);
+    buffer_ = ocs::system::make_unique_ptr<uint8_t[]>(arena_, buffer_size_);
     if (!buffer_) {
         return status::StatusCode::NoMem;
     }

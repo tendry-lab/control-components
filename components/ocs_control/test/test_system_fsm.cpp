@@ -10,6 +10,7 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_scheduler/constant_delay_estimator.h"
 #include "ocs_scheduler/periodic_task_scheduler.h"
+#include "ocs_system/heap_arena.h"
 #include "ocs_test/test_clock.h"
 #include "ocs_test/test_gpio.h"
 
@@ -58,13 +59,16 @@ struct TestInitHandler : public scheduler::IEventHandler, private core::NonCopya
     }
 };
 
+system::HeapArena heap_arena;
+
 } // namespace
 
 TEST_CASE("System FSM: button is pressed before LED reaction on system initialization",
           "[system_fsm], [ocs_control]") {
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
-    scheduler::PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+    scheduler::PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator,
+                                                    "scheduler", 16);
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
@@ -75,8 +79,8 @@ TEST_CASE("System FSM: button is pressed before LED reaction on system initializ
     TestInitHandler init_handler;
     TestButton button;
 
-    SystemFsm fsm(rebooter, clock, task_scheduler, init_handler, fsr_handler, led, button,
-                  SystemFsm::Params {});
+    SystemFsm fsm(heap_arena, rebooter, clock, task_scheduler, init_handler, fsr_handler,
+                  led, button, SystemFsm::Params {});
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
                       fsm.handle_pressed(system::Duration::second));
@@ -108,7 +112,8 @@ TEST_CASE("System FSM: button is pressed after LED reaction on system initializa
           "[system_fsm], [ocs_control]") {
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
-    scheduler::PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+    scheduler::PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator,
+                                                    "scheduler", 16);
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
@@ -119,8 +124,8 @@ TEST_CASE("System FSM: button is pressed after LED reaction on system initializa
     TestInitHandler init_handler;
     TestButton button;
 
-    SystemFsm fsm(rebooter, clock, task_scheduler, init_handler, fsr_handler, led, button,
-                  SystemFsm::Params {});
+    SystemFsm fsm(heap_arena, rebooter, clock, task_scheduler, init_handler, fsr_handler,
+                  led, button, SystemFsm::Params {});
 
     // Start LED reaction on system initialization.
     TEST_ASSERT_EQUAL(status::StatusCode::OK, fsm.run());
@@ -151,7 +156,8 @@ TEST_CASE("System FSM: button is pressed during LED reaction on system initializ
           "[system_fsm], [ocs_control]") {
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
-    scheduler::PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+    scheduler::PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator,
+                                                    "scheduler", 16);
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
@@ -162,8 +168,8 @@ TEST_CASE("System FSM: button is pressed during LED reaction on system initializ
     TestInitHandler init_handler;
     TestButton button;
 
-    SystemFsm fsm(rebooter, clock, task_scheduler, init_handler, fsr_handler, led, button,
-                  SystemFsm::Params {});
+    SystemFsm fsm(heap_arena, rebooter, clock, task_scheduler, init_handler, fsr_handler,
+                  led, button, SystemFsm::Params {});
 
     // Start LED reaction on system initialization.
     TEST_ASSERT_EQUAL(status::StatusCode::OK, fsm.run());
@@ -201,7 +207,8 @@ TEST_CASE("System FSM: button isn't released within interval",
           "[system_fsm], [ocs_control]") {
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
-    scheduler::PeriodicTaskScheduler task_scheduler(clock, estimator, "scheduler", 16);
+    scheduler::PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator,
+                                                    "scheduler", 16);
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
@@ -214,7 +221,8 @@ TEST_CASE("System FSM: button isn't released within interval",
 
     const system::Time release_interval = system::Duration::second * 5;
 
-    SystemFsm fsm(rebooter, clock, task_scheduler, init_handler, fsr_handler, led, button,
+    SystemFsm fsm(heap_arena, rebooter, clock, task_scheduler, init_handler, fsr_handler,
+                  led, button,
                   SystemFsm::Params {
                       .release_interval = release_interval,
                   });
@@ -251,8 +259,8 @@ TEST_CASE("System FSM: handle FSR", "[system_fsm], [ocs_control]") {
 
     test::TestClock scheduler_clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
-    scheduler::PeriodicTaskScheduler task_scheduler(scheduler_clock, estimator,
-                                                    "scheduler", 16);
+    scheduler::PeriodicTaskScheduler task_scheduler(heap_arena, scheduler_clock,
+                                                    estimator, "scheduler", 16);
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
@@ -264,8 +272,8 @@ TEST_CASE("System FSM: handle FSR", "[system_fsm], [ocs_control]") {
     TestButton button;
     test::TestClock fsm_clock;
 
-    SystemFsm fsm(rebooter, fsm_clock, task_scheduler, init_handler, fsr_handler, led,
-                  button,
+    SystemFsm fsm(heap_arena, rebooter, fsm_clock, task_scheduler, init_handler,
+                  fsr_handler, led, button,
                   SystemFsm::Params {
                       .fsr_wait_begin_interval = fsr_wait_begin_interval,
                       .fsr_wait_confirm_interval = fsr_wait_confirm_interval,
@@ -333,8 +341,8 @@ TEST_CASE("System FSM: FSR canceled: released too quickly",
 
     test::TestClock scheduler_clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
-    scheduler::PeriodicTaskScheduler task_scheduler(scheduler_clock, estimator,
-                                                    "scheduler", 16);
+    scheduler::PeriodicTaskScheduler task_scheduler(heap_arena, scheduler_clock,
+                                                    estimator, "scheduler", 16);
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
@@ -346,8 +354,8 @@ TEST_CASE("System FSM: FSR canceled: released too quickly",
     TestButton button;
     test::TestClock fsm_clock;
 
-    SystemFsm fsm(rebooter, fsm_clock, task_scheduler, init_handler, fsr_handler, led,
-                  button,
+    SystemFsm fsm(heap_arena, rebooter, fsm_clock, task_scheduler, init_handler,
+                  fsr_handler, led, button,
                   SystemFsm::Params {
                       .fsr_wait_begin_interval = fsr_wait_begin_interval,
                       .fsr_wait_confirm_interval = fsr_wait_confirm_interval,
@@ -393,8 +401,8 @@ TEST_CASE("System FSM: FSR canceled: isn't confirmed within timeout",
 
     test::TestClock scheduler_clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
-    scheduler::PeriodicTaskScheduler task_scheduler(scheduler_clock, estimator,
-                                                    "scheduler", 16);
+    scheduler::PeriodicTaskScheduler task_scheduler(heap_arena, scheduler_clock,
+                                                    estimator, "scheduler", 16);
 
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
@@ -406,8 +414,8 @@ TEST_CASE("System FSM: FSR canceled: isn't confirmed within timeout",
     TestButton button;
     test::TestClock fsm_clock;
 
-    SystemFsm fsm(rebooter, fsm_clock, task_scheduler, init_handler, fsr_handler, led,
-                  button,
+    SystemFsm fsm(heap_arena, rebooter, fsm_clock, task_scheduler, init_handler,
+                  fsr_handler, led, button,
                   SystemFsm::Params {
                       .fsr_wait_begin_interval = fsr_wait_begin_interval,
                       .fsr_wait_confirm_interval = fsr_wait_confirm_interval,

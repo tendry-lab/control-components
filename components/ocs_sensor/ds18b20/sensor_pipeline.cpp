@@ -9,13 +9,14 @@ namespace ocs {
 namespace sensor {
 namespace ds18b20 {
 
-SensorPipeline::SensorPipeline(scheduler::ITaskScheduler& task_scheduler,
+SensorPipeline::SensorPipeline(system::IArena& arena,
+                               scheduler::ITaskScheduler& task_scheduler,
                                storage::IStorage& storage,
                                Store& sensor_store,
                                const char* id,
                                SensorPipeline::Params params)
     : task_id_(std::string(id) + "_task") {
-    sensor_.reset(new (std::nothrow) Sensor(storage, id));
+    sensor_ = ocs::system::make_unique_ptr<Sensor>(arena, storage, id);
     configASSERT(sensor_);
 
     configASSERT(sensor_store.add(*sensor_, params.data_pin) == status::StatusCode::OK);

@@ -15,6 +15,7 @@
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_scheduler/constant_delay_estimator.h"
 #include "ocs_scheduler/periodic_task_scheduler.h"
+#include "ocs_system/heap_arena.h"
 #include "ocs_system/time.h"
 #include "ocs_test/task_scheduler_runner.h"
 #include "ocs_test/test_clock.h"
@@ -23,12 +24,19 @@
 namespace ocs {
 namespace control {
 
+namespace {
+
+system::HeapArena heap_arena;
+
+} // namespace
+
 TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") {
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
 
-    scheduler::PeriodicTaskScheduler task_scheduler(clock, estimator, "test", 10);
-    scheduler::AsyncFuncScheduler func_scheduler(10);
+    scheduler::PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "test",
+                                                    10);
+    scheduler::AsyncFuncScheduler func_scheduler(heap_arena, 10);
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
@@ -137,8 +145,9 @@ TEST_CASE("LED locator: disable locating when the LED is locked by another compo
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
 
-    scheduler::PeriodicTaskScheduler task_scheduler(clock, estimator, "test", 10);
-    scheduler::AsyncFuncScheduler func_scheduler(10);
+    scheduler::PeriodicTaskScheduler task_scheduler(heap_arena, clock, estimator, "test",
+                                                    10);
+    scheduler::AsyncFuncScheduler func_scheduler(heap_arena, 10);
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,

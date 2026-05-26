@@ -12,11 +12,11 @@ namespace ocs {
 namespace pipeline {
 namespace jsonfmt {
 
-TelemetryFormatter::TelemetryFormatter() {
-    fanout_formatter_.reset(new (std::nothrow) fmt::json::FanoutFormatter());
+TelemetryFormatter::TelemetryFormatter(system::IArena& arena) {
+    fanout_formatter_ = ocs::system::make_unique_ptr<fmt::json::FanoutFormatter>(arena);
     configASSERT(fanout_formatter_);
 
-    system_formatter_.reset(new (std::nothrow) SystemFormatter());
+    system_formatter_ = ocs::system::make_unique_ptr<SystemFormatter>(arena);
     configASSERT(system_formatter_);
 
     fanout_formatter_->add(*system_formatter_);

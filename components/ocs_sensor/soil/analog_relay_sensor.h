@@ -14,6 +14,7 @@
 #include "ocs_io/gpio/igpio.h"
 #include "ocs_io/gpio/types.h"
 #include "ocs_scheduler/itask.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace sensor {
@@ -25,10 +26,12 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p task to perform actual sensor reading.
     //!  - @p gpio_num - relay GPIO number.
     //!  - @p turn_on_delay_interval - how long to wait after the relay is activated.
-    AnalogRelaySensor(scheduler::ITask& task,
+    AnalogRelaySensor(system::IArena& arena,
+                      scheduler::ITask& task,
                       io::gpio::GpioNum gpio_num,
                       TickType_t turn_on_delay_interval);
 
@@ -38,7 +41,7 @@ public:
 private:
     scheduler::ITask& task_;
 
-    std::unique_ptr<io::gpio::IGpio> gpio_;
+    system::UniquePtr<io::gpio::IGpio> gpio_;
 };
 
 } // namespace soil

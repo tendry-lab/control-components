@@ -13,6 +13,7 @@
 #include "ocs_core/static_event_group.h"
 #include "ocs_scheduler/idelay_estimator.h"
 #include "ocs_scheduler/itask_scheduler.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/itimer.h"
 #include "ocs_system/platform_builder.h"
 
@@ -24,9 +25,14 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
+    //!  - @p platform_builder to build high-resolution timers.
     //!  - @p estimator to estimate the required delay after each round of execution.
     //!  - @p id to distinguish one scheduler from another.
-    AsyncTaskScheduler(IDelayEstimator& estimator, const char* id);
+    AsyncTaskScheduler(system::IArena& arena,
+                       system::PlatformBuilder& platform_builder,
+                       IDelayEstimator& estimator,
+                       const char* id);
 
     //! Maximum number of tasks to which a scheduler can deliver asynchronous events.
     size_t max_count() const override;
@@ -88,7 +94,9 @@ private:
 
         Node(ITask& task, EventBits_t event, const char* id, ClockType clock_type);
 
-        Node(ITask& task,
+        Node(system::IArena& arena,
+             system::PlatformBuilder& platform_builder,
+             ITask& task,
              EventGroupHandle_t event_group,
              EventBits_t event,
              system::Time interval,
@@ -110,7 +118,7 @@ private:
 
         ITask& task_;
 
-        std::unique_ptr<ITask> async_task_;
+        system::UniquePtr<ITask> async_task_;
         system::PlatformBuilder::ITimerPtr timer_;
     };
 
@@ -120,9 +128,12 @@ private:
 
     const std::string log_tag_;
 
+    system::IArena& arena_;
+    system::PlatformBuilder& platform_builder_;
     IDelayEstimator& estimator_;
 
-    std::vector<std::shared_ptr<Node>> nodes_;
+    using NodePtr = std::shared_ptr<Node>;
+    std::vector<NodePtr> nodes_;
 
     core::StaticEventGroup event_group_;
     EventBits_t bits_all_ { 0 };

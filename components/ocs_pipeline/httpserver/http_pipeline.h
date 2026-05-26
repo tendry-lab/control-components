@@ -10,6 +10,7 @@
 #include "ocs_http/irouter.h"
 #include "ocs_net/mdns_config.h"
 #include "ocs_scheduler/itask.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/irebooter.h"
 
 namespace ocs {
@@ -29,7 +30,8 @@ public:
     };
 
     //! Initialize.
-    HttpPipeline(system::IRebooter& rebooter,
+    HttpPipeline(system::IArena& arena,
+                 system::IRebooter& rebooter,
                  net::MdnsConfig& mdns_config,
                  http::IRouter& router,
                  fmt::json::IFormatter& telemetry_formatter,
@@ -42,13 +44,13 @@ public:
     http::IHandler& get_reboot_handler();
 
 private:
-    std::unique_ptr<http::IHandler> telemetry_handler_;
-    std::unique_ptr<http::IHandler> registration_handler_;
-    std::unique_ptr<http::IHandler> reboot_handler_;
-    std::unique_ptr<http::IHandler> mdns_handler_;
+    system::UniquePtr<http::IHandler> telemetry_handler_;
+    system::UniquePtr<http::IHandler> registration_handler_;
+    system::UniquePtr<http::IHandler> reboot_handler_;
+    system::UniquePtr<http::IHandler> mdns_handler_;
 
 #ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
-    std::unique_ptr<http::IHandler> system_state_handler_;
+    system::UniquePtr<http::IHandler> system_state_handler_;
 #endif // CONFIG_FREERTOS_USE_TRACE_FACILITY
 };
 

@@ -11,6 +11,8 @@
 #include "ocs_scheduler/async_task.h"
 #include "ocs_scheduler/async_task_scheduler.h"
 #include "ocs_scheduler/constant_delay_estimator.h"
+#include "ocs_system/heap_arena.h"
+#include "ocs_system/platform_builder.h"
 #include "ocs_test/task_scheduler_runner.h"
 #include "ocs_test/test_task.h"
 
@@ -37,13 +39,16 @@ void wait_task(test::TestTask& task) {
     }
 }
 
+system::HeapArena heap_arena;
+system::PlatformBuilder platform_builder(heap_arena);
+
 } // namespace
 
 TEST_CASE("Async task scheduler: wait for events",
           "[ocs_scheduler], [async_task_scheduler]") {
     const char* scheduler_id = "test";
     ConstantDelayEstimator estimator(portMAX_DELAY);
-    AsyncTaskScheduler scheduler(estimator, scheduler_id);
+    AsyncTaskScheduler scheduler(heap_arena, platform_builder, estimator, scheduler_id);
 
     test::TestTask task(status::StatusCode::OK);
 
@@ -62,7 +67,7 @@ TEST_CASE("Async task scheduler: register same task multiple times",
           "[ocs_scheduler], [async_task_scheduler]") {
     const char* scheduler_id = "test";
     ConstantDelayEstimator estimator(portMAX_DELAY);
-    AsyncTaskScheduler scheduler(estimator, scheduler_id);
+    AsyncTaskScheduler scheduler(heap_arena, platform_builder, estimator, scheduler_id);
 
     test::TestTask task(status::StatusCode::OK);
 
@@ -78,7 +83,7 @@ TEST_CASE("Async task scheduler: register maximum tasks",
           "[ocs_scheduler], [async_task_scheduler]") {
     const char* scheduler_id = "test";
     ConstantDelayEstimator estimator(pdMS_TO_TICKS(30));
-    AsyncTaskScheduler scheduler(estimator, scheduler_id);
+    AsyncTaskScheduler scheduler(heap_arena, platform_builder, estimator, scheduler_id);
 
     using TaskPtr = std::shared_ptr<test::TestTask>;
     std::vector<TaskPtr> tasks;
@@ -116,7 +121,7 @@ TEST_CASE("Async task scheduler: register maximum tasks: some failed",
           "[ocs_scheduler], [async_task_scheduler]") {
     const char* scheduler_id = "test";
     ConstantDelayEstimator estimator(pdMS_TO_TICKS(30));
-    AsyncTaskScheduler scheduler(estimator, scheduler_id);
+    AsyncTaskScheduler scheduler(heap_arena, platform_builder, estimator, scheduler_id);
 
     using TaskPtr = std::shared_ptr<test::TestTask>;
     std::vector<TaskPtr> tasks;
@@ -159,7 +164,7 @@ TEST_CASE("Async task scheduler: register tasks overflow",
           "[ocs_scheduler], [async_task_scheduler]") {
     const char* scheduler_id = "test";
     ConstantDelayEstimator estimator(pdMS_TO_TICKS(30));
-    AsyncTaskScheduler scheduler(estimator, scheduler_id);
+    AsyncTaskScheduler scheduler(heap_arena, platform_builder, estimator, scheduler_id);
 
     using TaskPtr = std::shared_ptr<test::TestTask>;
     std::vector<TaskPtr> tasks;
@@ -190,7 +195,7 @@ TEST_CASE("Async task scheduler: attach task",
           "[ocs_scheduler], [async_task_scheduler]") {
     const char* scheduler_id = "test";
     ConstantDelayEstimator estimator(portMAX_DELAY);
-    AsyncTaskScheduler scheduler(estimator, scheduler_id);
+    AsyncTaskScheduler scheduler(heap_arena, platform_builder, estimator, scheduler_id);
 
     test::TestTask task(status::StatusCode::OK);
 
@@ -212,7 +217,7 @@ TEST_CASE("Async task scheduler: add and attach task",
           "[ocs_scheduler], [async_task_scheduler]") {
     const char* scheduler_id = "test";
     ConstantDelayEstimator estimator(portMAX_DELAY);
-    AsyncTaskScheduler scheduler(estimator, scheduler_id);
+    AsyncTaskScheduler scheduler(heap_arena, platform_builder, estimator, scheduler_id);
 
     test::TestTask add_task(status::StatusCode::OK);
     test::TestTask attach_task(status::StatusCode::OK);

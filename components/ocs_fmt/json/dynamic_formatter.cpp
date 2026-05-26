@@ -13,11 +13,11 @@ namespace ocs {
 namespace fmt {
 namespace json {
 
-DynamicFormatter::DynamicFormatter(size_t size)
+DynamicFormatter::DynamicFormatter(system::IArena& arena, size_t size)
     : size_(size) {
     configASSERT(size_);
 
-    buf_.reset(new (std::nothrow) char[size_]);
+    buf_ = ocs::system::make_unique_ptr<char[]>(arena, size_);
     configASSERT(buf_);
 }
 

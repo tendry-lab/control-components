@@ -17,26 +17,30 @@ SelectNetworkPipeline::SelectNetworkPipeline(storage::IStorage& sta_config_stora
                                              storage::IStorage& ap_config_storage,
                                              net::INetworkHandler& network_handler,
                                              control::ConfigFsrHandler& fsr_handler,
+                                             system::IArena& arena,
                                              system::IRebooter& rebooter,
                                              const system::DeviceInfo& device_info) {
-    sta_config_.reset(new (std::nothrow) net::StaNetworkConfig(sta_config_storage));
+    sta_config_ =
+        ocs::system::make_unique_ptr<net::StaNetworkConfig>(arena, sta_config_storage);
     configASSERT(sta_config_);
 
     net::INetwork* network = nullptr;
     storage::IConfig* network_config = nullptr;
 
     if (sta_config_->valid()) {
-        sta_.reset(new (std::nothrow) net::StaNetwork(network_handler, *sta_config_));
+        sta_ = ocs::system::make_unique_ptr<net::StaNetwork>(arena, network_handler,
+                                                             *sta_config_);
         configASSERT(sta_);
 
         network = sta_.get();
         network_config = sta_config_.get();
     } else {
-        ap_config_.reset(new (std::nothrow)
-                             net::ApNetworkConfig(ap_config_storage, device_info));
+        ap_config_ = ocs::system::make_unique_ptr<net::ApNetworkConfig>(
+            arena, ap_config_storage, device_info);
         configASSERT(ap_config_);
 
-        ap_.reset(new (std::nothrow) net::ApNetwork(network_handler, *ap_config_));
+        ap_ = ocs::system::make_unique_ptr<net::ApNetwork>(arena, network_handler,
+                                                           *ap_config_);
         configASSERT(ap_);
 
         network = ap_.get();
@@ -46,14 +50,14 @@ SelectNetworkPipeline::SelectNetworkPipeline(storage::IStorage& sta_config_stora
     configASSERT(network);
     configASSERT(network_config);
 
-    wait_runner_.reset(new (std::nothrow)
-                           net::WaitNetworkRunner(*network, wait_start_interval_));
+    wait_runner_ = ocs::system::make_unique_ptr<net::WaitNetworkRunner>(
+        arena, *network, wait_start_interval_);
     configASSERT(wait_runner_);
 
     runner_ = wait_runner_.get();
 
-    reset_runner_.reset(new (std::nothrow)
-                            net::ResetNetworkRunner(*runner_, *network_config, rebooter));
+    reset_runner_ = ocs::system::make_unique_ptr<net::ResetNetworkRunner>(
+        arena, *runner_, *network_config, rebooter);
     configASSERT(reset_runner_);
 
     runner_ = reset_runner_.get();

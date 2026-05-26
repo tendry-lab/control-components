@@ -16,9 +16,12 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-MdnsHandler::MdnsHandler(net::MdnsConfig& config, system::IRebooter& rebooter)
-    : config_(config)
-    , rebooter_(rebooter) {
+MdnsHandler::MdnsHandler(system::IArena& arena,
+                         system::IRebooter& rebooter,
+                         net::MdnsConfig& config)
+    : arena_(arena)
+    , rebooter_(rebooter)
+    , config_(config) {
 }
 
 status::StatusCode MdnsHandler::serve_http(http::IResponseWriter& w, http::IRequest& r) {
@@ -46,7 +49,7 @@ status::StatusCode MdnsHandler::handle_get_(http::IResponseWriter& w) {
         return status::StatusCode::NoMem;
     }
 
-    fmt::json::DynamicFormatter json_formatter(64);
+    fmt::json::DynamicFormatter json_formatter(arena_, 64);
 
     auto code = json_formatter.format(json.get());
     if (code != status::StatusCode::OK) {

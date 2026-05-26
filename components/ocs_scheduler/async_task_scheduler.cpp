@@ -16,8 +16,13 @@
 namespace ocs {
 namespace scheduler {
 
-AsyncTaskScheduler::AsyncTaskScheduler(IDelayEstimator& estimator, const char* id)
+AsyncTaskScheduler::AsyncTaskScheduler(system::IArena& arena,
+                                       system::PlatformBuilder& platform_builder,
+                                       IDelayEstimator& estimator,
+                                       const char* id)
     : log_tag_(id)
+    , arena_(arena)
+    , platform_builder_(platform_builder)
     , estimator_(estimator) {
 }
 
@@ -39,8 +44,11 @@ AsyncTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
         return code;
     }
 
-    nodes_.emplace_back(
-        std::make_shared<Node>(task, event_group_.get(), event, interval, id));
+    auto node = ocs::system::make_shared_ptr<Node>(
+        arena_, arena_, platform_builder_, task, event_group_.get(), event, interval, id);
+    configASSERT(node);
+
+    nodes_.emplace_back(node);
 
     return status::StatusCode::OK;
 }
@@ -124,8 +132,11 @@ AsyncTaskScheduler::attach(EventBits_t& event, ITask& task, const char* id) {
         return code;
     }
 
-    nodes_.emplace_back(
-        std::make_shared<Node>(task, event, id, Node::ClockType::External));
+    auto node = ocs::system::make_shared_ptr<Node>(arena_, task, event, id,
+                                                   Node::ClockType::External);
+    configASSERT(node);
+
+    nodes_.emplace_back(node);
 
     return status::StatusCode::OK;
 }
@@ -171,17 +182,18 @@ AsyncTaskScheduler::Node::Node(ITask& task,
     , task_(task) {
 }
 
-AsyncTaskScheduler::Node::Node(ITask& task,
+AsyncTaskScheduler::Node::Node(system::IArena& arena,
+                               system::PlatformBuilder& platform_builder,
+                               ITask& task,
                                EventGroupHandle_t even_group,
                                EventBits_t event,
                                system::Time interval,
                                const char* id)
     : Node(task, event, id, ClockType::Internal) {
-    async_task_ = std::make_unique<AsyncTask>(even_group, event);
+    async_task_ = ocs::system::make_unique_ptr<AsyncTask>(arena, even_group, event);
     configASSERT(async_task_);
 
-    timer_ =
-        system::PlatformBuilder::make_high_resolution_timer(*async_task_, id, interval);
+    timer_ = platform_builder.make_high_resolution_timer(*async_task_, id, interval);
     configASSERT(timer_);
 }
 

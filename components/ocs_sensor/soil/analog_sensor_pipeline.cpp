@@ -16,6 +16,7 @@ AnalogSensorPipeline::AnalogSensorPipeline(system::IClock& clock,
                                            io::adc::IStore& adc_store,
                                            io::adc::IConverter& adc_converter,
                                            storage::IStorage& storage,
+                                           system::IArena& arena,
                                            system::IRtDelayer& delayer,
                                            system::FanoutRebootHandler& reboot_handler,
                                            scheduler::ITaskScheduler& task_scheduler,
@@ -27,21 +28,22 @@ AnalogSensorPipeline::AnalogSensorPipeline(system::IClock& clock,
 
     reader_ = adc_reader_.get();
 
-    sample_reader_.reset(new (std::nothrow)
-                             AnalogSampleReader(delayer, *reader_, config));
+    sample_reader_ = ocs::system::make_unique_ptr<AnalogSampleReader>(arena, delayer,
+                                                                      *reader_, config);
     configASSERT(sample_reader_);
 
     reader_ = sample_reader_.get();
 
     configASSERT(reader_);
 
-    fsm_block_pipeline_.reset(new (std::nothrow) control::FsmBlockPipeline(
-        clock, reboot_handler, task_scheduler, storage, id, params.fsm_block));
+    fsm_block_pipeline_ = ocs::system::make_unique_ptr<control::FsmBlockPipeline>(
+        arena, arena, clock, reboot_handler, task_scheduler, storage, id,
+        params.fsm_block);
     configASSERT(fsm_block_pipeline_);
 
-    sensor_.reset(new (std::nothrow) AnalogSensor(*reader_, adc_converter,
-                                                  fsm_block_pipeline_->get_block(),
-                                                  config, params.sensor));
+    sensor_ = ocs::system::make_unique_ptr<AnalogSensor>(arena, *reader_, adc_converter,
+                                                         fsm_block_pipeline_->get_block(),
+                                                         config, params.sensor);
     configASSERT(sensor_);
 }
 

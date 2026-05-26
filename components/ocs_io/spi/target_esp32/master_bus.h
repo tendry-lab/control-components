@@ -10,6 +10,7 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/types.h"
 #include "ocs_io/spi/ibus.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace io {
@@ -41,7 +42,11 @@ public:
     };
 
     //! Initialize SPI master bus.
-    explicit MasterBus(Params params);
+    //!
+    //! @params
+    //!  - @p arena to perform dynamic allocations.
+    //!  - @p params - various component settings.
+    MasterBus(system::IArena& arena, Params params);
 
     //! De-initialize SPI master bus.
     ~MasterBus();
@@ -51,6 +56,8 @@ public:
 
 private:
     const Params params_;
+
+    system::IArena& arena_;
 };
 
 } // namespace spi

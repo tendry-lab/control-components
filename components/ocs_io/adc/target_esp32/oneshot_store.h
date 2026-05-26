@@ -16,6 +16,7 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/adc/istore.h"
 #include "ocs_io/adc/target_esp32/oneshot_reader.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace io {
@@ -24,7 +25,10 @@ namespace adc {
 class OneshotStore : public IStore, private core::NonCopyable<> {
 public:
     //! Initialize ADC unit.
-    OneshotStore(adc_unit_t unit, adc_atten_t atten, adc_bitwidth_t bitwidth);
+    OneshotStore(system::IArena& arena,
+                 adc_unit_t unit,
+                 adc_atten_t atten,
+                 adc_bitwidth_t bitwidth);
 
     //! Release ADC unit resources.
     ~OneshotStore();
@@ -38,6 +42,8 @@ public:
     IStore::IReaderPtr add(Channel channel) override;
 
 private:
+    system::IArena& arena_;
+
     adc_oneshot_chan_cfg_t config_;
     adc_oneshot_unit_init_cfg_t unit_config_;
 

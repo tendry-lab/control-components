@@ -18,11 +18,12 @@ const char* log_tag = "analog_relay_sensor";
 
 } // namespace
 
-AnalogRelaySensor::AnalogRelaySensor(scheduler::ITask& task,
+AnalogRelaySensor::AnalogRelaySensor(system::IArena& arena,
+                                     scheduler::ITask& task,
                                      io::gpio::GpioNum gpio_num,
                                      TickType_t turn_on_delay_interval)
     : task_(task) {
-    gpio_.reset(new (std::nothrow) io::gpio::Gpio(gpio_num, true));
+    gpio_ = ocs::system::make_unique_ptr<io::gpio::Gpio>(arena, gpio_num, true);
     configASSERT(gpio_);
 }
 

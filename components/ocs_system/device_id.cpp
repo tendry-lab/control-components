@@ -24,7 +24,7 @@ const char* log_tag = "device_id";
 
 } // namespace
 
-DeviceID::DeviceID(const char* uuid) {
+DeviceID::DeviceID(IArena& arena, const char* uuid) {
     configASSERT(uuid);
     configASSERT(strlen(uuid));
 
@@ -48,7 +48,8 @@ DeviceID::DeviceID(const char* uuid) {
 
     const auto sha = generator.get_sha();
 
-    id_.reset(new (std::nothrow) security::sha_to_hex_str(sha.data(), sha.size()));
+    id_ = ocs::system::make_unique_ptr<security::sha_to_hex_str>(arena, sha.data(),
+                                                                 sha.size());
     configASSERT(id_);
 }
 

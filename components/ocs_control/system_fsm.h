@@ -16,6 +16,7 @@
 #include "ocs_scheduler/ievent_handler.h"
 #include "ocs_scheduler/itask.h"
 #include "ocs_scheduler/itask_scheduler.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/iclock.h"
 #include "ocs_system/irebooter.h"
 
@@ -24,7 +25,7 @@ namespace control {
 
 class SystemFsm : public IButtonHandler,
                   public scheduler::ITask,
-                  private scheduler::IEventHandler,
+                  public scheduler::IEventHandler,
                   private core::NonCopyable<> {
 public:
     struct Params {
@@ -41,6 +42,7 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p rebooter to be called when the button is pressed (ignored during the FSR).
     //!  - @p clock to measure the FSR state durations.
     //!  - @p task_scheduler to schedule the LED reactions.
@@ -49,7 +51,8 @@ public:
     //!  - @p led to signalize about the system events.
     //!  - @p button to check if the FSR is requested.
     //!  - @p params - various configuration parameters.
-    SystemFsm(system::IRebooter& rebooter,
+    SystemFsm(system::IArena& arena,
+              system::IRebooter& rebooter,
               system::IClock& clock,
               scheduler::ITaskScheduler& task_scheduler,
               scheduler::IEventHandler& init_handler,
@@ -103,6 +106,7 @@ private:
 
     const Params params_;
 
+    system::IArena& arena_;
     system::IRebooter& rebooter_;
     system::IClock& clock_;
     scheduler::ITaskScheduler& task_scheduler_;
@@ -111,7 +115,7 @@ private:
     ILed& led_;
     IButton& button_;
 
-    std::unique_ptr<scheduler::ITask> task_;
+    system::UniquePtr<scheduler::ITask> task_;
 
     core::StaticEventGroup event_group_;
     State state_ { State::Init };

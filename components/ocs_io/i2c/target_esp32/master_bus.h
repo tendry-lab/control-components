@@ -9,6 +9,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/i2c/ibus.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace io {
@@ -19,13 +20,16 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p handle - I2C bus handle.
-    explicit MasterBus(i2c_master_bus_handle_t handle);
+    MasterBus(system::IArena& arena, i2c_master_bus_handle_t handle);
 
     //! Add I2C device to the bus.
     ITransceiverPtr add(AddressLength len, Address addr, TransferSpeed speed) override;
 
 private:
+    system::IArena& arena_;
+
     i2c_master_bus_handle_t handle_ { nullptr };
 };
 

@@ -12,6 +12,7 @@
 #include "ocs_http/ihandler.h"
 #include "ocs_http/irouter.h"
 #include "ocs_sensor/ds18b20/store.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/isuspender.h"
 
 namespace ocs {
@@ -23,11 +24,13 @@ public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p router to register endpoints.
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p suspender to suspend the system during sensors operations.
+    //!  - @p router to register endpoints.
     //!  - @p store to perform operations on sensors.
-    DS18B20Handler(http::IRouter& router,
+    DS18B20Handler(system::IArena& arena,
                    system::ISuspender& suspender,
+                   http::IRouter& router,
                    sensor::ds18b20::Store& store);
 
 private:
@@ -89,6 +92,7 @@ private:
     status::StatusCode
     send_response_(size_t buffer_size, cJSON* json, http::IResponseWriter& w);
 
+    system::IArena& arena_;
     system::ISuspender& suspender_;
     sensor::ds18b20::Store& store_;
 };

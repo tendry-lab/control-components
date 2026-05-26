@@ -16,6 +16,7 @@
 #include "ocs_status/code_to_str.h"
 #include "ocs_storage/target_esp32/flash_initializer.h"
 #include "ocs_storage/target_esp32/nvs_storage.h"
+#include "ocs_system/heap_arena.h"
 #include "ocs_system/time.h"
 
 using namespace ocs;
@@ -94,7 +95,8 @@ void disable_power(io::gpio::GpioNum gpio_num) {
     configASSERT(power_gpio.turn_off() == status::StatusCode::OK);
 }
 
-void perform_verification(const VerificationConfig& verification_config) {
+void perform_verification(system::IArena& arena,
+                          const VerificationConfig& verification_config) {
     i2c_master_bus_config_t config;
     memset(&config, 0, sizeof(config));
 
@@ -111,7 +113,7 @@ void perform_verification(const VerificationConfig& verification_config) {
 
     I2cHandleDeleter i2c_handle_deleter(i2c_handle);
 
-    auto bus = std::make_unique<io::i2c::MasterBus>(i2c_handle);
+    auto bus = std::make_unique<io::i2c::MasterBus>(arena, i2c_handle);
 
     io::i2c::IBus::ITransceiverPtr sensor_transceiver =
         bus->add(io::i2c::AddressLength::Bit_7, verification_config.i2c_addr,
@@ -161,8 +163,9 @@ extern "C" void app_main(void) {
         enable_power(power_gpio_num);
     }
 
+    system::HeapArena heap_arena;
     VerificationConfig verification_config;
-    perform_verification(verification_config);
+    perform_verification(heap_arena, verification_config);
 
     if (power_gpio_num >= 0) {
         disable_power(power_gpio_num);

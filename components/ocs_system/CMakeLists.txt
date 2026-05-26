@@ -11,6 +11,8 @@ idf_component_register(
     "crc32_updater.cpp"
     "log_updater.cpp"
     "async_rebooter.cpp"
+    "heap_arena.cpp"
+    "guard_arena.cpp"
 
     "target_esp32/clock.cpp"
     "target_esp32/rebooter.cpp"

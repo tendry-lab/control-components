@@ -18,10 +18,12 @@ namespace ocs {
 namespace pipeline {
 namespace httpserver {
 
-StaNetworkHandler::StaNetworkHandler(net::StaNetworkConfig& config,
-                                     system::IRebooter& rebooter)
-    : config_(config)
-    , rebooter_(rebooter) {
+StaNetworkHandler::StaNetworkHandler(system::IArena& arena,
+                                     system::IRebooter& rebooter,
+                                     net::StaNetworkConfig& config)
+    : arena_(arena)
+    , rebooter_(rebooter)
+    , config_(config) {
 }
 
 status::StatusCode StaNetworkHandler::serve_http(http::IResponseWriter& w,
@@ -120,7 +122,7 @@ status::StatusCode StaNetworkHandler::handle_get_(http::IResponseWriter& w) {
         return status::StatusCode::NoMem;
     }
 
-    fmt::json::DynamicFormatter json_formatter(72);
+    fmt::json::DynamicFormatter json_formatter(arena_, 72);
 
     const auto code = json_formatter.format(json.get());
     if (code != status::StatusCode::OK) {

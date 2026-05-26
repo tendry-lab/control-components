@@ -21,8 +21,9 @@ const char* log_tag = "spi_master_bus";
 
 } // namespace
 
-MasterBus::MasterBus(MasterBus::Params params)
-    : params_(params) {
+MasterBus::MasterBus(system::IArena& arena, MasterBus::Params params)
+    : params_(params)
+    , arena_(arena) {
     configASSERT(params.max_transfer_size);
 
     spi_bus_config_t config;
@@ -66,7 +67,7 @@ IBus::ITransceiverPtr MasterBus::add(gpio::GpioNum cs, Mode mode, TransferSpeed 
     auto device_ptr = MasterTransceiver::make_device_shared(device);
     configASSERT(device_ptr);
 
-    return IBus::ITransceiverPtr(new (std::nothrow) MasterTransceiver(device_ptr));
+    return ocs::system::make_unique_ptr<MasterTransceiver>(arena_, device_ptr);
 }
 
 MasterBus::~MasterBus() {

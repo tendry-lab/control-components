@@ -9,6 +9,7 @@
 
 #include "ocs_core/noncopyable.h"
 #include "ocs_security/sha_to_hex_str.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace system {
@@ -18,14 +19,15 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p uuid - unique string identifier used during device ID generation.
-    explicit DeviceID(const char* uuid);
+    DeviceID(system::IArena& arena, const char* uuid);
 
     //! Return human-readable unique string device identifier.
     const char* get_id() const;
 
 private:
-    std::unique_ptr<security::sha_to_hex_str> id_;
+    UniquePtr<security::sha_to_hex_str> id_;
 };
 
 } // namespace system

@@ -15,6 +15,7 @@
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_sensor/soil/analog_sensor.h"
 #include "ocs_system/fanout_reboot_handler.h"
+#include "ocs_system/iarena.h"
 #include "ocs_system/iclock.h"
 #include "ocs_system/irt_delayer.h"
 
@@ -36,6 +37,7 @@ public:
                          io::adc::IStore& adc_store,
                          io::adc::IConverter& adc_converter,
                          storage::IStorage& storage,
+                         system::IArena& arena,
                          system::IRtDelayer& delayer,
                          system::FanoutRebootHandler& reboot_handler,
                          scheduler::ITaskScheduler& task_scheduler,
@@ -48,10 +50,10 @@ public:
 
 private:
     io::adc::IStore::IReaderPtr adc_reader_;
-    std::unique_ptr<io::adc::IReader> sample_reader_;
+    system::UniquePtr<io::adc::IReader> sample_reader_;
     io::adc::IReader* reader_ { nullptr };
-    std::unique_ptr<control::FsmBlockPipeline> fsm_block_pipeline_;
-    std::unique_ptr<AnalogSensor> sensor_;
+    system::UniquePtr<control::FsmBlockPipeline> fsm_block_pipeline_;
+    system::UniquePtr<AnalogSensor> sensor_;
 };
 
 } // namespace soil

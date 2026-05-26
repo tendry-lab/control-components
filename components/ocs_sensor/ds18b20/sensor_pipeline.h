@@ -11,6 +11,7 @@
 #include "ocs_io/gpio/types.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_sensor/ds18b20/store.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace sensor {
@@ -37,11 +38,13 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p task_scheduler to schedule periodic sensor readings.
     //!  - @p storage to persist sensor configuration.
     //!  - @p sensor_store to configure sensor.
     //!  - @p id to distinguish one sensor from another.
-    SensorPipeline(scheduler::ITaskScheduler& task_scheduler,
+    SensorPipeline(system::IArena& arena,
+                   scheduler::ITaskScheduler& task_scheduler,
                    storage::IStorage& storage,
                    Store& sensor_store,
                    const char* id,
@@ -53,7 +56,7 @@ public:
 private:
     const std::string task_id_;
 
-    std::unique_ptr<Sensor> sensor_;
+    system::UniquePtr<Sensor> sensor_;
 };
 
 } // namespace ds18b20

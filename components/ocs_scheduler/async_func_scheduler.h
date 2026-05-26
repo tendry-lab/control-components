@@ -13,6 +13,7 @@
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_recursive_mutex.h"
 #include "ocs_scheduler/itask.h"
+#include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace scheduler {
@@ -25,9 +26,10 @@ public:
     //! Initialize.
     //!
     //! @params
+    //!  - @p arena to perform dynamic allocations.
     //!  - @p max_event_count - maximum number of asynchronous events that can be enqueued
     //!    before run() is called.
-    explicit AsyncFuncScheduler(size_t max_event_count);
+    AsyncFuncScheduler(system::IArena& arena, size_t max_event_count);
 
     //! Run scheduled events.
     status::StatusCode run() override;
@@ -43,6 +45,8 @@ private:
 
     using Queue = std::vector<Func>;
     using QueuePtr = std::shared_ptr<Queue>;
+
+    system::IArena& arena_;
 
     core::StaticRecursiveMutex mu_;
     QueuePtr read_queue_;
