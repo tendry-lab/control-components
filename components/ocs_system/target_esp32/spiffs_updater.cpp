@@ -24,7 +24,7 @@ SpiffsUpdater::SpiffsUpdater(IUpdater& updater, const char* partition_label)
     , updater_(updater) {
 }
 
-status::StatusCode SpiffsUpdater::begin(size_t total_size, uint32_t crc32) {
+status::StatusCode SpiffsUpdater::begin(uint32_t total_size, uint32_t crc32) {
     const auto err = esp_vfs_spiffs_unregister(partition_label_.c_str());
     if (err != ESP_OK) {
         ocs_loge(log_tag, "esp_vfs_spiffs_unregister(): %s", esp_err_to_name(err));

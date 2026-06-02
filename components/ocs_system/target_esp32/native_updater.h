@@ -16,7 +16,7 @@ namespace system {
 class NativeUpdater : public IUpdater, private core::NonCopyable<> {
 public:
     //! Begin firmware update.
-    status::StatusCode begin(size_t total_size, uint32_t crc32) override;
+    status::StatusCode begin(uint32_t total_size, uint32_t crc32) override;
 
     //! Write firmware data.
     status::StatusCode write(const uint8_t* buf, size_t len) override;
