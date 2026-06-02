@@ -22,7 +22,7 @@ Crc32Updater::Crc32Updater(ICrc32Calculator& crc32_calculator, IUpdater& updater
     , updater_(updater) {
 }
 
-status::StatusCode Crc32Updater::begin(size_t total_size, uint32_t crc32) {
+status::StatusCode Crc32Updater::begin(uint32_t total_size, uint32_t crc32) {
     configASSERT(!crc32_src_);
     configASSERT(!crc32_clc_);
 

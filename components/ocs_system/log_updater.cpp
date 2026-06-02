@@ -16,8 +16,8 @@ LogUpdater::LogUpdater(IUpdater& updater, const char* log_tag)
     , updater_(updater) {
 }
 
-status::StatusCode LogUpdater::begin(size_t total_size, uint32_t crc32) {
-    ocs_logi(log_tag_.c_str(), "beginning firmware update: total_size=%zu crc32=%lu",
+status::StatusCode LogUpdater::begin(uint32_t total_size, uint32_t crc32) {
+    ocs_logi(log_tag_.c_str(), "beginning firmware update: total_size=%lu crc32=%lu",
              total_size, crc32);
 
     return updater_.begin(total_size, crc32);

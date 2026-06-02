@@ -17,7 +17,7 @@ const char* log_tag = "native_updater";
 
 } // namespace
 
-status::StatusCode NativeUpdater::begin(size_t total_size, uint32_t _) {
+status::StatusCode NativeUpdater::begin(uint32_t total_size, uint32_t _) {
     configASSERT(!handle_);
 
     const auto partition = esp_ota_get_next_update_partition(nullptr);

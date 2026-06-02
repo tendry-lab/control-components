@@ -24,7 +24,7 @@ public:
     //! @params
     //!  - @p total_size - total firmware size, in bytes.
     //!  - @p crc32 - CRC32 to verify data integrity.
-    virtual status::StatusCode begin(size_t total_size, uint32_t crc32) = 0;
+    virtual status::StatusCode begin(uint32_t total_size, uint32_t crc32) = 0;
 
     //! Write firmware data.
     //!

@@ -26,7 +26,7 @@ CacheUpdater::CacheUpdater(IUpdater& updater, size_t chunk_size)
     , updater_(updater) {
 }
 
-status::StatusCode CacheUpdater::begin(size_t total_size, uint32_t crc32) {
+status::StatusCode CacheUpdater::begin(uint32_t total_size, uint32_t crc32) {
     offset_ = 0;
     total_size_ = total_size;
     crc32_ = crc32;

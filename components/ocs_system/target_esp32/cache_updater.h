@@ -23,7 +23,7 @@ public:
     CacheUpdater(IUpdater& updater, size_t chunk_size);
 
     //! Begin firmware update.
-    status::StatusCode begin(size_t total_size, uint32_t crc32) override;
+    status::StatusCode begin(uint32_t total_size, uint32_t crc32) override;
 
     //! Write firmware data to the cached partition.
     status::StatusCode write(const uint8_t* buf, size_t len) override;
@@ -42,7 +42,7 @@ private:
     IUpdater& updater_;
 
     const esp_partition_t* partition_ { nullptr };
-    size_t total_size_ { 0 };
+    uint32_t total_size_ { 0 };
     size_t crc32_ { 0 };
     size_t offset_ { 0 };
 };

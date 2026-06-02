@@ -108,7 +108,7 @@ status::StatusCode UpdateHandler::serve_http(http::IResponseWriter& w,
 status::StatusCode UpdateHandler::begin_(http::IRequest& r) {
     const auto values = algo::UriOps::parse_query(r.get_uri());
 
-    size_t total_size = 0;
+    uint32_t total_size = 0;
     auto code = parse_number(total_size, "total_size", values);
     if (code != status::StatusCode::OK) {
         return code;

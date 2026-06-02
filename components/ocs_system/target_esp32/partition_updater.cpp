@@ -24,7 +24,7 @@ PartitionUpdater::PartitionUpdater(esp_partition_type_t type,
     configASSERT(partition_);
 }
 
-status::StatusCode PartitionUpdater::begin(size_t total_size, uint32_t crc32) {
+status::StatusCode PartitionUpdater::begin(uint32_t total_size, uint32_t crc32) {
     offset_ = 0;
 
     const auto err = esp_partition_erase_range(partition_, 0, partition_->size);
