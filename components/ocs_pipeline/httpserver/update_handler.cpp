@@ -42,7 +42,7 @@ parse_number(T& value, const char* key, const algo::UriOps::Values& values) {
     return status::StatusCode::OK;
 }
 
-const char* log_tag = "update_hanlder";
+const char* log_tag = "update_handler";
 
 } // namespace
 
