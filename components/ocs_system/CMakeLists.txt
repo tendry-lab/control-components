@@ -13,6 +13,7 @@ idf_component_register(
     "async_rebooter.cpp"
     "heap_arena.cpp"
     "guard_arena.cpp"
+    "func_rebooter.cpp"
 
     "target_esp32/clock.cpp"
     "target_esp32/rebooter.cpp"
