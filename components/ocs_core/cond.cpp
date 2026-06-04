@@ -21,7 +21,7 @@ status::StatusCode Cond::wait(TickType_t wait) {
     const auto count = ulTaskNotifyTake(pdTRUE, wait);
     OCS_STATUS_RETURN_ON_ERROR(locker_.lock());
 
-    return count != 0 ? status::StatusCode::OK : status::StatusCode::Error;
+    return count != 0 ? status::StatusCode::OK : status::StatusCode::Timeout;
 }
 
 status::StatusCode Cond::signal() {
