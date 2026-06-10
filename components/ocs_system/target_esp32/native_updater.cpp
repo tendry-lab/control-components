@@ -18,7 +18,16 @@ const char* log_tag = "native_updater";
 } // namespace
 
 status::StatusCode NativeUpdater::begin(uint32_t total_size, uint32_t _) {
-    configASSERT(!handle_);
+    if (handle_) {
+        ocs_logw(log_tag, "re-starting update process: committed=%d", committed_);
+
+        committed_ = false;
+
+        const auto code = end();
+        if (code != ocs::status::StatusCode::OK) {
+            return code;
+        }
+    }
 
     const auto partition = esp_ota_get_next_update_partition(nullptr);
     if (!partition) {
