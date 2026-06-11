@@ -23,15 +23,13 @@ Crc32Updater::Crc32Updater(ICrc32Calculator& crc32_calculator, IUpdater& updater
 }
 
 status::StatusCode Crc32Updater::begin(uint32_t total_size, uint32_t crc32) {
-    configASSERT(!crc32_src_);
-    configASSERT(!crc32_clc_);
-
-    crc32_src_ = crc32;
-
     const auto code = updater_.begin(total_size, crc32);
     if (code != status::StatusCode::OK) {
         return code;
     }
+
+    crc32_src_ = crc32;
+    crc32_clc_ = 0;
 
     return status::StatusCode::OK;
 }
@@ -67,15 +65,7 @@ status::StatusCode Crc32Updater::commit() {
 }
 
 status::StatusCode Crc32Updater::end() {
-    crc32_src_ = 0;
-    crc32_clc_ = 0;
-
-    const auto code = updater_.end();
-    if (code != status::StatusCode::OK) {
-        return code;
-    }
-
-    return status::StatusCode::OK;
+    return updater_.end();
 }
 
 } // namespace system
