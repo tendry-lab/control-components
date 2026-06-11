@@ -5,6 +5,7 @@
 
 #include "freertos/FreeRTOSConfig.h"
 
+#include "ocs_algo/math_ops.h"
 #include "ocs_core/log.h"
 #include "ocs_system/log_updater.h"
 
@@ -20,13 +21,28 @@ status::StatusCode LogUpdater::begin(uint32_t total_size, uint32_t crc32) {
     ocs_logi(log_tag_.c_str(), "beginning firmware update: total_size=%lu crc32=%lu",
              total_size, crc32);
 
+    total_size_ = total_size;
+    written_size_ = 0;
+
     return updater_.begin(total_size, crc32);
 }
 
 status::StatusCode LogUpdater::write(const uint8_t* buf, size_t len) {
-    ocs_logd(log_tag_.c_str(), "writing firmware data: len=%zu", len);
+    const auto code = updater_.write(buf, len);
+    if (code != ocs::status::StatusCode::OK) {
+        return code;
+    }
 
-    return updater_.write(buf, len);
+    configASSERT(total_size_);
+
+    written_size_ += len;
+
+    float progress = 100 * (static_cast<float>(written_size_) / total_size_);
+    progress = algo::MathOps::round_floor(progress, 1);
+
+    ocs_logi(log_tag_.c_str(), "writing firmware data: progress=%.1f", progress);
+
+    return ocs::status::StatusCode::OK;
 }
 
 status::StatusCode LogUpdater::commit() {

@@ -37,6 +37,9 @@ public:
 private:
     const std::string log_tag_;
 
+    uint32_t total_size_ { 0 };
+    uint32_t written_size_ { 0 };
+
     IUpdater& updater_;
 };
 
