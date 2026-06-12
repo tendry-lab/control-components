@@ -20,7 +20,7 @@
 #include "ocs_onewire/serial_number_to_str.h"
 #include "ocs_status/code_to_str.h"
 #include "ocs_system/heap_arena.h"
-#include "ocs_system/platform_builder.h"
+#include "ocs_system/target_esp32/rt_delayer.h"
 
 using namespace ocs;
 
@@ -79,7 +79,6 @@ void format_rom_code(cJSON* array,
 }
 
 void scan_rom_codes(system::IArena& arena,
-                    system::PlatformBuilder& platform_builder,
                     ScanParams scan_params,
                     onewire::Bus::Params bus_params) {
     fmt::json::CjsonUniqueBuilder builder;
@@ -95,7 +94,7 @@ void scan_rom_codes(system::IArena& arena,
 
     io::gpio::Gpio gpio(scan_params.gpio_num, true);
 
-    auto delayer = platform_builder.make_rt_delayer();
+    auto delayer = system::make_unique_ptr<system::RtDelayer>(arena);
     configASSERT(delayer);
 
     onewire::Bus bus(*delayer, gpio, bus_params);
@@ -129,9 +128,8 @@ void scan_rom_codes(system::IArena& arena,
 
 extern "C" void app_main(void) {
     system::HeapArena heap_arena;
-    system::PlatformBuilder platform_builder(heap_arena);
 
-    scan_rom_codes(heap_arena, platform_builder,
+    scan_rom_codes(heap_arena,
                    ScanParams {
                        .gpio_num = static_cast<io::gpio::GpioNum>(
                            CONFIG_OCS_TOOLS_ROM_CODE_SCANNER_GPIO),

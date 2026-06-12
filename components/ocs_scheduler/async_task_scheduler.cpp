@@ -12,17 +12,16 @@
 #include "ocs_scheduler/async_task.h"
 #include "ocs_scheduler/async_task_scheduler.h"
 #include "ocs_status/code_to_str.h"
+#include "ocs_system/target_esp32/high_resolution_timer.h"
 
 namespace ocs {
 namespace scheduler {
 
 AsyncTaskScheduler::AsyncTaskScheduler(system::IArena& arena,
-                                       system::PlatformBuilder& platform_builder,
                                        IDelayEstimator& estimator,
                                        const char* id)
     : log_tag_(id)
     , arena_(arena)
-    , platform_builder_(platform_builder)
     , estimator_(estimator) {
 }
 
@@ -45,7 +44,7 @@ AsyncTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
     }
 
     auto node = ocs::system::make_shared_ptr<Node>(
-        arena_, arena_, platform_builder_, task, event_group_.get(), event, interval, id);
+        arena_, arena_, task, event_group_.get(), event, interval, id);
     configASSERT(node);
 
     nodes_.emplace_back(node);
@@ -183,7 +182,6 @@ AsyncTaskScheduler::Node::Node(ITask& task,
 }
 
 AsyncTaskScheduler::Node::Node(system::IArena& arena,
-                               system::PlatformBuilder& platform_builder,
                                ITask& task,
                                EventGroupHandle_t even_group,
                                EventBits_t event,
@@ -193,7 +191,8 @@ AsyncTaskScheduler::Node::Node(system::IArena& arena,
     async_task_ = ocs::system::make_unique_ptr<AsyncTask>(arena, even_group, event);
     configASSERT(async_task_);
 
-    timer_ = platform_builder.make_high_resolution_timer(*async_task_, id, interval);
+    timer_ = ocs::system::make_unique_ptr<system::HighResolutionTimer>(
+        arena, *async_task_, id, interval);
     configASSERT(timer_);
 }
 

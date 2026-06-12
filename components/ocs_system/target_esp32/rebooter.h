@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "freertos/FreeRTOS.h"
+
 #include "ocs_core/noncopyable.h"
 #include "ocs_system/ireboot_handler.h"
 #include "ocs_system/irebooter.h"
@@ -18,12 +20,15 @@ public:
     //!
     //! @params
     //!  - @p handler to be notified before the actual reboot is happened.
-    explicit Rebooter(IRebootHandler& handler);
+    //!  - @p delay - optional delay before reboot.
+    Rebooter(IRebootHandler& handler, TickType_t delay);
 
     //! Restart the board.
     status::StatusCode reboot() override;
 
 private:
+    const TickType_t delay_ { 0 };
+
     IRebootHandler& handler_;
 };
 

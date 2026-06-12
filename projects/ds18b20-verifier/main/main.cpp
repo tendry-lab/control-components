@@ -22,7 +22,7 @@
 #include "ocs_sensor/ds18b20/scratchpad.h"
 #include "ocs_status/code_to_str.h"
 #include "ocs_system/heap_arena.h"
-#include "ocs_system/platform_builder.h"
+#include "ocs_system/target_esp32/rt_delayer.h"
 
 using namespace ocs;
 
@@ -129,7 +129,6 @@ void read_device(onewire::Bus& bus,
 }
 
 void verify_bus_operations(system::IArena& arena,
-                           system::PlatformBuilder& platform_builder,
                            VerifyParams verify_params,
                            onewire::Bus::Params bus_params) {
     fmt::json::CjsonUniqueBuilder builder;
@@ -146,7 +145,7 @@ void verify_bus_operations(system::IArena& arena,
 
     io::gpio::Gpio gpio(verify_params.gpio_num, true);
 
-    auto delayer = platform_builder.make_rt_delayer();
+    auto delayer = system::make_unique_ptr<system::RtDelayer>(arena);
     configASSERT(delayer);
 
     onewire::Bus bus(*delayer, gpio, bus_params);
@@ -186,10 +185,9 @@ void verify_bus_operations(system::IArena& arena,
 
 extern "C" void app_main(void) {
     system::HeapArena heap_arena;
-    system::PlatformBuilder platform_builder(heap_arena);
 
     verify_bus_operations(
-        heap_arena, platform_builder,
+        heap_arena,
         VerifyParams {
             .gpio_num =
                 static_cast<io::gpio::GpioNum>(CONFIG_OCS_TOOLS_DS18B20_VERIFIER_GPIO),
