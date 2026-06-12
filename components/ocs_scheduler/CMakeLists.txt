@@ -12,7 +12,9 @@ idf_component_register(
 
     REQUIRES
     "freertos"
+
     "ocs_core"
+    "ocs_system"
 
     INCLUDE_DIRS
     ".."

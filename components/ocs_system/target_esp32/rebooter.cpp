@@ -17,14 +17,19 @@ const char* log_tag = "rebooter";
 
 } // namespace
 
-Rebooter::Rebooter(IRebootHandler& handler)
-    : handler_(handler) {
+Rebooter::Rebooter(IRebootHandler& handler, TickType_t delay)
+    : delay_(delay)
+    , handler_(handler) {
 }
 
 status::StatusCode Rebooter::reboot() {
     ocs_logi(log_tag, "Prepare for rebooting...");
     handler_.handle_reboot();
     ocs_logi(log_tag, "Ready for rebooting...");
+
+    if (delay_) {
+        vTaskDelay(delay_);
+    }
 
     esp_restart();
 

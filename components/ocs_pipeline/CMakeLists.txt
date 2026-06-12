@@ -30,7 +30,6 @@ idf_component_register(
 
     "jsonfmt/target_esp32/toolchain_formatter.cpp"
 
-    "basic/system_pipeline.cpp"
     "basic/system_counter_pipeline.cpp"
     "basic/select_network_pipeline.cpp"
 

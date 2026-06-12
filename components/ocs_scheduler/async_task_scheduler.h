@@ -15,7 +15,6 @@
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_system/iarena.h"
 #include "ocs_system/itimer.h"
-#include "ocs_system/platform_builder.h"
 
 namespace ocs {
 namespace scheduler {
@@ -26,13 +25,9 @@ public:
     //!
     //! @params
     //!  - @p arena to perform dynamic allocations.
-    //!  - @p platform_builder to build high-resolution timers.
     //!  - @p estimator to estimate the required delay after each round of execution.
     //!  - @p id to distinguish one scheduler from another.
-    AsyncTaskScheduler(system::IArena& arena,
-                       system::PlatformBuilder& platform_builder,
-                       IDelayEstimator& estimator,
-                       const char* id);
+    AsyncTaskScheduler(system::IArena& arena, IDelayEstimator& estimator, const char* id);
 
     //! Maximum number of tasks to which a scheduler can deliver asynchronous events.
     size_t max_count() const override;
@@ -95,7 +90,6 @@ private:
         Node(ITask& task, EventBits_t event, const char* id, ClockType clock_type);
 
         Node(system::IArena& arena,
-             system::PlatformBuilder& platform_builder,
              ITask& task,
              EventGroupHandle_t event_group,
              EventBits_t event,
@@ -119,7 +113,7 @@ private:
         ITask& task_;
 
         system::UniquePtr<ITask> async_task_;
-        system::PlatformBuilder::ITimerPtr timer_;
+        system::UniquePtr<system::ITimer> timer_;
     };
 
     status::StatusCode allocate_event_(EventBits_t& event, const char* id);
@@ -129,7 +123,6 @@ private:
     const std::string log_tag_;
 
     system::IArena& arena_;
-    system::PlatformBuilder& platform_builder_;
     IDelayEstimator& estimator_;
 
     using NodePtr = std::shared_ptr<Node>;
