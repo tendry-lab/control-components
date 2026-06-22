@@ -41,8 +41,8 @@ SystemCounterPipeline::SystemCounterPipeline(system::IArena& arena,
             arena, storage, *lifetime_counter_);
     configASSERT(lifetime_persistent_counter_);
 
-    configASSERT(task_scheduler.add(*lifetime_persistent_counter_,
-                                    "lifetime_counter_task", system::Duration::hour)
+    configASSERT(task_scheduler.add(*lifetime_persistent_counter_, "c_sys_lifetime",
+                                    system::Duration::hour)
                  == status::StatusCode::OK);
 
     reboot_handler.add(*lifetime_persistent_counter_);
