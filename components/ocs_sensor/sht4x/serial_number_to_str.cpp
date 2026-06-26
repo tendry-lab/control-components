@@ -6,8 +6,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_sensor/sht4x/serial_number_to_str.h"
 
 namespace ocs {

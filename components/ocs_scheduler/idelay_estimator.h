@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include "ocs_core/freertos.h"
 
 namespace ocs {
 namespace scheduler {

@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_system/ireboot_handler.h"
 #include "ocs_system/irebooter.h"

@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
-#include "ocs_core/log.h"
 #include "ocs_system/guard_arena.h"
+#include "ocs_core/freertos.h"
+#include "ocs_core/log.h"
 
 namespace ocs {
 namespace system {

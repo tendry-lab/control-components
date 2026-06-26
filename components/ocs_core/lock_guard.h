@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_core/ilocker.h"
 #include "ocs_core/noncopyable.h"
 

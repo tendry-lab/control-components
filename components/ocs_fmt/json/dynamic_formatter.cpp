@@ -5,8 +5,7 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_fmt/json/dynamic_formatter.h"
 
 namespace ocs {

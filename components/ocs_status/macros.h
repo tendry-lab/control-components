@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "esp_compiler.h"
-
+#include "ocs_core/compiler.h"
 #include "ocs_status/code.h"
 
 //! If the status code is not OK, it returns.

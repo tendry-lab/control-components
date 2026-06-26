@@ -5,13 +5,11 @@
 
 #include <string>
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
 #include "unity.h"
 
 #include "ocs_control/gpio_led.h"
 #include "ocs_control/led_locator.h"
+#include "ocs_core/freertos.h"
 #include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_scheduler/constant_delay_estimator.h"
 #include "ocs_scheduler/periodic_task_scheduler.h"

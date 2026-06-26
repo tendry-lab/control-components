@@ -6,11 +6,10 @@
 #include <algorithm>
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "ocs_algo/bit_ops.h"
 #include "ocs_algo/crc_ops.h"
 #include "ocs_algo/math_ops.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_sensor/sht4x/command_to_str.h"
 #include "ocs_sensor/sht4x/sensor.h"

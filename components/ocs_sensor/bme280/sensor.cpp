@@ -6,10 +6,9 @@
 #include <cmath>
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "ocs_algo/bit_ops.h"
 #include "ocs_algo/math_ops.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_sensor/bme280/protocol.h"
 #include "ocs_sensor/bme280/sensor.h"

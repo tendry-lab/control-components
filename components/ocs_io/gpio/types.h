@@ -7,14 +7,29 @@
 
 #include <cstdint>
 
+#ifdef CONFIG_OCS_FIRMWARE_PLATFORM_STM32
+
+#else // !CONFIG_OCS_FIRMWARE_PLATFORM_STM32
+
 #include "driver/gpio.h"
+
+#endif // CONFIG_OCS_FIRMWARE_PLATFORM_STM32
 
 namespace ocs {
 namespace io {
 namespace gpio {
 
+#ifdef CONFIG_OCS_FIRMWARE_PLATFORM_STM32
+
+//! GPIO number.
+using GpioNum = uint16_t;
+
+#else // !CONFIG_OCS_FIRMWARE_PLATFORM_STM32
+
 //! GPIO number.
 using GpioNum = gpio_num_t;
+
+#endif // CONFIG_OCS_FIRMWARE_PLATFORM_STM32
 
 //! GPIO directions.
 enum class Direction : uint8_t {

@@ -6,9 +6,8 @@
 #include <cerrno>
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "ocs_core/file_stream_reader.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 
 namespace ocs {

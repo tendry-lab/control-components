@@ -5,8 +5,7 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_sensor/analog_config_store.h"
 
 namespace ocs {

@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
-#include "ocs_core/log.h"
 #include "ocs_io/i2c/target_esp32/master_transceiver.h"
+#include "ocs_core/freertos.h"
+#include "ocs_core/log.h"
 
 namespace ocs {
 namespace io {

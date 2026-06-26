@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/gpio/igpio.h"
 #include "ocs_status/code.h"

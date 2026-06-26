@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_pipeline/basic/select_network_pipeline.h"
+#include "ocs_core/freertos.h"
 #include "ocs_net/reset_network_runner.h"
 #include "ocs_net/wait_network_runner.h"
-#include "ocs_pipeline/basic/select_network_pipeline.h"
 
 namespace ocs {
 namespace pipeline {

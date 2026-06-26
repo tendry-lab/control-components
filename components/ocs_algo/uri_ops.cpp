@@ -5,9 +5,8 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "ocs_algo/uri_ops.h"
+#include "ocs_core/freertos.h"
 
 namespace ocs {
 namespace algo {

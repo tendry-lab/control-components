@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_status/code.h"
 
 namespace ocs {

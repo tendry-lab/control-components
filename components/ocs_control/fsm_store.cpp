@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "ocs_control/fsm_store.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_status/code_to_str.h"
 

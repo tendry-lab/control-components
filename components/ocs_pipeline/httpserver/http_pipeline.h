@@ -48,10 +48,6 @@ private:
     system::UniquePtr<http::IHandler> registration_handler_;
     system::UniquePtr<http::IHandler> reboot_handler_;
     system::UniquePtr<http::IHandler> mdns_handler_;
-
-#ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
-    system::UniquePtr<http::IHandler> system_state_handler_;
-#endif // CONFIG_FREERTOS_USE_TRACE_FACILITY
 };
 
 } // namespace httpserver

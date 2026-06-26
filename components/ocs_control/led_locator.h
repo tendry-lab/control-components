@@ -5,10 +5,9 @@
 
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-
 #include "ocs_control/iled.h"
 #include "ocs_control/ilocator.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_mutex.h"
 #include "ocs_scheduler/async_func_scheduler.h"

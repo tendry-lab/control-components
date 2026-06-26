@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
-#include "ocs_algo/bit_ops.h"
 #include "ocs_onewire/bus.h"
+#include "ocs_algo/bit_ops.h"
+#include "ocs_core/freertos.h"
 #include "ocs_status/macros.h"
 
 namespace ocs {

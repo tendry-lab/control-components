@@ -5,9 +5,8 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "ocs_core/basic_static_recursive_mutex.h"
+#include "ocs_core/freertos.h"
 
 namespace ocs {
 namespace core {

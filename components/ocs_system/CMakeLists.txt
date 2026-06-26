@@ -2,7 +2,6 @@ idf_component_register(
     SRCS
     "fanout_reboot_handler.cpp"
     "task_state_to_str.cpp"
-    "system_state_builder.cpp"
     "fanout_suspender.cpp"
     "suspender_guard.cpp"
     "device_id.cpp"
@@ -13,6 +12,8 @@ idf_component_register(
     "heap_arena.cpp"
     "guard_arena.cpp"
     "func_rebooter.cpp"
+    "freertos_timer.cpp"
+    "freertos_timer_builder.cpp"
 
     "target_esp32/clock.cpp"
     "target_esp32/rebooter.cpp"
@@ -20,6 +21,7 @@ idf_component_register(
     "target_esp32/rt_delayer.cpp"
     "target_esp32/randomizer.cpp"
     "target_esp32/high_resolution_timer.cpp"
+    "target_esp32/high_resolution_timer_builder.cpp"
     "target_esp32/le_crc32_calculator.cpp"
     "target_esp32/native_updater.cpp"
     "target_esp32/partition_updater.cpp"

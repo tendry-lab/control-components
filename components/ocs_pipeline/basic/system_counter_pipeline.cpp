@@ -3,12 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_pipeline/basic/system_counter_pipeline.h"
+#include "ocs_core/freertos.h"
 #include "ocs_diagnostic/acc_persistent_counter.h"
 #include "ocs_diagnostic/mem_persistent_counter.h"
 #include "ocs_diagnostic/time_counter.h"
-#include "ocs_pipeline/basic/system_counter_pipeline.h"
 
 namespace ocs {
 namespace pipeline {

@@ -5,9 +5,7 @@
 
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/event_groups.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_scheduler/itask.h"
 
 namespace ocs {

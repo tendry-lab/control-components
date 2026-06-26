@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "ocs_diagnostic/time_counter.h"
+#include "ocs_core/freertos.h"
 
 namespace ocs {
 namespace diagnostic {

@@ -5,11 +5,9 @@
 
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
 #include <string>
 
+#include "ocs_core/freertos.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_scheduler/itask_scheduler.h"
 #include "ocs_status/code.h"

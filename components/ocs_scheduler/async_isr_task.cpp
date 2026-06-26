@@ -17,9 +17,7 @@ status::StatusCode AsyncIsrTask::run() {
     BaseType_t task_woken = pdFALSE;
 
     xEventGroupSetBitsFromISR(handle_, event_, &task_woken);
-    if (task_woken) {
-        portYIELD_FROM_ISR();
-    }
+    portYIELD_FROM_ISR(task_woken);
 
     return status::StatusCode::OK;
 }

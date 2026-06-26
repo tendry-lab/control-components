@@ -7,12 +7,9 @@
 
 #include "unity.h"
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/FreeRTOSConfig.h"
-#include "freertos/task.h"
-
 #include "ocs_control/fsm_block.h"
 #include "ocs_control/test/test_fsm_block_storage.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_test/test_clock.h"
 

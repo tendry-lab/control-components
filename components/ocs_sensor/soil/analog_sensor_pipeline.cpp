@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
-#include "ocs_sensor/analog_sample_reader.h"
 #include "ocs_sensor/soil/analog_sensor_pipeline.h"
+#include "ocs_core/freertos.h"
+#include "ocs_sensor/analog_sample_reader.h"
 
 namespace ocs {
 namespace sensor {
