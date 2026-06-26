@@ -5,8 +5,7 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_io/adc/target_esp32/oneshot_store.h"
 

@@ -3,12 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
 #include "unity.h"
 
 #include "ocs_algo/time_ops.h"
+#include "ocs_core/freertos.h"
 #include "ocs_system/time.h"
 
 namespace ocs {

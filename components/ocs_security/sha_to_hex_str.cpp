@@ -6,8 +6,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_security/sha_to_hex_str.h"
 
 namespace ocs {

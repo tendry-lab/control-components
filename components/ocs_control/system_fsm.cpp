@@ -4,12 +4,13 @@
  */
 
 #include "ocs_control/system_fsm.h"
+#include "ocs_algo/bit_ops.h"
 #include "ocs_algo/time_ops.h"
 #include "ocs_control/flip_led_task.h"
 #include "ocs_core/log.h"
 #include "ocs_status/code_to_str.h"
 
-#define EVENT_BITS_BUTTON_PRESSED BIT0
+#define EVENT_BITS_BUTTON_PRESSED algo::BitOps::mask_u32(0)
 #define EVENT_BITS_ALL (EVENT_BITS_BUTTON_PRESSED)
 
 namespace ocs {
@@ -110,9 +111,7 @@ status::StatusCode SystemFsm::handle_pressed(system::Time duration) {
     BaseType_t task_woken = pdFALSE;
 
     xEventGroupSetBitsFromISR(event_group_.get(), EVENT_BITS_BUTTON_PRESSED, &task_woken);
-    if (task_woken) {
-        portYIELD_FROM_ISR();
-    }
+    portYIELD_FROM_ISR(task_woken);
 
     return status::StatusCode::OK;
 }

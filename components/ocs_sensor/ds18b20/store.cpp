@@ -5,8 +5,7 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_io/gpio/target_esp32/gpio.h"
 #include "ocs_sensor/ds18b20/resolution_to_str.h"

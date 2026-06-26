@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_scheduler/async_func_scheduler.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/lock_guard.h"
 #include "ocs_core/log.h"
-#include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_status/code_to_str.h"
 
 namespace ocs {

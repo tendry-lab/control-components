@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_security/isha_engine.h"
 
 namespace ocs {

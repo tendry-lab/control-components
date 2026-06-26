@@ -5,10 +5,9 @@
 
 #include <algorithm>
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "esp_ota_ops.h"
 
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_system/target_esp32/cache_updater.h"
 

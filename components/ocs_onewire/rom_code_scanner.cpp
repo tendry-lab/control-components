@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
-#include "ocs_algo/bit_ops.h"
 #include "ocs_onewire/rom_code_scanner.h"
+#include "ocs_algo/bit_ops.h"
+#include "ocs_core/freertos.h"
 #include "ocs_onewire/serial_number_to_str.h"
 #include "ocs_status/macros.h"
 
@@ -47,7 +46,7 @@ void RomCodeScanner::reset() {
 }
 
 status::StatusCode RomCodeScanner::scan_(uint8_t* buf, size_t size) {
-    for (int n = 0; n < size * bits_in_byte_; ++n) {
+    for (size_t n = 0; n < size * bits_in_byte_; ++n) {
         uint8_t bit1 = 0;
         OCS_STATUS_RETURN_ON_ERROR(bus_.read_bit(bit1));
 

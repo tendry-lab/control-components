@@ -5,16 +5,13 @@
 
 #include <unordered_map>
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/FreeRTOSConfig.h"
-#include "freertos/task.h"
-
 #include "unity.h"
 
 #include "ocs_control/fsm_block.h"
 #include "ocs_control/fsm_store.h"
 #include "ocs_control/ifsm_handler.h"
 #include "ocs_control/test/test_fsm_block_storage.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_test/test_clock.h"
 

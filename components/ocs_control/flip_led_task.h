@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include "ocs_control/iled.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_scheduler/ievent_handler.h"

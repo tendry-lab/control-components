@@ -5,10 +5,7 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/FreeRTOSConfig.h"
-#include "freertos/task.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_scheduler/periodic_task_scheduler.h"
 #include "ocs_status/code_to_str.h"

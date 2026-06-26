@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_pipeline/jsonfmt/registration_formatter.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_core/version.h"
-#include "ocs_pipeline/jsonfmt/registration_formatter.h"
 #include "ocs_pipeline/jsonfmt/toolchain_formatter.h"
 
 namespace ocs {

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include "cJSON.h"
 
 #include "ocs_core/noncopyable.h"

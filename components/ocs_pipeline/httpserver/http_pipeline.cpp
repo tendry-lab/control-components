@@ -9,10 +9,6 @@
 #include "ocs_pipeline/httpserver/reboot_handler.h"
 #include "ocs_status/code_to_str.h"
 
-#ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
-#include "ocs_pipeline/httpserver/system_state_handler.h"
-#endif // CONFIG_FREERTOS_USE_TRACE_FACILITY
-
 namespace ocs {
 namespace pipeline {
 namespace httpserver {
@@ -38,15 +34,6 @@ HttpPipeline::HttpPipeline(system::IArena& arena,
     mdns_handler_ =
         ocs::system::make_unique_ptr<MdnsHandler>(arena, arena, rebooter, mdns_config);
     configASSERT(mdns_handler_);
-
-#ifdef CONFIG_FREERTOS_USE_TRACE_FACILITY
-    system_state_handler_ =
-        ocs::system::make_unique_ptr<SystemStateHandler>(arena, arena, 1024 * 2);
-    configASSERT(system_state_handler_);
-
-    router.add(http::IRequest::Method::Get, "/api/v1/system/report",
-               *system_state_handler_);
-#endif // CONFIG_FREERTOS_USE_TRACE_FACILITY
 }
 
 http::IHandler& HttpPipeline::get_registration_handler() {

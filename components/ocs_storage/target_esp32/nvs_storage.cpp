@@ -6,8 +6,7 @@
 #include <algorithm>
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_storage/target_esp32/nvs_storage.h"
 

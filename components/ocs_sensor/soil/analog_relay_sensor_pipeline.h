@@ -8,10 +8,8 @@
 #include <memory>
 #include <string>
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
 #include "ocs_control/fsm_block_pipeline.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_io/adc/istore.h"
 #include "ocs_io/gpio/types.h"

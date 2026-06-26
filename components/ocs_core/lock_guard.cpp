@@ -4,6 +4,7 @@
  */
 
 #include "ocs_core/lock_guard.h"
+#include "ocs_core/compiler.h"
 #include "ocs_core/log.h"
 #include "ocs_status/code_to_str.h"
 

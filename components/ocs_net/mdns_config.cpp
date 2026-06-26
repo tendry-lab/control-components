@@ -5,9 +5,8 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "ocs_algo/storage_ops.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_net/mdns_config.h"
 

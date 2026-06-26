@@ -5,8 +5,7 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_status/code_to_str.h"
 #include "ocs_system/target_esp32/high_resolution_timer.h"

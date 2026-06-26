@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "ocs_sensor/bme280/spi_sensor_pipeline.h"
+#include "ocs_core/freertos.h"
 #include "ocs_sensor/bme280/spi_transceiver.h"
 
 namespace ocs {

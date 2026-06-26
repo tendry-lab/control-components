@@ -5,9 +5,8 @@
 
 #include <algorithm>
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "ocs_control/led_locator.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/lock_guard.h"
 #include "ocs_core/log.h"
 #include "ocs_status/code_to_str.h"

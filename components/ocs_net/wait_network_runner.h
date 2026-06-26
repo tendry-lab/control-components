@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_net/inetwork.h"
 #include "ocs_net/inetwork_runner.h"

@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "freertos/FreeRTOSConfig.h"
-
-#include "ocs_algo/math_ops.h"
-#include "ocs_core/log.h"
 #include "ocs_system/log_updater.h"
+#include "ocs_algo/math_ops.h"
+#include "ocs_core/freertos.h"
+#include "ocs_core/log.h"
 
 namespace ocs {
 namespace system {

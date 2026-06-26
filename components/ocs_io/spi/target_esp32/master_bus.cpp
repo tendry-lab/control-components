@@ -5,8 +5,7 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_io/spi/target_esp32/master_bus.h"
 #include "ocs_io/spi/target_esp32/master_transceiver.h"

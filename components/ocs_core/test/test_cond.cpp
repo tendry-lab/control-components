@@ -9,12 +9,10 @@
 #include <string>
 #include <vector>
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
 #include "unity.h"
 
 #include "ocs_core/cond.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/lock_guard.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_mutex.h"

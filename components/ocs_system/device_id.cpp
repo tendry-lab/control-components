@@ -5,10 +5,9 @@
 
 #include <cstring>
 
-#include "freertos/FreeRTOSConfig.h"
-
 #include "esp_mac.h"
 
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_security/mbedtls_sha_engine.h"
 #include "ocs_security/sha_generator.h"
