@@ -61,7 +61,7 @@ UriOps::Values UriOps::parse_query(const char* uri) {
 
     while (true) {
         // Check if last symbol.
-        if (query_start - uri == strlen(uri)) {
+        if (static_cast<size_t>(query_start - uri) == strlen(uri)) {
             break;
         }
 
