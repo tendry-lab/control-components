@@ -12,12 +12,12 @@
     ((TickType_t)((uint64_t)(xTicks) * 1000 / configTICK_RATE_HZ))
 #endif // !pdTICKS_TO_MS
 
-#include "FreeRTOS.h"
-#include "event_groups.h"
-#include "queue.h"
-#include "semphr.h"
-#include "task.h"
-#include "timers.h"
+#include <FreeRTOS.h>
+#include <event_groups.h>
+#include <queue.h>
+#include <semphr.h>
+#include <task.h>
+#include <timers.h>
 
 #else // !CONFIG_OCS_FIRMWARE_PLATFORM_STM32
 
