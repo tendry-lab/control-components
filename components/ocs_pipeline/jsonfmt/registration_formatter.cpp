@@ -20,7 +20,8 @@ const char* log_tag = "registration_json_formatter";
 } // namespace
 
 RegistrationFormatter::RegistrationFormatter(system::IArena& arena,
-                                             const system::DeviceInfo& device_info) {
+                                             const system::DeviceInfo& device_info,
+                                             const system::IDeviceId& device_id) {
     fanout_formatter_ = ocs::system::make_unique_ptr<fmt::json::FanoutFormatter>(arena);
     configASSERT(fanout_formatter_);
 
@@ -42,7 +43,7 @@ RegistrationFormatter::RegistrationFormatter(system::IArena& arena,
 
     string_formatter_->add("fw_name", device_info.get_fw_name());
     string_formatter_->add("fw_description", device_info.get_fw_description());
-    string_formatter_->add("device_id", device_info.get_device_id());
+    string_formatter_->add("device_id", device_id.get_id());
     string_formatter_->add("product_name", device_info.get_product_name());
 }
 

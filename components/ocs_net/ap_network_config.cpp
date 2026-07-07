@@ -6,6 +6,7 @@
 #include <cstring>
 
 #include "ocs_algo/storage_ops.h"
+#include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 #include "ocs_net/ap_network_config.h"
 #include "ocs_status/code_to_str.h"
@@ -20,7 +21,8 @@ const char* log_tag = "ap_network_config";
 } // namespace
 
 ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
-                                 const system::DeviceInfo& device_info)
+                                 const system::DeviceInfo& device_info,
+                                 const system::IDeviceId& device_id)
     : storage_(storage) {
     memset(ssid_, 0, sizeof(ssid_));
     memset(password_, 0, sizeof(password_));
@@ -31,7 +33,7 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
     // from the device ID.
     configASSERT(builtin_ssid.size() < max_ssid_len_);
     configASSERT(max_ssid_len_ - builtin_ssid.size() >= device_id_ssid_len_);
-    builtin_ssid += device_info.get_device_id();
+    builtin_ssid += device_id.get_id();
 
     strncpy(ssid_, builtin_ssid.c_str(),
             std::min(max_ssid_len_, static_cast<uint8_t>(builtin_ssid.size())));
@@ -44,9 +46,9 @@ ApNetworkConfig::ApNetworkConfig(storage::IStorage& storage,
                      status::code_to_str(code));
         }
 
-        strncpy(password_, device_info.get_device_id(),
-                std::min(min_password_len,
-                         static_cast<uint8_t>(strlen(device_info.get_device_id()))));
+        strncpy(
+            password_, device_id.get_id(),
+            std::min(min_password_len, static_cast<uint8_t>(strlen(device_id.get_id()))));
     }
 
     code =

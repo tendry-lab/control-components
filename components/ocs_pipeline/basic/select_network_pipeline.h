@@ -16,6 +16,8 @@
 #include "ocs_net/target_esp32/ap_network.h"
 #include "ocs_net/target_esp32/sta_network.h"
 #include "ocs_system/device_info.h"
+#include "ocs_system/iarena.h"
+#include "ocs_system/idevice_id.h"
 #include "ocs_system/irebooter.h"
 
 namespace ocs {
@@ -35,7 +37,8 @@ public:
                           control::ConfigFsrHandler& fsr_handler,
                           system::IArena& arena,
                           system::IRebooter& rebooter,
-                          const system::DeviceInfo& device_info);
+                          const system::DeviceInfo& device_info,
+                          const system::IDeviceId& device_id);
 
     net::INetworkRunner& get_runner();
     net::IApNetwork* get_ap_network();
