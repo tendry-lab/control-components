@@ -8,17 +8,14 @@
 namespace ocs {
 namespace system {
 
-DeviceInfo::DeviceInfo(IArena& arena,
-                       const char* fw_name,
+DeviceInfo::DeviceInfo(const char* fw_name,
                        const char* fw_version,
                        const char* fw_description,
-                       const char* product_name,
-                       const char* company_uuid)
+                       const char* product_name)
     : fw_name_(fw_name)
     , fw_version_(fw_version)
     , fw_description_(fw_description)
-    , product_name_(product_name)
-    , device_id_(arena, company_uuid) {
+    , product_name_(product_name) {
 }
 
 const char* DeviceInfo::get_fw_name() const {
@@ -31,10 +28,6 @@ const char* DeviceInfo::get_fw_description() const {
 
 const char* DeviceInfo::get_fw_version() const {
     return fw_version_.c_str();
-}
-
-const char* DeviceInfo::get_device_id() const {
-    return device_id_.get_id();
 }
 
 const char* DeviceInfo::get_product_name() const {

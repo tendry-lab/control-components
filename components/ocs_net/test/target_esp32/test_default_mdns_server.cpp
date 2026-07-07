@@ -10,6 +10,7 @@
 #include "ocs_net/target_esp32/default_mdns_server.h"
 #include "ocs_storage/target_esp32/flash_initializer.h"
 #include "ocs_system/heap_arena.h"
+#include "ocs_system/target_esp32/device_id.h"
 
 namespace ocs {
 namespace net {
@@ -47,9 +48,9 @@ TEST_CASE("Default mDNS server: start/stop", "[ocs_net], [default_mdns_server]")
     FanoutNetworkHandler handler;
 
     TestStorage storage;
-    system::DeviceInfo device_info(heap_arena, "test-firmware", "0.0.0", "Test Firmware",
-                                   "product", "company");
-    ApNetworkConfig config(storage, device_info);
+    system::DeviceInfo device_info("test-firmware", "0.0.0", "Test Firmware", "product");
+    system::DeviceId device_id(heap_arena, "company");
+    ApNetworkConfig config(storage, device_info, device_id);
 
     ApNetwork network(handler, config);
 

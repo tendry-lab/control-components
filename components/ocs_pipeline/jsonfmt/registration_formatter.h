@@ -13,6 +13,7 @@
 #include "ocs_fmt/json/string_formatter.h"
 #include "ocs_system/device_info.h"
 #include "ocs_system/iarena.h"
+#include "ocs_system/idevice_id.h"
 
 namespace ocs {
 namespace pipeline {
@@ -21,7 +22,9 @@ namespace jsonfmt {
 class RegistrationFormatter : public fmt::json::IFormatter, private core::NonCopyable<> {
 public:
     //! Initialize.
-    RegistrationFormatter(system::IArena& arena, const system::DeviceInfo& device_info);
+    RegistrationFormatter(system::IArena& arena,
+                          const system::DeviceInfo& device_info,
+                          const system::IDeviceId& device_id);
 
     //! Format the underlying data into @p json.
     status::StatusCode format(cJSON* json) override;

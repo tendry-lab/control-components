@@ -9,6 +9,7 @@
 #include "ocs_storage/iconfig.h"
 #include "ocs_storage/istorage.h"
 #include "ocs_system/device_info.h"
+#include "ocs_system/idevice_id.h"
 
 namespace ocs {
 namespace net {
@@ -41,7 +42,10 @@ public:
     //! @params
     //!  - @p storage to persist WiFi AP configuration.
     //!  - @p device_info to use as a fallback for WiFi AP configuration.
-    ApNetworkConfig(storage::IStorage& storage, const system::DeviceInfo& device_info);
+    //!  - @p device_id to use as a fallback for WiFi AP SSID and password.
+    ApNetworkConfig(storage::IStorage& storage,
+                    const system::DeviceInfo& device_info,
+                    const system::IDeviceId& device_id);
 
     //! Reset WiFi AP configuration.
     //!

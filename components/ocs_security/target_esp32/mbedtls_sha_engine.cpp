@@ -10,7 +10,7 @@
 #include "mbedtls/sha512.h"
 #endif // SOC_SHA_SUPPORT_SHA512
 
-#include "ocs_security/mbedtls_sha_engine.h"
+#include "ocs_security/target_esp32/mbedtls_sha_engine.h"
 
 namespace ocs {
 namespace security {

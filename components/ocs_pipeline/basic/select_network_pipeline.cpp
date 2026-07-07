@@ -18,7 +18,8 @@ SelectNetworkPipeline::SelectNetworkPipeline(storage::IStorage& sta_config_stora
                                              control::ConfigFsrHandler& fsr_handler,
                                              system::IArena& arena,
                                              system::IRebooter& rebooter,
-                                             const system::DeviceInfo& device_info) {
+                                             const system::DeviceInfo& device_info,
+                                             const system::IDeviceId& device_id) {
     sta_config_ =
         ocs::system::make_unique_ptr<net::StaNetworkConfig>(arena, sta_config_storage);
     configASSERT(sta_config_);
@@ -35,7 +36,7 @@ SelectNetworkPipeline::SelectNetworkPipeline(storage::IStorage& sta_config_stora
         network_config = sta_config_.get();
     } else {
         ap_config_ = ocs::system::make_unique_ptr<net::ApNetworkConfig>(
-            arena, ap_config_storage, device_info);
+            arena, ap_config_storage, device_info, device_id);
         configASSERT(ap_config_);
 
         ap_ = ocs::system::make_unique_ptr<net::ApNetwork>(arena, network_handler,

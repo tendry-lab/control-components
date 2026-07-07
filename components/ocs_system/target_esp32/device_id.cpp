@@ -9,10 +9,10 @@
 
 #include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
-#include "ocs_security/mbedtls_sha_engine.h"
 #include "ocs_security/sha_generator.h"
+#include "ocs_security/target_esp32/mbedtls_sha_engine.h"
 #include "ocs_status/code_to_str.h"
-#include "ocs_system/device_id.h"
+#include "ocs_system/target_esp32/device_id.h"
 
 namespace ocs {
 namespace system {
@@ -23,7 +23,7 @@ const char* log_tag = "device_id";
 
 } // namespace
 
-DeviceID::DeviceID(IArena& arena, const char* uuid) {
+DeviceId::DeviceId(IArena& arena, const char* uuid) {
     configASSERT(uuid);
     configASSERT(strlen(uuid));
 
@@ -52,7 +52,7 @@ DeviceID::DeviceID(IArena& arena, const char* uuid) {
     configASSERT(id_);
 }
 
-const char* DeviceID::get_id() const {
+const char* DeviceId::get_id() const {
     return id_->c_str();
 }
 

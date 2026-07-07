@@ -4,7 +4,6 @@ idf_component_register(
     "task_state_to_str.cpp"
     "fanout_suspender.cpp"
     "suspender_guard.cpp"
-    "device_id.cpp"
     "device_info.cpp"
     "crc32_updater.cpp"
     "log_updater.cpp"
@@ -16,6 +15,7 @@ idf_component_register(
     "freertos_timer_builder.cpp"
 
     "target_esp32/clock.cpp"
+    "target_esp32/device_id.cpp"
     "target_esp32/rebooter.cpp"
     "target_esp32/reset_reason_to_str.cpp"
     "target_esp32/rt_delayer.cpp"
