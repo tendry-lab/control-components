@@ -52,7 +52,7 @@ AsyncTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode AsyncTaskScheduler::remove(const char* id) {
+status::StatusCode AsyncTaskScheduler::remove(const char*) {
     return status::StatusCode::NotSupported;
 }
 
