@@ -43,6 +43,9 @@ public:
     //! Write 16 bits of data.
     bool write_u16(uint16_t data);
 
+    //! Write lowest 24 bits of @p data.
+    bool write_u24(uint32_t data);
+
     //! Change number of written bytes.
     void resize(size_t size);
 

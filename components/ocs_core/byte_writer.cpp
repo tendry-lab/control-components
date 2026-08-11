@@ -57,6 +57,20 @@ bool ByteWriter::write_u16(uint16_t data) {
     return write(data);
 }
 
+bool ByteWriter::write_u24(uint32_t data) {
+    if (data > 0xFFFFFF || left_() < 3) {
+        return false;
+    }
+
+    for (uint8_t n = 3; n > 0; --n) {
+        if (!write_u8((data >> ((n - 1) * 8)) & 0xFF)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 void ByteWriter::resize(size_t size) {
     offset_ = std::min(size_, size);
 }

@@ -39,6 +39,25 @@ size_t ByteReader::read(uint8_t* data, size_t size) {
     return ret;
 }
 
+bool ByteReader::read_u24(uint32_t& data) {
+    if (get_len() < 3) {
+        return false;
+    }
+
+    data = 0;
+
+    for (uint8_t n = 0; n < 3; ++n) {
+        uint8_t value = 0;
+        if (!read(value)) {
+            return false;
+        }
+
+        data = data << 8 | value;
+    }
+
+    return true;
+}
+
 size_t ByteReader::discard(size_t size) {
     const auto ret = std::min(size, get_len());
     if (ret) {
