@@ -43,6 +43,9 @@ public:
     //!  Number of read bytes or 0 if no bytes left.
     size_t read(uint8_t* data, size_t size);
 
+    //! Read 24 bits to @p data.
+    bool read_u24(uint32_t& data);
+
     //! Discard @p size bytes.
     //!
     //! @return
