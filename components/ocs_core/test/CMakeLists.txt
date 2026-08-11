@@ -8,6 +8,7 @@ idf_component_register(
     "test_stream_transceiver.cpp"
     "test_byte_writer.cpp"
     "test_byte_reader.cpp"
+    "test_byte_transceiver.cpp"
 
     REQUIRES
     "unity"
