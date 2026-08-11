@@ -49,11 +49,11 @@ size_t ByteWriter::write(const uint8_t* data, size_t size) {
     return ret;
 }
 
-bool ByteWriter::write_byte(uint8_t data) {
+bool ByteWriter::write_u8(uint8_t data) {
     return write(data);
 }
 
-bool ByteWriter::write_word(uint16_t data) {
+bool ByteWriter::write_u16(uint16_t data) {
     return write(data);
 }
 

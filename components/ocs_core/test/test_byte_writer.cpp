@@ -87,7 +87,7 @@ TEST_CASE("Byte writer: resize: no space left", "[ocs_core], [byte_writer]") {
     ByteWriter writer(write_buf, sizeof(write_buf));
 
     writer.resize(writer.get_cap() + 1);
-    TEST_ASSERT_FALSE(writer.write_byte(10));
+    TEST_ASSERT_FALSE(writer.write_u8(10));
 }
 
 TEST_CASE("Byte writer: find byte: in range", "[ocs_core], [byte_writer]") {
@@ -96,12 +96,12 @@ TEST_CASE("Byte writer: find byte: in range", "[ocs_core], [byte_writer]") {
 
     ByteWriter writer(write_buf, sizeof(write_buf));
 
-    TEST_ASSERT_TRUE(writer.write_byte(0xAA));
-    TEST_ASSERT_TRUE(writer.write_byte(0x55));
-    TEST_ASSERT_TRUE(writer.write_byte(0xAD));
-    TEST_ASSERT_TRUE(writer.write_byte(0xFE));
-    TEST_ASSERT_TRUE(writer.write_byte(0x5A));
-    TEST_ASSERT_TRUE(writer.write_byte(0xA5));
+    TEST_ASSERT_TRUE(writer.write_u8(0xAA));
+    TEST_ASSERT_TRUE(writer.write_u8(0x55));
+    TEST_ASSERT_TRUE(writer.write_u8(0xAD));
+    TEST_ASSERT_TRUE(writer.write_u8(0xFE));
+    TEST_ASSERT_TRUE(writer.write_u8(0x5A));
+    TEST_ASSERT_TRUE(writer.write_u8(0xA5));
 
     TEST_ASSERT_EQUAL(4, writer.find(0x5A));
     TEST_ASSERT_EQUAL(-1, writer.find(0x0A));
@@ -115,16 +115,16 @@ TEST_CASE("Byte writer: find byte: out of range", "[ocs_core], [byte_writer]") {
 
     ByteWriter writer(write_buf, sizeof(write_buf));
 
-    TEST_ASSERT_TRUE(writer.write_byte(0x55));
-    TEST_ASSERT_TRUE(writer.write_byte(0xAD));
-    TEST_ASSERT_TRUE(writer.write_byte(0xFE));
-    TEST_ASSERT_TRUE(writer.write_byte(0x5A));
-    TEST_ASSERT_TRUE(writer.write_byte(0xA5));
+    TEST_ASSERT_TRUE(writer.write_u8(0x55));
+    TEST_ASSERT_TRUE(writer.write_u8(0xAD));
+    TEST_ASSERT_TRUE(writer.write_u8(0xFE));
+    TEST_ASSERT_TRUE(writer.write_u8(0x5A));
+    TEST_ASSERT_TRUE(writer.write_u8(0xA5));
 
     TEST_ASSERT_EQUAL(4, writer.find(0xA5));
     TEST_ASSERT_EQUAL(-1, writer.find(0xAA));
 
-    TEST_ASSERT_TRUE(writer.write_byte(0xAA));
+    TEST_ASSERT_TRUE(writer.write_u8(0xAA));
     TEST_ASSERT_EQUAL(5, writer.find(0xAA));
 }
 

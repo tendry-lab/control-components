@@ -37,11 +37,11 @@ public:
     //! Write @p size bytes of @p data.
     size_t write(const uint8_t* data, size_t size);
 
-    //! Write single byte.
-    bool write_byte(uint8_t data);
+    //! Write 8 bits of data.
+    bool write_u8(uint8_t data);
 
-    //! Write single word.
-    bool write_word(uint16_t data);
+    //! Write 16 bits of data.
+    bool write_u16(uint16_t data);
 
     //! Change number of written bytes.
     void resize(size_t size);
