@@ -39,7 +39,7 @@ TEST_CASE("Byte reader: read byte", "[ocs_core], [byte_reader]") {
     for (size_t n = 0; n < sizeof(write_buf); ++n) {
         uint8_t byte = 0;
         TEST_ASSERT_TRUE(reader.read(byte));
-        TEST_ASSERT_EQUAL(5, byte);
+        TEST_ASSERT_EQUAL_UINT8(5, byte);
     }
 
     uint8_t byte = 0;
@@ -59,7 +59,7 @@ TEST_CASE("Byte reader: read by offset: whole at once", "[ocs_core], [byte_reade
 
     uint8_t byte = 0;
     TEST_ASSERT_TRUE(reader.read(byte));
-    TEST_ASSERT_EQUAL(5, byte);
+    TEST_ASSERT_EQUAL_UINT8(5, byte);
     TEST_ASSERT_EQUAL(sizeof(write_buf) - 1, reader.get_len());
 
     ByteReader off_reader(reader.get_data(), reader.get_len());
@@ -70,7 +70,7 @@ TEST_CASE("Byte reader: read by offset: whole at once", "[ocs_core], [byte_reade
 
     while (off_reader.get_len()) {
         TEST_ASSERT_TRUE(off_reader.read(byte));
-        TEST_ASSERT_EQUAL(5, byte);
+        TEST_ASSERT_EQUAL_UINT8(5, byte);
     }
     TEST_ASSERT_NULL(off_reader.get_data());
 }
@@ -84,10 +84,10 @@ TEST_CASE("Byte reader: read by offset: read less", "[ocs_core], [byte_reader]")
 
     uint8_t byte = 0;
     TEST_ASSERT_TRUE(reader.read(byte));
-    TEST_ASSERT_EQUAL(5, byte);
+    TEST_ASSERT_EQUAL_UINT8(5, byte);
 
     TEST_ASSERT_TRUE(reader.read(byte));
-    TEST_ASSERT_EQUAL(5, byte);
+    TEST_ASSERT_EQUAL_UINT8(5, byte);
 
     TEST_ASSERT_EQUAL(sizeof(write_buf) - 2, reader.get_len());
 
@@ -102,10 +102,10 @@ TEST_CASE("Byte reader: read by offset: read less", "[ocs_core], [byte_reader]")
     ByteReader off_reader(read_buf + sizeof(read_buf) - 2, 2);
 
     TEST_ASSERT_TRUE(off_reader.read(byte));
-    TEST_ASSERT_EQUAL(0, byte);
+    TEST_ASSERT_EQUAL_UINT8(0, byte);
 
     TEST_ASSERT_TRUE(off_reader.read(byte));
-    TEST_ASSERT_EQUAL(0, byte);
+    TEST_ASSERT_EQUAL_UINT8(0, byte);
 
     TEST_ASSERT_FALSE(off_reader.read(byte));
     TEST_ASSERT_EQUAL(0, off_reader.get_len());
@@ -124,7 +124,7 @@ TEST_CASE("Byte reader: discard: less", "[ocs_core], [byte_reader]") {
 
     uint8_t byte = 0;
     TEST_ASSERT_TRUE(reader.read(byte));
-    TEST_ASSERT_EQUAL(5, byte);
+    TEST_ASSERT_EQUAL_UINT8(5, byte);
 
     TEST_ASSERT_EQUAL(0, reader.get_len());
 }
@@ -141,7 +141,7 @@ TEST_CASE("Byte reader: discard: more", "[ocs_core], [byte_reader]") {
 
     uint8_t byte = 0;
     TEST_ASSERT_FALSE(reader.read(byte));
-    TEST_ASSERT_EQUAL(0, byte);
+    TEST_ASSERT_EQUAL_UINT8(0, byte);
 
     TEST_ASSERT_EQUAL(0, reader.get_len());
 }
@@ -158,7 +158,7 @@ TEST_CASE("Byte reader: discard: all", "[ocs_core], [byte_reader]") {
 
     uint8_t byte = 0;
     TEST_ASSERT_FALSE(reader.read(byte));
-    TEST_ASSERT_EQUAL(0, byte);
+    TEST_ASSERT_EQUAL_UINT8(0, byte);
 
     TEST_ASSERT_EQUAL(0, reader.get_len());
 }

@@ -24,7 +24,7 @@ TEST_CASE("Byte writer: write byte", "[ocs_core], [byte_writer]") {
     }
 
     for (uint8_t n = 0; n < sizeof(write_buf); ++n) {
-        TEST_ASSERT_EQUAL(n, write_buf[n]);
+        TEST_ASSERT_EQUAL_UINT8(n, write_buf[n]);
     }
 }
 
@@ -76,8 +76,8 @@ TEST_CASE("Byte writer: resize", "[ocs_core], [byte_writer]") {
     writer.resize(1);
     TEST_ASSERT_TRUE(writer.write(static_cast<uint8_t>(2)));
     TEST_ASSERT_FALSE(writer.write(static_cast<uint8_t>(2)));
-    TEST_ASSERT_EQUAL(7, write_buf[0]);
-    TEST_ASSERT_EQUAL(2, write_buf[1]);
+    TEST_ASSERT_EQUAL_UINT8(7, write_buf[0]);
+    TEST_ASSERT_EQUAL_UINT8(2, write_buf[1]);
 }
 
 TEST_CASE("Byte writer: resize: no space left", "[ocs_core], [byte_writer]") {

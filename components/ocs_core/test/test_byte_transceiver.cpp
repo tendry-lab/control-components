@@ -29,7 +29,7 @@ TEST_CASE("Test byte read/write", "[ocs_core], [byte_reader], [byte_writer]") {
         uint32_t r_value = 0;
         TEST_ASSERT_TRUE(reader.read(r_value));
 
-        TEST_ASSERT_EQUAL(w_value, r_value);
+        TEST_ASSERT_EQUAL_UINT32(w_value, r_value);
     }
     { // Check i32
         const int32_t w_value = -0x12345678;
@@ -63,7 +63,7 @@ TEST_CASE("Test byte read/write", "[ocs_core], [byte_reader], [byte_writer]") {
         uint32_t r_value = 0;
         TEST_ASSERT_TRUE(reader.read_u24(r_value));
 
-        TEST_ASSERT_EQUAL(w_value, r_value);
+        TEST_ASSERT_EQUAL_UINT32(w_value, r_value);
     }
 }
 
