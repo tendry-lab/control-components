@@ -7,6 +7,8 @@
 
 #if __has_include(<stm32g4xx_hal.h>)
 #include <stm32g4xx_hal.h>
+#elif __has_include(<stm32g0xx_hal.h>)
+#include <stm32g0xx_hal.h>
 #else
 #error "ocs_system: unsupported STM32 family"
 #endif
