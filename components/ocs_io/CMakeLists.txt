@@ -12,6 +12,8 @@ set(COMPONENT_SRCS
 
 if(IDF_TARGET STREQUAL "esp32")
     list(APPEND COMPONENT_SRCS "adc/target_esp32/line_fitting_converter.cpp")
+elseif(IDF_TARGET STREQUAL "esp32s3")
+    list(APPEND COMPONENT_SRCS "adc/target_esp32/curve_fitting_converter.cpp")
 endif()
 
 idf_component_register(
