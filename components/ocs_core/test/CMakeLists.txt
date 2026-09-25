@@ -9,6 +9,7 @@ idf_component_register(
     "test_byte_writer.cpp"
     "test_byte_reader.cpp"
     "test_byte_transceiver.cpp"
+    "test_func_value_monitor.cpp"
 
     REQUIRES
     "unity"
