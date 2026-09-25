@@ -10,7 +10,7 @@
 namespace ocs {
 namespace storage {
 
-TEST_CASE("Flash initializer", "[ocs_storage], [flash_initializer]") {
+TEST_CASE("Flash initializer", "[flash_initializer], [ocs_storage]") {
     FlashInitializer initializer;
 }
 

@@ -12,7 +12,7 @@ namespace ocs {
 namespace diagnostic {
 
 TEST_CASE("Time counter: gradually reach resolution",
-          "[ocs_diagnostic], [time_counter]") {
+          "[time_counter], [ocs_diagnostic]") {
     test::TestClock clock;
     clock.value = system::Duration::millisecond * 500;
 
@@ -27,7 +27,7 @@ TEST_CASE("Time counter: gradually reach resolution",
 }
 
 TEST_CASE("Time counter: reach resolution after reset",
-          "[ocs_diagnostic], [time_counter]") {
+          "[time_counter], [ocs_diagnostic]") {
     test::TestClock clock;
     clock.value = system::Duration::millisecond * 500;
 

@@ -15,7 +15,7 @@
 namespace ocs {
 namespace core {
 
-TEST_CASE("Compare versions: equal", "[ocs_core], [version]") {
+TEST_CASE("Compare versions: equal", "[version], [ocs_core]") {
     TEST_ASSERT_TRUE(Version(0, 0, 0) == Version(0, 0, 0));
     TEST_ASSERT_TRUE(Version(1, 0, 0) == Version(1, 0, 0));
     TEST_ASSERT_TRUE(Version(1, 1, 0) == Version(1, 1, 0));
@@ -23,13 +23,13 @@ TEST_CASE("Compare versions: equal", "[ocs_core], [version]") {
     TEST_ASSERT_TRUE(Version(1, 1, 1) == Version(1, 1, 1));
 }
 
-TEST_CASE("Compare versions: non-equal", "[ocs_core], [version]") {
+TEST_CASE("Compare versions: non-equal", "[version], [ocs_core]") {
     TEST_ASSERT_TRUE(Version(1, 1, 1) != Version(0, 1, 1));
     TEST_ASSERT_TRUE(Version(1, 1, 1) != Version(1, 0, 1));
     TEST_ASSERT_TRUE(Version(1, 1, 1) != Version(1, 0, 0));
 }
 
-TEST_CASE("Compare versions: less", "[ocs_core], [version]") {
+TEST_CASE("Compare versions: less", "[version], [ocs_core]") {
     TEST_ASSERT_FALSE(Version(0, 0, 0) < Version(0, 0, 0));
 
     TEST_ASSERT_TRUE(Version(0, 0, 1) < Version(0, 1, 0));
@@ -37,7 +37,7 @@ TEST_CASE("Compare versions: less", "[ocs_core], [version]") {
     TEST_ASSERT_TRUE(Version(1, 0, 0) < Version(2, 0, 0));
 }
 
-TEST_CASE("Parse version: empty", "[ocs_core], [version]") {
+TEST_CASE("Parse version: empty", "[version], [ocs_core]") {
     Version version;
     TEST_ASSERT_FALSE(version.parse(""));
     TEST_ASSERT_EQUAL(0, version.major);
@@ -45,14 +45,14 @@ TEST_CASE("Parse version: empty", "[ocs_core], [version]") {
     TEST_ASSERT_EQUAL(0, version.patch);
 }
 
-TEST_CASE("Parse version: no-digit input", "[ocs_core], [version]") {
+TEST_CASE("Parse version: no-digit input", "[version], [ocs_core]") {
     Version version;
     TEST_ASSERT_FALSE(version.parse("."));
     TEST_ASSERT_FALSE(version.parse(".."));
     TEST_ASSERT_FALSE(version.parse("..."));
 }
 
-TEST_CASE("Parse version: major-only input", "[ocs_core], [version]") {
+TEST_CASE("Parse version: major-only input", "[version], [ocs_core]") {
     Version version;
     TEST_ASSERT_TRUE(version.parse("9"));
     TEST_ASSERT_EQUAL(9, version.major);
@@ -60,7 +60,7 @@ TEST_CASE("Parse version: major-only input", "[ocs_core], [version]") {
     TEST_ASSERT_EQUAL(0, version.patch);
 }
 
-TEST_CASE("Parse version: major-minor input", "[ocs_core], [version]") {
+TEST_CASE("Parse version: major-minor input", "[version], [ocs_core]") {
     Version version;
     TEST_ASSERT_TRUE(version.parse("9.1"));
     TEST_ASSERT_EQUAL(9, version.major);
@@ -68,7 +68,7 @@ TEST_CASE("Parse version: major-minor input", "[ocs_core], [version]") {
     TEST_ASSERT_EQUAL(0, version.patch);
 }
 
-TEST_CASE("Parse version: random numbers", "[ocs_core], [version]") {
+TEST_CASE("Parse version: random numbers", "[version], [ocs_core]") {
     Version version;
     TEST_ASSERT_TRUE(version.parse("0.0.7"));
     TEST_ASSERT_EQUAL(0, version.major);
@@ -76,7 +76,7 @@ TEST_CASE("Parse version: random numbers", "[ocs_core], [version]") {
     TEST_ASSERT_EQUAL(7, version.patch);
 }
 
-TEST_CASE("Parse version: max numbers", "[ocs_core], [version]") {
+TEST_CASE("Parse version: max numbers", "[version], [ocs_core]") {
     Version version;
     TEST_ASSERT_TRUE(version.parse("65535.65535.65535"));
     TEST_ASSERT_EQUAL(UINT16_MAX, version.major);
@@ -84,7 +84,7 @@ TEST_CASE("Parse version: max numbers", "[ocs_core], [version]") {
     TEST_ASSERT_EQUAL(UINT16_MAX, version.patch);
 }
 
-TEST_CASE("Parse version: overflow", "[ocs_core], [version]") {
+TEST_CASE("Parse version: overflow", "[version], [ocs_core]") {
     const std::vector<std::string> versions {
         "65536.65535.65535", "65535.65536.65535", "65535.65535.65536",
         "65536.65536.65535", "65535.65536.65536", "65536.65535.65536",
@@ -100,7 +100,7 @@ TEST_CASE("Parse version: overflow", "[ocs_core], [version]") {
     }
 }
 
-TEST_CASE("Parse version: omit non-core characters", "[ocs_core], [version]") {
+TEST_CASE("Parse version: omit non-core characters", "[version], [ocs_core]") {
     Version version;
     TEST_ASSERT_TRUE(version.parse("9.1.1_<rc|beta|alpha|etc|_123>"));
     TEST_ASSERT_EQUAL(9, version.major);

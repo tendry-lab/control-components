@@ -22,7 +22,7 @@ system::HeapArena heap_arena;
 } // namespace
 
 TEST_CASE("Oneshot ADC store: register maximum number of ADC",
-          "[ocs_io], [adc_oneshot_store]") {
+          "[adc_oneshot_store], [ocs_io]") {
     const std::vector<adc_unit_t> units {
         ADC_UNIT_1,
         ADC_UNIT_2,
@@ -41,7 +41,7 @@ TEST_CASE("Oneshot ADC store: register maximum number of ADC",
 }
 
 TEST_CASE("Oneshot ADC store: register the same ADC twice",
-          "[ocs_io], [adc_oneshot_store]") {
+          "[adc_oneshot_store], [ocs_io]") {
     const std::vector<adc_unit_t> units {
         ADC_UNIT_1,
         ADC_UNIT_2,
@@ -56,7 +56,7 @@ TEST_CASE("Oneshot ADC store: register the same ADC twice",
     }
 }
 
-TEST_CASE("Oneshot ADC store: register overflow", "[ocs_io], [adc_oneshot_store]") {
+TEST_CASE("Oneshot ADC store: register overflow", "[adc_oneshot_store], [ocs_io]") {
     const std::vector<adc_unit_t> units {
         ADC_UNIT_1,
         ADC_UNIT_2,
@@ -77,7 +77,7 @@ TEST_CASE("Oneshot ADC store: register overflow", "[ocs_io], [adc_oneshot_store]
     }
 }
 
-TEST_CASE("Oneshot ADC store: read/convert operations", "[ocs_io], [adc_oneshot_store]") {
+TEST_CASE("Oneshot ADC store: read/convert operations", "[adc_oneshot_store], [ocs_io]") {
     const std::vector<adc_unit_t> units {
         ADC_UNIT_1,
         ADC_UNIT_2,

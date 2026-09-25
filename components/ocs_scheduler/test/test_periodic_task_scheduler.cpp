@@ -25,7 +25,7 @@ system::HeapArena heap_arena;
 
 } // namespace
 
-TEST_CASE("Periodic task scheduler: add", "[ocs_scheduler], [periodic_task_scheduler]") {
+TEST_CASE("Periodic task scheduler: add", "[periodic_task_scheduler], [ocs_scheduler]") {
     const system::Time interval = system::Duration::second;
     const TickType_t delay = pdMS_TO_TICKS(10);
     const char* task_id = "test_task";
@@ -62,7 +62,7 @@ TEST_CASE("Periodic task scheduler: add", "[ocs_scheduler], [periodic_task_sched
 }
 
 TEST_CASE("Periodic task scheduler: add-duplicate: pending",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const TickType_t delay = pdMS_TO_TICKS(10);
 
     test::TestClock clock;
@@ -78,7 +78,7 @@ TEST_CASE("Periodic task scheduler: add-duplicate: pending",
 }
 
 TEST_CASE("Periodic task scheduler: add-duplicate: active",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const TickType_t delay = pdMS_TO_TICKS(10);
 
     test::TestClock clock;
@@ -97,7 +97,7 @@ TEST_CASE("Periodic task scheduler: add-duplicate: active",
 }
 
 TEST_CASE("Periodic task scheduler: add-remove",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const TickType_t delay = pdMS_TO_TICKS(10);
 
     test::TestClock clock;
@@ -130,7 +130,7 @@ TEST_CASE("Periodic task scheduler: add-remove",
 }
 
 TEST_CASE("Periodic task scheduler: add-remove-add",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const TickType_t delay = pdMS_TO_TICKS(10);
 
     test::TestClock clock;
@@ -174,7 +174,7 @@ TEST_CASE("Periodic task scheduler: add-remove-add",
 }
 
 TEST_CASE("Periodic task scheduler: add-remove-remove",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const TickType_t delay = pdMS_TO_TICKS(10);
 
     test::TestClock clock;
@@ -209,7 +209,7 @@ TEST_CASE("Periodic task scheduler: add-remove-remove",
 }
 
 TEST_CASE("Periodic task scheduler: add-remove-collapse",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const TickType_t delay = pdMS_TO_TICKS(10);
 
     test::TestClock clock;
@@ -251,7 +251,7 @@ TEST_CASE("Periodic task scheduler: add-remove-collapse",
 }
 
 TEST_CASE("Periodic task scheduler: add-remove-run",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const TickType_t delay = pdMS_TO_TICKS(10);
 
     test::TestClock clock;
@@ -285,7 +285,7 @@ TEST_CASE("Periodic task scheduler: add-remove-run",
 }
 
 TEST_CASE("Periodic task scheduler: add multiple tasks",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const size_t task_count = 10;
     const TickType_t delay = pdMS_TO_TICKS(10);
     const system::Time interval = system::Duration::second;
@@ -345,7 +345,7 @@ TEST_CASE("Periodic task scheduler: add multiple tasks",
 }
 
 TEST_CASE("Periodic task scheduler: max number of tasks overflow: pending",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const system::Time interval = system::Duration::second;
     const TickType_t delay = pdMS_TO_TICKS(10);
 
@@ -377,7 +377,7 @@ TEST_CASE("Periodic task scheduler: max number of tasks overflow: pending",
 }
 
 TEST_CASE("Periodic task scheduler: max number of tasks overflow: active",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const TickType_t delay = pdMS_TO_TICKS(10);
 
     test::TestClock clock;
@@ -402,7 +402,7 @@ TEST_CASE("Periodic task scheduler: max number of tasks overflow: active",
 }
 
 TEST_CASE("Periodic task scheduler: add/remove multiple tasks",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const size_t task_count = 10;
     const TickType_t delay = pdMS_TO_TICKS(10);
     const system::Time interval = system::Duration::second;
@@ -489,7 +489,7 @@ TEST_CASE("Periodic task scheduler: add/remove multiple tasks",
 }
 
 TEST_CASE("Periodic task scheduler: zero delay",
-          "[ocs_scheduler], [periodic_task_scheduler]") {
+          "[periodic_task_scheduler], [ocs_scheduler]") {
     const system::Time interval = system::Duration::second;
     const char* task_id = "test_task";
 

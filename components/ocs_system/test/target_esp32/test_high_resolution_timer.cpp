@@ -12,7 +12,7 @@ namespace ocs {
 namespace system {
 
 TEST_CASE("High resolution timer: handle events in periodic task",
-          "[ocs_system], [high_resolution_timer]") {
+          "[high_resolution_timer], [ocs_system]") {
     test::TestTask task(status::StatusCode::OK);
     HighResolutionTimer timer(task, "test", system::Duration::millisecond * 100);
 

@@ -13,7 +13,7 @@ namespace ocs {
 namespace diagnostic {
 
 TEST_CASE("Memory persistent counter: erase on initialization",
-          "[ocs_diagnostic], [mem_persistent_counter]") {
+          "[mem_persistent_counter], [ocs_diagnostic]") {
     const ICounter::Value counter_value = 7;
 
     test::TestCounter counter("foo");

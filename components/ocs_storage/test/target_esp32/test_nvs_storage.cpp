@@ -14,7 +14,7 @@
 namespace ocs {
 namespace storage {
 
-TEST_CASE("NVS storage: write-read-erase", "[ocs_storage], [nvs_storage]") {
+TEST_CASE("NVS storage: write-read-erase", "[nvs_storage], [ocs_storage]") {
     FlashInitializer initializer;
 
     const char* id = "foo";
@@ -40,7 +40,7 @@ TEST_CASE("NVS storage: write-read-erase", "[ocs_storage], [nvs_storage]") {
                       storage.read(id, &read_value, sizeof(read_value)));
 }
 
-TEST_CASE("NVS storage: read: no data", "[ocs_storage], [nvs_storage]") {
+TEST_CASE("NVS storage: read: no data", "[nvs_storage], [ocs_storage]") {
     FlashInitializer initializer;
 
     const char* id = "foo";
@@ -51,7 +51,7 @@ TEST_CASE("NVS storage: read: no data", "[ocs_storage], [nvs_storage]") {
                       storage.read(id, &value, sizeof(value)));
 }
 
-TEST_CASE("NVS storage: erase: no data", "[ocs_storage], [nvs_storage]") {
+TEST_CASE("NVS storage: erase: no data", "[nvs_storage], [ocs_storage]") {
     FlashInitializer initializer;
 
     const char* id = "foo";
@@ -60,7 +60,7 @@ TEST_CASE("NVS storage: erase: no data", "[ocs_storage], [nvs_storage]") {
     TEST_ASSERT_EQUAL(status::StatusCode::NoData, storage.erase(id));
 }
 
-TEST_CASE("NVS storage: write-read large value", "[ocs_storage], [nvs_storage]") {
+TEST_CASE("NVS storage: write-read large value", "[nvs_storage], [ocs_storage]") {
     FlashInitializer initializer;
 
     using Buffer = std::unique_ptr<uint8_t[]>;
@@ -93,7 +93,7 @@ TEST_CASE("NVS storage: write-read large value", "[ocs_storage], [nvs_storage]")
     TEST_ASSERT_EQUAL(status::StatusCode::OK, storage.erase(id));
 }
 
-TEST_CASE("NVS storage: overwrite key", "[ocs_storage], [nvs_storage]") {
+TEST_CASE("NVS storage: overwrite key", "[nvs_storage], [ocs_storage]") {
     FlashInitializer initializer;
 
     const char* id = "overwrite";
@@ -120,7 +120,7 @@ TEST_CASE("NVS storage: overwrite key", "[ocs_storage], [nvs_storage]") {
     TEST_ASSERT_EQUAL(status::StatusCode::OK, storage.erase(id));
 }
 
-TEST_CASE("NVS storage: write-read string", "[ocs_storage], [nvs_storage]") {
+TEST_CASE("NVS storage: write-read string", "[nvs_storage], [ocs_storage]") {
     FlashInitializer initializer;
 
     const char* id = "string";

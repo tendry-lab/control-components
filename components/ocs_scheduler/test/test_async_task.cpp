@@ -12,7 +12,7 @@
 namespace ocs {
 namespace scheduler {
 
-TEST_CASE("Async task: run sets event in event group", "[ocs_scheduler], [async_task]") {
+TEST_CASE("Async task: run sets event in event group", "[async_task], [ocs_scheduler]") {
     core::StaticEventGroup event_group;
 
     const EventBits_t event = BIT(0);
@@ -29,7 +29,7 @@ TEST_CASE("Async task: run sets event in event group", "[ocs_scheduler], [async_
 }
 
 TEST_CASE("Async task: multiple runs set event correctly",
-          "[ocs_scheduler], [async_task]") {
+          "[async_task], [ocs_scheduler]") {
     core::StaticEventGroup event_group;
 
     const EventBits_t event1 = BIT(0);

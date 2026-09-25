@@ -12,7 +12,7 @@
 namespace ocs {
 namespace core {
 
-TEST_CASE("Byte reader: read array: whole at once", "[ocs_core], [byte_reader]") {
+TEST_CASE("Byte reader: read array: whole at once", "[byte_reader], [ocs_core]") {
     uint8_t write_buf[42];
     memset(write_buf, 5, sizeof(write_buf));
 
@@ -29,7 +29,7 @@ TEST_CASE("Byte reader: read array: whole at once", "[ocs_core], [byte_reader]")
     TEST_ASSERT_NULL(reader.get_data());
 }
 
-TEST_CASE("Byte reader: read byte", "[ocs_core], [byte_reader]") {
+TEST_CASE("Byte reader: read byte", "[byte_reader], [ocs_core]") {
     uint8_t write_buf[42];
     memset(write_buf, 5, sizeof(write_buf));
 
@@ -49,7 +49,7 @@ TEST_CASE("Byte reader: read byte", "[ocs_core], [byte_reader]") {
     TEST_ASSERT_NULL(reader.get_data());
 }
 
-TEST_CASE("Byte reader: read by offset: whole at once", "[ocs_core], [byte_reader]") {
+TEST_CASE("Byte reader: read by offset: whole at once", "[byte_reader], [ocs_core]") {
     uint8_t write_buf[42];
     memset(write_buf, 5, sizeof(write_buf));
 
@@ -75,7 +75,7 @@ TEST_CASE("Byte reader: read by offset: whole at once", "[ocs_core], [byte_reade
     TEST_ASSERT_NULL(off_reader.get_data());
 }
 
-TEST_CASE("Byte reader: read by offset: read less", "[ocs_core], [byte_reader]") {
+TEST_CASE("Byte reader: read by offset: read less", "[byte_reader], [ocs_core]") {
     uint8_t write_buf[42];
     memset(write_buf, 5, sizeof(write_buf));
 
@@ -113,7 +113,7 @@ TEST_CASE("Byte reader: read by offset: read less", "[ocs_core], [byte_reader]")
     TEST_ASSERT_NULL(off_reader.get_data());
 }
 
-TEST_CASE("Byte reader: discard: less", "[ocs_core], [byte_reader]") {
+TEST_CASE("Byte reader: discard: less", "[byte_reader], [ocs_core]") {
     uint8_t write_buf[42];
     memset(write_buf, 5, sizeof(write_buf));
 
@@ -130,7 +130,7 @@ TEST_CASE("Byte reader: discard: less", "[ocs_core], [byte_reader]") {
     TEST_ASSERT_EQUAL_UINT32(0, reader.get_len());
 }
 
-TEST_CASE("Byte reader: discard: more", "[ocs_core], [byte_reader]") {
+TEST_CASE("Byte reader: discard: more", "[byte_reader], [ocs_core]") {
     uint8_t write_buf[42];
     memset(write_buf, 5, sizeof(write_buf));
 
@@ -147,7 +147,7 @@ TEST_CASE("Byte reader: discard: more", "[ocs_core], [byte_reader]") {
     TEST_ASSERT_EQUAL_UINT32(0, reader.get_len());
 }
 
-TEST_CASE("Byte reader: discard: all", "[ocs_core], [byte_reader]") {
+TEST_CASE("Byte reader: discard: all", "[byte_reader], [ocs_core]") {
     uint8_t write_buf[42];
     memset(write_buf, 5, sizeof(write_buf));
 

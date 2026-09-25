@@ -28,7 +28,7 @@ enum class State {
 } // namespace
 
 TEST_CASE("FSM block: initialization: no persistent state",
-          "[ocs_control], [fsm_block]") {
+          "[fsm_block], [ocs_control]") {
     TestFsmBlockStorage storage;
 
     test::TestClock clock;
@@ -45,7 +45,7 @@ TEST_CASE("FSM block: initialization: no persistent state",
 }
 
 TEST_CASE("FSM block: initialization: failed to read persistent state",
-          "[ocs_control], [fsm_block]") {
+          "[fsm_block], [ocs_control]") {
     TestFsmBlockStorage storage(status::StatusCode::Error);
     storage.prev_state = static_cast<FsmBlock::State>(State::None);
     storage.curr_state = static_cast<FsmBlock::State>(State::First);
@@ -68,7 +68,7 @@ TEST_CASE("FSM block: initialization: failed to read persistent state",
 }
 
 TEST_CASE("FSM block: initialization: properly read persistent state",
-          "[ocs_control], [fsm_block]") {
+          "[fsm_block], [ocs_control]") {
     TestFsmBlockStorage storage;
     storage.prev_state = static_cast<FsmBlock::State>(State::None);
     storage.curr_state = static_cast<FsmBlock::State>(State::First);
@@ -90,7 +90,7 @@ TEST_CASE("FSM block: initialization: properly read persistent state",
     TEST_ASSERT_EQUAL_INT64(storage.curr_state_duration, block.current_state_duration());
 }
 
-TEST_CASE("FSM block: transit: save state", "[ocs_control], [fsm_block]") {
+TEST_CASE("FSM block: transit: save state", "[fsm_block], [ocs_control]") {
     const system::Time resolution = system::Duration::second;
     const char* id = "block_id";
     uint64_t write_count = 17;
@@ -134,7 +134,7 @@ TEST_CASE("FSM block: transit: save state", "[ocs_control], [fsm_block]") {
     TEST_ASSERT_EQUAL_UINT64(write_count, storage.write_count);
 }
 
-TEST_CASE("FSM block: transit: failed to save state", "[ocs_control], [fsm_block]") {
+TEST_CASE("FSM block: transit: failed to save state", "[fsm_block], [ocs_control]") {
     const system::Time resolution = system::Duration::second;
     const char* id = "block_id";
     const uint64_t write_count = 17;
@@ -174,7 +174,7 @@ TEST_CASE("FSM block: transit: failed to save state", "[ocs_control], [fsm_block
 }
 
 TEST_CASE("FSM block: transit: reset previously saved current state duration",
-          "[ocs_control], [fsm_block]") {
+          "[fsm_block], [ocs_control]") {
     const char* id = "block_id";
     const uint64_t write_count = 17;
 
@@ -209,7 +209,7 @@ TEST_CASE("FSM block: transit: reset previously saved current state duration",
     TEST_ASSERT_EQUAL_INT64(0, block.current_state_duration());
 }
 
-TEST_CASE("FSM block: save state on reboot", "[ocs_control], [fsm_block]") {
+TEST_CASE("FSM block: save state on reboot", "[fsm_block], [ocs_control]") {
     const system::Time resolution = system::Duration::second;
     const char* id = "block_id";
     const uint64_t write_count = 17;
@@ -228,7 +228,7 @@ TEST_CASE("FSM block: save state on reboot", "[ocs_control], [fsm_block]") {
     TEST_ASSERT_EQUAL_UINT64(write_count + 1, storage.write_count);
 }
 
-TEST_CASE("FSM block: save state on run", "[ocs_control], [fsm_block]") {
+TEST_CASE("FSM block: save state on run", "[fsm_block], [ocs_control]") {
     const system::Time resolution = system::Duration::second;
     const char* id = "block_id";
     const uint64_t write_count = 17;
@@ -244,7 +244,7 @@ TEST_CASE("FSM block: save state on run", "[ocs_control], [fsm_block]") {
     TEST_ASSERT_EQUAL_UINT64(write_count + 1, storage.write_count);
 }
 
-TEST_CASE("FSM block: update current state duration", "[ocs_control], [fsm_block]") {
+TEST_CASE("FSM block: update current state duration", "[fsm_block], [ocs_control]") {
     const char* id = "block_id";
     const uint64_t write_count = 17;
 

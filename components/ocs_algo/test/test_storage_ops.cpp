@@ -12,7 +12,7 @@
 namespace ocs {
 namespace algo {
 
-TEST_CASE("Storage Ops: prob read: empty storage", "[ocs_algo], [storage_ops]") {
+TEST_CASE("Storage Ops: prob read: empty storage", "[storage_ops], [ocs_algo]") {
     const char* key = "id";
 
     test::MemoryStorage storage;
@@ -26,7 +26,7 @@ TEST_CASE("Storage Ops: prob read: empty storage", "[ocs_algo], [storage_ops]") 
     TEST_ASSERT_EQUAL(0, recv_value);
 }
 
-TEST_CASE("Storage Ops: prob read: invalid key", "[ocs_algo], [storage_ops]") {
+TEST_CASE("Storage Ops: prob read: invalid key", "[storage_ops], [ocs_algo]") {
     const char* key = "foo";
     const char* invalid_key = "bar";
     const size_t value = 42;
@@ -48,7 +48,7 @@ TEST_CASE("Storage Ops: prob read: invalid key", "[ocs_algo], [storage_ops]") {
     TEST_ASSERT_EQUAL(0, recv_value);
 }
 
-TEST_CASE("Storage Ops: prob read: size mismatch", "[ocs_algo], [storage_ops]") {
+TEST_CASE("Storage Ops: prob read: size mismatch", "[storage_ops], [ocs_algo]") {
     const char* key = "foo";
     const size_t value = 42;
 
@@ -65,7 +65,7 @@ TEST_CASE("Storage Ops: prob read: size mismatch", "[ocs_algo], [storage_ops]") 
     TEST_ASSERT_EQUAL(0, recv_value);
 }
 
-TEST_CASE("Storage Ops: prob read: prob failed", "[ocs_algo], [storage_ops]") {
+TEST_CASE("Storage Ops: prob read: prob failed", "[storage_ops], [ocs_algo]") {
     const char* key = "foo";
     const size_t value = 42;
 
@@ -84,7 +84,7 @@ TEST_CASE("Storage Ops: prob read: prob failed", "[ocs_algo], [storage_ops]") {
     TEST_ASSERT_EQUAL(0, recv_value);
 }
 
-TEST_CASE("Storage Ops: prob read: read failed", "[ocs_algo], [storage_ops]") {
+TEST_CASE("Storage Ops: prob read: read failed", "[storage_ops], [ocs_algo]") {
     const char* key = "foo";
     const size_t value = 42;
 
@@ -103,7 +103,7 @@ TEST_CASE("Storage Ops: prob read: read failed", "[ocs_algo], [storage_ops]") {
     TEST_ASSERT_EQUAL(0, recv_value);
 }
 
-TEST_CASE("Storage Ops: prob read: properly read", "[ocs_algo], [storage_ops]") {
+TEST_CASE("Storage Ops: prob read: properly read", "[storage_ops], [ocs_algo]") {
     const char* key = "foo";
     const size_t value = 42;
 

@@ -28,7 +28,7 @@ system::HeapArena heap_arena;
 
 } // namespace
 
-TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") {
+TEST_CASE("LED locator: turn-on/turn-off/flip", "[led_locator], [ocs_control]") {
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
 
@@ -139,7 +139,7 @@ TEST_CASE("LED locator: turn-on/turn-off/flip", "[ocs_control], [led_locator]") 
 }
 
 TEST_CASE("LED locator: disable locating when the LED is locked by another component",
-          "[ocs_control], [led_locator]") {
+          "[led_locator], [ocs_control]") {
     test::TestClock clock;
     scheduler::ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
 

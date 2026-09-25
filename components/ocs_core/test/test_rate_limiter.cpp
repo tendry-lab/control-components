@@ -11,7 +11,7 @@
 namespace ocs {
 namespace core {
 
-TEST_CASE("Rate limiter: allow operation to be performed", "[ocs_core], [rate_limiter]") {
+TEST_CASE("Rate limiter: allow operation to be performed", "[rate_limiter], [ocs_core]") {
     const system::Time interval = system::Duration::second;
 
     test::TestClock clock;

@@ -43,7 +43,7 @@ system::HeapArena heap_arena;
 
 } // namespace
 
-TEST_CASE("Default mDNS server: start/stop", "[ocs_net], [default_mdns_server]") {
+TEST_CASE("Default mDNS server: start/stop", "[default_mdns_server], [ocs_net]") {
     storage::FlashInitializer flash_initializer;
     FanoutNetworkHandler handler;
 

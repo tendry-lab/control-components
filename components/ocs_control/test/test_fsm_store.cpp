@@ -64,7 +64,7 @@ enum class State {
 
 } // namespace
 
-TEST_CASE("FSM store: initialization", "[ocs_control], [fsm_store]") {
+TEST_CASE("FSM store: initialization", "[fsm_store], [ocs_control]") {
     test::TestClock clock;
     TestFsmBlockStorage storage;
     const system::Time resolution = system::Duration::second;
@@ -80,7 +80,7 @@ TEST_CASE("FSM store: initialization", "[ocs_control], [fsm_store]") {
     TEST_ASSERT_EQUAL_INT64(0, block.current_state_duration());
 }
 
-TEST_CASE("FSM store: handle none state", "[ocs_control], [fsm_store]") {
+TEST_CASE("FSM store: handle none state", "[fsm_store], [ocs_control]") {
     test::TestClock clock;
     TestFsmBlockStorage storage;
     const system::Time resolution = system::Duration::second;
@@ -100,7 +100,7 @@ TEST_CASE("FSM store: handle none state", "[ocs_control], [fsm_store]") {
 }
 
 TEST_CASE("FSM store: handle state: single state: different handlers",
-          "[ocs_control], [fsm_store]") {
+          "[fsm_store], [ocs_control]") {
     test::TestClock clock;
     TestFsmBlockStorage storage;
     const system::Time resolution = system::Duration::second;
@@ -128,7 +128,7 @@ TEST_CASE("FSM store: handle state: single state: different handlers",
 }
 
 TEST_CASE("FSM store: handle state: multiple states: same handler",
-          "[ocs_control], [fsm_store]") {
+          "[fsm_store], [ocs_control]") {
     test::TestClock clock;
     TestFsmBlockStorage storage;
     const system::Time resolution = system::Duration::second;
@@ -156,7 +156,7 @@ TEST_CASE("FSM store: handle state: multiple states: same handler",
 }
 
 TEST_CASE("FSM store: handle state: multiple states: different handlers",
-          "[ocs_control], [fsm_store]") {
+          "[fsm_store], [ocs_control]") {
     test::TestClock clock;
     TestFsmBlockStorage storage;
     const system::Time resolution = system::Duration::second;
@@ -187,7 +187,7 @@ TEST_CASE("FSM store: handle state: multiple states: different handlers",
     TEST_ASSERT_EQUAL(1, handler2.handle_state_count);
 }
 
-TEST_CASE("FSM store: handle state: some handlers failed", "[ocs_control], [fsm_store]") {
+TEST_CASE("FSM store: handle state: some handlers failed", "[fsm_store], [ocs_control]") {
     test::TestClock clock;
     TestFsmBlockStorage storage;
     const system::Time resolution = system::Duration::second;
@@ -212,7 +212,7 @@ TEST_CASE("FSM store: handle state: some handlers failed", "[ocs_control], [fsm_
     TEST_ASSERT_EQUAL(0, handler2.handle_state_count);
 }
 
-TEST_CASE("FSM store: handle state transition", "[ocs_control], [fsm_store]") {
+TEST_CASE("FSM store: handle state transition", "[fsm_store], [ocs_control]") {
     test::TestClock clock;
     TestFsmBlockStorage storage;
     const system::Time resolution = system::Duration::second;
@@ -266,7 +266,7 @@ TEST_CASE("FSM store: handle state transition", "[ocs_control], [fsm_store]") {
 }
 
 TEST_CASE("FSM store: state transition: some handlers failed",
-          "[ocs_control], [fsm_store]") {
+          "[fsm_store], [ocs_control]") {
     test::TestClock clock;
     TestFsmBlockStorage storage;
     const system::Time resolution = system::Duration::second;
@@ -336,7 +336,7 @@ TEST_CASE("FSM store: state transition: some handlers failed",
 }
 
 TEST_CASE("FSM store: state transition: block transition failed",
-          "[ocs_control], [fsm_store]") {
+          "[fsm_store], [ocs_control]") {
     test::TestClock clock;
 
     TestFsmBlockStorage storage(status::StatusCode::NoMem, status::StatusCode::NoMem,

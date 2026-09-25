@@ -11,7 +11,7 @@
 namespace ocs {
 namespace control {
 
-TEST_CASE("GPIO led: lock/unlock", "[ocs_core], [gpio_led]") {
+TEST_CASE("GPIO led: lock/unlock", "[gpio_led], [ocs_control]") {
     test::TestGpio gpio(status::StatusCode::OK, status::StatusCode::OK,
                         status::StatusCode::OK);
     GpioLed led(gpio);

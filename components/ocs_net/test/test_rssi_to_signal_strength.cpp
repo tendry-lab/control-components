@@ -10,7 +10,7 @@
 namespace ocs {
 namespace net {
 
-TEST_CASE("Format RSSI string", "[ocs_net], [rssi_to_signal_strength]") {
+TEST_CASE("Format RSSI string", "[rssi_to_signal_strength], [ocs_net]") {
     TEST_ASSERT_EQUAL_STRING("Excellent", rssi_to_signal_strength(-49));
 
     TEST_ASSERT_EQUAL_STRING("Good", rssi_to_signal_strength(-50));

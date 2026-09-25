@@ -13,7 +13,7 @@
 namespace ocs {
 namespace core {
 
-TEST_CASE("Test byte read/write", "[ocs_core], [byte_reader], [byte_writer]") {
+TEST_CASE("Test byte read/write", "[ocs_core]") {
     { // Check u32
         const uint32_t w_value = 0x12345678;
 

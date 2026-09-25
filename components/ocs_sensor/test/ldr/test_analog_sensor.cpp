@@ -35,7 +35,7 @@ struct TestAdcConverter : public io::adc::IConverter, private core::NonCopyable<
 
 } // namespace
 
-TEST_CASE("LDR analog sensor: receive in range", "[ocs_sensor], [ldr_analog_sensor]") {
+TEST_CASE("LDR analog sensor: receive in range", "[ldr_analog_sensor], [ocs_sensor]") {
     const uint16_t def_min = 10;
     const uint16_t def_max = 20;
     const char* id = "test";
@@ -64,7 +64,7 @@ TEST_CASE("LDR analog sensor: receive in range", "[ocs_sensor], [ldr_analog_sens
 }
 
 TEST_CASE("LDR analog sensor: receive out of range",
-          "[ocs_sensor], [ldr_analog_sensor]") {
+          "[ldr_analog_sensor], [ocs_sensor]") {
     const uint16_t def_min = 10;
     const uint16_t def_max = 20;
     const char* id = "test";
@@ -90,7 +90,7 @@ TEST_CASE("LDR analog sensor: receive out of range",
     TEST_ASSERT_EQUAL(100, sensor.get_data().lightness);
 }
 
-TEST_CASE("LDR analog sensor: read config invalid", "[ocs_sensor], [ldr_analog_sensor]") {
+TEST_CASE("LDR analog sensor: read config invalid", "[ldr_analog_sensor], [ocs_sensor]") {
     const uint16_t def_min = 20;
     const uint16_t def_max = 10;
     TEST_ASSERT_TRUE(def_min > def_max);

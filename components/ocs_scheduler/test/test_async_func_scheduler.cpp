@@ -17,13 +17,13 @@ system::HeapArena heap_arena;
 
 } // namespace
 
-TEST_CASE("Async func scheduler: no events", "[ocs_scheduler], [async_func_scheduler]") {
+TEST_CASE("Async func scheduler: no events", "[async_func_scheduler], [ocs_scheduler]") {
     AsyncFuncScheduler func_scheduler(heap_arena, 1);
     TEST_ASSERT_EQUAL(status::StatusCode::OK, func_scheduler.run());
 }
 
 TEST_CASE("Async func scheduler: number events overflow",
-          "[ocs_scheduler], [async_func_scheduler]") {
+          "[async_func_scheduler], [ocs_scheduler]") {
     AsyncFuncScheduler func_scheduler(heap_arena, 1);
 
     auto future1 = func_scheduler.add([]() {
@@ -54,7 +54,7 @@ TEST_CASE("Async func scheduler: number events overflow",
 }
 
 TEST_CASE("Async func scheduler: events one by one",
-          "[ocs_scheduler], [async_func_scheduler]") {
+          "[async_func_scheduler], [ocs_scheduler]") {
     AsyncFuncScheduler func_scheduler(heap_arena, 1);
 
     auto future1 = func_scheduler.add([]() {
@@ -76,7 +76,7 @@ TEST_CASE("Async func scheduler: events one by one",
 }
 
 TEST_CASE("Async func scheduler: reschedule event",
-          "[ocs_scheduler], [async_func_scheduler]") {
+          "[async_func_scheduler], [ocs_scheduler]") {
     AsyncFuncScheduler func_scheduler(heap_arena, 1);
 
     AsyncFuncScheduler::FuturePtr future1;

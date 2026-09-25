@@ -15,7 +15,7 @@ namespace net {
 
 #ifdef CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED
 TEST_CASE("WiFi STA: connect to AP: invalid credentials: invalid SSID",
-          "[ocs_net], [sta_network]") {
+          "[sta_network], [ocs_net]") {
     storage::FlashInitializer flash_initializer;
     FanoutNetworkHandler handler;
     test::MemoryStorage storage;
@@ -36,7 +36,7 @@ TEST_CASE("WiFi STA: connect to AP: invalid credentials: invalid SSID",
 }
 
 TEST_CASE("WiFi STA: connect to AP: invalid credentials: invalid password",
-          "[ocs_net], [sta_network]") {
+          "[sta_network], [ocs_net]") {
     storage::FlashInitializer flash_initializer;
     FanoutNetworkHandler handler;
     test::MemoryStorage storage;
@@ -57,7 +57,7 @@ TEST_CASE("WiFi STA: connect to AP: invalid credentials: invalid password",
 }
 
 TEST_CASE("WiFi STA: connect to AP: invalid credentials: invalid SSID and password",
-          "[ocs_net], [sta_network]") {
+          "[sta_network], [ocs_net]") {
     storage::FlashInitializer flash_initializer;
     FanoutNetworkHandler handler;
     test::MemoryStorage storage;
@@ -75,7 +75,7 @@ TEST_CASE("WiFi STA: connect to AP: invalid credentials: invalid SSID and passwo
     TEST_ASSERT_EQUAL(status::StatusCode::OK, network.stop());
 }
 
-TEST_CASE("WiFi STA: connect to AP: valid credentials", "[ocs_net], [sta_network]") {
+TEST_CASE("WiFi STA: connect to AP: valid credentials", "[sta_network], [ocs_net]") {
     storage::FlashInitializer flash_initializer;
     FanoutNetworkHandler handler;
     test::MemoryStorage storage;

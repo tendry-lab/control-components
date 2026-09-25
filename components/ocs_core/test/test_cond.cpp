@@ -85,7 +85,7 @@ private:
 
 } // namespace
 
-TEST_CASE("Condition variable: wait multiple tasks", "[ocs_core], [cond]") {
+TEST_CASE("Condition variable: wait multiple tasks", "[cond], [ocs_core]") {
     StaticMutex mutex;
     Cond cond(mutex);
 
