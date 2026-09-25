@@ -11,7 +11,7 @@
 namespace ocs {
 namespace sensor {
 
-TEST_CASE("Analog config store: get", "[ocs_sensor], [analog_config]") {
+TEST_CASE("Analog config store: get", "[analog_config], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -32,7 +32,7 @@ TEST_CASE("Analog config store: get", "[ocs_sensor], [analog_config]") {
     TEST_ASSERT_EQUAL_STRING(config.get_id(), recv_config->get_id());
 }
 
-TEST_CASE("Analog config store: get all", "[ocs_sensor], [analog_config]") {
+TEST_CASE("Analog config store: get all", "[analog_config], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id1 = "test_1";

@@ -28,13 +28,13 @@
 namespace ocs {
 namespace http {
 
-TEST_CASE("Stop HTTP server: no start", "[ocs_http], [server]") {
+TEST_CASE("Stop HTTP server: no start", "[server], [ocs_http]") {
     Router router;
     Server server(router, Server::Params {});
     TEST_ASSERT_EQUAL(status::StatusCode::OK, server.stop());
 }
 
-TEST_CASE("Start HTTP server: WiFi not started", "[ocs_http], [server]") {
+TEST_CASE("Start HTTP server: WiFi not started", "[server], [ocs_http]") {
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;
 
@@ -54,7 +54,7 @@ TEST_CASE("Start HTTP server: WiFi not started", "[ocs_http], [server]") {
     TEST_ASSERT_EQUAL(status::StatusCode::OK, server.stop());
 }
 
-TEST_CASE("Start HTTP server: WiFi invalid credentials", "[ocs_http], [server]") {
+TEST_CASE("Start HTTP server: WiFi invalid credentials", "[server], [ocs_http]") {
     storage::FlashInitializer flash_initializer;
     net::FanoutNetworkHandler handler;
 
@@ -80,7 +80,7 @@ TEST_CASE("Start HTTP server: WiFi invalid credentials", "[ocs_http], [server]")
 }
 
 #ifdef CONFIG_OCS_TEST_UNIT_WIFI_STA_ENABLED
-TEST_CASE("Start HTTP server: WiFi valid credentials", "[ocs_http], [server]") {
+TEST_CASE("Start HTTP server: WiFi valid credentials", "[server], [ocs_http]") {
     const uint8_t server_port = 80;
 
     Router router;
@@ -150,7 +150,7 @@ TEST_CASE("Start HTTP server: WiFi valid credentials", "[ocs_http], [server]") {
     TEST_ASSERT_EQUAL(status::StatusCode::OK, network.stop());
 }
 
-TEST_CASE("Start HTTP server: chunked response", "[ocs_http], [server]") {
+TEST_CASE("Start HTTP server: chunked response", "[server], [ocs_http]") {
     struct TestStreamReader : public core::IStreamReader {
         TestStreamReader(const char* response, size_t chunk_size)
             : response_(response)

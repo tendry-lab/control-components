@@ -12,7 +12,7 @@
 namespace ocs {
 namespace scheduler {
 
-TEST_CASE("Task fanout: run all tasks successfully", "[ocs_scheduler], [fanout_task]") {
+TEST_CASE("Task fanout: run all tasks successfully", "[fanout_task], [ocs_scheduler]") {
     FanoutTask fanout;
 
     test::TestTask task1(status::StatusCode::OK);
@@ -26,7 +26,7 @@ TEST_CASE("Task fanout: run all tasks successfully", "[ocs_scheduler], [fanout_t
     TEST_ASSERT_EQUAL(1, task2.run_call_count());
 }
 
-TEST_CASE("Task fanout: run fails on first task", "[ocs_scheduler], [fanout_task]") {
+TEST_CASE("Task fanout: run fails on first task", "[fanout_task], [ocs_scheduler]") {
     FanoutTask fanout;
 
     test::TestTask task1(status::StatusCode::Error);
@@ -40,7 +40,7 @@ TEST_CASE("Task fanout: run fails on first task", "[ocs_scheduler], [fanout_task
     TEST_ASSERT_EQUAL(0, task2.run_call_count());
 }
 
-TEST_CASE("Task fanout: run fails on second task", "[ocs_scheduler], [fanout_task]") {
+TEST_CASE("Task fanout: run fails on second task", "[fanout_task], [ocs_scheduler]") {
     FanoutTask fanout;
 
     test::TestTask task1(status::StatusCode::OK);
@@ -54,7 +54,7 @@ TEST_CASE("Task fanout: run fails on second task", "[ocs_scheduler], [fanout_tas
     TEST_ASSERT_EQUAL(1, task2.run_call_count());
 }
 
-TEST_CASE("Task fanout: no tasks added", "[ocs_scheduler], [fanout_task]") {
+TEST_CASE("Task fanout: no tasks added", "[fanout_task], [ocs_scheduler]") {
     FanoutTask fanout;
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, fanout.run());

@@ -10,7 +10,7 @@
 namespace ocs {
 namespace system {
 
-TEST_CASE("Rt delayer: delay", "[ocs_system], [rt_delayer]") {
+TEST_CASE("Rt delayer: delay", "[rt_delayer], [ocs_system]") {
     RtDelayer delayer;
 
     for (size_t n = 0; n < 10; ++n) {

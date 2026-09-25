@@ -12,7 +12,7 @@
 namespace ocs {
 namespace core {
 
-TEST_CASE("Byte writer: write byte", "[ocs_core], [byte_writer]") {
+TEST_CASE("Byte writer: write byte", "[byte_writer], [ocs_core]") {
     uint8_t write_buf[42];
     memset(write_buf, 0, sizeof(write_buf));
 
@@ -28,7 +28,7 @@ TEST_CASE("Byte writer: write byte", "[ocs_core], [byte_writer]") {
     }
 }
 
-TEST_CASE("Byte writer: write array: whole at once", "[ocs_core], [byte_writer]") {
+TEST_CASE("Byte writer: write array: whole at once", "[byte_writer], [ocs_core]") {
     uint8_t write_buf[42];
     memset(write_buf, 0, sizeof(write_buf));
 
@@ -42,7 +42,7 @@ TEST_CASE("Byte writer: write array: whole at once", "[ocs_core], [byte_writer]"
     TEST_ASSERT_TRUE(memcmp(write_buf, buf, sizeof(buf)) == 0);
 }
 
-TEST_CASE("Byte writer: write array: by parts", "[ocs_core], [byte_writer]") {
+TEST_CASE("Byte writer: write array: by parts", "[byte_writer], [ocs_core]") {
     uint8_t write_buf[6];
     memset(write_buf, 0, sizeof(write_buf));
 
@@ -67,7 +67,7 @@ TEST_CASE("Byte writer: write array: by parts", "[ocs_core], [byte_writer]") {
     TEST_ASSERT_TRUE(memcmp(want_buf, writer.get_data(), sizeof(want_buf)) == 0);
 }
 
-TEST_CASE("Byte writer: resize", "[ocs_core], [byte_writer]") {
+TEST_CASE("Byte writer: resize", "[byte_writer], [ocs_core]") {
     uint8_t write_buf[2];
     memset(write_buf, 7, sizeof(write_buf));
 
@@ -80,7 +80,7 @@ TEST_CASE("Byte writer: resize", "[ocs_core], [byte_writer]") {
     TEST_ASSERT_EQUAL_UINT8(2, write_buf[1]);
 }
 
-TEST_CASE("Byte writer: resize: no space left", "[ocs_core], [byte_writer]") {
+TEST_CASE("Byte writer: resize: no space left", "[byte_writer], [ocs_core]") {
     uint8_t write_buf[2];
     memset(write_buf, 7, sizeof(write_buf));
 
@@ -90,7 +90,7 @@ TEST_CASE("Byte writer: resize: no space left", "[ocs_core], [byte_writer]") {
     TEST_ASSERT_FALSE(writer.write_u8(10));
 }
 
-TEST_CASE("Byte writer: find byte: in range", "[ocs_core], [byte_writer]") {
+TEST_CASE("Byte writer: find byte: in range", "[byte_writer], [ocs_core]") {
     uint8_t write_buf[6];
     memset(write_buf, 0, sizeof(write_buf));
 
@@ -107,7 +107,7 @@ TEST_CASE("Byte writer: find byte: in range", "[ocs_core], [byte_writer]") {
     TEST_ASSERT_EQUAL_INT32(-1, writer.find(0x0A));
 }
 
-TEST_CASE("Byte writer: find byte: out of range", "[ocs_core], [byte_writer]") {
+TEST_CASE("Byte writer: find byte: out of range", "[byte_writer], [ocs_core]") {
     uint8_t write_buf[6];
     memset(write_buf, 0, sizeof(write_buf));
 

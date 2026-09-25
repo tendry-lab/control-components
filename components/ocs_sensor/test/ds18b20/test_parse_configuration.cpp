@@ -13,7 +13,7 @@ namespace sensor {
 namespace ds18b20 {
 
 TEST_CASE("Parse configuration: invalid resolution invalid serial number",
-          "[ocs_sensor], [parse_configuration]") {
+          "[parse_configuration], [ocs_sensor]") {
     Sensor::Configuration configuration;
 
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg,
@@ -21,7 +21,7 @@ TEST_CASE("Parse configuration: invalid resolution invalid serial number",
 }
 
 TEST_CASE("Parse configuration: valid resolution invalid serial number",
-          "[ocs_sensor], [parse_configuration]") {
+          "[parse_configuration], [ocs_sensor]") {
     Sensor::Configuration configuration;
 
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg,
@@ -35,7 +35,7 @@ TEST_CASE("Parse configuration: valid resolution invalid serial number",
 }
 
 TEST_CASE("Parse configuration: invalid resolution valid serial number",
-          "[ocs_sensor], [parse_configuration]") {
+          "[parse_configuration], [ocs_sensor]") {
     Sensor::Configuration configuration;
 
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg,
@@ -49,7 +49,7 @@ TEST_CASE("Parse configuration: invalid resolution valid serial number",
 }
 
 TEST_CASE("Parse configuration: valid resolution valid serial number",
-          "[ocs_sensor], [parse_configuration]") {
+          "[parse_configuration], [ocs_sensor]") {
     { // 9-Bit resolution
         Sensor::Configuration configuration;
 

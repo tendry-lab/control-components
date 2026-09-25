@@ -79,7 +79,7 @@ private:
 } // namespace
 
 TEST_CASE("Analog sample reader: ADC failed to read",
-          "[ocs_sensor], [analog_sample_reader]") {
+          "[analog_sample_reader], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -101,7 +101,7 @@ TEST_CASE("Analog sample reader: ADC failed to read",
 }
 
 TEST_CASE("Analog sample reader: invalid sample count",
-          "[ocs_sensor], [analog_sample_reader]") {
+          "[analog_sample_reader], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -123,7 +123,7 @@ TEST_CASE("Analog sample reader: invalid sample count",
 }
 
 TEST_CASE("Analog sample reader: invalid bitwidth",
-          "[ocs_sensor], [analog_sample_reader]") {
+          "[analog_sample_reader], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -144,7 +144,7 @@ TEST_CASE("Analog sample reader: invalid bitwidth",
     TEST_ASSERT_EQUAL(-1, raw);
 }
 
-TEST_CASE("Analog sample reader: OK", "[ocs_sensor], [analog_sample_reader]") {
+TEST_CASE("Analog sample reader: OK", "[analog_sample_reader], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";

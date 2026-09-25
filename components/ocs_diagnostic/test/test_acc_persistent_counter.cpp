@@ -13,7 +13,7 @@ namespace ocs {
 namespace diagnostic {
 
 TEST_CASE("Accumulative persistent counter: without initial value",
-          "[ocs_diagnostic], [acc_persistent_counter]") {
+          "[acc_persistent_counter], [ocs_diagnostic]") {
     const ICounter::Value counter_value = 42;
 
     test::MemoryStorage storage;
@@ -26,7 +26,7 @@ TEST_CASE("Accumulative persistent counter: without initial value",
 }
 
 TEST_CASE("Accumulative persistent counter: with initial value",
-          "[ocs_diagnostic], [acc_persistent_counter]") {
+          "[acc_persistent_counter], [ocs_diagnostic]") {
     const ICounter::Value counter_value = 42;
     const ICounter::Value persisted_value = 43;
 
@@ -44,7 +44,7 @@ TEST_CASE("Accumulative persistent counter: with initial value",
 }
 
 TEST_CASE("Accumulative persistent counter: handle reboot: without initial value",
-          "[ocs_diagnostic], [acc_persistent_counter]") {
+          "[acc_persistent_counter], [ocs_diagnostic]") {
     const ICounter::Value counter_value = 42;
 
     test::MemoryStorage storage;
@@ -66,7 +66,7 @@ TEST_CASE("Accumulative persistent counter: handle reboot: without initial value
 }
 
 TEST_CASE("Accumulative persistent counter: handle reboot: with initial value",
-          "[ocs_diagnostic], [acc_persistent_counter]") {
+          "[acc_persistent_counter], [ocs_diagnostic]") {
     const ICounter::Value counter_value = 42;
     const ICounter::Value persisted_value = 43;
 
@@ -95,7 +95,7 @@ TEST_CASE("Accumulative persistent counter: handle reboot: with initial value",
 }
 
 TEST_CASE("Accumulative persistent counter: save value: without previous value",
-          "[ocs_diagnostic], [acc_persistent_counter]") {
+          "[acc_persistent_counter], [ocs_diagnostic]") {
     const ICounter::Value current_value = 42;
     const char* id = "foo";
 
@@ -124,7 +124,7 @@ TEST_CASE("Accumulative persistent counter: save value: without previous value",
 }
 
 TEST_CASE("Accumulative persistent counter: save value: with previous value",
-          "[ocs_diagnostic], [acc_persistent_counter]") {
+          "[acc_persistent_counter], [ocs_diagnostic]") {
     const ICounter::Value current_value = 42;
     const ICounter::Value persisted_value = 43;
 
@@ -159,7 +159,7 @@ TEST_CASE("Accumulative persistent counter: save value: with previous value",
 }
 
 TEST_CASE("Accumulative persistent counter: save value on task run",
-          "[ocs_diagnostic], [acc_persistent_counter]") {
+          "[acc_persistent_counter], [ocs_diagnostic]") {
     const ICounter::Value counter_value = 42;
 
     test::MemoryStorage storage;

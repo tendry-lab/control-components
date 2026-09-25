@@ -10,51 +10,51 @@
 namespace ocs {
 namespace algo {
 
-TEST_CASE("URI ops: parse path: null input", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse path: null input", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_TRUE(UriOps::parse_path(nullptr) == std::string_view());
 }
 
-TEST_CASE("URI ops: parse path: empty", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse path: empty", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_TRUE(UriOps::parse_path("") == std::string_view());
 }
 
-TEST_CASE("URI ops: parse path: without query", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse path: without query", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_TRUE(UriOps::parse_path("/foo/bar/baz") == "/foo/bar/baz");
 }
 
-TEST_CASE("URI ops: parse path: with query", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse path: with query", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_TRUE(UriOps::parse_path("/foo/bar/baz?key=val") == "/foo/bar/baz");
 }
 
-TEST_CASE("URI ops: parse query: null input", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse query: null input", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_EQUAL(0, UriOps::parse_query(nullptr).size());
 }
 
-TEST_CASE("URI ops: parse query: empty inut", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse query: empty inut", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_EQUAL(0, UriOps::parse_query("").size());
 }
 
-TEST_CASE("URI ops: parse query: no query", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse query: no query", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_EQUAL(0, UriOps::parse_query("/foo/bar").size());
 }
 
-TEST_CASE("URI ops: parse query: key missed", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse query: key missed", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_EQUAL(0, UriOps::parse_query("/foo/bar?").size());
 }
 
-TEST_CASE("URI ops: parse query: wrong delimiter", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse query: wrong delimiter", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_EQUAL(0, UriOps::parse_query("/foo/bar?key:").size());
 }
 
-TEST_CASE("URI ops: parse query: key-value missed", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse query: key-value missed", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_EQUAL(0, UriOps::parse_query("/foo/bar?=").size());
 }
 
-TEST_CASE("URI ops: parse query: value missed", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse query: value missed", "[uri_ops], [ocs_algo]") {
     TEST_ASSERT_EQUAL(0, UriOps::parse_query("/foo/bar?key=").size());
 }
 
-TEST_CASE("URI ops: parse query: single pair", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse query: single pair", "[uri_ops], [ocs_algo]") {
     const auto values = UriOps::parse_query("/foo/bar?key=value");
     TEST_ASSERT_EQUAL(1, values.size());
 
@@ -64,7 +64,7 @@ TEST_CASE("URI ops: parse query: single pair", "[ocs_algo], [uri_ops]") {
     TEST_ASSERT_TRUE(it->second == "value");
 }
 
-TEST_CASE("URI ops: parse query: numeric argument", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse query: numeric argument", "[uri_ops], [ocs_algo]") {
     const auto values = UriOps::parse_query("/foo/bar?key=2");
     TEST_ASSERT_EQUAL(1, values.size());
 
@@ -74,7 +74,7 @@ TEST_CASE("URI ops: parse query: numeric argument", "[ocs_algo], [uri_ops]") {
     TEST_ASSERT_TRUE(it->second == "2");
 }
 
-TEST_CASE("URI ops: parse query: multile pairs", "[ocs_algo], [uri_ops]") {
+TEST_CASE("URI ops: parse query: multile pairs", "[uri_ops], [ocs_algo]") {
     const auto values = UriOps::parse_query("/foo/bar?key1=value1&key2=value2");
     TEST_ASSERT_EQUAL(2, values.size());
 

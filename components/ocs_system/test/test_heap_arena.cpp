@@ -30,7 +30,7 @@ private:
 
 } // namespace
 
-TEST_CASE("Heap arena: allocate/deallocate", "[ocs_system], [heap_caps_arena]") {
+TEST_CASE("Heap arena: allocate/deallocate", "[heap_caps_arena], [ocs_system]") {
     HeapArena arena;
 
     void* ptr = arena.allocate(123);
@@ -40,7 +40,7 @@ TEST_CASE("Heap arena: allocate/deallocate", "[ocs_system], [heap_caps_arena]") 
 }
 
 TEST_CASE("Heap arena: placemenet new/delete: primitives",
-          "[ocs_system], [heap_caps_arena]") {
+          "[heap_caps_arena], [ocs_system]") {
     HeapArena heap_arena;
     GuardArena guard_arena(heap_arena);
 
@@ -60,7 +60,7 @@ TEST_CASE("Heap arena: placemenet new/delete: primitives",
 }
 
 TEST_CASE("Heap arena: placemenet new/delete: user-defined objects",
-          "[ocs_system], [heap_caps_arena]") {
+          "[heap_caps_arena], [ocs_system]") {
     HeapArena heap_arena;
     GuardArena guard_arena(heap_arena);
 
@@ -81,7 +81,7 @@ TEST_CASE("Heap arena: placemenet new/delete: user-defined objects",
 }
 
 TEST_CASE("Heap arena: smart pointers: non-array user-defined objects",
-          "[ocs_system], [heap_caps_arena]") {
+          "[heap_caps_arena], [ocs_system]") {
     HeapArena heap_arena;
     GuardArena guard_arena(heap_arena);
 
@@ -114,7 +114,7 @@ TEST_CASE("Heap arena: smart pointers: non-array user-defined objects",
 }
 
 TEST_CASE("Heap arena: smart pointers: non-array primitive types",
-          "[ocs_system], [heap_caps_arena]") {
+          "[heap_caps_arena], [ocs_system]") {
     HeapArena heap_arena;
     GuardArena guard_arena(heap_arena);
 
@@ -130,7 +130,7 @@ TEST_CASE("Heap arena: smart pointers: non-array primitive types",
 }
 
 TEST_CASE("Heap arena: smart pointers: array of primitive types",
-          "[ocs_system], [heap_caps_arena]") {
+          "[heap_caps_arena], [ocs_system]") {
     HeapArena heap_arena;
     GuardArena guard_arena(heap_arena);
 

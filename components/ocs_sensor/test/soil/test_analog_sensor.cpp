@@ -37,7 +37,7 @@ struct TestAdcConverter : public io::adc::IConverter, private core::NonCopyable<
 
 } // namespace
 
-TEST_CASE("Soil analog sensor: receive in range", "[ocs_sensor], [soil_analog_sensor]") {
+TEST_CASE("Soil analog sensor: receive in range", "[soil_analog_sensor], [ocs_sensor]") {
     const uint16_t def_min = 10;
     const uint16_t def_max = 20;
     const char* id = "test";
@@ -73,7 +73,7 @@ TEST_CASE("Soil analog sensor: receive in range", "[ocs_sensor], [soil_analog_se
 }
 
 TEST_CASE("Soil analog sensor: receive out of range",
-          "[ocs_sensor], [soil_analog_sensor]") {
+          "[soil_analog_sensor], [ocs_sensor]") {
     const uint16_t def_min = 10;
     const uint16_t def_max = 20;
     const char* id = "test";
@@ -115,7 +115,7 @@ TEST_CASE("Soil analog sensor: receive out of range",
 }
 
 TEST_CASE("Soil analog sensor: read config invalid",
-          "[ocs_sensor], [soil_analog_sensor]") {
+          "[soil_analog_sensor], [ocs_sensor]") {
     const uint16_t def_min = 20;
     const uint16_t def_max = 10;
     TEST_ASSERT_TRUE(def_min > def_max);
@@ -152,7 +152,7 @@ TEST_CASE("Soil analog sensor: read config invalid",
 }
 
 TEST_CASE("Soil analog sensor: validate each status",
-          "[ocs_sensor], [soil_analog_sensor]") {
+          "[soil_analog_sensor], [ocs_sensor]") {
     // Saturated, Wet, Depletion, Dry.
     const uint16_t def_min = 10;
     const uint16_t def_max = 26;
@@ -335,7 +335,7 @@ TEST_CASE("Soil analog sensor: validate each status",
 }
 
 TEST_CASE("Soil analog sensor: read initial status from storage",
-          "[ocs_sensor], [soil_analog_sensor]") {
+          "[soil_analog_sensor], [ocs_sensor]") {
     const uint16_t def_min = 10;
     const uint16_t def_max = 26;
     const char* id = "test";
@@ -413,7 +413,7 @@ TEST_CASE("Soil analog sensor: read initial status from storage",
 }
 
 TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid states",
-          "[ocs_sensor], [soil_analog_sensor]") {
+          "[soil_analog_sensor], [ocs_sensor]") {
     const uint16_t def_min = 10;
     const uint16_t def_max = 26;
     const char* id = "test";
@@ -541,7 +541,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: valid stat
 }
 
 TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid states",
-          "[ocs_sensor], [soil_analog_sensor]") {
+          "[soil_analog_sensor], [ocs_sensor]") {
     const uint16_t def_min = 10;
     const uint16_t def_max = 26;
     const char* id = "test";
@@ -685,7 +685,7 @@ TEST_CASE("Soil analog sensor: ignore changes close to the threshold: invalid st
 }
 
 TEST_CASE("Soil analog sensor: validate moisture calculation",
-          "[ocs_sensor], [soil_analog_sensor]") {
+          "[soil_analog_sensor], [ocs_sensor]") {
     const uint16_t def_min = 900;
     const uint16_t def_max = 2300;
     const char* id = "test";

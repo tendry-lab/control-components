@@ -126,7 +126,7 @@ private:
 } // namespace
 
 TEST_CASE("Stream transceiver: automatically end process",
-          "[ocs_core], [stream_transceiver]") {
+          "[stream_transceiver], [ocs_core]") {
     TestStreamReader reader;
     TestStreamWriter writer;
     StreamTransceiver::Buffer buffer;
@@ -140,7 +140,7 @@ TEST_CASE("Stream transceiver: automatically end process",
     TEST_ASSERT_EQUAL(1, writer.end_count);
 }
 
-TEST_CASE("Stream transceiver: reader begin failed", "[ocs_core], [stream_transceiver]") {
+TEST_CASE("Stream transceiver: reader begin failed", "[stream_transceiver], [ocs_core]") {
     TestStreamReader reader;
     reader.begin_status = status::StatusCode::Error;
 
@@ -161,7 +161,7 @@ TEST_CASE("Stream transceiver: reader begin failed", "[ocs_core], [stream_transc
     TEST_ASSERT_EQUAL(0, writer.write_count);
 }
 
-TEST_CASE("Stream transceiver: writer begin failed", "[ocs_core], [stream_transceiver]") {
+TEST_CASE("Stream transceiver: writer begin failed", "[stream_transceiver], [ocs_core]") {
     TestStreamReader reader;
 
     TestStreamWriter writer;
@@ -183,7 +183,7 @@ TEST_CASE("Stream transceiver: writer begin failed", "[ocs_core], [stream_transc
     TEST_ASSERT_EQUAL(0, writer.write_count);
 }
 
-TEST_CASE("Stream transceiver: transceive data", "[ocs_core], [stream_transceiver]") {
+TEST_CASE("Stream transceiver: transceive data", "[stream_transceiver], [ocs_core]") {
     const char* want_string = "helloworld";
     StreamTransceiver::Buffer buffer;
     buffer.resize(strlen(want_string));

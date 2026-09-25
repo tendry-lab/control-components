@@ -33,7 +33,7 @@ system::HeapArena heap_arena;
 
 } // namespace
 
-TEST_CASE("DS18B20 store: schedule: empty store", "[ocs_sensor], [ds18b20_store]") {
+TEST_CASE("DS18B20 store: schedule: empty store", "[ds18b20_store], [ocs_sensor]") {
     const io::gpio::GpioNum gpio_num = GPIO_NUM_26;
 
     TestDelayer delayer;
@@ -46,7 +46,7 @@ TEST_CASE("DS18B20 store: schedule: empty store", "[ocs_sensor], [ds18b20_store]
     TEST_ASSERT_NULL(future);
 }
 
-TEST_CASE("DS18B20 store: schedule: invalid GPIO", "[ocs_sensor], [ds18b20_store]") {
+TEST_CASE("DS18B20 store: schedule: invalid GPIO", "[ds18b20_store], [ocs_sensor]") {
     const char* sensor_id = "test_sensor";
     const io::gpio::GpioNum gpio_num = GPIO_NUM_26;
     const io::gpio::GpioNum invalid_gpio_num = GPIO_NUM_27;
@@ -67,7 +67,7 @@ TEST_CASE("DS18B20 store: schedule: invalid GPIO", "[ocs_sensor], [ds18b20_store
     TEST_ASSERT_NULL(future);
 }
 
-TEST_CASE("DS18B20 store: add sensor", "[ocs_sensor], [ds18b20_store]") {
+TEST_CASE("DS18B20 store: add sensor", "[ds18b20_store], [ocs_sensor]") {
     const char* sensor_id = "test_sensor";
     const io::gpio::GpioNum gpio_num = GPIO_NUM_26;
 
@@ -91,7 +91,7 @@ TEST_CASE("DS18B20 store: add sensor", "[ocs_sensor], [ds18b20_store]") {
 }
 
 TEST_CASE("DS18B20 store: read sensor configuration: non-configured",
-          "[ocs_sensor], [ds18b20_store]") {
+          "[ds18b20_store], [ocs_sensor]") {
     const char* sensor_id = "test_sensor";
     const io::gpio::GpioNum gpio_num = GPIO_NUM_26;
 

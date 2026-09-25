@@ -13,7 +13,7 @@ namespace ocs {
 namespace sensor {
 
 TEST_CASE("Analog config: failed to read on initialization",
-          "[ocs_sensor], [analog_config]") {
+          "[analog_config], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -36,7 +36,7 @@ TEST_CASE("Analog config: failed to read on initialization",
     TEST_ASSERT_EQUAL_STRING(id, config.get_id());
 }
 
-TEST_CASE("Analog config: invalid on initialization", "[ocs_sensor], [analog_config]") {
+TEST_CASE("Analog config: invalid on initialization", "[analog_config], [ocs_sensor]") {
     const char* id = "test";
 
     test::MemoryStorage memory_storage;
@@ -54,7 +54,7 @@ TEST_CASE("Analog config: invalid on initialization", "[ocs_sensor], [analog_con
     }
 }
 
-TEST_CASE("Analog config: configure: OK", "[ocs_sensor], [analog_config]") {
+TEST_CASE("Analog config: configure: OK", "[analog_config], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -92,7 +92,7 @@ TEST_CASE("Analog config: configure: OK", "[ocs_sensor], [analog_config]") {
     TEST_ASSERT_EQUAL(new_sample_count, config1.get_sample_count());
 }
 
-TEST_CASE("Analog config: configure: invalid input", "[ocs_sensor], [analog_config]") {
+TEST_CASE("Analog config: configure: invalid input", "[analog_config], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -116,7 +116,7 @@ TEST_CASE("Analog config: configure: invalid input", "[ocs_sensor], [analog_conf
     TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg, config.configure(0, 10, 7));
 }
 
-TEST_CASE("Analog config: configure: failed to save", "[ocs_sensor], [analog_config]") {
+TEST_CASE("Analog config: configure: failed to save", "[analog_config], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -140,7 +140,7 @@ TEST_CASE("Analog config: configure: failed to save", "[ocs_sensor], [analog_con
 }
 
 TEST_CASE("Analog config: failed to reset configuration",
-          "[ocs_sensor], [analog_config]") {
+          "[analog_config], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -175,7 +175,7 @@ TEST_CASE("Analog config: failed to reset configuration",
     TEST_ASSERT_EQUAL(def_sample_count, config.get_sample_count());
 }
 
-TEST_CASE("Analog config: reset default configuration", "[ocs_sensor], [analog_config]") {
+TEST_CASE("Analog config: reset default configuration", "[analog_config], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -195,7 +195,7 @@ TEST_CASE("Analog config: reset default configuration", "[ocs_sensor], [analog_c
     TEST_ASSERT_EQUAL(def_sample_count, config.get_sample_count());
 }
 
-TEST_CASE("Analog config: configure and reset", "[ocs_sensor], [analog_config]") {
+TEST_CASE("Analog config: configure and reset", "[analog_config], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";
@@ -242,7 +242,7 @@ TEST_CASE("Analog config: configure and reset", "[ocs_sensor], [analog_config]")
     TEST_ASSERT_EQUAL(def_sample_count, config1.get_sample_count());
 }
 
-TEST_CASE("Analog config: get bitwidth", "[ocs_sensor], [analog_config]") {
+TEST_CASE("Analog config: get bitwidth", "[analog_config], [ocs_sensor]") {
     const uint16_t def_min = 1;
     const uint16_t def_max = 2;
     const char* id = "test";

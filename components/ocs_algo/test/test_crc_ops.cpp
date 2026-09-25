@@ -13,7 +13,7 @@
 namespace ocs {
 namespace algo {
 
-TEST_CASE("CRC Ops: crc8: MSB", "[ocs_algo], [crc_ops]") {
+TEST_CASE("CRC Ops: crc8: MSB", "[crc_ops], [ocs_algo]") {
     const uint16_t data = 0xBEEF;
 
     uint8_t buf[2];
@@ -25,7 +25,7 @@ TEST_CASE("CRC Ops: crc8: MSB", "[ocs_algo], [crc_ops]") {
                       CrcOps::crc8(buf, sizeof(buf), 0xFF, 0x31, CrcOps::BitOrder::MSB));
 }
 
-TEST_CASE("CRC Ops: crc8: LSB", "[ocs_algo], [crc_ops]") {
+TEST_CASE("CRC Ops: crc8: LSB", "[crc_ops], [ocs_algo]") {
     const uint8_t buf[] {
         0xAB, 0x1, 0x4B, 0x46, 0x7F, 0xFF, 0x5, 0x10,
     };

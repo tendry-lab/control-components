@@ -42,7 +42,7 @@ private:
 } // namespace
 
 TEST_CASE("Fanout suspender: suspend/resume component: all succeeded",
-          "[ocs_system], [fanout_suspender]") {
+          "[fanout_suspender], [ocs_system]") {
     FanoutSuspender suspender;
     TestHandler handler1(status::StatusCode::OK, status::StatusCode::OK);
     TestHandler handler2(status::StatusCode::OK, status::StatusCode::OK);
@@ -64,7 +64,7 @@ TEST_CASE("Fanout suspender: suspend/resume component: all succeeded",
 }
 
 TEST_CASE("Fanout suspender: suspend/resume component: one failed",
-          "[ocs_system], [fanout_suspender]") {
+          "[fanout_suspender], [ocs_system]") {
     FanoutSuspender suspender;
     TestHandler handler1(status::StatusCode::OK, status::StatusCode::Error);
     TestHandler handler2(status::StatusCode::Error, status::StatusCode::OK);
@@ -86,7 +86,7 @@ TEST_CASE("Fanout suspender: suspend/resume component: one failed",
 }
 
 TEST_CASE("Fanout suspender: add same component twice",
-          "[ocs_system], [fanout_suspender]") {
+          "[fanout_suspender], [ocs_system]") {
     FanoutSuspender suspender;
     TestHandler handler(status::StatusCode::OK, status::StatusCode::Error);
 

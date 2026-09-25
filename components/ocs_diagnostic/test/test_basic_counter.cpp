@@ -13,12 +13,12 @@
 namespace ocs {
 namespace diagnostic {
 
-TEST_CASE("Basic counter: ID length in a range", "[ocs_diagnostic], [basic_counter]") {
+TEST_CASE("Basic counter: ID length in a range", "[basic_counter], [ocs_diagnostic]") {
     test::TestCounter counter("foo");
     TEST_ASSERT_EQUAL_STRING("foo", counter.id());
 }
 
-TEST_CASE("Basic counter: ID length overflow", "[ocs_diagnostic], [basic_counter]") {
+TEST_CASE("Basic counter: ID length overflow", "[basic_counter], [ocs_diagnostic]") {
     const auto max_len = 15;
 
     std::string actual_id;
