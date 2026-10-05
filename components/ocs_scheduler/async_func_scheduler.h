@@ -5,24 +5,22 @@
 
 #pragma once
 
-#include <functional>
 #include <memory>
 #include <vector>
 
-#include "ocs_core/future.h"
 #include "ocs_core/noncopyable.h"
 #include "ocs_core/static_recursive_mutex.h"
+#include "ocs_scheduler/ifunc_scheduler.h"
 #include "ocs_scheduler/itask.h"
 #include "ocs_system/iarena.h"
 
 namespace ocs {
 namespace scheduler {
 
-class AsyncFuncScheduler : public ITask, private core::NonCopyable<> {
+class AsyncFuncScheduler : public IFuncScheduler,
+                           public ITask,
+                           private core::NonCopyable<> {
 public:
-    using FuturePtr = std::shared_ptr<core::Future>;
-    using Func = std::function<status::StatusCode()>;
-
     //! Initialize.
     //!
     //! @params
@@ -38,7 +36,7 @@ public:
     //!
     //! @remarks
     //!  It is safe to call scheduler functions in @p func.
-    FuturePtr add(Func func);
+    FuturePtr add(Func func) override;
 
 private:
     const size_t max_event_count_ { 0 };

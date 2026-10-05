@@ -4,6 +4,7 @@ idf_component_register(
     "test_async_task.cpp"
     "test_async_task_scheduler.cpp"
     "test_async_func_scheduler.cpp"
+    "test_event_func_scheduler.cpp"
     "test_periodic_task_scheduler.cpp"
 
     REQUIRES
