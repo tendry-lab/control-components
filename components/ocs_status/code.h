@@ -42,6 +42,9 @@ enum class StatusCode : uint8_t {
     //! An operation isn't supported.
     NotSupported,
 
+    //! Operation cancelled.
+    Cancelled,
+
     //! Invalid status code.
     Last,
 };
