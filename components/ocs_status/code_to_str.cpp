@@ -30,6 +30,8 @@ const char* code_to_str(StatusCode status) {
         return "NotModified";
     case StatusCode::NotSupported:
         return "NotSupported";
+    case StatusCode::Cancelled:
+        return "Cancelled";
 
     case StatusCode::Last:
         break;
