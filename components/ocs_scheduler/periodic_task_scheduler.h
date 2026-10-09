@@ -56,6 +56,11 @@ public:
     //!   - If there are too many tasks added to the same scheduler, it is possible that
     //!     the total time required to run all these tasks will be greater then the
     //!     minimum periodic interval.
+    //!
+    //!  It's safe to call add()/remove() from the existing task. The most common use case
+    //!  is when IFuncScheduler is used to schedule asynchronous operations on the task
+    //!  scheduler and inside the provided function a new task is added or removed, while
+    //!  IFuncScheduler itself is called during the run() call.
     status::StatusCode add(ITask& task, const char* id, system::Time interval) override;
 
     //! Remove task by @p id.
