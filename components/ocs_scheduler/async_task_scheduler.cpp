@@ -43,8 +43,8 @@ AsyncTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
         return code;
     }
 
-    auto node = ocs::system::make_shared_ptr<Node>(
-        arena_, arena_, timer_builder_, task, event_group_.get(), event, interval, id);
+    auto node = system::make_shared_ptr<Node>(arena_, arena_, timer_builder_, task,
+                                              event_group_.get(), event, interval, id);
     configASSERT(node);
 
     nodes_.emplace_back(node);
@@ -131,8 +131,8 @@ AsyncTaskScheduler::attach(EventBits_t& event, ITask& task, const char* id) {
         return code;
     }
 
-    auto node = ocs::system::make_shared_ptr<Node>(arena_, task, event, id,
-                                                   Node::ClockType::External);
+    auto node =
+        system::make_shared_ptr<Node>(arena_, task, event, id, Node::ClockType::External);
     configASSERT(node);
 
     nodes_.emplace_back(node);
@@ -189,7 +189,7 @@ AsyncTaskScheduler::Node::Node(system::IArena& arena,
                                system::Time interval,
                                const char* id)
     : Node(task, event, id, ClockType::Internal) {
-    async_task_ = ocs::system::make_unique_ptr<AsyncTask>(arena, even_group, event);
+    async_task_ = system::make_unique_ptr<AsyncTask>(arena, even_group, event);
     configASSERT(async_task_);
 
     timer_ = timer_builder.make_timer(*async_task_, id, interval);

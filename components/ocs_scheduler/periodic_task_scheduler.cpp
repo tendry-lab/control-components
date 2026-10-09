@@ -47,7 +47,7 @@ PeriodicTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
         return status::StatusCode::Error;
     }
 
-    auto node = ocs::system::make_shared_ptr<Node>(arena_, clock_, task, id, interval);
+    auto node = system::make_shared_ptr<Node>(arena_, clock_, task, id, interval);
     configASSERT(node);
 
     nodes_to_add_.push_back(node);
