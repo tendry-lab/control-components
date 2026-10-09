@@ -48,14 +48,14 @@ public:
     //!  - @p interval - task running frequency, milliseconds resolution.
     //!
     //! @notes
-    //! It's possible for the task's frequency to drift over time. There are several
-    //! reasons for this:
-    //!  - This scheduler can't be considered as a precise scheduler, since all tasks
-    //!    are running on the same FreeRTOS task. This task can be preempted by other
-    //!    tasks with higher priority.
-    //!  - If there are too many tasks added to the same scheduler, it is possible that
-    //!    the total time required to run all these tasks will be greater then the
-    //!    minimum periodic interval.
+    //!  It's possible for the task's frequency to drift over time. There are several
+    //!  reasons for this:
+    //!   - This scheduler can't be considered as a precise scheduler, since all tasks
+    //!     are running on the same FreeRTOS task. This task can be preempted by other
+    //!     tasks with higher priority.
+    //!   - If there are too many tasks added to the same scheduler, it is possible that
+    //!     the total time required to run all these tasks will be greater then the
+    //!     minimum periodic interval.
     status::StatusCode add(ITask& task, const char* id, system::Time interval) override;
 
     //! Remove task by @p id.
