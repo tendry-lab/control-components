@@ -62,6 +62,12 @@ public:
     //! Wait for the asynchronous tasks.
     status::StatusCode run() override;
 
+    //! Pause execution of @p task.
+    status::StatusCode pause(ITask& task) override;
+
+    //! Resume execution of @p task.
+    status::StatusCode resume(ITask& task) override;
+
     //! Return an event group to schedule external asynchronous events.
     //!
     //! @remarks
@@ -107,9 +113,13 @@ private:
         const char* id() const;
         EventBits_t event() const;
         ClockType get_clock_type() const;
+        const ITask& get_task() const;
+        bool is_paused() const;
 
         status::StatusCode start();
         status::StatusCode stop();
+
+        void set_paused(bool paused);
 
     private:
         const std::string id_;
@@ -118,9 +128,15 @@ private:
 
         ITask& task_;
 
+        bool is_paused_ { false };
+
         system::UniquePtr<ITask> async_task_;
         system::UniquePtr<system::ITimer> timer_;
     };
+
+    using NodePtr = std::shared_ptr<Node>;
+
+    NodePtr node_find_(ITask&);
 
     status::StatusCode allocate_event_(EventBits_t& event, const char* id);
 
@@ -132,7 +148,6 @@ private:
     system::ITimerBuilder& timer_builder_;
     IDelayEstimator& estimator_;
 
-    using NodePtr = std::shared_ptr<Node>;
     std::vector<NodePtr> nodes_;
 
     core::StaticEventGroup event_group_;

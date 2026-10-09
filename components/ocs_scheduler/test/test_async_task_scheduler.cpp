@@ -8,6 +8,7 @@
 
 #include "unity.h"
 
+#include "ocs_scheduler/async_func_scheduler.h"
 #include "ocs_scheduler/async_task.h"
 #include "ocs_scheduler/async_task_scheduler.h"
 #include "ocs_scheduler/constant_delay_estimator.h"
@@ -21,11 +22,11 @@ namespace scheduler {
 
 namespace {
 
-void wait_task(ITaskScheduler& scheduler, test::TestTask& task) {
+template <typename T> void run_and_wait(ITaskScheduler& scheduler, T& t) {
     while (true) {
         TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.run());
 
-        if (task.wait(pdMS_TO_TICKS(30)) == status::StatusCode::OK) {
+        if (t.wait(pdMS_TO_TICKS(30)) == status::StatusCode::OK) {
             break;
         }
     }
@@ -55,7 +56,7 @@ TEST_CASE("Async task scheduler: wait for events",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        scheduler.add(task, "test_task", system::Duration::millisecond * 100));
+        scheduler.add(task, "test_task", system::Duration::millisecond * 50));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.start());
     TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.run());
@@ -75,10 +76,10 @@ TEST_CASE("Async task scheduler: register same task multiple times",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        scheduler.add(task, "test_task", system::Duration::millisecond * 100));
+        scheduler.add(task, "test_task", system::Duration::millisecond * 50));
     TEST_ASSERT_EQUAL(
         status::StatusCode::InvalidArg,
-        scheduler.add(task, "test_task", system::Duration::millisecond * 100));
+        scheduler.add(task, "test_task", system::Duration::millisecond * 50));
 }
 
 TEST_CASE("Async task scheduler: register maximum tasks",
@@ -114,7 +115,7 @@ TEST_CASE("Async task scheduler: register maximum tasks",
     }
 
     for (auto& task : tasks) {
-        wait_task(scheduler, *task);
+        run_and_wait(scheduler, *task);
     }
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.stop());
@@ -158,7 +159,7 @@ TEST_CASE("Async task scheduler: register maximum tasks: some failed",
     }
 
     for (auto& task : tasks) {
-        wait_task(scheduler, *task);
+        run_and_wait(scheduler, *task);
     }
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.stop());
@@ -231,7 +232,7 @@ TEST_CASE("Async task scheduler: add and attach task",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        scheduler.add(add_task, "add_task", system::Duration::millisecond * 100));
+        scheduler.add(add_task, "add_task", system::Duration::millisecond * 50));
 
     EventBits_t event = 0;
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
@@ -245,6 +246,158 @@ TEST_CASE("Async task scheduler: add and attach task",
 
     wait_task(add_task);
     wait_task(attach_task);
+}
+
+TEST_CASE("Async task scheduler: pause/resume task during run",
+          "[async_task_scheduler], [ocs_scheduler]") {
+    const char* scheduler_id = "test";
+
+    ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
+
+    AsyncTaskScheduler task_scheduler(heap_arena, freertos_timer_builder, estimator,
+                                      scheduler_id);
+
+    AsyncFuncScheduler func_scheduler(heap_arena, 10);
+
+    test::TestTask task(status::StatusCode::OK);
+
+    TEST_ASSERT_EQUAL(
+        status::StatusCode::OK,
+        task_scheduler.add(func_scheduler, "func", system::Duration::millisecond * 50));
+
+    TEST_ASSERT_EQUAL(
+        status::StatusCode::OK,
+        task_scheduler.add(task, "task", system::Duration::millisecond * 10));
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.start());
+    run_and_wait(task_scheduler, task);
+
+    size_t task_call_count = 0;
+
+    auto future = func_scheduler.add([&task_scheduler, &task, &task_call_count]() {
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.pause(task));
+
+        task_call_count = task.run_call_count();
+
+        return status::StatusCode::OK;
+    });
+    TEST_ASSERT_NOT_NULL(future);
+
+    run_and_wait(task_scheduler, *future);
+
+    future = func_scheduler.add([&task, task_call_count]() {
+        TEST_ASSERT_EQUAL(task_call_count, task.run_call_count());
+
+        return status::StatusCode::OK;
+    });
+    TEST_ASSERT_NOT_NULL(future);
+
+    run_and_wait(task_scheduler, *future);
+
+    future = func_scheduler.add([&task_scheduler, &task, task_call_count]() {
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.resume(task));
+
+        TEST_ASSERT_NOT_EQUAL(task_call_count, task.run_call_count());
+
+        return status::StatusCode::OK;
+    });
+    TEST_ASSERT_NOT_NULL(future);
+
+    run_and_wait(task_scheduler, *future);
+}
+
+TEST_CASE("Async task scheduler: pause/resume task on start up",
+          "[async_task_scheduler], [ocs_scheduler]") {
+    const char* scheduler_id = "test";
+
+    ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
+
+    AsyncTaskScheduler task_scheduler(heap_arena, freertos_timer_builder, estimator,
+                                      scheduler_id);
+
+    AsyncFuncScheduler func_scheduler(heap_arena, 10);
+
+    test::TestTask task(status::StatusCode::OK);
+
+    TEST_ASSERT_EQUAL(
+        status::StatusCode::OK,
+        task_scheduler.add(func_scheduler, "func", system::Duration::millisecond * 50));
+
+    TEST_ASSERT_EQUAL(
+        status::StatusCode::OK,
+        task_scheduler.add(task, "task", system::Duration::millisecond * 10));
+
+    // Multiple pauses have no effect.
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.pause(task));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.pause(task));
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.pause(task));
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.start());
+
+    auto future = func_scheduler.add([&task]() {
+        TEST_ASSERT_EQUAL(0, task.run_call_count());
+
+        return status::StatusCode::OK;
+    });
+    TEST_ASSERT_NOT_NULL(future);
+    run_and_wait(task_scheduler, *future);
+
+    future = func_scheduler.add([&task_scheduler, &task]() {
+        // Multiple resumes have no effect.
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.resume(task));
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.resume(task));
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.resume(task));
+        TEST_ASSERT_EQUAL(1, task.run_call_count());
+
+        return status::StatusCode::OK;
+    });
+    TEST_ASSERT_NOT_NULL(future);
+    run_and_wait(task_scheduler, *future);
+
+    while (true) {
+        if (task.run_call_count() > 5) {
+            break;
+        }
+
+        TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.run());
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+}
+
+TEST_CASE("Async task scheduler: resume non-paused task",
+          "[async_task_scheduler], [ocs_scheduler]") {
+    const char* scheduler_id = "test";
+
+    ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
+
+    AsyncTaskScheduler task_scheduler(heap_arena, freertos_timer_builder, estimator,
+                                      scheduler_id);
+
+    test::TestTask task(status::StatusCode::OK);
+
+    TEST_ASSERT_EQUAL(
+        status::StatusCode::OK,
+        task_scheduler.add(task, "task", system::Duration::millisecond * 10));
+
+    TEST_ASSERT_EQUAL(status::StatusCode::OK, task_scheduler.resume(task));
+    TEST_ASSERT_EQUAL(0, task.run_call_count());
+}
+
+TEST_CASE("Async task scheduler: pause/resume unknown task",
+          "[async_task_scheduler], [ocs_scheduler]") {
+    const char* scheduler_id = "test";
+
+    ConstantDelayEstimator estimator(pdMS_TO_TICKS(10));
+
+    AsyncTaskScheduler task_scheduler(heap_arena, freertos_timer_builder, estimator,
+                                      scheduler_id);
+
+    test::TestTask task(status::StatusCode::OK);
+
+    TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg, task_scheduler.pause(task));
+    TEST_ASSERT_EQUAL(status::StatusCode::InvalidArg, task_scheduler.resume(task));
+
+    TEST_ASSERT_EQUAL(0, task.run_call_count());
 }
 
 } // namespace scheduler

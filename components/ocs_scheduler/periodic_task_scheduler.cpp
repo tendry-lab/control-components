@@ -36,11 +36,11 @@ PeriodicTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
     configASSERT(interval > 0);
     configASSERT(interval >= system::Duration::millisecond);
 
-    if (node_exist_(nodes_all_, id) || node_exist_(nodes_to_add_, id)) {
+    if (node_find_(nodes_all_, id) || node_find_(nodes_to_add_, id)) {
         return status::StatusCode::InvalidArg;
     }
 
-    configASSERT(!node_exist_(nodes_to_remove_, id));
+    configASSERT(!node_find_(nodes_to_remove_, id));
 
     const auto nodes_count = nodes_all_.size() + nodes_to_add_.size();
     if (nodes_count == max_count()) {
@@ -58,17 +58,17 @@ PeriodicTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
 status::StatusCode PeriodicTaskScheduler::remove(const char* id) {
     configASSERT(id);
 
-    if (node_exist_(nodes_to_remove_, id)) {
+    if (node_find_(nodes_to_remove_, id)) {
         return status::StatusCode::InvalidArg;
     }
 
-    if (node_exist_(nodes_to_add_, id)) {
+    if (node_find_(nodes_to_add_, id)) {
         node_remove_(nodes_to_add_, id);
 
         return status::StatusCode::OK;
     }
 
-    auto node = node_exist_(nodes_all_, id);
+    auto node = node_find_(nodes_all_, id);
     if (!node) {
         return status::StatusCode::InvalidArg;
     }
@@ -116,9 +116,17 @@ status::StatusCode PeriodicTaskScheduler::run() {
     return status::StatusCode::OK;
 }
 
+status::StatusCode PeriodicTaskScheduler::pause(ITask& task) {
+    return status::StatusCode::NotSupported;
+}
+
+status::StatusCode PeriodicTaskScheduler::resume(ITask& task) {
+    return status::StatusCode::NotSupported;
+}
+
 PeriodicTaskScheduler::NodePtr
-PeriodicTaskScheduler::node_exist_(const PeriodicTaskScheduler::NodeList& nodes,
-                                   const char* id) {
+PeriodicTaskScheduler::node_find_(const PeriodicTaskScheduler::NodeList& nodes,
+                                  const char* id) {
     for (const auto& node : nodes) {
         if (strcmp(node->id(), id) == 0) {
             return node;

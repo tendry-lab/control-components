@@ -75,6 +75,12 @@ public:
     //! Run all periodic tasks.
     status::StatusCode run() override;
 
+    //! Pause execution of @p task.
+    status::StatusCode pause(ITask& task) override;
+
+    //! Resume execution of @p task.
+    status::StatusCode resume(ITask& task) override;
+
 private:
     class Node : public ITask, private core::NonCopyable<> {
     public:
@@ -99,7 +105,7 @@ private:
     using NodePtr = std::shared_ptr<Node>;
     using NodeList = std::vector<NodePtr>;
 
-    static NodePtr node_exist_(const NodeList& nodes, const char* id);
+    static NodePtr node_find_(const NodeList& nodes, const char* id);
     static void node_remove_(NodeList& nodes, const char* id);
 
     void run_();

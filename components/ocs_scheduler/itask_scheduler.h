@@ -40,6 +40,12 @@ public:
 
     //! Run all registered tasks.
     virtual status::StatusCode run() = 0;
+
+    //! Pause execution of @p task.
+    virtual status::StatusCode pause(ITask& task) = 0;
+
+    //! Resume execution of @p task.
+    virtual status::StatusCode resume(ITask& task) = 0;
 };
 
 } // namespace scheduler
