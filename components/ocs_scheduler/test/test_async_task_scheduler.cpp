@@ -56,7 +56,7 @@ TEST_CASE("Async task scheduler: wait for events",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        scheduler.add(task, "test_task", system::Duration::millisecond * 100));
+        scheduler.add(task, "test_task", system::Duration::millisecond * 50));
 
     TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.start());
     TEST_ASSERT_EQUAL(status::StatusCode::OK, scheduler.run());
@@ -76,10 +76,10 @@ TEST_CASE("Async task scheduler: register same task multiple times",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        scheduler.add(task, "test_task", system::Duration::millisecond * 100));
+        scheduler.add(task, "test_task", system::Duration::millisecond * 50));
     TEST_ASSERT_EQUAL(
         status::StatusCode::InvalidArg,
-        scheduler.add(task, "test_task", system::Duration::millisecond * 100));
+        scheduler.add(task, "test_task", system::Duration::millisecond * 50));
 }
 
 TEST_CASE("Async task scheduler: register maximum tasks",
@@ -232,7 +232,7 @@ TEST_CASE("Async task scheduler: add and attach task",
 
     TEST_ASSERT_EQUAL(
         status::StatusCode::OK,
-        scheduler.add(add_task, "add_task", system::Duration::millisecond * 100));
+        scheduler.add(add_task, "add_task", system::Duration::millisecond * 50));
 
     EventBits_t event = 0;
     TEST_ASSERT_EQUAL(status::StatusCode::OK,
