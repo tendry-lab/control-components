@@ -105,7 +105,7 @@ private:
     using NodePtr = std::shared_ptr<Node>;
     using NodeList = std::vector<NodePtr>;
 
-    static NodePtr node_exist_(const NodeList& nodes, const char* id);
+    static NodePtr node_find_(const NodeList& nodes, const char* id);
     static void node_remove_(NodeList& nodes, const char* id);
 
     void run_();
