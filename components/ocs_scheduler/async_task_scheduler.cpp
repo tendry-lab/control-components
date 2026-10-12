@@ -46,6 +46,8 @@ AsyncTaskScheduler::add(ITask& task, const char* id, system::Time interval) {
 
     const auto code = allocate_event_(event, id);
     if (code != status::StatusCode::OK) {
+        ocs_loge(log_tag, "unable to allocate event: %s", status::code_to_str(code));
+
         return code;
     }
 
