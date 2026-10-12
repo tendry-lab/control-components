@@ -116,6 +116,14 @@ status::StatusCode PeriodicTaskScheduler::run() {
     return status::StatusCode::OK;
 }
 
+status::StatusCode PeriodicTaskScheduler::pause(ITask& task) {
+    return status::StatusCode::NotSupported;
+}
+
+status::StatusCode PeriodicTaskScheduler::resume(ITask& task) {
+    return status::StatusCode::NotSupported;
+}
+
 PeriodicTaskScheduler::NodePtr
 PeriodicTaskScheduler::node_exist_(const PeriodicTaskScheduler::NodeList& nodes,
                                    const char* id) {

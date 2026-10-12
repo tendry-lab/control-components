@@ -15,6 +15,12 @@
 namespace ocs {
 namespace scheduler {
 
+namespace {
+
+const char* log_tag = "async_task_scheduler";
+
+} // namespace
+
 AsyncTaskScheduler::AsyncTaskScheduler(system::IArena& arena,
                                        system::ITimerBuilder& timer_builder,
                                        IDelayEstimator& estimator,
@@ -65,6 +71,10 @@ status::StatusCode AsyncTaskScheduler::start() {
             continue;
         }
 
+        if (node->is_paused()) {
+            continue;
+        }
+
         const auto code = node->run();
         if (code != status::StatusCode::OK) {
             ocs_logw(log_tag_.c_str(),
@@ -75,6 +85,10 @@ status::StatusCode AsyncTaskScheduler::start() {
 
     for (auto& node : nodes_) {
         if (node->get_clock_type() == Node::ClockType::External) {
+            continue;
+        }
+
+        if (node->is_paused()) {
             continue;
         }
 
@@ -140,6 +154,38 @@ AsyncTaskScheduler::attach(EventBits_t& event, ITask& task, const char* id) {
     return status::StatusCode::OK;
 }
 
+status::StatusCode AsyncTaskScheduler::pause(ITask& task) {
+    auto node = node_find_(task);
+    if (!node) {
+        return status::StatusCode::InvalidArg;
+    }
+
+    node->set_paused(true);
+
+    return status::StatusCode::OK;
+}
+
+status::StatusCode AsyncTaskScheduler::resume(ITask& task) {
+    auto node = node_find_(task);
+    if (!node) {
+        return status::StatusCode::InvalidArg;
+    }
+
+    node->set_paused(false);
+
+    return status::StatusCode::OK;
+}
+
+AsyncTaskScheduler::NodePtr AsyncTaskScheduler::node_find_(ITask& task) {
+    for (const auto& node : nodes_) {
+        if (&task == &node->get_task()) {
+            return node;
+        }
+    }
+
+    return nullptr;
+}
+
 status::StatusCode AsyncTaskScheduler::allocate_event_(EventBits_t& event,
                                                        const char* id) {
     if (nodes_.size() == max_count()) {
@@ -162,6 +208,10 @@ status::StatusCode AsyncTaskScheduler::allocate_event_(EventBits_t& event,
 void AsyncTaskScheduler::run_(EventBits_t bits) {
     for (auto& node : nodes_) {
         if (bits & node->event()) {
+            if (node->is_paused()) {
+                continue;
+            }
+
             const auto code = node->run();
             if (code != status::StatusCode::OK) {
                 ocs_loge(log_tag_.c_str(), "failed to run task: id=%s code=%s",
@@ -212,12 +262,67 @@ AsyncTaskScheduler::Node::ClockType AsyncTaskScheduler::Node::get_clock_type() c
     return clock_type_;
 }
 
+const ITask& AsyncTaskScheduler::Node::get_task() const {
+    return task_;
+}
+
+bool AsyncTaskScheduler::Node::is_paused() const {
+    return paused_;
+}
+
 status::StatusCode AsyncTaskScheduler::Node::start() {
-    return timer_->start();
+    if (!started_) {
+        const auto code = timer_->start();
+        if (code != ocs::status::StatusCode::OK) {
+            return code;
+        }
+    }
+
+    started_ = true;
+
+    return ocs::status::StatusCode::OK;
 }
 
 status::StatusCode AsyncTaskScheduler::Node::stop() {
-    return timer_->stop();
+    if (started_) {
+        const auto code = timer_->stop();
+        if (code != ocs::status::StatusCode::OK) {
+            return code;
+        }
+    }
+
+    started_ = false;
+
+    return ocs::status::StatusCode::OK;
+}
+
+void AsyncTaskScheduler::Node::set_paused(bool paused) {
+    const auto changed = paused_ != paused;
+    if (!changed) {
+        return;
+    }
+
+    if (!paused_ && paused) {
+        const auto code = stop();
+        if (code != status::StatusCode::OK) {
+            ocs_logw(log_tag, "failed to stop node on pause: id=%s code=%s", id_.c_str(),
+                     status::code_to_str(code));
+        }
+    } else {
+        auto code = run();
+        if (code != status::StatusCode::OK) {
+            ocs_logw(log_tag, "failed to run node on resume: id=%s code=%s", id_.c_str(),
+                     status::code_to_str(code));
+        }
+
+        code = start();
+        if (code != status::StatusCode::OK) {
+            ocs_logw(log_tag, "failed to start node on resume: id=%s code=%s",
+                     id_.c_str(), status::code_to_str(code));
+        }
+    }
+
+    paused_ = paused;
 }
 
 } // namespace scheduler

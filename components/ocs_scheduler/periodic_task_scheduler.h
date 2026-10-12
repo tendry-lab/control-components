@@ -75,6 +75,12 @@ public:
     //! Run all periodic tasks.
     status::StatusCode run() override;
 
+    //! Pause execution of @p task.
+    status::StatusCode pause(ITask& task) override;
+
+    //! Resume execution of @p task.
+    status::StatusCode resume(ITask& task) override;
+
 private:
     class Node : public ITask, private core::NonCopyable<> {
     public:
