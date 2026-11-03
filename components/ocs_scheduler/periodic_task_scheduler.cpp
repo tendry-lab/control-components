@@ -116,11 +116,11 @@ status::StatusCode PeriodicTaskScheduler::run() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode PeriodicTaskScheduler::pause(ITask& task) {
+status::StatusCode PeriodicTaskScheduler::pause(ITask&) {
     return status::StatusCode::NotSupported;
 }
 
-status::StatusCode PeriodicTaskScheduler::resume(ITask& task) {
+status::StatusCode PeriodicTaskScheduler::resume(ITask&) {
     return status::StatusCode::NotSupported;
 }
 
