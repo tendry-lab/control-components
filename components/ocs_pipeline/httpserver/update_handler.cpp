@@ -47,12 +47,12 @@ const char* log_tag = "update_handler";
 } // namespace
 
 UpdateHandler::UpdateHandler(system::IArena& arena,
-                             system::IUpdater& updater,
+                             system::IBlobWriter& writer,
                              system::IRebooter& rebooter,
                              size_t buffer_size)
     : buffer_size_(buffer_size)
     , arena_(arena)
-    , updater_(updater)
+    , writer_(writer)
     , rebooter_(rebooter) {
 }
 
@@ -69,7 +69,7 @@ status::StatusCode UpdateHandler::serve_http(http::IResponseWriter& w,
     if (code != status::StatusCode::OK) {
         ocs_loge(log_tag, "failed to write firmware: %s", status::code_to_str(code));
 
-        if (const auto c = updater_.end(); c != status::StatusCode::OK) {
+        if (const auto c = writer_.end(); c != status::StatusCode::OK) {
             ocs_loge(log_tag, "failed to end update process on write failure: %s",
                      status::code_to_str(c));
         }
@@ -77,12 +77,12 @@ status::StatusCode UpdateHandler::serve_http(http::IResponseWriter& w,
         return code;
     }
 
-    code = updater_.commit();
+    code = writer_.commit();
     if (code != status::StatusCode::OK) {
         ocs_loge(log_tag, "failed to commit written firmware: %s",
                  status::code_to_str(code));
 
-        if (const auto c = updater_.end(); c != status::StatusCode::OK) {
+        if (const auto c = writer_.end(); c != status::StatusCode::OK) {
             ocs_loge(log_tag, "failed to end update process on commit failure: %s",
                      status::code_to_str(c));
         }
@@ -90,7 +90,7 @@ status::StatusCode UpdateHandler::serve_http(http::IResponseWriter& w,
         return code;
     }
 
-    code = updater_.end();
+    code = writer_.end();
     if (code != status::StatusCode::OK) {
         ocs_loge(log_tag, "failed to end update process: %s", status::code_to_str(code));
 
@@ -120,7 +120,7 @@ status::StatusCode UpdateHandler::begin_(http::IRequest& r) {
         return code;
     }
 
-    code = updater_.begin(total_size, crc32);
+    code = writer_.begin(total_size, crc32);
     if (code != status::StatusCode::OK) {
         return code;
     }
@@ -152,7 +152,7 @@ status::StatusCode UpdateHandler::write_(http::IRequest& r) {
             break;
         }
 
-        code = updater_.write(buffer_.get(), read_size);
+        code = writer_.write(buffer_.get(), read_size);
         if (code != status::StatusCode::OK) {
             break;
         }

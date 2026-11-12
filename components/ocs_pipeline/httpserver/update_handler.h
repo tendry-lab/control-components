@@ -14,8 +14,8 @@
 #include "ocs_http/irequest.h"
 #include "ocs_http/iresponse_writer.h"
 #include "ocs_system/iarena.h"
+#include "ocs_system/iblob_writer.h"
 #include "ocs_system/irebooter.h"
-#include "ocs_system/iupdater.h"
 
 namespace ocs {
 namespace pipeline {
@@ -27,11 +27,11 @@ public:
     //!
     //! @params
     //!  - @p arena to perform dynamic allocations.
-    //!  - @p updater to perform the firmware update process.
+    //!  - @p writer to write the firmware received over HTTP.
     //!  - @p rebooter to reboot the system once the firmware update process is finished.
     //!  - @p buffer_size - buffer size to read chunks of firmware from HTTP connection.
     UpdateHandler(system::IArena& arena,
-                  system::IUpdater& updater,
+                  system::IBlobWriter& writer,
                   system::IRebooter& rebooter,
                   size_t buffer_size);
 
@@ -46,7 +46,7 @@ private:
 
     core::StaticMutex mu_;
     system::IArena& arena_;
-    system::IUpdater& updater_;
+    system::IBlobWriter& writer_;
     system::IRebooter& rebooter_;
 
     system::UniquePtr<uint8_t[]> buffer_;

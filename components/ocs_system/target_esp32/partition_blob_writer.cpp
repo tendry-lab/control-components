@@ -1,9 +1,9 @@
 /*
- * SPDX-FileCopyrightText: 2025 Tendry Lab
+ * SPDX-FileCopyrightText: 2025-2026 Tendry Lab
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "ocs_system/target_esp32/partition_updater.h"
+#include "ocs_system/target_esp32/partition_blob_writer.h"
 #include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 
@@ -12,18 +12,18 @@ namespace system {
 
 namespace {
 
-const char* log_tag = "partition_updater";
+const char* log_tag = "partition_blob_writer";
 
 } // namespace
 
-PartitionUpdater::PartitionUpdater(esp_partition_type_t type,
-                                   esp_partition_subtype_t subtype,
-                                   const char* partname) {
+PartitionBlobWriter::PartitionBlobWriter(esp_partition_type_t type,
+                                         esp_partition_subtype_t subtype,
+                                         const char* partname) {
     partition_ = esp_partition_find_first(type, subtype, partname);
     configASSERT(partition_);
 }
 
-status::StatusCode PartitionUpdater::begin(uint32_t total_size, uint32_t crc32) {
+status::StatusCode PartitionBlobWriter::begin(uint32_t total_size, uint32_t crc32) {
     offset_ = 0;
 
     const auto err = esp_partition_erase_range(partition_, 0, partition_->size);
@@ -36,7 +36,7 @@ status::StatusCode PartitionUpdater::begin(uint32_t total_size, uint32_t crc32) 
     return status::StatusCode::OK;
 }
 
-status::StatusCode PartitionUpdater::write(const uint8_t* buf, size_t len) {
+status::StatusCode PartitionBlobWriter::write(const uint8_t* buf, size_t len) {
     configASSERT(partition_);
 
     const auto err = esp_partition_write(partition_, offset_, buf, len);
@@ -51,13 +51,13 @@ status::StatusCode PartitionUpdater::write(const uint8_t* buf, size_t len) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode PartitionUpdater::commit() {
+status::StatusCode PartitionBlobWriter::commit() {
     configASSERT(offset_);
 
     return status::StatusCode::OK;
 }
 
-status::StatusCode PartitionUpdater::end() {
+status::StatusCode PartitionBlobWriter::end() {
     return status::StatusCode::OK;
 }
 

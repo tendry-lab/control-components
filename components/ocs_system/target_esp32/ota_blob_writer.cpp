@@ -1,9 +1,9 @@
 /*
- * SPDX-FileCopyrightText: 2025 Tendry Lab
+ * SPDX-FileCopyrightText: 2025-2026 Tendry Lab
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "ocs_system/target_esp32/native_updater.h"
+#include "ocs_system/target_esp32/ota_blob_writer.h"
 #include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 
@@ -12,13 +12,13 @@ namespace system {
 
 namespace {
 
-const char* log_tag = "native_updater";
+const char* log_tag = "ota_blob_writer";
 
 } // namespace
 
-status::StatusCode NativeUpdater::begin(uint32_t total_size, uint32_t _) {
+status::StatusCode OtaBlobWriter::begin(uint32_t total_size, uint32_t _) {
     if (handle_) {
-        ocs_logw(log_tag, "re-starting update process: committed=%d", committed_);
+        ocs_logw(log_tag, "re-starting OTA: committed=%d", committed_);
 
         committed_ = false;
 
@@ -30,7 +30,7 @@ status::StatusCode NativeUpdater::begin(uint32_t total_size, uint32_t _) {
 
     const auto partition = esp_ota_get_next_update_partition(nullptr);
     if (!partition) {
-        ocs_loge(log_tag, "OTA partion not found");
+        ocs_loge(log_tag, "OTA partition not found");
 
         return status::StatusCode::InvalidState;
     }
@@ -45,7 +45,7 @@ status::StatusCode NativeUpdater::begin(uint32_t total_size, uint32_t _) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode NativeUpdater::write(const uint8_t* buf, size_t len) {
+status::StatusCode OtaBlobWriter::write(const uint8_t* buf, size_t len) {
     configASSERT(handle_);
 
     const auto err = esp_ota_write(handle_, buf, len);
@@ -58,13 +58,13 @@ status::StatusCode NativeUpdater::write(const uint8_t* buf, size_t len) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode NativeUpdater::commit() {
+status::StatusCode OtaBlobWriter::commit() {
     committed_ = true;
 
     return status::StatusCode::OK;
 }
 
-status::StatusCode NativeUpdater::end() {
+status::StatusCode OtaBlobWriter::end() {
     configASSERT(handle_);
 
     if (committed_) {
@@ -93,7 +93,7 @@ status::StatusCode NativeUpdater::end() {
         }
     }
 
-    ocs_logi(log_tag, "end update process: committed=%d", committed_);
+    ocs_logi(log_tag, "end OTA: committed=%d", committed_);
 
     handle_ = 0;
     committed_ = false;

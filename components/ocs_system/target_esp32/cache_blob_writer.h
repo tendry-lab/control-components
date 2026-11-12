@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Tendry Lab
+ * SPDX-FileCopyrightText: 2025-2026 Tendry Lab
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -8,30 +8,35 @@
 #include "esp_partition.h"
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_system/iupdater.h"
+#include "ocs_system/iblob_writer.h"
 
 namespace ocs {
 namespace system {
 
-class CacheUpdater : public IUpdater, private core::NonCopyable<> {
+//! Cache the blob in the next OTA partition.
+//!
+//! @remarks
+//!  Don't use this component while the firmware update is in progress,
+//!  because it also writes the new FW image data into the next OTA partition.
+class CacheBlobWriter : public IBlobWriter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p updater to perform the actual update process.
+    //!  - @p writer to write the cached blob to.
     //!  - @p chunk_size to use when writing data from the cached partition.
-    CacheUpdater(IUpdater& updater, size_t chunk_size);
+    CacheBlobWriter(IBlobWriter& writer, size_t chunk_size);
 
-    //! Begin firmware update.
+    //! Erase the cache partition.
     status::StatusCode begin(uint32_t total_size, uint32_t crc32) override;
 
-    //! Write firmware data to the cached partition.
+    //! Write blob data to the cache partition.
     status::StatusCode write(const uint8_t* buf, size_t len) override;
 
-    //! Write firmware data from the cached partition to the updating partition.
+    //! Write the cached blob to the underlying writer.
     status::StatusCode commit() override;
 
-    //! End firmware update.
+    //! End writing the blob.
     status::StatusCode end() override;
 
 private:
@@ -39,7 +44,7 @@ private:
 
     const size_t chunk_size_ { 0 };
 
-    IUpdater& updater_;
+    IBlobWriter& writer_;
 
     const esp_partition_t* partition_ { nullptr };
     uint32_t total_size_ { 0 };

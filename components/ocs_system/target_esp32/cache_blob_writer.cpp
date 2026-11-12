@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Tendry Lab
+ * SPDX-FileCopyrightText: 2025-2026 Tendry Lab
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -9,30 +9,30 @@
 
 #include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
-#include "ocs_system/target_esp32/cache_updater.h"
+#include "ocs_system/target_esp32/cache_blob_writer.h"
 
 namespace ocs {
 namespace system {
 
 namespace {
 
-const char* log_tag = "cache_updater";
+const char* log_tag = "cache_blob_writer";
 
 } // namespace
 
-CacheUpdater::CacheUpdater(IUpdater& updater, size_t chunk_size)
+CacheBlobWriter::CacheBlobWriter(IBlobWriter& writer, size_t chunk_size)
     : chunk_size_(chunk_size)
-    , updater_(updater) {
+    , writer_(writer) {
 }
 
-status::StatusCode CacheUpdater::begin(uint32_t total_size, uint32_t crc32) {
+status::StatusCode CacheBlobWriter::begin(uint32_t total_size, uint32_t crc32) {
     offset_ = 0;
     total_size_ = total_size;
     crc32_ = crc32;
 
     partition_ = esp_ota_get_next_update_partition(nullptr);
     if (!partition_) {
-        ocs_loge(log_tag, "OTA partion not found");
+        ocs_loge(log_tag, "OTA partition not found");
 
         return status::StatusCode::InvalidState;
     }
@@ -47,7 +47,7 @@ status::StatusCode CacheUpdater::begin(uint32_t total_size, uint32_t crc32) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode CacheUpdater::write(const uint8_t* buf, size_t len) {
+status::StatusCode CacheBlobWriter::write(const uint8_t* buf, size_t len) {
     configASSERT(partition_);
 
     const auto err = esp_partition_write(partition_, offset_, buf, len);
@@ -62,13 +62,13 @@ status::StatusCode CacheUpdater::write(const uint8_t* buf, size_t len) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode CacheUpdater::commit() {
+status::StatusCode CacheBlobWriter::commit() {
     configASSERT(offset_);
     configASSERT(partition_);
     configASSERT(total_size_);
     configASSERT(crc32_);
 
-    auto code = updater_.begin(total_size_, crc32_);
+    auto code = writer_.begin(total_size_, crc32_);
     if (code != status::StatusCode::OK) {
         return code;
     }
@@ -78,12 +78,12 @@ status::StatusCode CacheUpdater::commit() {
         return code;
     }
 
-    code = updater_.commit();
+    code = writer_.commit();
     if (code != status::StatusCode::OK) {
         return code;
     }
 
-    code = updater_.end();
+    code = writer_.end();
     if (code != status::StatusCode::OK) {
         return code;
     }
@@ -91,13 +91,13 @@ status::StatusCode CacheUpdater::commit() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode CacheUpdater::end() {
+status::StatusCode CacheBlobWriter::end() {
     partition_ = nullptr;
 
     return status::StatusCode::OK;
 }
 
-status::StatusCode CacheUpdater::write_() {
+status::StatusCode CacheBlobWriter::write_() {
     esp_partition_mmap_handle_t handle = 0;
     const void* ptr = nullptr;
 
@@ -117,7 +117,7 @@ status::StatusCode CacheUpdater::write_() {
     while (remaining) {
         const size_t len = std::min(remaining, chunk_size_);
 
-        code = updater_.write(reinterpret_cast<const uint8_t*>(ptr) + pos, len);
+        code = writer_.write(reinterpret_cast<const uint8_t*>(ptr) + pos, len);
         if (code != status::StatusCode::OK) {
             break;
         }
