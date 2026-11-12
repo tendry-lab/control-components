@@ -1,41 +1,42 @@
 /*
- * SPDX-FileCopyrightText: 2025 Tendry Lab
+ * SPDX-FileCopyrightText: 2025-2026 Tendry Lab
  * SPDX-License-Identifier: Apache-2.0
  */
 
 #pragma once
 
 #include "ocs_core/noncopyable.h"
+#include "ocs_system/iblob_writer.h"
 #include "ocs_system/icrc32_calculator.h"
-#include "ocs_system/iupdater.h"
 
 namespace ocs {
 namespace system {
 
-class Crc32Updater : public IUpdater, private core::NonCopyable<> {
+//! Verify CRC32 of the blob before committing it.
+class Crc32BlobWriter : public IBlobWriter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
     //!  - @p crc32_calculator to calculate CRC32 checksum to check data integrity.
-    //!  - @p updater to perform the actual update process.
-    Crc32Updater(ICrc32Calculator& crc32_calculator, IUpdater& updater);
+    //!  - @p writer to write the blob.
+    Crc32BlobWriter(ICrc32Calculator& crc32_calculator, IBlobWriter& writer);
 
-    //! Begin firmware update.
+    //! Begin writing the blob.
     status::StatusCode begin(uint32_t total_size, uint32_t crc32) override;
 
-    //! Write firmware data.
+    //! Write blob data.
     status::StatusCode write(const uint8_t* buf, size_t len) override;
 
-    //! Calculate CRC32 and commit firmware update.
+    //! Verify CRC32 of the written data and commit the blob.
     status::StatusCode commit() override;
 
-    //! End firmware update.
+    //! End writing the blob.
     status::StatusCode end() override;
 
 private:
     ICrc32Calculator& crc32_calculator_;
-    IUpdater& updater_;
+    IBlobWriter& writer_;
 
     uint32_t crc32_src_ { 0 };
     uint32_t crc32_clc_ { 0 };

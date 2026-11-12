@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Tendry Lab
+ * SPDX-FileCopyrightText: 2025-2026 Tendry Lab
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -8,30 +8,31 @@
 #include <string>
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_system/iupdater.h"
+#include "ocs_system/iblob_writer.h"
 
 namespace ocs {
 namespace system {
 
-class LogUpdater : public IUpdater, private core::NonCopyable<> {
+//! Log the blob writing progress.
+class LogBlobWriter : public IBlobWriter, private core::NonCopyable<> {
 public:
     //! Initialize.
     //!
     //! @params
-    //!  - @p updater to perform the actual update process.
+    //!  - @p writer to write the blob.
     //!  - @p log_tag to use for logging.
-    LogUpdater(IUpdater& updater, const char* log_tag);
+    LogBlobWriter(IBlobWriter& writer, const char* log_tag);
 
-    //! Begin firmware update.
+    //! Begin writing the blob.
     status::StatusCode begin(uint32_t total_size, uint32_t crc32) override;
 
-    //! Write firmware data.
+    //! Write blob data.
     status::StatusCode write(const uint8_t* buf, size_t len) override;
 
-    //! Commit firmware update.
+    //! Commit the blob.
     status::StatusCode commit() override;
 
-    //! End firmware update.
+    //! End writing the blob.
     status::StatusCode end() override;
 
 private:
@@ -40,7 +41,7 @@ private:
     uint32_t total_size_ { 0 };
     uint32_t written_size_ { 0 };
 
-    IUpdater& updater_;
+    IBlobWriter& writer_;
 };
 
 } // namespace system

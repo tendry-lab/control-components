@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Tendry Lab
+ * SPDX-FileCopyrightText: 2025-2026 Tendry Lab
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -8,23 +8,27 @@
 #include "esp_ota_ops.h"
 
 #include "ocs_core/noncopyable.h"
-#include "ocs_system/iupdater.h"
+#include "ocs_system/iblob_writer.h"
 
 namespace ocs {
 namespace system {
 
-class NativeUpdater : public IUpdater, private core::NonCopyable<> {
+//! Write the firmware image to the next OTA partition.
+//!
+//! @remarks
+//!  end() after a successful commit() makes the written partition the boot one.
+class OtaBlobWriter : public IBlobWriter, private core::NonCopyable<> {
 public:
-    //! Begin firmware update.
+    //! Begin writing the firmware image.
     status::StatusCode begin(uint32_t total_size, uint32_t crc32) override;
 
-    //! Write firmware data.
+    //! Write firmware image data.
     status::StatusCode write(const uint8_t* buf, size_t len) override;
 
-    //! Commit firmware update.
+    //! Commit the firmware image.
     status::StatusCode commit() override;
 
-    //! End firmware update.
+    //! Set the boot partition if committed, abort the OTA otherwise.
     status::StatusCode end() override;
 
 private:

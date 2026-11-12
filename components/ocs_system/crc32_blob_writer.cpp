@@ -1,9 +1,9 @@
 /*
- * SPDX-FileCopyrightText: 2025 Tendry Lab
+ * SPDX-FileCopyrightText: 2025-2026 Tendry Lab
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "ocs_system/crc32_updater.h"
+#include "ocs_system/crc32_blob_writer.h"
 #include "ocs_core/freertos.h"
 #include "ocs_core/log.h"
 
@@ -12,17 +12,17 @@ namespace system {
 
 namespace {
 
-const char* log_tag = "crc32_updater";
+const char* log_tag = "crc32_blob_writer";
 
 } // namespace
 
-Crc32Updater::Crc32Updater(ICrc32Calculator& crc32_calculator, IUpdater& updater)
+Crc32BlobWriter::Crc32BlobWriter(ICrc32Calculator& crc32_calculator, IBlobWriter& writer)
     : crc32_calculator_(crc32_calculator)
-    , updater_(updater) {
+    , writer_(writer) {
 }
 
-status::StatusCode Crc32Updater::begin(uint32_t total_size, uint32_t crc32) {
-    const auto code = updater_.begin(total_size, crc32);
+status::StatusCode Crc32BlobWriter::begin(uint32_t total_size, uint32_t crc32) {
+    const auto code = writer_.begin(total_size, crc32);
     if (code != status::StatusCode::OK) {
         return code;
     }
@@ -33,8 +33,8 @@ status::StatusCode Crc32Updater::begin(uint32_t total_size, uint32_t crc32) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode Crc32Updater::write(const uint8_t* buf, size_t len) {
-    const auto code = updater_.write(buf, len);
+status::StatusCode Crc32BlobWriter::write(const uint8_t* buf, size_t len) {
+    const auto code = writer_.write(buf, len);
     if (code != status::StatusCode::OK) {
         return code;
     }
@@ -44,7 +44,7 @@ status::StatusCode Crc32Updater::write(const uint8_t* buf, size_t len) {
     return status::StatusCode::OK;
 }
 
-status::StatusCode Crc32Updater::commit() {
+status::StatusCode Crc32BlobWriter::commit() {
     configASSERT(crc32_src_);
     configASSERT(crc32_clc_);
 
@@ -55,7 +55,7 @@ status::StatusCode Crc32Updater::commit() {
         return status::StatusCode::Error;
     }
 
-    const auto code = updater_.commit();
+    const auto code = writer_.commit();
     if (code != status::StatusCode::OK) {
         return code;
     }
@@ -63,8 +63,8 @@ status::StatusCode Crc32Updater::commit() {
     return status::StatusCode::OK;
 }
 
-status::StatusCode Crc32Updater::end() {
-    return updater_.end();
+status::StatusCode Crc32BlobWriter::end() {
+    return writer_.end();
 }
 
 } // namespace system
