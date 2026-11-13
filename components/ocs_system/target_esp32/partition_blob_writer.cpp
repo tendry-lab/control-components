@@ -52,8 +52,6 @@ status::StatusCode PartitionBlobWriter::write(const uint8_t* buf, size_t len) {
 }
 
 status::StatusCode PartitionBlobWriter::commit() {
-    configASSERT(offset_);
-
     return status::StatusCode::OK;
 }
 
