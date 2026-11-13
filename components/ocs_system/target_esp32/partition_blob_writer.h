@@ -30,12 +30,17 @@ public:
     status::StatusCode begin(uint32_t total_size, uint32_t crc32) override;
 
     //! Write blob data to the partition.
+    //!
+    //! @remarks
+    //!  commit() and end() are non-operational calls, which means that if the write() is
+    //!  failed for some reason, the partition will be left in the partly written state.
+    //!  The partition will be erased on the next begin() call.
     status::StatusCode write(const uint8_t* buf, size_t len) override;
 
-    //! Commit the blob.
+    //! Non-operational.
     status::StatusCode commit() override;
 
-    //! End writing the blob.
+    //! Non-operational.
     status::StatusCode end() override;
 
 private:
