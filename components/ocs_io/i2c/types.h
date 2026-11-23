@@ -15,10 +15,10 @@ namespace i2c {
 using Address = uint16_t;
 
 enum class TransferSpeed : uint8_t {
-    //! 100 kbit/s.
+    //! 100 kHz.
     Default,
 
-    //! 400 kbit/s.
+    //! 400 kHz.
     Fast,
 };
 
